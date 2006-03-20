@@ -1,0 +1,140 @@
+// IDL rozhrani pro volani CORBA funkci
+// interfaces: EPP , Whois , Admin
+
+module ccReg
+{
+typedef  short Response;
+typedef unsigned long long timestamp;
+
+enum AddrType { IPv4 , IPv6 };
+// typy funkci pro transfer
+enum TransferFunc{ Approve , Cancel , Query , Reject , Request } ;
+enum StatusToken { OK , Linked , 
+                  clientDeleteProhibited ,
+                  clientUpdateProhibited,
+                  pendingCreate, 
+                  pendingDelete,
+                  pendingTransfer,
+                  serverDeleteProhibited,
+                  serverUpdateProhibited };
+
+
+struct Address_Type{
+string address;
+short type;
+};
+
+struct NameServer_Type{
+string name;
+};
+
+typedef  sequence<NameServer_Type> NameServer;
+typedef  sequence<Address_Type> Address;
+typedef  sequence<short> Status;
+
+struct Contact{
+string ROID;    // identifikator kontaktu  repository ID
+string ClID;    // identifikator registratora ktery ma pravo na zmeny
+string CrID;    // identifikator registratora ktery vytvoril kontak
+string UpID;    // identifikator registratora ktery provedl zmeny
+timestamp CrDate; // datum a cas vytvoreni
+timestamp UpDate; // datum a cas zmeny
+timestamp TrDate;  // datum a cas transferu
+string Name; // jmeno nebo nazev kontaktu
+string Organization; // nazev organizace
+string Street1; // adresa
+string Street2; // adresa
+string Street3; // adresa
+string City;  // obec
+string StateOrProvince;
+string PostalCode; // PSC
+char Country[2]; // kod zeme
+string Telephone;
+string Fax;
+string Email;
+string NotifyEmail; // upozornovaci email
+string VAT; // DIC 
+char AuthInfoPw[32] ; // heslo
+boolean DiscloseName; // povolovani zobrazeni
+boolean DiscloseOrganization;
+boolean DiscloseAddress;
+boolean DiscloseTelephone;
+boolean DiscloseFax;
+boolean DiscloseEmail;
+};
+
+interface EPP{
+
+  // pro prihlaseni klienta registratora
+  Response Login( in  string clientID ,  in  string pass , in string clTRID , out string errMsg , out string svTRID );
+  Response Logout( in string clTRID , out string errMsg , out string svTRID ); // odhlaseni
+// pro klienty EPP  protokolu 
+  // zjisteni kontaktaktu
+  Response  ContactCheck( in  string roid , in string clTRID ,  out string errMsg , out string svTRID );
+  // info o kontaktni osobe
+  Response  ContactInfo(  in  string roid , in string clTRID  , out  Contact c , out string errMsg , out string svTRID);
+  // vymazani kontaktni osoby 
+  Response  ContactDelete( in  string roid , in string clTRID , out string  errMsg , out string svTRID);
+  // zmena udaju u kontaktni osoby 
+  Response  ContactUpdate( in Contact c , in string clTRID , out string errMsg , out string svTRID);  
+  // vytvoreni kontaktni osoby 
+  Response  ContactCreate( in Contact c , in string clTRID , out string errMsg , out string svTRID);
+  // Funkce pro transfer kontaktu typ funkce zatim 
+/*   
+  Response  Transfer( short type , in string roid , in string authInfo , 
+                      out short trStatus , out string reID ,  out timestamp  reDate ,
+                       out string  acID ,  out timestamp acDate ,  out string svTRID );
+   -  A <contact:trStatus> element that contains the state of the most
+      recent transfer request.
+
+   -  A <contact:reID> element that contains the identifier of the
+      client that requested the object transfer.
+
+   -  A <contact:reDate> element that contains the date and time that
+      the transfer was requested.
+
+   -  A <contact:acID> element that contains the identifier of the
+      client that SHOULD act upon the transfer request.
+*/
+ 
+
+
+// nasleduji funkce na spravu domen
+//  DomainCheck( 
+//  DomainInfo(
+//  DomainDelete(
+//  DomainUpdate(
+//  DomainCreate(
+//  DomainTransfer(
+
+// funkce pro hosty jsou zruseny budou se zpracovavat pres domeny
+
+// roid registratora
+readonly attribute string clientID;
+
+};
+
+// struktura
+struct DomainWhois{
+string name;
+string description; // popis domeny ted tam je 
+short status; // status sequence
+timestamp registered;
+timestamp expired;
+// technicke kontakty
+// specifikovat co je potreba zverejnit pres whois
+string registrar;  // kod registratora
+NameServer ns; // sequence vracenych nameservru
+};
+
+interface Whois{
+    DomainWhois Domain( in string  name );
+};
+
+
+// administratorske rozhrani
+interface Admin{
+
+};
+
+};
