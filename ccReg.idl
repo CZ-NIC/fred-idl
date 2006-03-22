@@ -109,8 +109,6 @@ interface EPP{
 
 // funkce pro hosty jsou zruseny budou se zpracovavat pres domeny
 
-// roid registratora
-readonly attribute string clientID;
 
 };
 
