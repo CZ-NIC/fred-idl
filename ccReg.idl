@@ -48,13 +48,14 @@ string Street3; // adresa
 string City;  // obec
 string StateOrProvince;
 string PostalCode; // PSC
-char Country[2]; // kod zeme
+string Country; // kod zeme ISO dve pismena velke
 string Telephone;
 string Fax;
 string Email;
 string NotifyEmail; // upozornovaci email
 string VAT; // DIC 
-char AuthInfoPw[32] ; // heslo
+string SSN; // SSN
+string AuthInfoPw ; // autentifikace
 boolean DiscloseName; // povolovani zobrazeni
 boolean DiscloseOrganization;
 boolean DiscloseAddress;
