@@ -116,16 +116,15 @@ interface EPP{
 // struktura
 struct DomainWhois{
 string name;
-string description; // popis domeny ted tam je 
+// string description; // popis domeny ted tam je 
 short status; // status sequence
-timestamp registered;
-// timestamp expired;
+timestamp created;
+timestamp expired;
 // technicke kontakty
 // specifikovat co je potreba zverejnit pres whois
 string registrarName;  // jmeno registratora
 string registrarUrl; // odkaz na jeho webovou adresu
 string NameServers; // retezec vracenych nameservru oddelenych znakem tabulatorem
-// OLD NameServer ns; // sequence vracenych nameservru
 };
 
 interface Whois{
