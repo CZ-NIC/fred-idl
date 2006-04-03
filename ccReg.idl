@@ -3,7 +3,6 @@
 
 module ccReg
 {
-typedef  short Response;
 typedef unsigned long long timestamp;
 
 enum AddrType { IPv4 , IPv6 };
@@ -18,25 +17,24 @@ enum StatusToken { OK , Linked ,
                   serverDeleteProhibited,
                   serverUpdateProhibited };
 
+// vracena struktura 
 
-struct Address_Type{
-string address;
-short type;
+struct Response{
+short errCode; // chybove hlasnei
+string errMsg; // chybova zprava
 };
 
-struct NameServer_Type{
-string name;
-};
-
-typedef  sequence<NameServer_Type> NameServer;
-typedef  sequence<Address_Type> Address;
-typedef  sequence<short> Status;
+typedef  sequence<string> NameServers;
+typedef  sequence<string> InetAddress;
+// typedef  sequence<short> Status; // musel jsem predelat na short
+typedef short Status;
 
 struct Contact{
 string ROID;    // identifikator kontaktu  repository ID
 string ClID;    // identifikator registratora ktery ma pravo na zmeny
 string CrID;    // identifikator registratora ktery vytvoril kontak
 string UpID;    // identifikator registratora ktery provedl zmeny
+Status stat; // status sequence
 timestamp CrDate; // datum a cas vytvoreni
 timestamp UpDate; // datum a cas zmeny
 timestamp TrDate;  // datum a cas transferu
@@ -64,51 +62,73 @@ boolean DiscloseFax;
 boolean DiscloseEmail;
 };
 
+// struktura pro popis hostu
+struct Host{
+string domain; // domena do ktere patri host
+string name; // fqdn nazev domeny
+Status stat; // status sequence
+timestamp CrDate; // datum vytvoreni
+timestamp UpDate; // datum zmeny
+string ClID;    // identifikator registratora ktery vytvoril host
+string UpID;    // identifikator registratora ktery zmenil zaznam
+InetAddress inet; // sequence ip adres
+};
+
+// struktura pro popis domen
+struct Domain{
+string ROID; 
+string name; // fqdn nazev domeny
+string Registrant; // ROID registranta contactu
+Status stat; // status sequence
+string ClID;    // identifikator registratora ktery ma pravo na zemnu
+string CrID;    // identifikator registratora ktery zaznam vytvoril 
+string UpID;    // identifikator registratora ktery zmenil zaznam
+timestamp CrDate; // datum a cas vytvoreni
+timestamp ExDate; // taum a cas expirace domeny
+timestamp TrDate;  // datum a cas transferu
+string AuthInfoPw ; // autentifikace
+NameServers ns; //  sequence nameservru
+};
+
+// pro klienty EPP  protokolu 
 interface EPP{
 
-  // pro prihlaseni klienta registratora
-  Response Login( in  string clientID ,  in  string pass , in string clTRID , out string errMsg , out string svTRID );
-  Response Logout( in string clTRID , out string errMsg , out string svTRID ); // odhlaseni
-// pro klienty EPP  protokolu 
-  // zjisteni kontaktaktu
-  Response  ContactCheck( in  string roid , in string clTRID ,  out string errMsg , out string svTRID );
-  // info o kontaktni osobe
-  Response  ContactInfo(  in  string roid , in string clTRID  , out  Contact c , out string errMsg , out string svTRID);
-  // vymazani kontaktni osoby 
-  Response  ContactDelete( in  string roid , in string clTRID , out string  errMsg , out string svTRID);
-  // zmena udaju u kontaktni osoby 
-  Response  ContactUpdate( in Contact c , in string clTRID , out string errMsg , out string svTRID);  
-  // vytvoreni kontaktni osoby 
-  Response  ContactCreate( in Contact c , in string clTRID , out string errMsg , out string svTRID);
-  // Funkce pro transfer kontaktu typ funkce zatim 
-/*   
-  Response  Transfer( short type , in string roid , in string authInfo , 
-                      out short trStatus , out string reID ,  out timestamp  reDate ,
-                       out string  acID ,  out timestamp acDate ,  out string svTRID );
-   -  A <contact:trStatus> element that contains the state of the most
-      recent transfer request.
+   // pro prihlaseni clienta 
+   Response  ClientLogin(in string ClID);
+   Response  ClientLogout();
 
-   -  A <contact:reID> element that contains the identifier of the
-      client that requested the object transfer.
-
-   -  A <contact:reDate> element that contains the date and time that
-      the transfer was requested.
-
-   -  A <contact:acID> element that contains the identifier of the
-      client that SHOULD act upon the transfer request.
-*/
- 
+   // zjisteni kontaktaktu
+   Response  ContactCheck( in  string roid  );
+   // info o kontaktni osobe
+   Response  ContactInfo(  in  string roid  , out Contact c );
+   // vymazani kontaktni osoby 
+   Response  ContactDelete( in  string roid  );
+   // zmena udaju u kontaktni osoby 
+   Response  ContactUpdate( in Contact c  );  
+   // vytvoreni kontaktni osoby 
+   Response  ContactCreate( in Contact c  );
+   // Funkce pro transfer kontaktu typ funkce nezadana
 
 
-// nasleduji funkce na spravu domen
-//  DomainCheck( 
-//  DomainInfo(
-//  DomainDelete(
-//  DomainUpdate(
-//  DomainCreate(
-//  DomainTransfer(
+   // check hostu
+   Response  HostCheck( in string name  );
+   // info o hostu
+   Response  HostInfo( in string name , out Host h );
+   // smazani hostu
+   Response  HostDelete( in string name );
+   // vytvoreni hostu
+   Response  HostCreate( in Host h );
+   // zmena udaju update
+   Response  HostUpdate( in Host h );
 
-// funkce pro hosty jsou zruseny budou se zpracovavat pres domeny
+   // nasleduji funkce na spravu domen
+   Response  DomainCheck( in string name  );
+   Response  DomainInfo( in string name , out Domain d );
+   Response  DomainDelete( in string name );
+   Response  DomainUpdate( in Domain d );
+   Response  DomainCreate( in Domain d );
+//  transfer zatim nezadan  Response  DomainTransfer(
+
 
 
 };
@@ -117,14 +137,14 @@ interface EPP{
 struct DomainWhois{
 string name;
 // string description; // popis domeny ted tam je 
-short status; // status sequence
+Status stat; // status sequence
 timestamp created;
 timestamp expired;
 // technicke kontakty
 // specifikovat co je potreba zverejnit pres whois
 string registrarName;  // jmeno registratora
 string registrarUrl; // odkaz na jeho webovou adresu
-string NameServers; // retezec vracenych nameservru oddelenych znakem tabulatorem
+NameServers ns; // sequnce nameservru
 };
 
 interface Whois{
