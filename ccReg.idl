@@ -5,7 +5,6 @@ module ccReg
 {
 typedef unsigned long long timestamp;
 
-enum AddrType { IPv4 , IPv6 };
 // typy funkci pro transfer
 enum TransferFunc{ Approve , Cancel , Query , Reject , Request } ;
 enum StatusToken { OK , Linked , 
@@ -20,8 +19,8 @@ enum StatusToken { OK , Linked ,
 // vracena struktura 
 
 struct Response{
-short errCode; // chybove hlasnei
-string errMsg; // chybova zprava
+short errCode; // chybove hlaseni
+string svTRID; // server transaction ID
 };
 
 typedef  sequence<string> NameServers;
@@ -94,39 +93,39 @@ NameServers ns; //  sequence nameservru
 interface EPP{
 
    // pro prihlaseni clienta 
-   Response  ClientLogin(in string ClID);
-   Response  ClientLogout();
+   Response  ClientLogin(in string ClID ,  in string clTRID  ,  out short clientID  );
+   Response  ClientLogout(in short clientID  , in string clTRID );
 
    // zjisteni kontaktaktu
-   Response  ContactCheck( in  string roid  );
+   Response  ContactCheck( in  string roid  , in short clientID , in string clTRID );
    // info o kontaktni osobe
-   Response  ContactInfo(  in  string roid  , out Contact c );
+   Response  ContactInfo(  in  string roid  , out Contact c , in short clientID , in string clTRID );
    // vymazani kontaktni osoby 
-   Response  ContactDelete( in  string roid  );
+   Response  ContactDelete( in  string roid  , in short clientID , in string clTRID );
    // zmena udaju u kontaktni osoby 
-   Response  ContactUpdate( in Contact c  );  
+   Response  ContactUpdate( in Contact c , in short clientID , in string clTRID  );  
    // vytvoreni kontaktni osoby 
-   Response  ContactCreate( in Contact c  );
+   Response  ContactCreate( in Contact c  , in short clientID , in string clTRID );
    // Funkce pro transfer kontaktu typ funkce nezadana
 
 
    // check hostu
-   Response  HostCheck( in string name  );
+   Response  HostCheck( in string name  , in short clientID , in string clTRID );
    // info o hostu
-   Response  HostInfo( in string name , out Host h );
+   Response  HostInfo( in string name , out Host h, in short clientID , in string clTRID  );
    // smazani hostu
-   Response  HostDelete( in string name );
+   Response  HostDelete( in string name , in short clientID , in string clTRID );
    // vytvoreni hostu
-   Response  HostCreate( in Host h );
+   Response  HostCreate( in Host h , in short clientID , in string clTRID );
    // zmena udaju update
-   Response  HostUpdate( in Host h );
+   Response  HostUpdate( in Host h , in short clientID , in string clTRID );
 
    // nasleduji funkce na spravu domen
-   Response  DomainCheck( in string name  );
-   Response  DomainInfo( in string name , out Domain d );
-   Response  DomainDelete( in string name );
-   Response  DomainUpdate( in Domain d );
-   Response  DomainCreate( in Domain d );
+   Response  DomainCheck( in string name  , in short clientID , in string clTRID );
+   Response  DomainInfo( in string name , out Domain d , in short clientID , in string clTRID );
+   Response  DomainDelete( in string name , in short clientID , in string clTRID );
+   Response  DomainUpdate( in Domain d , in short clientID , in string clTRID );
+   Response  DomainCreate( in Domain d , in short clientID , in string clTRID );
 //  transfer zatim nezadan  Response  DomainTransfer(
 
 
