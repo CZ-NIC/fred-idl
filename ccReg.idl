@@ -23,10 +23,19 @@ short errCode; // chybove hlaseni
 string svTRID; // server transaction ID
 };
 
+
 typedef  sequence<string> NameServers;
 typedef  sequence<string> InetAddress;
+typedef  sequence<string> TechContact;
 // typedef  sequence<short> Status; // musel jsem predelat na short
 typedef short Status;
+
+struct DNSHost_str{
+string fqdn; // fqdn DNS serveru
+InetAddress inet; // pole ip adres 
+};
+
+typedef sequence<DNSHost_str> DNSHost;
 
 struct Contact{
 string ROID;    // identifikator kontaktu  repository ID
@@ -63,14 +72,29 @@ boolean DiscloseEmail;
 
 // struktura pro popis hostu
 struct Host{
-string domain; // domena do ktere patri host
-string name; // fqdn nazev domeny
+string fqdn; // fqdn nazev hostu 
+string nsset; // handle na nsset
 Status stat; // status sequence
 timestamp CrDate; // datum vytvoreni
 timestamp UpDate; // datum zmeny
 string ClID;    // identifikator registratora ktery vytvoril host
 string UpID;    // identifikator registratora ktery zmenil zaznam
 InetAddress inet; // sequence ip adres
+};
+
+struct NSSet{
+string ROID;
+string handle;
+Status stat; // status sequence
+string ClID;    // identifikator registratora ktery ma pravo na zemnu
+string CrID;    // identifikator registratora ktery zaznam vytvoril
+string UpID;    // identifikator registratora ktery zmenil zaznam
+timestamp CrDate; // datum a cas vytvoreni
+timestamp ExDate; // taum a cas expirace domeny
+timestamp UpDate;  // datum a cas update
+string AuthInfoPw ; // autentifikace
+DNSHost dns;   // sequence DNS hosty fqd plus InetAddress
+TechContact tech; // sequence handle na technicke kontakty
 };
 
 // struktura pro popis domen
@@ -93,7 +117,7 @@ NameServers ns; //  sequence nameservru
 interface EPP{
 
    // pro prihlaseni clienta 
-   Response  ClientLogin(in string ClID ,  in string clTRID  ,  out long clientID  );
+   Response  ClientLogin(in string ClID , in string passwd , in string newpass ,  in string clTRID  ,  out long clientID  );
    Response  ClientLogout(in long clientID  , in string clTRID );
 
    // zjisteni kontaktaktu
@@ -120,7 +144,21 @@ interface EPP{
    // zmena udaju update
    Response  HostUpdate( in string name , in Host h , in long clientID , in string clTRID );
 
-   // nasleduji funkce na spravu domen
+
+// predelano na NSSET
+   // check hostu
+   Response  NSSetCheck( in string handle  ,  out boolean avial ,  in long clientID , in string clTRID );
+   // info o hostu
+   Response  NSSetInfo( in string handle , out NSSet n, in long clientID , in string clTRID  );
+   // smazani hostu
+   Response  NSSetDelete( in string handle , in long clientID , in string clTRID );
+   // vytvoreni hostu
+   Response  NSSetCreate( in string handle , in NSSet n , in long clientID , in string clTRID );
+   // zmena udaju update
+   Response  NSSetUpdate( in string handle , in NSSet n , in long clientID , in string clTRID );
+
+
+//  funkce na spravu domen
    Response  DomainCheck( in string fqdn  ,  out boolean avial , in long clientID , in string clTRID );
    Response  DomainInfo( in string fqdn , out Domain d , in long clientID , in string clTRID );
    Response  DomainDelete( in string fqdn , in long clientID , in string clTRID );
