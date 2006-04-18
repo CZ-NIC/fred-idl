@@ -116,6 +116,9 @@ NameServers ns; //  sequence nameservru
 // pro klienty EPP  protokolu 
 interface EPP{
 
+   // pro vraceni serverTRID 
+   Response GetTransaction(  in long clientID ,  in string clTRID , in short errCode );
+
    // pro prihlaseni clienta 
    Response  ClientLogin(in string ClID , in string passwd , in string newpass ,  in string clTRID  ,  out long clientID  );
    Response  ClientLogout(in long clientID  , in string clTRID );
