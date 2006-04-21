@@ -27,6 +27,7 @@ string svTRID; // server transaction ID
 typedef  sequence<string> NameServers;
 typedef  sequence<string> InetAddress;
 typedef  sequence<string> TechContact;
+
 // typedef  sequence<short> Status; // musel jsem predelat na short
 typedef short Status;
 
@@ -93,7 +94,7 @@ timestamp CrDate; // datum a cas vytvoreni
 timestamp ExDate; // taum a cas expirace domeny
 timestamp UpDate;  // datum a cas update
 string AuthInfoPw ; // autentifikace
-DNSHost dns;   // sequence DNS hosty fqd plus InetAddress
+DNSHost dns; // hosty DNS
 TechContact tech; // sequence handle na technicke kontakty
 };
 
@@ -102,6 +103,7 @@ struct Domain{
 string ROID; 
 string name; // fqdn nazev domeny
 string Registrant; // ROID registranta contactu
+string nsset; // handle NSSETu
 Status stat; // status sequence
 string ClID;    // identifikator registratora ktery ma pravo na zemnu
 string CrID;    // identifikator registratora ktery zaznam vytvoril 
@@ -110,7 +112,6 @@ timestamp CrDate; // datum a cas vytvoreni
 timestamp ExDate; // taum a cas expirace domeny
 timestamp TrDate;  // datum a cas transferu
 string AuthInfoPw ; // autentifikace
-NameServers ns; //  sequence nameservru
 };
 
 // pro klienty EPP  protokolu 
