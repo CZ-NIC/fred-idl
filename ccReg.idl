@@ -27,6 +27,7 @@ string svTRID; // server transaction ID
 typedef  sequence<string> NameServers;
 typedef  sequence<string> InetAddress;
 typedef  sequence<string> TechContact;
+typedef  sequence<string> AdminContact;
 
 // typedef  sequence<short> Status; // musel jsem predelat na short
 typedef short Status;
@@ -112,6 +113,7 @@ timestamp CrDate; // datum a cas vytvoreni
 timestamp ExDate; // taum a cas expirace domeny
 timestamp TrDate;  // datum a cas transferu
 string AuthInfoPw ; // autentifikace
+AdminContact admin; // administrativni kontakty (handle)
 };
 
 // pro klienty EPP  protokolu 
@@ -125,7 +127,7 @@ interface EPP{
    Response  ClientLogout(in long clientID  , in string clTRID );
 
    // zjisteni kontaktaktu
-   Response  ContactCheck( in  string handle  , out boolean avial , in long clientID , in string clTRID );
+   Response  ContactCheck( in  string handle  , out boolean avail , in long clientID , in string clTRID );
    // info o kontaktni osobe
    Response  ContactInfo(  in  string  handle  , out Contact c , in long clientID , in string clTRID );
    // vymazani kontaktni osoby 
@@ -138,7 +140,7 @@ interface EPP{
 
 
    // check hostu
-   Response  HostCheck( in string name  ,  out boolean avial ,  in long clientID , in string clTRID );
+   Response  HostCheck( in string name  ,  out boolean avail ,  in long clientID , in string clTRID );
    // info o hostu
    Response  HostInfo( in string name , out Host h, in long clientID , in string clTRID  );
    // smazani hostu
@@ -151,7 +153,7 @@ interface EPP{
 
 // predelano na NSSET
    // check hostu
-   Response  NSSetCheck( in string handle  ,  out boolean avial ,  in long clientID , in string clTRID );
+   Response  NSSetCheck( in string handle  ,  out boolean avail ,  in long clientID , in string clTRID );
    // info o hostu
    Response  NSSetInfo( in string handle , out NSSet n, in long clientID , in string clTRID  );
    // smazani hostu
@@ -163,7 +165,7 @@ interface EPP{
 
 
 //  funkce na spravu domen
-   Response  DomainCheck( in string fqdn  ,  out boolean avial , in long clientID , in string clTRID );
+   Response  DomainCheck( in string fqdn  ,  out boolean avail , in long clientID , in string clTRID );
    Response  DomainInfo( in string fqdn , out Domain d , in long clientID , in string clTRID );
    Response  DomainDelete( in string fqdn , in long clientID , in string clTRID );
    Response  DomainUpdate( in string fqdn , in Domain d , in long clientID , in string clTRID );
@@ -181,11 +183,12 @@ string name;
 short status; // status 1 REGISTRED - 0 FREE
 timestamp created;
 timestamp expired;
-// technicke kontakty
-// specifikovat co je potreba zverejnit pres whois
 string registrarName;  // jmeno registratora
 string registrarUrl; // odkaz na jeho webovou adresu
-NameServers ns; // sequnce nameservru
+NameServers ns; // sequence nameservru
+string nsset; // handle NSSETu
+TechContact tech; // sequence handle na technicke kontakty
+AdminContact admin; // administrativni kontakty (handle)
 };
 
 interface Whois{
