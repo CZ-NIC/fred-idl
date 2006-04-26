@@ -28,6 +28,8 @@ typedef  sequence<string> NameServers;
 typedef  sequence<string> InetAddress;
 typedef  sequence<string> TechContact;
 typedef  sequence<string> AdminContact;
+typedef  sequence<string> Check; // sequence pro check
+typedef  sequence<short> Avail; // jednicka ci nula 
 
 // typedef  sequence<short> Status; // musel jsem predelat na short
 typedef short Status;
@@ -127,7 +129,7 @@ interface EPP{
    Response  ClientLogout(in long clientID  , in string clTRID );
 
    // zjisteni kontaktaktu
-   Response  ContactCheck( in  string handle  , out boolean avail , in long clientID , in string clTRID );
+   Response  ContactCheck( in  Check handle  , out Avail a , in long clientID , in string clTRID );
    // info o kontaktni osobe
    Response  ContactInfo(  in  string  handle  , out Contact c , in long clientID , in string clTRID );
    // vymazani kontaktni osoby 
@@ -140,7 +142,7 @@ interface EPP{
 
 
    // check hostu
-   Response  HostCheck( in string name  ,  out boolean avail ,  in long clientID , in string clTRID );
+   Response  HostCheck( in Check name  ,  out Avail a ,  in long clientID , in string clTRID );
    // info o hostu
    Response  HostInfo( in string name , out Host h, in long clientID , in string clTRID  );
    // smazani hostu
@@ -153,7 +155,7 @@ interface EPP{
 
 // predelano na NSSET
    // check hostu
-   Response  NSSetCheck( in string handle  ,  out boolean avail ,  in long clientID , in string clTRID );
+   Response  NSSetCheck( in Check handle  ,  out Avail a ,  in long clientID , in string clTRID );
    // info o hostu
    Response  NSSetInfo( in string handle , out NSSet n, in long clientID , in string clTRID  );
    // smazani hostu
@@ -165,7 +167,7 @@ interface EPP{
 
 
 //  funkce na spravu domen
-   Response  DomainCheck( in string fqdn  ,  out boolean avail , in long clientID , in string clTRID );
+   Response  DomainCheck( in Check fqdn  ,  out Avail a , in long clientID , in string clTRID );
    Response  DomainInfo( in string fqdn , out Domain d , in long clientID , in string clTRID );
    Response  DomainDelete( in string fqdn , in long clientID , in string clTRID );
    Response  DomainUpdate( in string fqdn , in Domain d , in long clientID , in string clTRID );
