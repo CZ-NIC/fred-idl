@@ -172,6 +172,8 @@ interface EPP{
    Response  DomainDelete( in string fqdn , in long clientID , in string clTRID );
    Response  DomainUpdate( in string fqdn , in Domain d , in long clientID , in string clTRID );
    Response  DomainCreate( in string fqdn , in Domain d , in long clientID , in string clTRID );
+   // doba prodlouzeni period je v mesicich
+   Response  DomainRenew( in string fqdn , in Domain d , in short period , in long clientID ,  in string clTRID );
 //  transfer zatim nezadan  Response  DomainTransfer(
 
 
