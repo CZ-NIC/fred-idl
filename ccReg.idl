@@ -74,6 +74,14 @@ boolean DiscloseFax;
 boolean DiscloseEmail;
 };
 
+struct Poll
+{
+short count; // celkovy pocet zprav
+long msgID; // id zpravy
+timestamp qDate; // datum zarazeni do fronty
+string mesg; // zprava
+};
+
 // struktura pro popis hostu
 struct Host{
 string fqdn; // fqdn nazev hostu 
@@ -123,6 +131,13 @@ interface EPP{
 
    // pro vraceni serverTRID 
    Response GetTransaction(  in long clientID ,  in string clTRID , in short errCode );
+
+   // poll funkce
+   // potvrezeni prijeti zpravy msgID vraci pocet zbyvajicich zprav a dalsi id zpravy
+   Response PollAcknowledgement( in long msgID , out short count , in long newmsgID , in long clientID ,  in string clTRID );
+   // ziskani zpravy s msgID ze servru
+   Response PollResponse( in long msgID , out Poll p , in long clientID ,  in string clTRID );
+
 
    // pro prihlaseni clienta 
    Response  ClientLogin(in string ClID , in string passwd , in string newpass ,  in string clTRID  ,  out long clientID  );
