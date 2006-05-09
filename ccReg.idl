@@ -93,7 +93,6 @@ string ClID;    // identifikator registratora ktery ma pravo na zemnu
 string CrID;    // identifikator registratora ktery zaznam vytvoril
 string UpID;    // identifikator registratora ktery zmenil zaznam
 timestamp CrDate; // datum a cas vytvoreni
-timestamp ExDate; // taum a cas expirace domeny
 timestamp UpDate;  // datum a cas update
 string AuthInfoPw ; // autentifikace
 DNSHost dns; // hosty DNS
@@ -112,6 +111,7 @@ string CrID;    // identifikator registratora ktery zaznam vytvoril
 string UpID;    // identifikator registratora ktery zmenil zaznam
 timestamp CrDate; // datum a cas vytvoreni
 timestamp ExDate; // taum a cas expirace domeny
+timestamp UpDate;  // datum a cas update
 timestamp TrDate;  // datum a cas transferu
 string AuthInfoPw ; // autentifikace
 AdminContact admin; // administrativni kontakty (handle)
