@@ -7,14 +7,6 @@ typedef unsigned long long timestamp;
 
 // typy funkci pro transfer
 enum TransferFunc{ Approve , Cancel , Query , Reject , Request } ;
-enum StatusToken { OK , Linked , 
-                  clientDeleteProhibited ,
-                  clientUpdateProhibited,
-                  pendingCreate, 
-                  pendingDelete,
-                  pendingTransfer,
-                  serverDeleteProhibited,
-                  serverUpdateProhibited };
 
 // vracena struktura 
 
@@ -31,8 +23,7 @@ typedef  sequence<string> AdminContact;
 typedef  sequence<string> Check; // sequence pro check
 typedef  sequence<short> Avail; // jednicka ci nula 
 
-// typedef  sequence<short> Status; // musel jsem predelat na short
-typedef short Status;
+typedef  sequence<string> Status; // vraceny status je sequence stringu 
 
 struct DNSHost_str{
 string fqdn; // fqdn DNS serveru
