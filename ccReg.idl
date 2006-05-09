@@ -94,6 +94,7 @@ string CrID;    // identifikator registratora ktery zaznam vytvoril
 string UpID;    // identifikator registratora ktery zmenil zaznam
 timestamp CrDate; // datum a cas vytvoreni
 timestamp UpDate;  // datum a cas update
+timestamp TrDate;  // datum a cas transferu
 string AuthInfoPw ; // autentifikace
 DNSHost dns; // hosty DNS
 TechContact tech; // sequence handle na technicke kontakty
