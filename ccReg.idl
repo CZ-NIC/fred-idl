@@ -142,7 +142,9 @@ interface EPP{
    // vymazani kontaktni osoby 
    Response  ContactDelete( in  string handle  , in long  clientID , in string clTRID );
    // zmena udaju u kontaktni osoby 
-   Response  ContactUpdate( in  string handle  , in Contact c , in long clientID , in string clTRID  );  
+   // zmena je co je ve strukture  Contact chg 
+   // remove a add je pouze status
+   Response  ContactUpdate( in  string handle , in Contact chg , in Status status_add ,  in Status status_rem ,  in long clientID , in string clTRID  );  
    // vytvoreni kontaktni osoby 
    Response  ContactCreate( in  string handle  ,  in Contact c  , in long clientID , in string clTRID );
    // Funkce pro transfer kontaktu typ funkce nezadana
@@ -169,16 +171,21 @@ interface EPP{
    Response  NSSetDelete( in string handle , in long clientID , in string clTRID );
    // vytvoreni hostu
    Response  NSSetCreate( in string handle , in NSSet n , in long clientID , in string clTRID );
-   // zmena udaju update
-   Response  NSSetUpdate( in string handle , in NSSet n , in long clientID , in string clTRID );
+   // zmena udaju update  change pouze authInfo 
+   // pridat nebo zrusit pouze TechContact 
+   Response  NSSetUpdate( in string handle , in string authInfo_chg, in TechContact tech_add,  in TechContact tech_rem, in long clientID , in string clTRID );
 
 
 //  funkce na spravu domen
    Response  DomainCheck( in Check fqdn  ,  out Avail a , in long clientID , in string clTRID );
    Response  DomainInfo( in string fqdn , out Domain d , in long clientID , in string clTRID );
    Response  DomainDelete( in string fqdn , in long clientID , in string clTRID );
-   Response  DomainUpdate( in string fqdn , in Domain d , in long clientID , in string clTRID );
+
+   // Data elements that can be changed: registrant authInfo and nsset
+   // Data elements that can be added or removed: admin contact and status 
+   Response  DomainUpdate( in string fqdn , in string registrant_chg , in string  authInfo_chg, in string nsset_chg, in AdminContact admin_add , in  AdminContact  admin_rem , in Status status_add ,  in Status status_rem  , in long clientID , in string clTRID );
    Response  DomainCreate( in string fqdn , in Domain d , in long clientID , in string clTRID );
+
    // doba prodlouzeni period je v mesicich
    Response  DomainRenew( in string fqdn , in Domain d , in short period , in long clientID ,  in string clTRID );
 //  transfer zatim nezadan  Response  DomainTransfer(
