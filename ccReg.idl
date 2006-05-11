@@ -173,7 +173,7 @@ interface EPP{
    Response  NSSetCreate( in string handle , in NSSet n , in long clientID , in string clTRID );
    // zmena udaju update  change pouze authInfo 
    // pridat nebo zrusit pouze TechContact 
-   Response  NSSetUpdate( in string handle , in string authInfo_chg, in TechContact tech_add,  in TechContact tech_rem, in long clientID , in string clTRID );
+   Response  NSSetUpdate( in string handle , in string authInfo_chg, in TechContact tech_add,  in TechContact tech_rem, in Status status_add ,  in Status status_rem , in long clientID , in string clTRID );
 
 
 //  funkce na spravu domen
