@@ -122,7 +122,7 @@ interface EPP{
    Response PollAcknowledgement( in long msgID , out short count , in long newmsgID , in long clientID ,  in string clTRID );
    // ziskani zpravy s msgID ze servru
    // count  celkovy pocet zprav  msgID id zpravy  qDate datum zarazeni do fronty mesg zprava
-   Response PollRequest( in long msgID , out short count , out long msgID , out timestamp qDate , out string mesg ,  in long clientID ,  in string clTRID );
+   Response PollRequest( in long msgID , out short count , out long newMsgID , out timestamp qDate , out string mesg ,  in long clientID ,  in string clTRID );
 
 
    // pro prihlaseni clienta 
