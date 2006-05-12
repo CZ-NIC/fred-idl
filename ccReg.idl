@@ -65,13 +65,6 @@ boolean DiscloseFax;
 boolean DiscloseEmail;
 };
 
-struct Poll
-{
-short count; // celkovy pocet zprav
-long msgID; // id zpravy
-timestamp qDate; // datum zarazeni do fronty
-string mesg; // zprava
-};
 
 // struktura pro popis hostu
 struct Host{
@@ -128,7 +121,8 @@ interface EPP{
    // potvrezeni prijeti zpravy msgID vraci pocet zbyvajicich zprav a dalsi id zpravy
    Response PollAcknowledgement( in long msgID , out short count , in long newmsgID , in long clientID ,  in string clTRID );
    // ziskani zpravy s msgID ze servru
-   Response PollResponse( in long msgID , out Poll p , in long clientID ,  in string clTRID );
+   // count  celkovy pocet zprav  msgID id zpravy  qDate datum zarazeni do fronty mesg zprava
+   Response PollRequest( in long msgID , out short count , out long msgID , out timestamp qDate , out string mesg ,  in long clientID ,  in string clTRID );
 
 
    // pro prihlaseni clienta 
