@@ -119,10 +119,10 @@ interface EPP{
 
    // poll funkce
    // potvrezeni prijeti zpravy msgID vraci pocet zbyvajicich zprav a dalsi id zpravy
-   Response PollAcknowledgement( in long msgID , out short count , in long newmsgID , in long clientID ,  in string clTRID );
+   Response PollAcknowledgement( in long msgID , out short count , out long newmsgID , in long clientID ,  in string clTRID );
    // ziskani zpravy s msgID ze servru
    // count  celkovy pocet zprav  msgID id zpravy  qDate datum zarazeni do fronty mesg zprava
-   Response PollRequest( in long msgID , out short count , out long newMsgID , out timestamp qDate , out string mesg ,  in long clientID ,  in string clTRID );
+   Response PollRequest( out long msgID , out short count , out timestamp qDate , out string mesg ,  in long clientID ,  in string clTRID );
 
 
    // pro prihlaseni clienta 
