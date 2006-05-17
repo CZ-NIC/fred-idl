@@ -32,6 +32,17 @@ InetAddress inet; // pole ip adres
 
 typedef sequence<DNSHost_str> DNSHost;
 
+struct Transfer{  
+string handle; // server-unique identifier  for the queried object
+Status trStatus; // state of the rmost ecent transfer request 
+string reID; // identifier of the client that requested the object transfer
+timestamp reDate; // date and time   that the transfer was requested
+string acID; // identifier of the client that SHOULD act upon the transfer request
+timestamp acDate; // date and time of a   required or completed response
+timestamp exDate; // specielne pto transfer domeny datum expirace
+};
+
+
 struct Contact{
 string ROID;    // identifikator kontaktu  repository ID
 string ClID;    // identifikator registratora ktery ma pravo na zmeny
@@ -141,7 +152,9 @@ interface EPP{
    Response  ContactUpdate( in  string handle , in Contact chg , in Status status_add ,  in Status status_rem ,  in long clientID , in string clTRID  );  
    // vytvoreni kontaktni osoby 
    Response  ContactCreate( in  string handle  ,  in Contact c  , in long clientID , in string clTRID );
-   // Funkce pro transfer kontaktu typ funkce nezadana
+   // Funkce pro transfer kontaktu query a response
+   Response  ContactTransferQuery(   in string handle , in string authInfo , out Transfer trn , in long clientID , in string clTRID );
+   Response  ContactTransferRequest( in string handle , in string authInfo , out Transfer trn  , in long clientID , in string clTRID );
 
 
    // check hostu
@@ -167,7 +180,10 @@ interface EPP{
    Response  NSSetCreate( in string handle , in NSSet n , in long clientID , in string clTRID );
    // zmena udaju update  change pouze authInfo 
    // pridat nebo zrusit pouze TechContact 
-   Response  NSSetUpdate( in string handle , in string authInfo_chg, in TechContact tech_add,  in TechContact tech_rem, in Status status_add ,  in Status status_rem , in long clientID , in string clTRID );
+   // dns hosty dns_chg zmena pouze ip adresy pro dany fqdn
+   // dns_rem zrusene dns hosty 
+   // dns_add pridane dns hosty
+   Response  NSSetUpdate( in string handle , in string authInfo_chg , in DNSHost dns_chg , in DNSHost dns_add , in DNSHost dns_rem , in TechContact tech_add,  in TechContact tech_rem, in Status status_add ,  in Status status_rem , in long clientID , in string clTRID );
 
 
 //  funkce na spravu domen
@@ -182,8 +198,11 @@ interface EPP{
 
    // doba prodlouzeni period je v mesicich
    Response  DomainRenew( in string fqdn , in Domain d , in short period , in long clientID ,  in string clTRID );
-//  transfer zatim nezadan  Response  DomainTransfer(
-
+   // transfer funkce 
+   Response  DomainTransferQuery(   in string fqdn , in string registrant ,  in string authInfo , out Transfer trn , in long clientID , in string clTRID );
+   Response  DomainTransferRequest( in string fqdn , in string  registrant, in string authInfo , out Transfer trn  , in long clientID , in string clTRID );
+   // TODO 
+   Response DomainTrade(  in string fqdn, in string  old_registrant , in string new_registrant, in string authInfo ,  in long clientID , in string clTRID );
 
 
 };
