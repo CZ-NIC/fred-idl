@@ -32,15 +32,6 @@ InetAddress inet; // pole ip adres
 
 typedef sequence<DNSHost_str> DNSHost;
 
-struct Transfer{  
-string handle; // server-unique identifier  for the queried object
-Status trStatus; // state of the rmost ecent transfer request 
-string reID; // identifier of the client that requested the object transfer
-timestamp reDate; // date and time   that the transfer was requested
-string acID; // identifier of the client that SHOULD act upon the transfer request
-timestamp acDate; // date and time of a   required or completed response
-timestamp exDate; // specielne pto transfer domeny datum expirace
-};
 
 
 struct Contact{
@@ -152,11 +143,9 @@ interface EPP{
    Response  ContactUpdate( in  string handle , in Contact chg , in Status status_add ,  in Status status_rem ,  in long clientID , in string clTRID  );  
    // vytvoreni kontaktni osoby 
    Response  ContactCreate( in  string handle  ,  in Contact c  , in long clientID , in string clTRID );
-   // Funkce pro transfer kontaktu query a response
-   Response  ContactTransferQuery(   in string handle , in string authInfo , out Transfer trn , in long clientID , in string clTRID );
-   Response  ContactTransferRequest( in string handle , in string authInfo , out Transfer trn  , in long clientID , in string clTRID );
+  
 
-
+/* HOST zruseno a nahrazeno NSSetem
    // check hostu
    Response  HostCheck( in Check name  ,  out Avail a ,  in long clientID , in string clTRID );
    // info o hostu
@@ -167,7 +156,7 @@ interface EPP{
    Response  HostCreate( in string name , in Host h , in long clientID , in string clTRID );
    // zmena udaju update
    Response  HostUpdate( in string name , in Host h , in long clientID , in string clTRID );
-
+*/
 
 // predelano na NSSET
    // check hostu
@@ -185,6 +174,9 @@ interface EPP{
    // dns_add pridane dns hosty
    Response  NSSetUpdate( in string handle , in string authInfo_chg , in DNSHost dns_chg , in DNSHost dns_add , in DNSHost dns_rem , in TechContact tech_add,  in TechContact tech_rem, in Status status_add ,  in Status status_rem , in long clientID , in string clTRID );
 
+   // prevod nssetu
+   Response NSSetTransfer( in string handle ,  in string authInfo , in long clientID , in string clTRID );
+
 
 //  funkce na spravu domen
    Response  DomainCheck( in Check fqdn  ,  out Avail a , in long clientID , in string clTRID );
@@ -199,9 +191,8 @@ interface EPP{
    // doba prodlouzeni period je v mesicich
    Response  DomainRenew( in string fqdn , in Domain d , in short period , in long clientID ,  in string clTRID );
    // transfer funkce 
-   Response  DomainTransferQuery(   in string fqdn , in string registrant ,  in string authInfo , out Transfer trn , in long clientID , in string clTRID );
-   Response  DomainTransferRequest( in string fqdn , in string  registrant, in string authInfo , out Transfer trn  , in long clientID , in string clTRID );
-   // TODO 
+   Response DomainTransfer( in string fqdn , in string registrant , in string authInfo , in long clientID , in string clTRID );
+   // trade funkce
    Response DomainTrade(  in string fqdn, in string  old_registrant , in string new_registrant, in string authInfo ,  in long clientID , in string clTRID );
 
 
