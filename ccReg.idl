@@ -67,7 +67,7 @@ boolean DiscloseFax;
 boolean DiscloseEmail;
 };
 
-struct ContactCreate{
+struct Contact_Create{
 string Name; // jmeno nebo nazev kontaktu
 string Organization; // nazev organizace
 string Street1; // adresa
@@ -152,9 +152,9 @@ interface EPP{
    // zmena udaju u kontaktni osoby 
    // zmena je co je ve strukture  Contact chg 
    // remove a add je pouze status
-   Response  ContactUpdate( in ContactCreate chg , in Status status_add ,  in Status status_rem ,  in long clientID , in string clTRID  );  
+   Response  ContactUpdate( in Contact_Create chg , in Status status_add ,  in Status status_rem ,  in long clientID , in string clTRID  );  
    // vytvoreni kontaktni osoby 
-   Response  ContactCreate( in ContactCreate c  , in long clientID , in string clTRID );
+   Response  ContactCreate( in Contact_Create c  , in long clientID , in string clTRID );
  
 
 // predelano na NSSET
