@@ -171,7 +171,7 @@ interface EPP{
    // pridat nebo zrusit pouze TechContact 
    // dns_rem zrusene dns hosty 
    // dns_add pridane dns hosty
-   Response  NSSetUpdate( in string handle , in string authInfo_chg , in DNSHost dns_add , in DNSHost dns_rem , in TechContact tech_add,  in TechContact tech_rem, in Status status_add ,  in Status status_rem , in long clientID , in string clTRID );
+   Response  NSSetUpdate( in string handle ,  in string authInfo ,  in string authInfo_chg , in DNSHost dns_add , in DNSHost dns_rem , in TechContact tech_add,  in TechContact tech_rem, in Status status_add ,  in Status status_rem , in long clientID , in string clTRID );
 
    // prevod nssetu
    Response NSSetTransfer( in string handle ,  in string authInfo , in long clientID , in string clTRID );
@@ -184,7 +184,7 @@ interface EPP{
 
    // Data elements that can be changed: registrant authInfo and nsset
    // Data elements that can be added or removed: admin contact and status 
-   Response  DomainUpdate( in string fqdn , in string registrant_chg , in string  authInfo_chg, in string nsset_chg, in AdminContact admin_add , in  AdminContact  admin_rem , in Status status_add ,  in Status status_rem  , in long clientID , in string clTRID );
+   Response  DomainUpdate( in string fqdn , in string registrant_chg ,  in string  authInfo , in string  authInfo_chg, in string nsset_chg, in AdminContact admin_add , in  AdminContact  admin_rem , in Status status_add ,  in Status status_rem  , in long clientID , in string clTRID );
    Response  DomainCreate( in string fqdn, in string Registrant, in string nsset,in string AuthInfoPw, in short period , in AdminContact admin, in long clientID , in string clTRID );
 
    // doba prodlouzeni period je v mesicich
