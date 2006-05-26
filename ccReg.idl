@@ -5,7 +5,7 @@ module ccReg
 {
 typedef unsigned long long timestamp;
 
-typedef disclose short; // pro modifikace -1 zadna zmena 0 nastavi na false 1 nastavi na true
+typedef short  disclose; // pro modifikace -1 zadna zmena 0 nastavi na false 1 nastavi na true
 
 // typy funkci pro transfer
 enum TransferFunc{ Approve , Cancel , Query , Reject , Request } ;
