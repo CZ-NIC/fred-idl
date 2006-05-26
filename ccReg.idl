@@ -5,6 +5,8 @@ module ccReg
 {
 typedef unsigned long long timestamp;
 
+typedef disclose short; // pro modifikace -1 zadna zmena 0 nastavi na false 1 nastavi na true
+
 // typy funkci pro transfer
 enum TransferFunc{ Approve , Cancel , Query , Reject , Request } ;
 
@@ -85,12 +87,12 @@ string NotifyEmail; // upozornovaci email
 string VAT; // DIC 
 string SSN; // SSN
 string AuthInfoPw ; // autentifikace
-boolean DiscloseName; // povolovani zobrazeni
-boolean DiscloseOrganization;
-boolean DiscloseAddress;
-boolean DiscloseTelephone;
-boolean DiscloseFax;
-boolean DiscloseEmail;
+disclose DiscloseName; // povolovani zobrazeni
+disclose DiscloseOrganization;
+disclose DiscloseAddress;
+disclose DiscloseTelephone;
+disclose DiscloseFax;
+disclose DiscloseEmail;
 };
 
 struct NSSet{
