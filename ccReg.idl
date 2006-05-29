@@ -44,8 +44,8 @@ string CrID;    // identifikator registratora ktery vytvoril kontak
 string UpID;    // identifikator registratora ktery provedl zmeny
 Status stat; // status sequence
 timestamp CrDate; // datum a cas vytvoreni
-// timestamp UpDate; // datum a cas zmeny
-timestamp TrDate;  // datum a cas transferu
+timestamp UpDate; // datum a cas zmeny
+// timestamp TrDate;  // datum a cas transferu
 string Name; // jmeno nebo nazev kontaktu
 string Organization; // nazev organizace
 string Street1; // adresa
