@@ -192,7 +192,7 @@ interface EPP{
    // doba prodlouzeni period je v mesicich
    Response  DomainRenew( in string fqdn , in timestamp curExpDate ,  in short period , in long clientID ,  in string clTRID );
    // transfer funkce 
-   Response DomainTransfer( in string fqdn , in string registrant , in string authInfo , in long clientID , in string clTRID );
+   Response DomainTransfer( in string fqdn  , in string authInfo , in long clientID , in string clTRID );
    // trade funkce
    Response DomainTrade(  in string fqdn, in string  old_registrant , in string new_registrant, in string authInfo ,  in long clientID , in string clTRID );
 
