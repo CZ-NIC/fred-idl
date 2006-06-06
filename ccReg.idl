@@ -190,7 +190,7 @@ interface EPP{
    Response  DomainCreate( in string fqdn, in string Registrant, in string nsset,in string AuthInfoPw, in short period , in AdminContact admin, out timestamp crDate, out timestamp exDate, in long clientID , in string clTRID );
 
    // doba prodlouzeni period je v mesicich
-   Response  DomainRenew( in string fqdn , in timestamp curExpDate ,  in short period , in long clientID ,  in string clTRID );
+   Response  DomainRenew( in string fqdn , in timestamp curExpDate ,  in short period , out timestamp exDate, in long clientID ,  in string clTRID );
    // transfer funkce 
    Response DomainTransfer( in string fqdn  , in string authInfo , in long clientID , in string clTRID );
    // trade funkce
