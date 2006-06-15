@@ -54,7 +54,7 @@ string Street3; // adresa
 string City;  // obec
 string StateOrProvince;
 string PostalCode; // PSC
-string Country; // kod zeme ISO dve pismena velke
+string Country; // plny nazev zeme
 string Telephone;
 string Fax;
 string Email;
@@ -79,7 +79,7 @@ string Street3; // adresa
 string City;  // obec
 string StateOrProvince;
 string PostalCode; // PSC
-string Country; // kod zeme ISO dve pismena velke
+string cc; // kod zeme ISO dve pismena velke
 string Telephone;
 string Fax;
 string Email;
