@@ -3,226 +3,280 @@
 
 module ccReg
 {
-typedef unsigned long long timestamp;
+  typedef unsigned long long timestamp;
 
-typedef short  disclose; // pro modifikace -1 zadna zmena 0 nastavi na false 1 nastavi na true
+  typedef short disclose;	// pro modifikace -1 zadna zmena 0 nastavi na false 1 nastavi na true
 
-// typy funkci pro transfer
-enum TransferFunc{ Approve , Cancel , Query , Reject , Request } ;
+  // typy funkci pro transfer
+  enum TransferFunc
+  { Approve, Cancel, Query, Reject, Request };
 
-// vracena struktura 
+  // vracena struktura 
+  struct Response
+  {
+    short errCode;		// chybove hlaseni
+    string svTRID;		// server transaction ID
+  };
 
-struct Response{
-short errCode; // chybove hlaseni
-string svTRID; // server transaction ID
-};
+  typedef sequence < string > NameServers;
+  typedef sequence < string > InetAddress;
+  typedef sequence < string > TechContact;
+  typedef sequence < string > AdminContact;
+  typedef sequence < string > Check;	// sequence pro check
+  typedef sequence < short > Avail;	// jednicka ci nula 
 
+  typedef sequence < string > Status;	// vraceny status je sequence stringu 
 
-typedef  sequence<string> NameServers;
-typedef  sequence<string> InetAddress;
-typedef  sequence<string> TechContact;
-typedef  sequence<string> AdminContact;
-typedef  sequence<string> Check; // sequence pro check
-typedef  sequence<short> Avail; // jednicka ci nula 
+  struct DNSHost_str
+  {
+    string fqdn;		// fqdn DNS serveru
+    InetAddress inet;		// pole ip adres 
+  };
 
-typedef  sequence<string> Status; // vraceny status je sequence stringu 
+  typedef sequence < DNSHost_str > DNSHost;
 
-struct DNSHost_str{
-string fqdn; // fqdn DNS serveru
-InetAddress inet; // pole ip adres 
-};
+  struct Contact
+  {
+    string handle;		// handle kontaktu
+    string ROID;		// identifikator kontaktu  repository ID
+    string CrID;		// identifikator registratora ktery vytvoril kontak
+    string UpID;		// identifikator registratora ktery provedl zmeny
+    Status stat;		// status sequence
+    timestamp CrDate;		// datum a cas vytvoreni
+    timestamp UpDate;		// datum a cas zmeny
+    string Name;		// jmeno nebo nazev kontaktu
+    string Organization;	// nazev organizace
+    string Street1;		// adresa
+    string Street2;		// adresa
+    string Street3;		// adresa
+    string City;		// obec
+    string StateOrProvince;
+    string PostalCode;		// PSC
+    string Country;		// kod zeme ISO dve pismena velke
+    string Telephone;
+    string Fax;
+    string Email;
+    string NotifyEmail;		// upozornovaci email
+    string VAT;			// DIC 
+    string SSN;			// SSN
+    boolean DiscloseName;	// povolovani zobrazeni
+    boolean DiscloseOrganization;
+    boolean DiscloseAddress;
+    boolean DiscloseTelephone;
+    boolean DiscloseFax;
+    boolean DiscloseEmail;
+  };
 
-typedef sequence<DNSHost_str> DNSHost;
+  struct ContactChange
+  {
+    string Name;		// jmeno nebo nazev kontaktu
+    string Organization;	// nazev organizace
+    string Street1;		// adresa
+    string Street2;		// adresa
+    string Street3;		// adresa
+    string City;		// obec
+    string StateOrProvince;
+    string PostalCode;		// PSC
+    string Country;		// kod zeme ISO dve pismena velke
+    string Telephone;
+    string Fax;
+    string Email;
+    string NotifyEmail;		// upozornovaci email
+    string VAT;			// DIC 
+    string SSN;			// SSN
+    disclose DiscloseName;	// povolovani zobrazeni
+    disclose DiscloseOrganization;
+    disclose DiscloseAddress;
+    disclose DiscloseTelephone;
+    disclose DiscloseFax;
+    disclose DiscloseEmail;
+  };
 
+  struct NSSet
+  {
+    string ROID;
+    string handle;
+    Status stat;		// status sequence
+    string ClID;		// identifikator registratora ktery ma pravo na zemnu
+    string CrID;		// identifikator registratora ktery zaznam vytvoril
+    string UpID;		// identifikator registratora ktery zmenil zaznam
+    timestamp CrDate;		// datum a cas vytvoreni
+    timestamp UpDate;		// datum a cas update
+    timestamp TrDate;		// datum a cas transferu
+    string AuthInfoPw;		// autentifikace
+    DNSHost dns;		// hosty DNS
+    TechContact tech;		// sequence handle na technicke kontakty
+  };
 
+  struct ENUMValidationExtension {
+    timestamp valExDate; // datum expirace overeni validity
+  };
 
-struct Contact{
-string handle; // handle kontaktu
-string ROID;    // identifikator kontaktu  repository ID
-// string ClID;    // identifikator registratora ktery ma pravo na zmeny
-string CrID;    // identifikator registratora ktery vytvoril kontak
-string UpID;    // identifikator registratora ktery provedl zmeny
-Status stat; // status sequence
-timestamp CrDate; // datum a cas vytvoreni
-timestamp UpDate; // datum a cas zmeny
-// timestamp TrDate;  // datum a cas transferu
-string Name; // jmeno nebo nazev kontaktu
-string Organization; // nazev organizace
-string Street1; // adresa
-string Street2; // adresa
-string Street3; // adresa
-string City;  // obec
-string StateOrProvince;
-string PostalCode; // PSC
-string Country; // plny nazev zeme
-string Telephone;
-string Fax;
-string Email;
-string NotifyEmail; // upozornovaci email
-string VAT; // DIC 
-string SSN; // SSN
-// string AuthInfoPw ; // autentifikace
-boolean DiscloseName; // povolovani zobrazeni
-boolean DiscloseOrganization;
-boolean DiscloseAddress;
-boolean DiscloseTelephone;
-boolean DiscloseFax;
-boolean DiscloseEmail;
-};
+  typedef sequence<any> ExtensionList; 
 
-struct ContactChange{
-string Name; // jmeno nebo nazev kontaktu
-string Organization; // nazev organizace
-string Street1; // adresa
-string Street2; // adresa
-string Street3; // adresa
-string City;  // obec
-string StateOrProvince;
-string PostalCode; // PSC
-string cc; // kod zeme ISO dve pismena velke
-string Telephone;
-string Fax;
-string Email;
-string NotifyEmail; // upozornovaci email
-string VAT; // DIC 
-string SSN; // SSN
-// string AuthInfoPw ; // autentifikace
-disclose DiscloseName; // povolovani zobrazeni
-disclose DiscloseOrganization;
-disclose DiscloseAddress;
-disclose DiscloseTelephone;
-disclose DiscloseFax;
-disclose DiscloseEmail;
-};
+  // struktura pro popis domen
+  struct Domain
+  {
+    string ROID;
+    string name;		// fqdn nazev domeny
+    string Registrant;		// ROID registranta contactu
+    string nsset;		// handle NSSETu
+    Status stat;		// status sequence
+    string ClID;		// identifikator registratora ktery ma pravo na zemnu
+    string CrID;		// identifikator registratora ktery zaznam vytvoril 
+    string UpID;		// identifikator registratora ktery zmenil zaznam
+    timestamp CrDate;		// datum a cas vytvoreni
+    timestamp ExDate;		// taum a cas expirace domeny
+    timestamp UpDate;		// datum a cas update
+    timestamp TrDate;		// datum a cas transferu
+    string AuthInfoPw;		// autentifikace
+    AdminContact admin;		// administrativni kontakty (handle)
+    ExtensionList ext;  // obecne rozsirujici informace 
+  };
+  
+  // pro klienty EPP  protokolu 
+  interface EPP
+  {
+    // pro vraceni serverTRID 
+    Response GetTransaction (in long clientID, in string clTRID,
+			     in short errCode);
 
-struct NSSet{
-string ROID;
-string handle;
-Status stat; // status sequence
-string ClID;    // identifikator registratora ktery ma pravo na zemnu
-string CrID;    // identifikator registratora ktery zaznam vytvoril
-string UpID;    // identifikator registratora ktery zmenil zaznam
-timestamp CrDate; // datum a cas vytvoreni
-timestamp UpDate;  // datum a cas update
-timestamp TrDate;  // datum a cas transferu
-string AuthInfoPw ; // autentifikace
-DNSHost dns; // hosty DNS
-TechContact tech; // sequence handle na technicke kontakty
-};
-
-// struktura pro popis domen
-struct Domain{
-string ROID; 
-string name; // fqdn nazev domeny
-string Registrant; // ROID registranta contactu
-string nsset; // handle NSSETu
-Status stat; // status sequence
-string ClID;    // identifikator registratora ktery ma pravo na zemnu
-string CrID;    // identifikator registratora ktery zaznam vytvoril 
-string UpID;    // identifikator registratora ktery zmenil zaznam
-timestamp CrDate; // datum a cas vytvoreni
-timestamp ExDate; // taum a cas expirace domeny
-timestamp UpDate;  // datum a cas update
-timestamp TrDate;  // datum a cas transferu
-string AuthInfoPw ; // autentifikace
-AdminContact admin; // administrativni kontakty (handle)
-};
-
-// pro klienty EPP  protokolu 
-interface EPP{
-
-   // pro vraceni serverTRID 
-   Response GetTransaction(  in long clientID ,  in string clTRID , in short errCode );
-
-   // poll funkce
-   // potvrezeni prijeti zpravy msgID vraci pocet zbyvajicich zprav a dalsi id zpravy
-   Response PollAcknowledgement( in long msgID , out short count , out long newmsgID , in long clientID ,  in string clTRID );
-   // ziskani zpravy s msgID ze servru
-   // count  celkovy pocet zprav  msgID id zpravy  qDate datum zarazeni do fronty mesg zprava
-   Response PollRequest( out long msgID , out short count , out timestamp qDate , out string mesg ,  in long clientID ,  in string clTRID );
-
-
-   // pro prihlaseni clienta 
-   Response  ClientLogin(in string ClID , in string passwd , in string newpass ,  in string clTRID  ,  out long clientID , in string certID );
-   Response  ClientLogout(in long clientID  , in string clTRID );
-
-   // zjisteni kontaktaktu
-   Response  ContactCheck( in  Check handle  , out Avail a , in long clientID , in string clTRID );
-   // info o kontaktni osobe
-   Response  ContactInfo(  in  string  handle  , out Contact c , in long clientID , in string clTRID );
-   // vymazani kontaktni osoby 
-   Response  ContactDelete( in  string handle  , in long  clientID , in string clTRID );
-   // zmena udaju u kontaktni osoby 
-   // zmena je co je ve strukture  Contact chg 
-   // remove a add je pouze status
-   Response  ContactUpdate(in  string handle ,  in ContactChange c , in Status status_add ,  in Status status_rem ,  in long clientID , in string clTRID  );  
-   // vytvoreni kontaktni osoby 
-   Response  ContactCreate( in  string handle , in ContactChange  c , out timestamp crDate, in long clientID , in string clTRID );
- 
-
-// predelano na NSSET
-   // check hostu
-   Response  NSSetCheck( in Check handle  ,  out Avail a ,  in long clientID , in string clTRID );
-   // info o hostu
-   Response  NSSetInfo( in string handle , out NSSet n, in long clientID , in string clTRID  );
-   // smazani hostu
-   Response  NSSetDelete( in string handle , in long clientID , in string clTRID );
-   // vytvoreni hostu
-   Response  NSSetCreate( in string handle, in string authInfoPw, in TechContact tech , in DNSHost dns, out timestamp crDate, in long clientID , in string clTRID );
-   // zmena udaju update  change pouze authInfo 
-   // pridat nebo zrusit pouze TechContact 
-   // dns_rem zrusene dns hosty 
-   // dns_add pridane dns hosty
-   Response  NSSetUpdate( in string handle ,  in string authInfo_chg , in DNSHost dns_add , in DNSHost dns_rem , in TechContact tech_add,  in TechContact tech_rem, in Status status_add ,  in Status status_rem , in long clientID , in string clTRID );
-
-   // prevod nssetu
-   Response NSSetTransfer( in string handle ,  in string authInfo , in long clientID , in string clTRID );
+    // poll funkce
+    // potvrezeni prijeti zpravy msgID vraci pocet zbyvajicich zprav a 
+    // dalsi id zpravy
+    Response PollAcknowledgement (in long msgID, out short count,
+				  out long newmsgID, in long clientID,
+				  in string clTRID);
+    // ziskani zpravy s msgID ze servru
+    // count  celkovy pocet zprav  msgID id zpravy  qDate datum zarazeni 
+    // do fronty mesg zprava
+    Response PollRequest (out long msgID, out short count,
+			  out timestamp qDate, out string mesg,
+			  in long clientID, in string clTRID);
 
 
-//  funkce na spravu domen
-   Response  DomainCheck( in Check fqdn  ,  out Avail a , in long clientID , in string clTRID );
-   Response  DomainInfo( in string fqdn , out Domain d , in long clientID , in string clTRID );
-   Response  DomainDelete( in string fqdn , in long clientID , in string clTRID );
+    // pro prihlaseni clienta 
+    Response ClientLogin (in string ClID, in string passwd, in string newpass,
+			  in string clTRID, out long clientID,
+			  in string certID);
+    Response ClientLogout (in long clientID, in string clTRID);
 
-   // Data elements that can be changed: registrant authInfo and nsset
-   // Data elements that can be added or removed: admin contact and status 
-   Response  DomainUpdate( in string fqdn , in string registrant_chg  , in string  authInfo_chg, in string nsset_chg, in AdminContact admin_add , in  AdminContact  admin_rem , in Status status_add ,  in Status status_rem  , in long clientID , in string clTRID );
-   Response  DomainCreate( in string fqdn, in string Registrant, in string nsset,in string AuthInfoPw, in short period , in AdminContact admin, out timestamp crDate, out timestamp exDate, in long clientID , in string clTRID );
+    // zjisteni kontaktaktu
+    Response ContactCheck (in Check handle, out Avail a, in long clientID,
+			   in string clTRID);
+    // info o kontaktni osobe
+    Response ContactInfo (in string handle, out Contact c, in long clientID,
+			  in string clTRID);
+    // vymazani kontaktni osoby 
+    Response ContactDelete (in string handle, in long clientID,
+			    in string clTRID);
+    // zmena udaju u kontaktni osoby 
+    // zmena je co je ve strukture  Contact chg 
+    // remove a add je pouze status
+    Response ContactUpdate (in string handle, in ContactChange c,
+			    in Status status_add, in Status status_rem,
+			    in long clientID, in string clTRID);
+    // vytvoreni kontaktni osoby 
+    Response ContactCreate (in string handle, in ContactChange c,
+			    out timestamp crDate, in long clientID,
+			    in string clTRID);
 
-   // doba prodlouzeni period je v mesicich
-   Response  DomainRenew( in string fqdn , in timestamp curExpDate ,  in short period , out timestamp exDate, in long clientID ,  in string clTRID );
-   // transfer funkce 
-   Response DomainTransfer( in string fqdn  , in string authInfo , in long clientID , in string clTRID );
-   // trade funkce
-   Response DomainTrade(  in string fqdn, in string  old_registrant , in string new_registrant, in string authInfo ,  in long clientID , in string clTRID );
+    // predelano na NSSET
+    // check hostu
+    Response NSSetCheck (in Check handle, out Avail a, in long clientID,
+			 in string clTRID);
+    // info o hostu
+    Response NSSetInfo (in string handle, out NSSet n, in long clientID,
+			in string clTRID);
+    // smazani hostu
+    Response NSSetDelete (in string handle, in long clientID,
+			  in string clTRID);
+    // vytvoreni hostu
+    Response NSSetCreate (in string handle, in string authInfoPw,
+			  in TechContact tech, in DNSHost dns,
+			  out timestamp crDate, in long clientID,
+			  in string clTRID);
+    // zmena udaju update  change pouze authInfo 
+    // pridat nebo zrusit pouze TechContact 
+    // dns_rem zrusene dns hosty 
+    // dns_add pridane dns hosty
+    Response NSSetUpdate (in string handle, in string authInfo_chg,
+			  in DNSHost dns_add, in DNSHost dns_rem,
+			  in TechContact tech_add, in TechContact tech_rem,
+			  in Status status_add, in Status status_rem,
+			  in long clientID, in string clTRID);
+
+    // prevod nssetu
+    Response NSSetTransfer (in string handle, in string authInfo,
+			    in long clientID, in string clTRID );
 
 
-};
+    //  funkce na spravu domen
+    Response DomainCheck (in Check fqdn, out Avail a, in long clientID,
+			  in string clTRID);
+    Response DomainInfo (in string fqdn, out Domain d, in long clientID,
+			 in string clTRID);
+    Response DomainDelete (in string fqdn, in long clientID,
+			   in string clTRID);
 
-// struktura
-struct DomainWhois{
-string name;
-// string description; // popis domeny ted tam je 
-short status; // status 1 REGISTRED - 0 FREE
-timestamp created;
-timestamp expired;
-string registrarName;  // jmeno registratora
-string registrarUrl; // odkaz na jeho webovou adresu
-NameServers ns; // sequence nameservru
-string nsset; // handle NSSETu
-TechContact tech; // sequence handle na technicke kontakty
-AdminContact admin; // administrativni kontakty (handle)
-};
+    // Data elements that can be changed: registrant authInfo and nsset
+    // Data elements that can be added or removed: admin contact and status 
+    Response DomainUpdate (in string fqdn, in string registrant_chg,
+			   in string authInfo_chg, in string nsset_chg,
+			   in AdminContact admin_add,
+			   in AdminContact admin_rem, in Status status_add,
+			   in Status status_rem, in long clientID,
+			   in string clTRID,
+			   in ExtensionList ext);
+    Response DomainCreate (in string fqdn, in string Registrant,
+			   in string nsset, in string AuthInfoPw,
+			   in short period, in AdminContact admin,
+			   out timestamp crDate, out timestamp exDate,
+			   in long clientID, in string clTRID,
+			   in ExtensionList ext);
 
-interface Whois{
+    // doba prodlouzeni period je v mesicich
+    Response DomainRenew (in string fqdn, in timestamp curExpDate,
+			  in short period, out timestamp exDate,
+			  in long clientID, in string clTRID,
+			  in ExtensionList ext);			  
+    // transfer funkce 
+    Response DomainTransfer (in string fqdn, in string authInfo,
+              in long clientID, in string clTRID,
+              in ExtensionList ext);
+    // trade funkce
+    Response DomainTrade (in string fqdn, in string old_registrant,
+			  in string new_registrant, in string authInfo,
+			  in long clientID, in string clTRID);
+
+  };
+
+  // struktura
+  struct DomainWhois
+  {
+    string name;
+    // string description; // popis domeny ted tam je 
+    short status;		// status 1 REGISTRED - 0 FREE
+    timestamp created;
+    timestamp expired;
+    string registrarName;	// jmeno registratora
+    string registrarUrl;	// odkaz na jeho webovou adresu
+    NameServers ns;		// sequence nameservru
+    string nsset;		// handle NSSETu
+    TechContact tech;		// sequence handle na technicke kontakty
+    AdminContact admin;		// administrativni kontakty (handle)
+  };
+
+  interface Whois
+  {
     // vraci identifikaci domeny pro whois server podle nazvu
-    DomainWhois Domain( in string  domain_name );
-};
+    DomainWhois Domain (in string domain_name);
+  };
 
+  // administratorske rozhrani
+  interface Admin
+  {
 
-// administratorske rozhrani
-interface Admin{
-
-};
+  };
 
 };
