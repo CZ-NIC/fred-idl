@@ -52,7 +52,7 @@ module ccReg
     string City;		// obec
     string StateOrProvince;
     string PostalCode;		// PSC
-    string Country;		// kod zeme ISO dve pismena velke
+    string Country;		// nazev zeme z enum_country
     string Telephone;
     string Fax;
     string Email;
@@ -77,7 +77,7 @@ module ccReg
     string City;		// obec
     string StateOrProvince;
     string PostalCode;		// PSC
-    string Country;		// kod zeme ISO dve pismena velke
+    string CC;		        // country code dvojmistny kod zeme ISO 
     string Telephone;
     string Fax;
     string Email;
