@@ -16,6 +16,7 @@ module ccReg
   {
     short errCode;		// chybove hlaseni
     string svTRID;		// server transaction ID
+    strinf errMsg;              // chybova zprava 
   };
 
   typedef sequence < string > NameServers;
