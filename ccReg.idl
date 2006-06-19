@@ -140,7 +140,8 @@ module ccReg
   {
     // pro vraceni serverTRID 
     Response GetTransaction (in long clientID, in string clTRID,
-			     in short errCode);
+			     in short errCode , in string lang );
+ 
 
     // poll funkce
     // potvrezeni prijeti zpravy msgID vraci pocet zbyvajicich zprav a 
@@ -159,7 +160,7 @@ module ccReg
     // pro prihlaseni clienta 
     Response ClientLogin (in string ClID, in string passwd, in string newpass,
 			  in string clTRID, out long clientID,
-			  in string certID);
+			  in string certID , in string lang );
     Response ClientLogout (in long clientID, in string clTRID);
 
     // zjisteni kontaktaktu
