@@ -140,7 +140,7 @@ module ccReg
   {
     // pro vraceni serverTRID 
     Response GetTransaction (in long clientID, in string clTRID,
-			     in short errCode , in string lang );
+			     in short errCode  );
  
 
     // poll funkce
