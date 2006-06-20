@@ -11,6 +11,10 @@ module ccReg
   enum TransferFunc
   { Approve, Cancel, Query, Reject, Request };
 
+  // komunikacni jazyky
+  enum Languages  { EN , CS }; // 0 default anglictina 1 cestina
+  typedef short lang;
+
   // vracena struktura 
   struct Response
   {
@@ -160,7 +164,7 @@ module ccReg
     // pro prihlaseni clienta 
     Response ClientLogin (in string ClID, in string passwd, in string newpass,
 			  in string clTRID, out long clientID,
-			  in string certID , in string lang );
+			  in string certID , in lang language );
     Response ClientLogout (in long clientID, in string clTRID);
 
     // zjisteni kontaktaktu
