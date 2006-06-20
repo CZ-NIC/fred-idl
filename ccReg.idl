@@ -117,7 +117,7 @@ module ccReg
     timestamp valExDate; // datum expirace overeni validity
   };
 
-  typedef sequence<any> ExtensionList; 
+ typedef sequence<any> ExtensionList;  
 
   // struktura pro popis domen
   struct Domain
@@ -248,8 +248,7 @@ module ccReg
 			  in ExtensionList ext);			  
     // transfer funkce 
     Response DomainTransfer (in string fqdn, in string authInfo,
-              in long clientID, in string clTRID,
-              in ExtensionList ext);
+              in long clientID, in string clTRID );
     // trade funkce
     Response DomainTrade (in string fqdn, in string old_registrant,
 			  in string new_registrant, in string authInfo,
