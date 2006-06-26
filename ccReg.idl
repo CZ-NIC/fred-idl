@@ -5,7 +5,7 @@ module ccReg
 {
   typedef unsigned long long timestamp;
 
-  typedef short disclose;	// pro modifikace -1 zadna zmena 0 nastavi na false 1 nastavi na true
+  typedef short disclose; // pro modifikace -1 zadna zmena 0 nastavi na false 1 nastavi na true
 
   // typy funkci pro transfer
   enum TransferFunc
@@ -13,14 +13,22 @@ module ccReg
 
   // komunikacni jazyky
   enum Languages  { EN , CS }; // 0 default anglictina 1 cestina
-//   typedef short lang;
+
+  struct Error_seq
+  {
+    string value;		// text zadany klientem, ktery zpusobil chybu
+    string reason;		// duvod chyby, textovy popis
+  };
+
+  typedef sequence < Error_seq > Error;
 
   // vracena struktura 
   struct Response
   {
-    short errCode;		// chybove hlaseni
+    short errCode;		// navratovy kod definovany EPP protokolem
+    string errMsg;              // zprava prislusejici navratovemu kodu
     string svTRID;		// server transaction ID
-    string errMsg;              // chybova zprava 
+    Error errors;		// chyby
   };
 
   typedef sequence < string > NameServers;
@@ -29,7 +37,6 @@ module ccReg
   typedef sequence < string > AdminContact;
   typedef sequence < string > Check;	// sequence pro check
   typedef sequence < short > Avail;	// jednicka ci nula 
-
   typedef sequence < string > Status;	// vraceny status je sequence stringu 
 
   struct DNSHost_str
@@ -138,7 +145,37 @@ module ccReg
     AdminContact admin;		// administrativni kontakty (handle)
     ExtensionList ext;  // obecne rozsirujici informace 
   };
-  
+ 
+  // specifikace chybneho parametru (odvozen od nazvu funkce a parametru)
+  enum ErrorSpec {
+	pollAck_msgID,
+	contactUpdate_status_add,
+	contactUpdate_status_rem,
+	nssetCreate_tech,
+	nssetCreate_dns,
+	nssetUpdate_dns_add,
+	nssetUpdate_dns_rem,
+	nssetUpdate_tech_add,
+	nssetUpdate_tech_rem,
+	nssetUpdate_status_add,
+	nssetUpdate_status_rem,
+	domainCreate_registrant,
+	domainCreate_nsset,
+	domainCreate_period,
+	domainCreate_admin,
+	domainCreate_ext_valdate,
+	domainUpdate_registrant,
+	domainUpdate_nsset,
+	domainUpdate_admin_add,
+	domainUpdate_admin_rem,
+	domainUpdate_status_add,
+	domainUpdate_status_rem,
+	domainUpdate_ext_valdate,
+	domainRenew_curExpDate,
+	domainRenew_period,
+	domainRenew_ext_valDate
+  };
+
   // pro klienty EPP  protokolu 
   interface EPP
   {
@@ -249,11 +286,6 @@ module ccReg
     // transfer funkce 
     Response DomainTransfer (in string fqdn, in string authInfo,
               in long clientID, in string clTRID );
-    // trade funkce
-    Response DomainTrade (in string fqdn, in string old_registrant,
-			  in string new_registrant, in string authInfo,
-			  in long clientID, in string clTRID);
-
   };
 
   // struktura
