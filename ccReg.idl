@@ -14,9 +14,44 @@ module ccReg
   // komunikacni jazyky
   enum Languages  { EN , CS }; // 0 default anglictina 1 cestina
 
+  // specifikace chybneho parametru (odvozen od nazvu funkce a parametru)
+  enum ErrorSpec {
+	pollAck_msgID,
+	contactUpdate_status_add,
+	contactUpdate_status_rem,
+	nssetCreate_tech,
+	nssetCreate_ns_name,
+	nssetCreate_ns_addr,
+	nssetUpdate_ns_name_add,
+	nssetUpdate_ns_addr_add,
+	nssetUpdate_ns_name_rem,
+	nssetUpdate_ns_addr_rem,
+	nssetUpdate_tech_add,
+	nssetUpdate_tech_rem,
+	nssetUpdate_status_add,
+	nssetUpdate_status_rem,
+	domainCreate_registrant,
+	domainCreate_nsset,
+	domainCreate_period,
+	domainCreate_admin,
+	domainCreate_ext_valdate,
+	domainUpdate_registrant,
+	domainUpdate_nsset,
+	domainUpdate_admin_add,
+	domainUpdate_admin_rem,
+	domainUpdate_status_add,
+	domainUpdate_status_rem,
+	domainUpdate_ext_valdate,
+	domainRenew_curExpDate,
+	domainRenew_period,
+	domainRenew_ext_valDate
+  };
+
   struct Error_seq
   {
-    string value;		// text zadany klientem, ktery zpusobil chybu
+    ErrorSpec code;		// kod chyby (urcuje funkci a parametr) - nutny
+    				// pro spravne doplneni xml tagu v EPP serveru
+    string value;		// hodnota zadana klientem, ktera zpusobila chybu
     string reason;		// duvod chyby, textovy popis
   };
 
@@ -146,36 +181,6 @@ module ccReg
     ExtensionList ext;  // obecne rozsirujici informace 
   };
  
-  // specifikace chybneho parametru (odvozen od nazvu funkce a parametru)
-  enum ErrorSpec {
-	pollAck_msgID,
-	contactUpdate_status_add,
-	contactUpdate_status_rem,
-	nssetCreate_tech,
-	nssetCreate_dns,
-	nssetUpdate_dns_add,
-	nssetUpdate_dns_rem,
-	nssetUpdate_tech_add,
-	nssetUpdate_tech_rem,
-	nssetUpdate_status_add,
-	nssetUpdate_status_rem,
-	domainCreate_registrant,
-	domainCreate_nsset,
-	domainCreate_period,
-	domainCreate_admin,
-	domainCreate_ext_valdate,
-	domainUpdate_registrant,
-	domainUpdate_nsset,
-	domainUpdate_admin_add,
-	domainUpdate_admin_rem,
-	domainUpdate_status_add,
-	domainUpdate_status_rem,
-	domainUpdate_ext_valdate,
-	domainRenew_curExpDate,
-	domainRenew_period,
-	domainRenew_ext_valDate
-  };
-
   // pro klienty EPP  protokolu 
   interface EPP
   {
