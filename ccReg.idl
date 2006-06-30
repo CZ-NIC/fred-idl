@@ -20,6 +20,11 @@ module ccReg
 	pollAck_msgID,
 	contactCreate_cc, // kod zeme pri vytvoreni kontaktu
 	contactUpdate_cc, // kod zeme pri updatu kontaktu
+
+        contactCreate_handle, // nespravny format handlu
+        nssetCreate_handle,
+
+        // NEJSOU HOTOVY 
 	contactUpdate_status_add,
 	contactUpdate_status_rem,
 	nssetCreate_tech,
