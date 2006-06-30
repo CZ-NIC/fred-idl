@@ -16,9 +16,10 @@ module ccReg
 
   // specifikace chybneho parametru (odvozen od nazvu funkce a parametru)
   enum ErrorSpec {
-        unknow, 
+	unknow, 
 	pollAck_msgID,
-        contactCreate_cc, // kod zeme pri vytvoreni kontaktu
+	contactCreate_cc, // kod zeme pri vytvoreni kontaktu
+	contactUpdate_cc, // kod zeme pri updatu kontaktu
 	contactUpdate_status_add,
 	contactUpdate_status_rem,
 	nssetCreate_tech,
