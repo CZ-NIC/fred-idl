@@ -102,7 +102,7 @@ module ccReg
     string City;		// obec
     string StateOrProvince;
     string PostalCode;		// PSC
-    string Country;		// nazev zeme z enum_country
+    string CountryCode;		// ISO kod
     string Telephone;
     string Fax;
     string Email;
