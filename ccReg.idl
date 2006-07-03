@@ -21,9 +21,9 @@ module ccReg
 	contactCreate_cc, // kod zeme pri vytvoreni kontaktu
 	contactUpdate_cc, // kod zeme pri updatu kontaktu
 
-        contactCreate_handle, // nespravny format handlu
-        nssetCreate_handle,
-        domainCreate_fqdn, // spatny nazev domeny
+	contactCreate_handle, // nespravny format handlu
+	nssetCreate_handle,
+	domainCreate_fqdn, // spatny nazev domeny
 
         // NEJSOU DODELANY
 	contactUpdate_status_add,
