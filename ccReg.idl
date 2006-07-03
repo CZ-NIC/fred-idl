@@ -7,12 +7,12 @@ module ccReg
 
   typedef short disclose; // pro modifikace -1 zadna zmena 0 nastavi na false 1 nastavi na true
 
-  // typy funkci pro transfer
-  enum TransferFunc
-  { Approve, Cancel, Query, Reject, Request };
 
   // komunikacni jazyky
   enum Languages  { EN , CS }; // 0 default anglictina 1 cestina
+  
+  // vracena hodnota avail v check funkcich  
+  enum CheckAvail { Exist , NotExist , BadFormat , BlackList }; // navrh na vraceni pri Check
 
   // specifikace chybneho parametru (odvozen od nazvu funkce a parametru)
   enum ErrorSpec {
@@ -23,8 +23,9 @@ module ccReg
 
         contactCreate_handle, // nespravny format handlu
         nssetCreate_handle,
+        domainCreate_fqdn, // spatny nazev domeny
 
-        // NEJSOU HOTOVY 
+        // NEJSOU DODELANY
 	contactUpdate_status_add,
 	contactUpdate_status_rem,
 	nssetCreate_tech,
@@ -79,7 +80,7 @@ module ccReg
   typedef sequence < string > TechContact;
   typedef sequence < string > AdminContact;
   typedef sequence < string > Check;	// sequence pro check
-  typedef sequence < short > Avail;	// jednicka ci nula 
+  typedef sequence < short > Avail;    // jednicka ci nula
   typedef sequence < string > Status;	// vraceny status je sequence stringu 
 
   struct DNSHost_str
