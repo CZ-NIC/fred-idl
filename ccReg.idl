@@ -25,35 +25,34 @@ module ccReg
 	nssetCreate_handle,
 	domainCreate_fqdn, // spatny nazev domeny
 
-        // NEJSOU DODELANY
 	contactUpdate_status_add,
 	contactUpdate_status_rem,
 	nssetCreate_tech,
-	nssetCreate_ns_name,
-	nssetCreate_ns_addr,
-	nssetUpdate_ns_name_add,
-	nssetUpdate_ns_addr_add,
-	nssetUpdate_ns_name_rem,
-	nssetUpdate_ns_addr_rem,
+	nssetCreate_ns_name, // TODO
+	nssetCreate_ns_addr, // TODO
+	nssetUpdate_ns_name_add,// TODO
+	nssetUpdate_ns_addr_add,// TODO
+	nssetUpdate_ns_name_rem, // TODO
+	nssetUpdate_ns_addr_rem,// TODO
 	nssetUpdate_tech_add,
 	nssetUpdate_tech_rem,
 	nssetUpdate_status_add,
 	nssetUpdate_status_rem,
 	domainCreate_registrant,
 	domainCreate_nsset,
-	domainCreate_period,
+	domainCreate_period,// TODO
 	domainCreate_admin,
-	domainCreate_ext_valdate,
+	domainCreate_ext_valdate,// TODO
 	domainUpdate_registrant,
 	domainUpdate_nsset,
 	domainUpdate_admin_add,
 	domainUpdate_admin_rem,
 	domainUpdate_status_add,
 	domainUpdate_status_rem,
-	domainUpdate_ext_valdate,
-	domainRenew_curExpDate,
-	domainRenew_period,
-	domainRenew_ext_valDate
+	domainUpdate_ext_valdate,// TODO
+	domainRenew_curExpDate,// TODO
+	domainRenew_period,// TODO
+	domainRenew_ext_valDate// TODO
   };
 
   struct Error_seq
@@ -193,6 +192,8 @@ module ccReg
   // pro klienty EPP  protokolu 
   interface EPP
   {
+    string version(); // vraceni cisla verze
+
     // pro vraceni serverTRID 
     Response GetTransaction (in long clientID, in string clTRID,
 			     in short errCode  );
