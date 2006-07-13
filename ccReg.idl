@@ -50,16 +50,17 @@ module ccReg
 	domainUpdate_status_add,
 	domainUpdate_status_rem,
 	domainUpdate_ext_valdate,// TODO
-	domainRenew_curExpDate,// TODO
-	domainRenew_period,// TODO
-	domainRenew_ext_valDate// TODO
+	domainRenew_curExpDate,
+	domainRenew_period,
+	domainRenew_ext_valDate
   };
 
   struct Error_seq
   {
     ErrorSpec code;		// kod chyby (urcuje funkci a parametr) - nutny
     				// pro spravne doplneni xml tagu v EPP serveru
-    string value;		// hodnota zadana klientem, ktera zpusobila chybu
+    any value;		        // hodnota zadana klientem, ktera zpusobila chybu
+                                // string timestamp Long 
     string reason;		// duvod chyby, textovy popis
   };
 
