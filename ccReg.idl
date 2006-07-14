@@ -24,35 +24,36 @@ module ccReg
 	contactCreate_handle, // nespravny format handlu
 	nssetCreate_handle,
 	domainCreate_fqdn, // spatny nazev domeny
-
-	contactUpdate_status_add,
-	contactUpdate_status_rem,
-	nssetCreate_tech,
-	nssetCreate_ns_name, // TODO
-	nssetCreate_ns_addr, // TODO
-	nssetUpdate_ns_name_add,// TODO
-	nssetUpdate_ns_addr_add,// TODO
-	nssetUpdate_ns_name_rem, // TODO
-	nssetUpdate_ns_addr_rem,// TODO
-	nssetUpdate_tech_add,
-	nssetUpdate_tech_rem,
-	nssetUpdate_status_add,
-	nssetUpdate_status_rem,
-	domainCreate_registrant,
-	domainCreate_nsset,
-	domainCreate_period,// TODO
-	domainCreate_admin,
-	domainCreate_ext_valdate,// TODO
-	domainUpdate_registrant,
-	domainUpdate_nsset,
-	domainUpdate_admin_add,
-	domainUpdate_admin_rem,
-	domainUpdate_status_add,
-	domainUpdate_status_rem,
-	domainUpdate_ext_valdate,// TODO
-	domainRenew_curExpDate,
-	domainRenew_period,
-	domainRenew_ext_valDate
+        domainUpdate_fqdn, // spatny nazev domeny
+        domainRenew_fqdn, // spatny nazev domeny 
+        contactUpdate_status_add,
+        contactUpdate_status_rem,
+        nssetCreate_tech,
+        nssetCreate_ns_name, // TODO
+        nssetCreate_ns_addr, // TODO
+        nssetUpdate_ns_name_add,// TODO
+        nssetUpdate_ns_addr_add,// TODO
+        nssetUpdate_ns_name_rem, // TODO
+        nssetUpdate_ns_addr_rem,// TODO
+        nssetUpdate_tech_add,
+        nssetUpdate_tech_rem,
+        nssetUpdate_status_add,
+        nssetUpdate_status_rem,
+        domainCreate_registrant,
+        domainCreate_nsset,
+        domainCreate_period,
+        domainCreate_admin,
+        domainCreate_ext_valDate,
+        domainUpdate_registrant,
+        domainUpdate_nsset,
+        domainUpdate_admin_add,
+        domainUpdate_admin_rem,
+        domainUpdate_status_add,
+        domainUpdate_status_rem,
+        domainUpdate_ext_valDate,
+        domainRenew_curExpDate,
+        domainRenew_period,
+        domainRenew_ext_valDate
   };
 
   struct Error_seq
