@@ -29,12 +29,12 @@ module ccReg
         contactUpdate_status_add,
         contactUpdate_status_rem,
         nssetCreate_tech,
-        nssetCreate_ns_name, // TODO
-        nssetCreate_ns_addr, // TODO
-        nssetUpdate_ns_name_add,// TODO
-        nssetUpdate_ns_addr_add,// TODO
-        nssetUpdate_ns_name_rem, // TODO
-        nssetUpdate_ns_addr_rem,// TODO
+        nssetCreate_ns_name, 
+        nssetCreate_ns_addr, 
+        nssetUpdate_ns_name_add,
+        nssetUpdate_ns_addr_add,
+        nssetUpdate_ns_name_rem, 
+        nssetUpdate_ns_addr_rem,
         nssetUpdate_tech_add,
         nssetUpdate_tech_rem,
         nssetUpdate_status_add,
@@ -53,10 +53,7 @@ module ccReg
         domainUpdate_ext_valDate,
         domainRenew_curExpDate,
         domainRenew_period,
-        domainRenew_ext_valDate,
-        nssetUpdate_ns_host_min, // nulovy pocet DNS hostu po update
-        nssetUpdate_ns_host_max // vice nez maximalni pocet DNS hostu po update
-
+        domainRenew_ext_valDate
   };
 
   struct Error_seq
