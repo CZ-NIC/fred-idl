@@ -53,7 +53,10 @@ module ccReg
         domainUpdate_ext_valDate,
         domainRenew_curExpDate,
         domainRenew_period,
-        domainRenew_ext_valDate
+        domainRenew_ext_valDate,
+        nssetUpdate_ns_host_min, // nulovy pocet DNS hostu po update
+        nssetUpdate_ns_host_max // vice nez maximalni pocet DNS hostu po update
+
   };
 
   struct Error_seq
