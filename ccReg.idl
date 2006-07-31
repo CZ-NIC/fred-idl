@@ -330,6 +330,38 @@ module ccReg
   // administratorske rozhrani
   interface Admin
   {
+    // zpristupni interface EPP
+    EPP getEpp();
+
+    // vycet typu objektu spravovanych registrem
+    enum RegObjectType { CCTLD_DOMAIN, ENUM_DOMAIN, NSSET, CONTACT };
+    // vrati typ objektu, ktery je evidovan pod danym jmenem
+    RegObjectType getRegObjectType(in string objectName);
+
+    // detail registratora
+    struct Registrar {
+       long id;
+       string handle;
+       string name;
+       string organization;
+       string street1;
+       string street2;
+       string street3;
+       string city;
+       string stateorprovince;
+       string postalcode;
+       string country;
+       string telephone;
+       string fax;
+       string email;
+       string url;
+    };
+    // typ seznamu registratoru 
+    typedef sequence<Registrar> RegistrarList;
+    // vrati kompletni seznam registratoru
+    RegistrarList getRegistrars();
+    // najde jednoho registratora
+    Registrar getRegistrarByHandle(in string handle);
 
   };
 
