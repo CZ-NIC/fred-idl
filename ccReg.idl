@@ -10,6 +10,9 @@ module ccReg
 
   // komunikacni jazyky
   enum Languages  { EN , CS }; // 0 default anglictina 1 cestina
+
+  enum RegObjectType { NONE , CZ_DOMAIN, ENUM_DOMAIN,  CONTACT_HANDLE , NSSET_HANDLE };
+
   
   // vracena hodnota avail v check funkcich  
   enum CheckAvail { Exist , NotExist , BadFormat , BlackList }; // navrh na vraceni pri Check
@@ -209,9 +212,12 @@ module ccReg
        string email;
        string url;
     };
-    // typ seznamu registratoru 
-      typedef sequence<Registrar> RegistrarList;
 
+    // typ seznamu registratoru 
+    typedef sequence<Registrar> RegistrarList;
+
+
+  typedef sequence < string > Lists;
  
   // pro klienty EPP  protokolu 
   interface EPP
@@ -332,6 +338,20 @@ module ccReg
     // najde jednoho registratora
     Registrar getRegistrarByHandle(in string handle);
 
+    // List funkce na vypis
+    Lists ListRegistrar(); 
+    Lists ListDomain(); 
+    Lists ListContact(); 
+    Lists ListNSSet(); 
+
+    // vycet typu objektu spravovanych registrem
+
+
+   // vrati typ objektu, ktery je evidovan pod danym jmenem
+    RegObjectType getRegObjectType(in string objectName);
+
+
+
 
   };
 
@@ -363,11 +383,6 @@ module ccReg
     // zpristupni interface EPP
 //    EPP getEpp();
 
-    // vycet typu objektu spravovanych registrem
-  //  enum RegObjectType { CCTLD_DOMAIN, ENUM_DOMAIN, NSSET, CONTACT };
-    // vrati typ objektu, ktery je evidovan pod danym jmenem
-  //  RegObjectType getRegObjectType(in string objectName);
-//
 
   };
 
