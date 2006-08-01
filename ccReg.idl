@@ -219,9 +219,12 @@ module ccReg
 
   typedef sequence < string > Lists;
  
+  interface Admin;
   // pro klienty EPP  protokolu 
   interface EPP
   {
+    Admin getAdmin();
+
     string version(); // vraceni cisla verze
 
     // pro vraceni serverTRID 
@@ -332,18 +335,6 @@ module ccReg
     Response DomainTransfer (in string fqdn, in string authInfo,
               in long clientID, in string clTRID );
 
-
-    // vrati kompletni seznam registratoru
-    RegistrarList getRegistrars();
-    // najde jednoho registratora
-    Registrar getRegistrarByHandle(in string handle);
-
-    // List funkce na vypis
-    Lists ListRegistrar(); 
-    Lists ListDomain(); 
-    Lists ListContact(); 
-    Lists ListNSSet(); 
-
     // vycet typu objektu spravovanych registrem
 
 
@@ -380,10 +371,16 @@ module ccReg
   // administratorske rozhrani
   interface Admin
   {
-    // zpristupni interface EPP
-//    EPP getEpp();
+    // vrati kompletni seznam registratoru
+    RegistrarList getRegistrars();
+    // najde jednoho registratora
+    Registrar getRegistrarByHandle(in string handle);
 
-
+    // List funkce na vypis
+    Lists ListRegistrar(); 
+    Lists ListDomain(); 
+    Lists ListContact(); 
+    Lists ListNSSet(); 
   };
 
 };
