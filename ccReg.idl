@@ -190,6 +190,28 @@ module ccReg
     AdminContact admin;		// administrativni kontakty (handle)
     ExtensionList ext;  // obecne rozsirujici informace 
   };
+
+    // detail registratora
+    struct Registrar {
+       long id;
+       string handle;
+       string name;
+       string organization;
+       string street1;
+       string street2;
+       string street3;
+       string city;
+       string stateorprovince;
+       string postalcode;
+       string country;
+       string telephone;
+       string fax;
+       string email;
+       string url;
+    };
+    // typ seznamu registratoru 
+      typedef sequence<Registrar> RegistrarList;
+
  
   // pro klienty EPP  protokolu 
   interface EPP
@@ -303,6 +325,14 @@ module ccReg
     // transfer funkce 
     Response DomainTransfer (in string fqdn, in string authInfo,
               in long clientID, in string clTRID );
+
+
+    // vrati kompletni seznam registratoru
+    RegistrarList getRegistrars();
+    // najde jednoho registratora
+    Registrar getRegistrarByHandle(in string handle);
+
+
   };
 
   // struktura
@@ -331,37 +361,13 @@ module ccReg
   interface Admin
   {
     // zpristupni interface EPP
-    EPP getEpp();
+//    EPP getEpp();
 
     // vycet typu objektu spravovanych registrem
-    enum RegObjectType { CCTLD_DOMAIN, ENUM_DOMAIN, NSSET, CONTACT };
+  //  enum RegObjectType { CCTLD_DOMAIN, ENUM_DOMAIN, NSSET, CONTACT };
     // vrati typ objektu, ktery je evidovan pod danym jmenem
-    RegObjectType getRegObjectType(in string objectName);
-
-    // detail registratora
-    struct Registrar {
-       long id;
-       string handle;
-       string name;
-       string organization;
-       string street1;
-       string street2;
-       string street3;
-       string city;
-       string stateorprovince;
-       string postalcode;
-       string country;
-       string telephone;
-       string fax;
-       string email;
-       string url;
-    };
-    // typ seznamu registratoru 
-    typedef sequence<Registrar> RegistrarList;
-    // vrati kompletni seznam registratoru
-    RegistrarList getRegistrars();
-    // najde jednoho registratora
-    Registrar getRegistrarByHandle(in string handle);
+  //  RegObjectType getRegObjectType(in string objectName);
+//
 
   };
 
