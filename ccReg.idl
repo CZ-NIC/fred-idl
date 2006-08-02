@@ -371,10 +371,11 @@ module ccReg
   // administratorske rozhrani
   interface Admin
   {
+    exception ObjectNotFound {};
     // vrati kompletni seznam registratoru
     RegistrarList getRegistrars();
     // najde jednoho registratora
-    Registrar getRegistrarByHandle(in string handle);
+    Registrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
 
     // List funkce na vypis
     Lists ListRegistrar(); 
