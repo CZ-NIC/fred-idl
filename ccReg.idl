@@ -237,56 +237,56 @@ module ccReg
     // dalsi id zpravy
     Response PollAcknowledgement (in long msgID, out short count,
 				  out long newmsgID, in long clientID,
-				  in string clTRID);
+				  in string clTRID , in string XML );
     // ziskani zpravy s msgID ze servru
     // count  celkovy pocet zprav  msgID id zpravy  qDate datum zarazeni 
     // do fronty mesg zprava
     Response PollRequest (out long msgID, out short count,
 			  out timestamp qDate, out string mesg,
-			  in long clientID, in string clTRID);
+			  in long clientID, in string clTRID , in string XML );
 
 
     // pro prihlaseni clienta 
     Response ClientLogin (in string ClID, in string passwd, in string newpass,
-			  in string clTRID, out long clientID,
+			  in string clTRID,  in string XML ,  out long clientID,
 			  in string certID , in Languages  lang );
-    Response ClientLogout (in long clientID, in string clTRID);
+    Response ClientLogout (in long clientID, in string clTRID , in string XML);
 
     // zjisteni kontaktaktu
     Response ContactCheck (in Check handle, out Avail a, in long clientID,
-			   in string clTRID);
+			   in string clTRID, in string XML);
     // info o kontaktni osobe
     Response ContactInfo (in string handle, out Contact c, in long clientID,
-			  in string clTRID);
+			  in string clTRID, in string XML);
     // vymazani kontaktni osoby 
     Response ContactDelete (in string handle, in long clientID,
-			    in string clTRID);
+			    in string clTRID, in string XML);
     // zmena udaju u kontaktni osoby 
     // zmena je co je ve strukture  Contact chg 
     // remove a add je pouze status
     Response ContactUpdate (in string handle, in ContactChange c,
 			    in Status status_add, in Status status_rem,
-			    in long clientID, in string clTRID);
+			    in long clientID, in string clTRID , in string XML);
     // vytvoreni kontaktni osoby 
     Response ContactCreate (in string handle, in ContactChange c,
 			    out timestamp crDate, in long clientID,
-			    in string clTRID);
+			    in string clTRID, in string XML );
 
     // predelano na NSSET
     // check hostu
     Response NSSetCheck (in Check handle, out Avail a, in long clientID,
-			 in string clTRID);
+			 in string clTRID, in string XML );
     // info o hostu
     Response NSSetInfo (in string handle, out NSSet n, in long clientID,
-			in string clTRID);
+			in string clTRID, in string XML);
     // smazani hostu
     Response NSSetDelete (in string handle, in long clientID,
-			  in string clTRID);
+			  in string clTRID, in string XML);
     // vytvoreni hostu
     Response NSSetCreate (in string handle, in string authInfoPw,
 			  in TechContact tech, in DNSHost dns,
 			  out timestamp crDate, in long clientID,
-			  in string clTRID);
+			  in string clTRID , in string XML);
     // zmena udaju update  change pouze authInfo 
     // pridat nebo zrusit pouze TechContact 
     // dns_rem zrusene dns hosty 
@@ -295,20 +295,20 @@ module ccReg
 			  in DNSHost dns_add, in DNSHost dns_rem,
 			  in TechContact tech_add, in TechContact tech_rem,
 			  in Status status_add, in Status status_rem,
-			  in long clientID, in string clTRID);
+			  in long clientID, in string clTRID , in string XML );
 
     // prevod nssetu
     Response NSSetTransfer (in string handle, in string authInfo,
-			    in long clientID, in string clTRID );
+			    in long clientID, in string clTRID , in string XML );
 
 
     //  funkce na spravu domen
     Response DomainCheck (in Check fqdn, out Avail a, in long clientID,
-			  in string clTRID);
+			  in string clTRID  , in string XML);
     Response DomainInfo (in string fqdn, out Domain d, in long clientID,
-			 in string clTRID);
+			 in string clTRID , in string XML);
     Response DomainDelete (in string fqdn, in long clientID,
-			   in string clTRID);
+			   in string clTRID , in string XML );
 
     // Data elements that can be changed: registrant authInfo and nsset
     // Data elements that can be added or removed: admin contact and status 
@@ -317,23 +317,23 @@ module ccReg
 			   in AdminContact admin_add,
 			   in AdminContact admin_rem, in Status status_add,
 			   in Status status_rem, in long clientID,
-			   in string clTRID,
+			   in string clTRID, in string XML , 
 			   in ExtensionList ext);
     Response DomainCreate (in string fqdn, in string Registrant,
 			   in string nsset, in string AuthInfoPw,
 			   in short period, in AdminContact admin,
 			   out timestamp crDate, out timestamp exDate,
-			   in long clientID, in string clTRID,
+			   in long clientID, in string clTRID, in string XML,
 			   in ExtensionList ext);
 
     // doba prodlouzeni period je v mesicich
     Response DomainRenew (in string fqdn, in timestamp curExpDate,
 			  in short period, out timestamp exDate,
-			  in long clientID, in string clTRID,
+			  in long clientID, in string clTRID, in string XML,
 			  in ExtensionList ext);			  
     // transfer funkce 
     Response DomainTransfer (in string fqdn, in string authInfo,
-              in long clientID, in string clTRID );
+              in long clientID, in string clTRID , in string XML );
 
     // vycet typu objektu spravovanych registrem
 
