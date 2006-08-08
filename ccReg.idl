@@ -56,7 +56,10 @@ module ccReg
         domainUpdate_ext_valDate,
         domainRenew_curExpDate,
         domainRenew_period,
-        domainRenew_ext_valDate
+        domainRenew_ext_valDate,
+        domainInfo_fqdn, // spatny nazev domeny
+        contactInfo_handle,
+        nssetInfo_handle 
   };
 
   struct Error_seq
