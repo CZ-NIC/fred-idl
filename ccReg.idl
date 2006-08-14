@@ -17,6 +17,8 @@ module ccReg
   // vracena hodnota avail v check funkcich  
   enum CheckAvail { Exist , NotExist , BadFormat , BlackList }; // navrh na vraceni pri Check
 
+  enum SSNtyp { EMPTY , RC , OP , PASS , ICO }; // typ SSN rodne cislo ,  obcanka , cestovni pas , ico
+
   // specifikace chybneho parametru (odvozen od nazvu funkce a parametru)
   enum ErrorSpec {
 	unknow, 
@@ -102,11 +104,13 @@ module ccReg
   {
     string handle;		// handle kontaktu
     string ROID;		// identifikator kontaktu  repository ID
+    string ClID;		// identifikator registratora ktery ma pravo na zemnu
     string CrID;		// identifikator registratora ktery vytvoril kontak
     string UpID;		// identifikator registratora ktery provedl zmeny
     Status stat;		// status sequence
     timestamp CrDate;		// datum a cas vytvoreni
     timestamp UpDate;		// datum a cas zmeny
+    timestamp TrDate;		// datum a cas transferu
     string Name;		// jmeno nebo nazev kontaktu
     string Organization;	// nazev organizace
     string Street1;		// adresa
@@ -122,6 +126,8 @@ module ccReg
     string NotifyEmail;		// upozornovaci email
     string VAT;			// DIC 
     string SSN;			// SSN
+    SSNtyp SSNtype;             // typ SSN
+    string AuthInfoPw;		// autentifikace
     boolean DiscloseName;	// povolovani zobrazeni
     boolean DiscloseOrganization;
     boolean DiscloseAddress;
@@ -147,6 +153,8 @@ module ccReg
     string NotifyEmail;		// upozornovaci email
     string VAT;			// DIC 
     string SSN;			// SSN
+    SSNtyp SSNtype;             // typ SSN
+    string AuthInfoPw;		// autentifikace
     disclose DiscloseName;	// povolovani zobrazeni
     disclose DiscloseOrganization;
     disclose DiscloseAddress;
@@ -274,6 +282,10 @@ module ccReg
     Response ContactCreate (in string handle, in ContactChange c,
 			    out timestamp crDate, in long clientID,
 			    in string clTRID, in string XML );
+
+    // prevod kontaktni osoby
+    Response ContactTransfer (in string handle, in string authInfo,
+			    in long clientID, in string clTRID , in string XML );
 
     // predelano na NSSET
     // check hostu
