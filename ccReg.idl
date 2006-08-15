@@ -417,4 +417,33 @@ module ccReg
     Lists ListNSSet(); 
   };
 
+  // datove typy pro generovani zony
+  struct ZoneItem {
+    string name;    // fqdn
+    DNSHost nameservers; // seznam nameserveru vcetne jejich adres
+                         // pokud jsou potrebne (GLUE RR)
+  };
+  typedef sequence<ZoneItem> ZoneSeq; 
+
+  // interface (zatim jen) pro generovani zony
+  interface ZoneGenerator {
+
+    exception ZoneGeneratorError {
+      string message;
+    };
+
+    // returns domains and their nameservers
+    ZoneSeq getZoneData(in string zonename,
+      out long ttl,
+      out string hostmaster,
+      out string serial,
+      out long refresh,
+      out long update_retr,
+      out long expiry,
+      out long minimum,
+      out string ns_fqdn, // fqdn of primary server
+      out InetAddress ns_addrs, // addresses of prim. server
+      out DNSHost nameservers // secondary nameservers
+      ) raises (ZoneGeneratorError);
+  };
 };
