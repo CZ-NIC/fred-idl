@@ -17,7 +17,7 @@ module ccReg
   // vracena hodnota avail v check funkcich  
   enum CheckAvail { Exist , NotExist , BadFormat , BlackList }; // navrh na vraceni pri Check
 
-  enum SSNtyp { EMPTY , RC , OP , PASS , ICO }; // typ SSN rodne cislo ,  obcanka , cestovni pas , ico
+  enum SSNtyp { EMPTY , RC , OP , PASS , ICO , MPSV }; // typ SSN rodne cislo ,  obcanka , cestovni pas , ico
 
   // specifikace chybneho parametru (odvozen od nazvu funkce a parametru)
   enum ErrorSpec {
@@ -64,6 +64,13 @@ module ccReg
         nssetInfo_handle 
   };
 
+  struct CheckSeq {
+    CheckAvail avail;
+    string reason;              // if avail != NotExist tak zde je duvod
+  };
+
+  typedef sequence < CheckSeq > CheckResp; // check response
+
   struct Error_seq
   {
     ErrorSpec code;		// kod chyby (urcuje funkci a parametr) - nutny
@@ -89,7 +96,6 @@ module ccReg
   typedef sequence < string > TechContact;
   typedef sequence < string > AdminContact;
   typedef sequence < string > Check;	// sequence pro check
-  typedef sequence < short > Avail;    // jednicka ci nula
   typedef sequence < string > Status;	// vraceny status je sequence stringu 
 
   struct DNSHost_str
@@ -264,7 +270,7 @@ module ccReg
     Response ClientLogout (in long clientID, in string clTRID , in string XML);
 
     // zjisteni kontaktaktu
-    Response ContactCheck (in Check handle, out Avail a, in long clientID,
+    Response ContactCheck (in Check handle, out CheckResp a, in long clientID,
 			   in string clTRID, in string XML);
     // info o kontaktni osobe
     Response ContactInfo (in string handle, out Contact c, in long clientID,
@@ -287,9 +293,13 @@ module ccReg
     Response ContactTransfer (in string handle, in string authInfo,
 			    in long clientID, in string clTRID , in string XML );
 
+    // listing registrovanych kontaktu
+    Response ContactList (out Lists contacts,
+			    in long clientID, in string clTRID , in string XML );
+
     // predelano na NSSET
     // check hostu
-    Response NSSetCheck (in Check handle, out Avail a, in long clientID,
+    Response NSSetCheck (in Check handle, out CheckResp a, in long clientID,
 			 in string clTRID, in string XML );
     // info o hostu
     Response NSSetInfo (in string handle, out NSSet n, in long clientID,
@@ -316,9 +326,13 @@ module ccReg
     Response NSSetTransfer (in string handle, in string authInfo,
 			    in long clientID, in string clTRID , in string XML );
 
+    // listing registrovanych nssetu
+    Response NSSetList (out Lists nssets,
+			    in long clientID, in string clTRID , in string XML );
+
 
     //  funkce na spravu domen
-    Response DomainCheck (in Check fqdn, out Avail a, in long clientID,
+    Response DomainCheck (in Check fqdn, out CheckResp a, in long clientID,
 			  in string clTRID  , in string XML);
     Response DomainInfo (in string fqdn, out Domain d, in long clientID,
 			 in string clTRID , in string XML);
@@ -349,6 +363,10 @@ module ccReg
     // transfer funkce 
     Response DomainTransfer (in string fqdn, in string authInfo,
               in long clientID, in string clTRID , in string XML );
+
+    // listing registrovanych domen
+    Response DomainList (out Lists domains,
+			    in long clientID, in string clTRID , in string XML );
 
     // vycet typu objektu spravovanych registrem
 
