@@ -5,14 +5,12 @@ module ccReg
 {
   typedef unsigned long long timestamp;
 
-  typedef short disclose; // pro modifikace -1 zadna zmena 0 nastavi na false 1 nastavi na true
-
-
   // komunikacni jazyky
   enum Languages  { EN , CS }; // 0 default anglictina 1 cestina
 
   enum RegObjectType { NONE , CZ_DOMAIN, ENUM_DOMAIN,  CONTACT_HANDLE , NSSET_HANDLE };
 
+  enum Disclose { DISCL_EMPTY, DISCL_HIDE, DISCL_DISPLAY };
   
   // vracena hodnota avail v check funkcich  
   enum CheckAvail { Exist , NotExist , BadFormat , BlackList }; // navrh na vraceni pri Check
@@ -134,12 +132,12 @@ module ccReg
     string SSN;			// SSN
     SSNtyp SSNtype;             // typ SSN
     string AuthInfoPw;		// autentifikace
-    boolean DiscloseName;	// povolovani zobrazeni
-    boolean DiscloseOrganization;
-    boolean DiscloseAddress;
-    boolean DiscloseTelephone;
-    boolean DiscloseFax;
-    boolean DiscloseEmail;
+    Disclose DiscloseName;	// povolovani zobrazeni
+    Disclose DiscloseOrganization;
+    Disclose DiscloseAddress;
+    Disclose DiscloseTelephone;
+    Disclose DiscloseFax;
+    Disclose DiscloseEmail;
   };
 
   struct ContactChange
@@ -161,12 +159,12 @@ module ccReg
     string SSN;			// SSN
     SSNtyp SSNtype;             // typ SSN
     string AuthInfoPw;		// autentifikace
-    disclose DiscloseName;	// povolovani zobrazeni
-    disclose DiscloseOrganization;
-    disclose DiscloseAddress;
-    disclose DiscloseTelephone;
-    disclose DiscloseFax;
-    disclose DiscloseEmail;
+    Disclose DiscloseName;	// povolovani zobrazeni
+    Disclose DiscloseOrganization;
+    Disclose DiscloseAddress;
+    Disclose DiscloseTelephone;
+    Disclose DiscloseFax;
+    Disclose DiscloseEmail;
   };
 
   struct NSSet
