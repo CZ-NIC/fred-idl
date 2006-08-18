@@ -430,8 +430,8 @@ module ccReg
       string message;
     };
 
-    // returns domains and their nameservers
-    ZoneSeq getZoneData(in string zonename,
+    // Request zone transfer
+    long transferRequest(in string zonename,
       out long ttl,
       out string hostmaster,
       out string serial,
@@ -442,5 +442,9 @@ module ccReg
       out DNSHost_str primns, // fqdn and addresses of prim. nameserver
       out DNSHost nameservers // secondary nameservers
       ) raises (ZoneGeneratorError);
+
+    // get domains and their nameservers
+    ZoneSeq getZoneData(in long trID, in long count, out boolean eof)
+        raises (ZoneGeneratorError);
   };
 };
