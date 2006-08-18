@@ -439,8 +439,7 @@ module ccReg
       out long update_retr,
       out long expiry,
       out long minimum,
-      out string ns_fqdn, // fqdn of primary server
-      out InetAddress ns_addrs, // addresses of prim. server
+      out DNSHost_str primns, // fqdn and addresses of prim. nameserver
       out DNSHost nameservers // secondary nameservers
       ) raises (ZoneGeneratorError);
   };
