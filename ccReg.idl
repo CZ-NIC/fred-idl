@@ -8,7 +8,23 @@ module ccReg
   // komunikacni jazyky
   enum Languages  { EN , CS }; // 0 default anglictina 1 cestina
 
-  enum RegObjectType { NONE , CZ_DOMAIN, ENUM_DOMAIN,  CONTACT_HANDLE , NSSET_HANDLE };
+  /// classification for register object handle 
+  enum CheckHandleClass {
+    CH_ENUM_BAD_ZONE, ///< handle is enum number not managed in this register 
+    CH_ENUM, ///< handle is enum number
+    CH_DOMAIN_PART, ///< handle is single string (appended by default domain)
+    CH_DOMAIN_BAD_ZONE, ///< hadnle is domain not managed in this register
+    CH_DOMAIN_LONG, ///< handle is domain longer then allowed (truncated)
+    CH_DOMAIN, ///< handle is domain
+    CH_NSSET, ///< handle is nsset
+    CH_CONTACT, ///< handle is contact  
+    CH_INVALID ///< not a valid handle
+  };
+  /// return type for checkHandle
+  struct CheckHandleType {
+    string newHandle; ///< transformed handle if appropriate
+    CheckHandleClass handleClass; ///< result of handle classification
+  };
 
   enum Disclose { DISCL_EMPTY, DISCL_HIDE, DISCL_DISPLAY };
   
@@ -369,8 +385,8 @@ module ccReg
     // vycet typu objektu spravovanych registrem
 
 
-   // vrati typ objektu, ktery je evidovan pod danym jmenem
-    RegObjectType getRegObjectType(in string objectName);
+    /// classify input handle according register rules 
+   void  checkHandle(in string handle, out CheckHandleType ch);
 
 
 
