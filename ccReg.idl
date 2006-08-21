@@ -444,7 +444,9 @@ module ccReg
       ) raises (ZoneGeneratorError);
 
     // get domains and their nameservers
-    ZoneSeq getZoneData(in long trID, in long count, out boolean eof)
-        raises (ZoneGeneratorError);
+    ZoneSeq getZoneData(in long trID, in long count) raises (ZoneGeneratorError);
+
+    // close zone transfer
+    void transferDelete(in long trID) raises (ZoneGeneratorError);
   };
 };
