@@ -105,6 +105,18 @@ module ccReg
     Error errors;		// chyby
   };
 
+  //  zone popis zony a parametry
+  struct Zone
+  {
+   string  fqdn; // nazev zony .cz
+   short ex_period_min ; // parametry zony
+   short  ex_period_max ;
+   short  val_period;
+   short  dots_max;
+   boolean enum_zone;
+  };
+
+  typedef sequence < Zone > Zones;
   typedef sequence < string > NameServers;
   typedef sequence < string > InetAddress;
   typedef sequence < string > TechContact;
