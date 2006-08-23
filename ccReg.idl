@@ -262,11 +262,13 @@ module ccReg
 
   typedef sequence < string > Lists;
  
+  interface Whois;
   interface Admin;
   // pro klienty EPP  protokolu 
   interface EPP
   {
     Admin getAdmin();
+    Whois getWhois();
 
     string version(); // vraceni cisla verze
 
