@@ -4,6 +4,7 @@
 module ccReg
 {
   typedef unsigned long long timestamp;
+  typedef unsigned long price; // pro credit cena na cele cislo v halirich
 
   // komunikacni jazyky
   enum Languages  { EN , CS }; // 0 default anglictina 1 cestina
@@ -254,6 +255,7 @@ module ccReg
        string fax;
        string email;
        string url;
+       price credit; 
     };
 
     // typ seznamu registratoru 
@@ -271,6 +273,9 @@ module ccReg
     Whois getWhois();
 
     string version(); // vraceni cisla verze
+
+
+
 
     // pro vraceni serverTRID 
     Response GetTransaction (in long clientID, in string clTRID,
@@ -296,6 +301,10 @@ module ccReg
 			  in string clTRID,  in string XML ,  out long clientID,
 			  in string certID , in Languages  lang );
     Response ClientLogout (in long clientID, in string clTRID , in string XML);
+
+    // vyse creditu prihlaseneho ragistratora
+    Response ClientCredit (out price credit, in long clientID, in string clTRID , in string XML );
+
 
     // zjisteni kontaktaktu
     Response ContactCheck (in Check handle, out CheckResp a, in long clientID,
