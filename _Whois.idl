@@ -1,0 +1,29 @@
+
+  // status flag domeny v whoisu
+  enum WhoisDomainStatus  { WHOIS_ACTIVE, WHOIS_EXPIRED };
+
+  // struktura
+  struct DomainWhois
+  {
+    WhoisDomainStatus status;
+    string created;
+    string expired;
+    string registrarName;	// jmeno registratora
+    string registrarUrl;	// odkaz na jeho webovou adresu
+    NameServers ns;		// sequence nameservru
+    TechContact tech;		// sequence handle na technicke kontakty
+  };
+
+  interface Whois
+  {
+    exception WhoisError {
+      string message;
+    };
+    exception DomainNotFound {
+      string timestamp; // ikdyz domena neexistuje potrebujem timestamp
+    };
+
+    // vraci udaje o domene pro whois podle nazvu
+    DomainWhois getDomain(in string domain_name, out string timestamp)
+	    raises (WhoisError, DomainNotFound);
+  };

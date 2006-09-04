@@ -1,0 +1,5 @@
+module ccReg
+{
+  #include "dataTypes.idl"
+  #include "_Whois.idl"
+};

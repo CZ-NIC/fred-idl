@@ -1,0 +1,4 @@
+module ccReg {
+	#include "_dataTypes.idl"
+	#include "_Admin.idl"
+}

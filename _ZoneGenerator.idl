@@ -1,0 +1,34 @@
+  // datove typy pro generovani zony
+  struct ZoneItem {
+    string name;    // fqdn
+    DNSHost nameservers; // seznam nameserveru vcetne jejich adres
+                         // pokud jsou potrebne (GLUE RR)
+  };
+  typedef sequence<ZoneItem> ZoneSeq; 
+
+  // interface (zatim jen) pro generovani zony
+  interface ZoneGenerator {
+
+    exception ZoneGeneratorError {
+      string message;
+    };
+
+    // Request zone transfer
+    long transferRequest(in string zonename,
+      out long ttl,
+      out string hostmaster,
+      out string serial,
+      out long refresh,
+      out long update_retr,
+      out long expiry,
+      out long minimum,
+      out DNSHost_str primns, // fqdn and addresses of prim. nameserver
+      out DNSHost nameservers // secondary nameservers
+      ) raises (ZoneGeneratorError);
+
+    // get domains and their nameservers
+    ZoneSeq getZoneData(in long trID, in long count) raises (ZoneGeneratorError);
+
+    // close zone transfer
+    void transferDelete(in long trID) raises (ZoneGeneratorError);
+  };

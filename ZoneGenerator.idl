@@ -1,0 +1,4 @@
+module ccReg {
+	#include "dataTypes.idl"
+	#include "_ZoneGenerator.idl"
+};

@@ -1,0 +1,13 @@
+
+  typedef sequence < string > NameServers;
+  typedef sequence < string > TechContact;
+  typedef sequence < string > Lists;
+  typedef sequence < string > InetAddress;
+ 
+  struct DNSHost_str
+  {
+    string fqdn;		// fqdn DNS serveru
+    InetAddress inet;		// pole ip adres 
+  };
+  typedef sequence < DNSHost_str > DNSHost;
+

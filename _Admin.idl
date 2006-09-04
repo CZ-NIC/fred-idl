@@ -1,0 +1,40 @@
+  typedef unsigned long price; // pro credit cena na cele cislo v halirich
+
+  // detail registratora
+  struct Registrar {
+     long id;
+     string handle;
+     string name;
+     string organization;
+     string street1;
+     string street2;
+     string street3;
+     string city;
+     string stateorprovince;
+     string postalcode;
+     string country;
+     string telephone;
+     string fax;
+     string email;
+     string url;
+     price credit; 
+  };
+
+  // typ seznamu registratoru 
+  typedef sequence<Registrar> RegistrarList;
+
+  // administratorske rozhrani
+  interface Admin
+  {
+    exception ObjectNotFound {};
+    // vrati kompletni seznam registratoru
+    RegistrarList getRegistrars();
+    // najde jednoho registratora
+    Registrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
+
+    // List funkce na vypis
+    Lists ListRegistrar(); 
+    Lists ListDomain(); 
+    Lists ListContact(); 
+    Lists ListNSSet(); 
+  };
