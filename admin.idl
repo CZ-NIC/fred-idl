@@ -1,0 +1,86 @@
+module Register {
+
+  /// date structure
+  struct Date {
+    int day; ///< day of month (1..31)
+    int month; ///< month in year (1..12)
+    int year; ///< year (i.e. 2006)
+  };
+  
+  /// date interval
+  struct DateInteval {
+    Date from; ///< start of interval - Date(0,0,0) means ignore this field
+    Date to; ///< end of interval - Date(0,0,0) means ignore this field 
+  };
+ 
+  /// filtr structure for domain selection
+  struct DomainFilter {
+    long registrar; ///< domain is registred by this registrar
+    long registrant; ///< domain belongs to this registrant
+    long nsset; ///< domain referes to this nsset
+    long admin; ///< domain 
+    string nameRegexp; ///< regular expresion for matching domain name
+    DateInterval expDate; ///< interval for domain expiration date
+    DateInterval crDate; ///< interval for domain creation date
+    DateInterval trDate; ///< interval for domain transfer date
+    DateInterval valExDate; ///< interval for enum domain validation exp. date
+  };
+  
+  struct Domain {
+    string name;
+  };
+
+  typedef sequence<Domain> DomainList;
+  
+  struct Contact {
+    string handle;
+  };
+
+  typedef sequence<Contact> ContactList;
+
+  struct NSSet {
+    string handle;
+  };
+
+  typedef sequence<NSSet> NSSetList;
+  
+  /// detail of registrar
+  struct Registrar {
+    long id;
+    string handle;
+    string name;
+    string organization;
+    string street1;
+    string street2;
+    string street3;
+    string city;
+    string stateorprovince;
+    string postalcode;
+    string country;
+    string telephone;
+    string fax;
+    string email;
+    string url;
+    price credit; 
+  };
+
+  typedef sequence<Registrar> RegistrarList;
+
+  // administratorske rozhrani
+  interface Admin
+  {
+    exception ObjectNotFound {};
+    // vrati kompletni seznam registratoru
+    RegistrarList getRegistrars();
+    // najde jednoho registratora
+    Registrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
+    // vypise seznam domen podle zadaneho filtru
+    DomainList getDomainList(in DomainFiltr filtr);
+    // vypise seznam domen podle zadaneho filtru
+    NSSetList getNSSetList(in NSSetFiltr filtr);
+    // vypise seznam domen podle zadaneho filtru
+    ContactList getContactList(in ContactFiltr filtr);
+ 
+  };
+
+};
