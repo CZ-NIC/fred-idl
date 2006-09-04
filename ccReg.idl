@@ -416,26 +416,33 @@ module ccReg
 
   };
 
+  // status flag domeny v whoisu
+  enum WhoisDomainStatus  { WHOIS_ACTIVE, WHOIS_EXPIRED };
+
   // struktura
   struct DomainWhois
   {
-    string name;
-    // string description; // popis domeny ted tam je 
-    short status;		// status 1 REGISTRED - 0 FREE
-    timestamp created;
-    timestamp expired;
+    WhoisDomainStatus status;	// status 1 REGISTRED - 0 FREE
+    string created;
+    string expired;
     string registrarName;	// jmeno registratora
     string registrarUrl;	// odkaz na jeho webovou adresu
     NameServers ns;		// sequence nameservru
-    string nsset;		// handle NSSETu
     TechContact tech;		// sequence handle na technicke kontakty
-    AdminContact admin;		// administrativni kontakty (handle)
   };
 
   interface Whois
   {
-    // vraci identifikaci domeny pro whois server podle nazvu
-    DomainWhois Domain (in string domain_name);
+    exception WhoisError {
+      string message;
+    };
+    exception DomainNotFound {
+      string timestamp; // ikdyz domena neexistuje potrebujem timestamp
+    };
+
+    // vraci udaje o domene pro whois podle nazvu
+    DomainWhois getDomain(in string domain_name, out string timestamp)
+	    raises (WhoisError, DomainNotFound);
   };
 
   // administratorske rozhrani
