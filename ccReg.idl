@@ -5,3 +5,7 @@
 #include "_EPP.idl"
 #include "_Whois.idl"
 #include "_ZoneGenerator.idl"
+
+// pro nacteni zone
+#include "_zone.idl"
+

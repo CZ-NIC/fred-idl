@@ -1,0 +1,16 @@
+module ccReg {
+
+   // struktura pro nacvitani parametru zony
+  struct Zone
+  {
+   string  fqdn; // nazev zony .cz
+   short ex_period_min ; // parametry zony
+   short  ex_period_max ;
+   short  val_period;
+   short  dots_max;
+   boolean enum_zone;
+  };
+
+  typedef sequence < Zone > Zones;
+
+};

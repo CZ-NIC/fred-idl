@@ -1,5 +1,12 @@
 module ccReg {
 
+  typedef string timestamp; // vyjadreni datumu a casu dle rfc3339
+                            // YYYY-MM-DD  (jen datum)
+                            // YYYY-MM-DDTHH:MM:SS.ssZ ( datum a cas  v UTC zulu time  sec na des mista )
+                            // YYYY-MM-DDTHH:MM:SS.ss(+/-)HH:MM ( datum a cas  plus offset casova zona  sec na des mista )
+  typedef string date; // pouze datum  ve formatu  YYYY-MM-DD  
+
+  
   typedef sequence < string > NameServers;
   typedef sequence < string > TechContact;
   typedef sequence < string > Lists;

@@ -90,9 +90,9 @@ module ccReg {
     string CrID;		// identifikator registratora ktery vytvoril kontak
     string UpID;		// identifikator registratora ktery provedl zmeny
     Status stat;		// status sequence
-    string CrDate;		// datum a cas vytvoreni
-    string UpDate;		// datum a cas zmeny
-    string TrDate;		// datum a cas transferu
+    timestamp CrDate;		// datum a cas vytvoreni
+    timestamp UpDate;		// datum a cas zmeny
+    timestamp TrDate;		// datum a cas transferu
     string Name;		// jmeno nebo nazev kontaktu
     string Organization;	// nazev organizace
     string Street1;		// adresa
@@ -155,9 +155,9 @@ module ccReg {
     string ClID;		// identifikator registratora ktery ma pravo na zemnu
     string CrID;		// identifikator registratora ktery zaznam vytvoril
     string UpID;		// identifikator registratora ktery zmenil zaznam
-    string CrDate;		// datum a cas vytvoreni
-    string UpDate;		// datum a cas update
-    string TrDate;		// datum a cas transferu
+    timestamp CrDate;		// datum a cas vytvoreni
+    timestamp UpDate;		// datum a cas update
+    timestamp TrDate;		// datum a cas transferu
     string AuthInfoPw;		// autentifikace
     DNSHost dns;		// hosty DNS
     TechContact tech;		// sequence handle na technicke kontakty
@@ -174,23 +174,23 @@ module ccReg {
     string ClID;		// identifikator registratora ktery ma pravo na zemnu
     string CrID;		// identifikator registratora ktery zaznam vytvoril 
     string UpID;		// identifikator registratora ktery zmenil zaznam
-    string CrDate;		// datum a cas vytvoreni
-    string ExDate;		// taum a cas expirace domeny
-    string UpDate;		// datum a cas update
-    string TrDate;		// datum a cas transferu
+    timestamp CrDate;		// datum a cas vytvoreni
+    timestamp ExDate;		// taum a cas expirace domeny
+    timestamp UpDate;		// datum a cas update
+    timestamp TrDate;		// datum a cas transferu
     string AuthInfoPw;		// autentifikace
     AdminContact admin;		// administrativni kontakty (handle)
     ExtensionList ext;  // obecne rozsirujici informace 
   };
 
   struct ENUMValidationExtension {
-    string valExDate; // datum expirace overeni validity
+    date valExDate; // datum expirace overeni validity
   };
 
   // pro klienty EPP  protokolu 
   interface EPP
   {
-    string version(out string date); // vraceni cisla verze a datumu
+    string version(out timestamp datetime); // vraceni cisla verze a datumu
 
     // pro vraceni serverTRID 
     Response GetTransaction (in long clientID, in string clTRID,
@@ -206,7 +206,7 @@ module ccReg {
     // count  celkovy pocet zprav  msgID id zpravy  qDate datum zarazeni 
     // do fronty mesg zprava
     Response PollRequest (out long msgID, out short count,
-			  out string qDate, out string mesg,
+			  out timestamp qDate, out string mesg,
 			  in long clientID, in string clTRID , in string XML );
 
     // pro prihlaseni clienta 
@@ -232,7 +232,7 @@ module ccReg {
 			    in long clientID, in string clTRID , in string XML);
     // vytvoreni kontaktni osoby 
     Response ContactCreate (in string handle, in ContactChange c,
-			    out string crDate, in long clientID,
+			    out timestamp crDate, in long clientID,
 			    in string clTRID, in string XML );
 
     // prevod kontaktni osoby
@@ -256,7 +256,7 @@ module ccReg {
     // vytvoreni hostu
     Response NSSetCreate (in string handle, in string authInfoPw,
 			  in TechContact tech, in DNSHost dns,
-			  out string crDate, in long clientID,
+			  out timestamp crDate, in long clientID,
 			  in string clTRID , in string XML);
     // zmena udaju update  change pouze authInfo 
     // pridat nebo zrusit pouze TechContact 
@@ -297,13 +297,13 @@ module ccReg {
     Response DomainCreate (in string fqdn, in string Registrant,
 			   in string nsset, in string AuthInfoPw,
 			   in short period, in AdminContact admin,
-			   out string crDate, out string exDate,
+			   out timestamp crDate, out date exDate,
 			   in long clientID, in string clTRID, in string XML,
 			   in ExtensionList ext);
 
     // doba prodlouzeni period je v mesicich
-    Response DomainRenew (in string fqdn, in string curExpDate,
-			  in short period, out string exDate,
+    Response DomainRenew (in string fqdn, in date curExpDate,
+			  in short period, out timestamp exDate,
 			  in long clientID, in string clTRID, in string XML,
 			  in ExtensionList ext);			  
     // transfer funkce 
