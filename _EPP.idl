@@ -1,3 +1,5 @@
+module ccReg {
+
   // komunikacni jazyky
   enum Languages  { EN , CS }; // 0 default anglictina 1 cestina
   // vracena hodnota avail v check funkcich  
@@ -313,3 +315,4 @@
 			    in long clientID, in string clTRID , in string XML );
 
   };
+};

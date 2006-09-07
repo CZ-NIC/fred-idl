@@ -1,3 +1,4 @@
+module ccReg {
   typedef unsigned long price; // pro credit cena na cele cislo v halirich
 
   // detail registratora
@@ -38,3 +39,4 @@
     Lists ListContact(); 
     Lists ListNSSet(); 
   };
+};

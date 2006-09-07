@@ -1,3 +1,5 @@
+module ccReg {
+
   // datove typy pro generovani zony
   struct ZoneItem {
     string name;    // fqdn
@@ -32,3 +34,4 @@
     // close zone transfer
     void transferDelete(in long trID) raises (ZoneGeneratorError);
   };
+};

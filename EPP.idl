@@ -1,4 +1,2 @@
-module ccReg{
-	#include "_dataTypes.idl"
-	#include "_EPP.idl"
-};
+#include "_dataTypes.idl"
+#include "_EPP.idl"

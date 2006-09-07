@@ -1,3 +1,4 @@
+module ccReg {
 
   // status flag domeny v whoisu
   enum WhoisDomainStatus  { WHOIS_ACTIVE, WHOIS_EXPIRED };
@@ -27,3 +28,4 @@
     DomainWhois getDomain(in string domain_name, out string timestamp)
 	    raises (WhoisError, DomainNotFound);
   };
+};

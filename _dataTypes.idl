@@ -1,3 +1,4 @@
+module ccReg {
 
   typedef sequence < string > NameServers;
   typedef sequence < string > TechContact;
@@ -10,4 +11,4 @@
     InetAddress inet;		// pole ip adres 
   };
   typedef sequence < DNSHost_str > DNSHost;
-
+};
