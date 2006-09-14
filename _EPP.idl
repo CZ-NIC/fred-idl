@@ -3,7 +3,7 @@ module ccReg {
   // komunikacni jazyky
   enum Languages  { EN , CS }; // 0 default anglictina 1 cestina
   // vracena hodnota avail v check funkcich  
-  enum CheckAvail { Exist , NotExist , BadFormat , BlackList }; // navrh na vraceni pri Check
+  enum CheckAvail { Exist , NotExist , BadFormat , BlackList , DelPeriod }; // navrh na vraceni pri Check  DelPerdiod ochrana lhuta
   enum SSNtyp { EMPTY , RC , OP , PASS , ICO , MPSV }; // typ SSN rodne cislo ,  obcanka , cestovni pas , ico
   enum Disclose { DISCL_EMPTY, DISCL_HIDE, DISCL_DISPLAY };
 
