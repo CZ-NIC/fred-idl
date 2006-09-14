@@ -26,59 +26,67 @@ module Register {
     DateInterval valExDate; ///< interval for enum domain validation exp. date
   };
   
+  /// Typ pro detail domény
   struct Domain {
-    string name;
+    string name; ///< Název domény
   };
 
+  /// Typ pro seznam domén
   typedef sequence<Domain> DomainList;
   
+  /// Typ pro detail kontaktu
   struct Contact {
-    string handle;
+    string handle; ///< Identifikátor
   };
 
+  /// Typ pro seznam kontaktů
   typedef sequence<Contact> ContactList;
 
+  /// Typ pro detail nssetu
   struct NSSet {
-    string handle;
+    string handle; ///< Identifikátor
   };
 
+  /// Typ pro seznam nssetů
   typedef sequence<NSSet> NSSetList;
   
-  /// detail of registrar
+  /// Detail registrátora
   struct Registrar {
-    long id;
-    string handle;
-    string name;
-    string organization;
-    string street1;
-    string street2;
-    string street3;
-    string city;
-    string stateorprovince;
-    string postalcode;
-    string country;
-    string telephone;
-    string fax;
-    string email;
-    string url;
-    price credit; 
+    long id; ///< ID
+    string handle; ///< Identifkátor
+    string name; ///< Jméno
+    string organization; ///< Název organizace
+    string street1; ///< Adresa 1
+    string street2; ///< Adresa 2
+    string street3; ///< Adresa 3
+    string city; ///< Město
+    string stateorprovince; ///< Kraj
+    string postalcode; ///< PSČ
+    string country; ///< Kód země
+    string telephone; ///< Telefonní číslo
+    string fax; ///< Faxové číslo
+    string email; ///< Kontaktní email
+    string url; ///< URL 
+    price credit; ///< Aktuální víše kreditu
   };
 
+  /// Typ pro výpis seznamu registrátorů
   typedef sequence<Registrar> RegistrarList;
 
-  // administratorske rozhrani
+  /// administratorske rozhrani
   interface Admin
   {
+    /// Vyjímka vracená v případě nenalezení hledaného objektu
     exception ObjectNotFound {};
-    // vrati kompletni seznam registratoru
+    /// vrati kompletni seznam registratoru
     RegistrarList getRegistrars();
-    // najde jednoho registratora
+    /// najde jednoho registratora
     Registrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
-    // vypise seznam domen podle zadaneho filtru
+    /// vypise seznam domen podle zadaneho filtru
     DomainList getDomainList(in DomainFiltr filtr);
-    // vypise seznam domen podle zadaneho filtru
+    /// vypise seznam domen podle zadaneho filtru
     NSSetList getNSSetList(in NSSetFiltr filtr);
-    // vypise seznam domen podle zadaneho filtru
+    /// vypise seznam domen podle zadaneho filtru
     ContactList getContactList(in ContactFiltr filtr);
  
   };

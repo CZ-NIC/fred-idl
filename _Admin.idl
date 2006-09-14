@@ -1,64 +1,90 @@
 module ccReg {
-  typedef unsigned long price; // pro credit cena na cele cislo v halirich
 
-  // detail registratora
+  /// Typ pro kredit registrátora, celé číslo v haléřích
+  typedef unsigned long price;
+
+  /// Struktura s detailem registrátora
   struct Registrar {
-     long id;
-     string handle;
-     string name;
-     string organization;
-     string street1;
-     string street2;
-     string street3;
-     string city;
-     string stateorprovince;
-     string postalcode;
-     string country;
-     string telephone;
-     string fax;
-     string email;
-     string url;
-     price credit; 
+    long id; ///< ID
+    string handle; ///< Identifkátor
+    string name; ///< Jméno
+    string organization; ///< Název organizace
+    string street1; ///< Adresa 1
+    string street2; ///< Adresa 2
+    string street3; ///< Adresa 3
+    string city; ///< Město
+    string stateorprovince; ///< Kraj
+    string postalcode; ///< PSČ
+    string country; ///< Kód země
+    string telephone; ///< Telefonní číslo
+    string fax; ///< Faxové číslo
+    string email; ///< Kontaktní email
+    string url; ///< URL 
+    price credit; ///< Aktuální víše kreditu
   };
 
-  // typ seznamu registratoru 
+  // Typ pro seznam registrátorů 
   typedef sequence<Registrar> RegistrarList;
 
-  /// classification for register object handle
+  /// Typ pro výsledek klasifikace identifikátoru
   enum CheckHandleClass {
-    CH_ENUM_BAD_ZONE, ///< handle is enum number not managed in this register
- 	CH_ENUM, ///< handle is enum number
- 	CH_DOMAIN_PART, ///< handle is single string (appended by default domain)
- 	CH_DOMAIN_BAD_ZONE, ///< hadnle is domain not managed in this register
- 	CH_DOMAIN_LONG, ///< handle is domain longer then allowed (truncated)
- 	CH_DOMAIN, ///< handle is domain
- 	CH_NSSET, ///< handle is nsset
- 	CH_CONTACT, ///< handle is contact 
- 	CH_INVALID ///< not a valid handle
+    CH_ENUM_BAD_ZONE, ///< Handle je enum číslo minmo registr
+    CH_ENUM, ///< Handle je enum číslo
+    CH_DOMAIN_PART, ///< Handle je část domény (připojí se defaultní koncovka)
+    CH_DOMAIN_BAD_ZONE, ///< Handle je doména mimo registr
+    CH_DOMAIN_LONG, ///< Handle je doména nepovolené délky (zkrácena)
+    CH_DOMAIN, ///< Handle je doména
+    CH_NSSET, ///< Handle je nsset
+    CH_CONTACT, ///< Handle je kontakt
+    CH_INVALID ///< Handle není validní
   };
   
-  /// return type for checkHandle
+  /// Typ návratové hodnoty funkce checkHandle
   struct CheckHandleType {
-    string newHandle; ///< transformed handle if appropriate
-    CheckHandleClass handleClass; ///< result of handle classification
+    string newHandle; ///< Přeložený handle pokud je třeba
+    CheckHandleClass handleClass; ///< Výsledek klasifikace handle
   };
 
-  // administratorske rozhrani
+  /// Administrátorské rozhraní
   interface Admin
   {
+    /// Vyjímka pro případ nenalezení hledaného objektu
     exception ObjectNotFound {};
-    // vrati kompletni seznam registratoru
+    /// Vrátí kompletní seznam registrátorů
+    /**
+     \return Seznam registrátorů */
     RegistrarList getRegistrars();
-    // najde jednoho registratora
-    Registrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
+    /// Najde jednoho registrátora podle zadaného handle
+    /**
+     \param handle Identifikátor hledaného registrátora
+     \return Nalezený registrátor pokud není vyjímka */
+    Registrar getRegistrarByHandle(
+     in string handle
+    ) raises (ObjectNotFound);
 
-    // List funkce na vypis
+    /// Jednoduchý výpis všech identifikátorů registrátorů
+     \return Seznam identifikátorů */
     Lists ListRegistrar(); 
+    /// Jednoduchý výpis všech identifikátorů domén
+    /**
+     \return Seznam identifikátorů */
     Lists ListDomain(); 
+    /// Jednoduchý výpis všech identifikátorů registrátorů
+    /**
+     \return Seznam identifikátorů */
     Lists ListContact(); 
+    /// Jednoduchý výpis všech identifikátorů registrátorů
+    /**
+     \return Seznam identifikátorů */
     Lists ListNSSet(); 
     
-    /// classify input handle according register rules
-    void  checkHandle(in string handle, out CheckHandleType ch);
+    /// Klasifikuje vstupní handle podle pravidel registru
+    /**
+     \param handle Vstupní handle pro klasifikaci
+     \param ch Výstupní struktura s klasifikací */
+    void checkHandle(
+      in string handle,
+      out CheckHandleType ch
+    );
   };
 };

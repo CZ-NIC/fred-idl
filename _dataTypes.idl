@@ -1,21 +1,30 @@
 module ccReg {
 
-  typedef string timestamp; // vyjadreni datumu a casu dle rfc3339
-                            // YYYY-MM-DD  (jen datum)
-                            // YYYY-MM-DDTHH:MM:SS.ssZ ( datum a cas  v UTC zulu time  sec na des mista )
-                            // YYYY-MM-DDTHH:MM:SS.ss(+/-)HH:MM ( datum a cas  plus offset casova zona  sec na des mista )
-  typedef string date; // pouze datum  ve formatu  YYYY-MM-DD  
-
-  
+  /// Typ pro vyjádření datumu a času podle rfc3339
+  /** YYYY-MM-DD  (jen datum)
+   *  YYYY-MM-DDTHH:MM:SS.ssZ 
+   *  (datum a čas v UTC zulu time sec. na 2 des. místa)
+   *  YYYY-MM-DDTHH:MM:SS.ss(+/-)HH:MM 
+   *  (datum a čas plus offset časové zóny, sec. na 2 des. místa)  
+   */
+  typedef string timestamp;
+  /// Typ pro datum ve formátu YYYY-MM-DD  
+  typedef string date;
+  /// Typ pro seznam názvů nameserverů
   typedef sequence < string > NameServers;
+  /// Typ pro seznam identifikátorů technických kontaktů
   typedef sequence < string > TechContact;
+  /// Typ pro obecný seznam řetězců
   typedef sequence < string > Lists;
+  /// Typ pro seznam IP adres
   typedef sequence < string > InetAddress;
- 
+  /// Typ pro jeden prvek seznamu záznamů pro jednotlivé nameservery
   struct DNSHost_str
   {
-    string fqdn;		// fqdn DNS serveru
-    InetAddress inet;		// pole ip adres 
+    string fqdn; ///< Fqdn DNS serveru
+    InetAddress inet; ///< Pole IP adres 
   };
+  /// Typ pro seznam záznamů jednotlivých nameserverů
   typedef sequence < DNSHost_str > DNSHost;
+  
 };

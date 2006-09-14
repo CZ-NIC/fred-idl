@@ -1,31 +1,41 @@
 module ccReg {
 
-  // status flag domeny v whoisu
+  /// Typ pro status flag domény v whoisu
   enum WhoisDomainStatus  { WHOIS_ACTIVE, WHOIS_EXPIRED };
 
-  // struktura
+  /// Typ pro data o doméně
   struct DomainWhois
   {
-    WhoisDomainStatus status;
-    string created;
-    string expired;
-    string registrarName;	// jmeno registratora
-    string registrarUrl;	// odkaz na jeho webovou adresu
-    NameServers ns;		// sequence nameservru
-    TechContact tech;		// sequence handle na technicke kontakty
+    WhoisDomainStatus status; ///< Stav domény
+    string created; ///< Datum vytvoření domény
+    string expired; ///< Datum expirace domény
+    string registrarName; ///< Jméno registrátora
+    string registrarUrl; ///< Webová adresa registrátora
+    NameServers ns;	///< Seznam nameserverů
+    TechContact tech; ///< Seznam idenitifikátorů technických kontaktů
   };
 
+  /// Rozhraní pro WHOIS
   interface Whois
   {
+    /// Vyjímka pro případ chyby
     exception WhoisError {
-      string message;
+      string message; ///< Popis chyby
     };
+    /// Vyjímka v případě nenalezení zadané domény
     exception DomainNotFound {
-      string timestamp; // ikdyz domena neexistuje potrebujem timestamp
+      string timestamp; ///< I když doména neexistuje potřebujeme timestamp
     };
 
-    // vraci udaje o domene pro whois podle nazvu
-    DomainWhois getDomain(in string domain_name, out string timestamp)
-	    raises (WhoisError, DomainNotFound);
+    /// Vraci údaje o doméně pro whois podle názvu
+    /** 
+     \param domain_name Název požadované domény
+     \param timestamp Vrací čas vyřízení požadavku
+     \return
+    */
+    DomainWhois getDomain(
+      in string domain_name,
+      out string timestamp
+    ) raises (WhoisError, DomainNotFound);
   };
 };

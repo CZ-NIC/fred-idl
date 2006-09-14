@@ -1,22 +1,37 @@
 module ccReg {
 
-  // datove typy pro generovani zony
+  /// Záznam o doméně v zónovém souboru
   struct ZoneItem {
-    string name;    // fqdn
-    DNSHost nameservers; // seznam nameserveru vcetne jejich adres
-                         // pokud jsou potrebne (GLUE RR)
+    string name;    ///< Fqdn
+    DNSHost nameservers; ///< Seznam nameserverů včetně jejich adres
+                         ///< pokud jsou potřebné (GLUE RR)
   };
+  /// Typ pro seznam položek zóny
   typedef sequence<ZoneItem> ZoneSeq; 
 
-  // interface (zatim jen) pro generovani zony
+  /// Interface (zatim jen) pro generovani zony
   interface ZoneGenerator {
 
+    /// Vyjímka pro předání chyby při generování
     exception ZoneGeneratorError {
-      string message;
+      string message; ///< Detail chyby
     };
 
-    // Request zone transfer
-    long transferRequest(in string zonename,
+    /// Spustí přenos dat zóny
+    /**
+     \param zonename Název zóny pro kterou se generuje
+     \param ttl TTL
+     \param hostmaster Hostmaster
+     \param serial Serial
+     \param refresh Refresh
+     \param update_retr Update retr
+     \param expiry Expiry
+     \param minimum Minimum
+     \param primns Fqdn a adresa prmárního nameserveru
+     \param nameservers Sekundární nameservery
+     \return Chybový stav */
+    long transferRequest(
+      in string zonename,
       out long ttl,
       out string hostmaster,
       out string serial,
@@ -24,14 +39,25 @@ module ccReg {
       out long update_retr,
       out long expiry,
       out long minimum,
-      out DNSHost_str primns, // fqdn and addresses of prim. nameserver
-      out DNSHost nameservers // secondary nameservers
+      out DNSHost_str primns,
+      out DNSHost nameservers
       ) raises (ZoneGeneratorError);
 
-    // get domains and their nameservers
-    ZoneSeq getZoneData(in long trID, in long count) raises (ZoneGeneratorError);
+    /// Vrátí data zóny
+    /**
+     \param trID Identifikace transakce
+     \param count Počet požadovaných prvků
+     \return Seznam prvků zóny */
+    ZoneSeq getZoneData(
+      in long trID,
+      in long count
+    ) raises (ZoneGeneratorError);
 
-    // close zone transfer
-    void transferDelete(in long trID) raises (ZoneGeneratorError);
+    /// Uzavře transfer zóny
+    /** 
+     \param trID Číslo transakci */
+    void transferDelete(
+      in long trID
+    ) raises (ZoneGeneratorError);
   };
 };

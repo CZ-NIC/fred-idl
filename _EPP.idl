@@ -1,318 +1,690 @@
 module ccReg {
 
-  // komunikacni jazyky
-  enum Languages  { EN , CS }; // 0 default anglictina 1 cestina
-  // vracena hodnota avail v check funkcich  
-  enum CheckAvail { Exist , NotExist , BadFormat , BlackList , DelPeriod }; // navrh na vraceni pri Check  DelPerdiod ochrana lhuta
-  enum SSNtyp { EMPTY , RC , OP , PASS , ICO , MPSV }; // typ SSN rodne cislo ,  obcanka , cestovni pas , ico
-  enum Disclose { DISCL_EMPTY, DISCL_HIDE, DISCL_DISPLAY };
-
-  struct CheckSeq {
-    CheckAvail avail;
-    string reason;              // if avail != NotExist tak zde je duvod
+  /// Typ pro stanovení jazyka ve kterím se budou vracet textoví zprávy
+  enum Languages  
+  { 
+    EN, ///< angličtina (default)
+    CS ///< čeština
   };
-
-  typedef sequence<any> ExtensionList;  
-  typedef sequence < CheckSeq > CheckResp; // check response
-  typedef sequence < string > Check;	// sequence pro check
-  typedef sequence < string > Status;	// vraceny status je sequence stringu 
-  typedef sequence < string > AdminContact;
-
-  // specifikace chybneho parametru (odvozen od nazvu funkce a parametru)
-  enum ErrorSpec {
-	unknow, 
-	pollAck_msgID,
-	contactCreate_cc, // kod zeme pri vytvoreni kontaktu
-	contactUpdate_cc, // kod zeme pri updatu kontaktu
-
-	contactCreate_handle, // nespravny format handlu
-	nssetCreate_handle,
-	domainCreate_fqdn, // spatny nazev domeny
-        domainUpdate_fqdn, // spatny nazev domeny
-        domainRenew_fqdn, // spatny nazev domeny 
-        contactUpdate_status_add,
-        contactUpdate_status_rem,
-        nssetCreate_tech,
-        nssetCreate_ns_name, 
-        nssetCreate_ns_addr, 
-        nssetUpdate_ns_name_add,
-        nssetUpdate_ns_addr_add,
-        nssetUpdate_ns_name_rem, 
-        nssetUpdate_ns_addr_rem,
-        nssetUpdate_tech_add,
-        nssetUpdate_tech_rem,
-        nssetUpdate_status_add,
-        nssetUpdate_status_rem,
-        domainCreate_registrant,
-        domainCreate_nsset,
-        domainCreate_period,
-        domainCreate_admin,
-        domainCreate_ext_valDate,
-        domainUpdate_registrant,
-        domainUpdate_nsset,
-        domainUpdate_admin_add,
-        domainUpdate_admin_rem,
-        domainUpdate_status_add,
-        domainUpdate_status_rem,
-        domainUpdate_ext_valDate,
-        domainRenew_curExpDate,
-        domainRenew_period,
-        domainRenew_ext_valDate,
-        domainInfo_fqdn, // spatny nazev domeny
-        contactInfo_handle,
-        nssetInfo_handle 
+  /// Typ pro stanovení druhu SSN identifikátoru, definuje význam řetězce SSN
+  enum SSNtyp 
+  {
+    EMPTY, ///< Není uveden žádný význam
+    RC, ///< Rodné číslo
+    OP, ///< Číslo občanského průkazu
+    PASS, ///< Číslo pasu
+    ICO, ///< Identifikační číslo organizace
+    MPSV ///< Identifikátor ministerstva práce a sociálních věcí
   };
-
+  /// Typ pro určení významu uvedených disclose parametrů
+  enum Disclose 
+  {
+    DISCL_EMPTY, ///< Disclose sekce chybí, ignorovat disclose parametry
+    DISCL_HIDE, ///< Všechny parametry s TRUE hodnotou budou schovány
+    DISCL_DISPLAY  ///< Všechny parametry s TRUE hodnotou budou zobrazeny
+  };
+  /// Typ pro stanovení výsledku check operace
+  enum CheckAvail 
+  {
+    Exist, ///< Objekt existuje a není možné ho zaregistrovat
+    NotExist, ///< Objekt neexistuje a je možné ho registrovat
+    BadFormat, ///< Špatný formát identifikátoru
+    BlackList, ///< Je zakázáno tento objekt registrovat
+    DelPeriod ///< Handle je v ochrané lhůtě pro registraci
+  };
+  /// Typ pro jeden prvek seznamu výsledků funkcí check
+  struct CheckSeq 
+  {
+    CheckAvail avail; ///< Jaký je výsledek check operace
+    string reason; ///< Pokud avail!=NotExist, je zde uveden textový dúvod
+  };
+  /// Typ pro obecný seznam rozšíření
+  typedef sequence <any> ExtensionList;  
+  /// Typ pro návratovou hodnotu funkcí check
+  typedef sequence <CheckSeq> CheckResp;
+  /// Typ pro nadefinování seznamu identifikátorů v parametru funkcí check
+  typedef sequence <string> Check;
+  /// Typ pro nadefinování seznamu stavů objektů
+  typedef sequence <string> Status;
+  /// Typ pro nadefinování seznamu identifikátorů administrativních kontaktů
+  typedef sequence <string> AdminContact;
+  /// Typ pro identifikaci místa v parametrech, ve kterém byla nalezena chyba
+  enum ErrorSpec 
+  {
+	unknow, ///< Není určené žádné konkrétní místo
+	pollAck_msgID, ///< Chyba v msgID zprávy poll
+	contactCreate_cc, ///< Chyba v kódu země při vytváření kontaktu
+	contactUpdate_cc, ///< Chyba v kódu země při update kontaktu
+	contactCreate_handle, ///< Chyba v handle při vytváření kontaktu
+	nssetCreate_handle, ///< Chyba v handle při vytváření nssetu
+	domainCreate_fqdn, ///< Chyba v názvu při vytváření domény
+    domainUpdate_fqdn, ///< Chyba v názvu při update domény
+    domainRenew_fqdn, ///< Chyba v názvu při renew domény
+    contactUpdate_status_add, ///< Chyba přidávaného stavu při update kontaktu
+    contactUpdate_status_rem, ///< Chyba odebíraného stavu při update kontaktu
+    nssetCreate_tech, ///< Chyba v technickém kontaktu při vytváření nssetu
+    nssetCreate_ns_name, ///< Chyba v názvu nameserveru při vytváření nssetu
+    nssetCreate_ns_addr, ///< Chyba v adrese nameserveru při vytváření nssetu
+    nssetUpdate_ns_name_add, ///< Chyba v názvu nameserveru při přidávání ns
+    nssetUpdate_ns_addr_add, ///< Chyba v adrese nameserveru při přidávání ns
+    nssetUpdate_ns_name_rem, ///< Chyba v názvu nameserveru při odebírání ns
+    nssetUpdate_ns_addr_rem, ///< Chyba v adrese nameserveru při odebírání ns
+    nssetUpdate_tech_add, ///< Chyba v přidávaném technickém kontaktu
+    nssetUpdate_tech_rem, ///< Chyba v odebíraném technickém kontaktu
+    nssetUpdate_status_add, ///< Chyba v přidávaném stavu při update nssetu
+    nssetUpdate_status_rem, ///< Chyba v odebíraném stavu při update nssetu
+    domainCreate_registrant, ///< Chyba v držiteli při vytváření domény
+    domainCreate_nsset, ///< Chyba v nssetu při vytváření domény
+    domainCreate_period, ///< Chyba v periodě při vytváření domény
+    domainCreate_admin, ///< Chyba v admin. kontaktu při vytváření domény
+    domainCreate_ext_valDate, ///< Chyba v datumu validace při vytváření domény
+    domainUpdate_registrant, ///< Chyba v držiteli při update domény
+    domainUpdate_nsset, ///< Chyba v nssetu při update domény
+    domainUpdate_admin_add, ///< Chyba v přidávaném admin. kontaktu
+    domainUpdate_admin_rem, ///< Chyba v odebíraném admin. kontaktu
+    domainUpdate_status_add, ///< Chyba v přidávaném stavu při update domény
+    domainUpdate_status_rem, ///< Chyba v přidávaném stavu při update domény
+    domainUpdate_ext_valDate, ///< Chyba v datumu validace při update domény
+    domainRenew_curExpDate, ///< Chyba v současném datumu expirace u domény
+    domainRenew_period, ///< Chyba v periodě u renew domény
+    domainRenew_ext_valDate, ///< Chyba v datumu validace u renew domény
+    domainInfo_fqdn, ///< Špatný název domény
+    contactInfo_handle, ///< Špatný identifikátor kontaktu
+    nssetInfo_handle ///< Špatný identifikátor nssetu
+  };
+  /// Typ pro prvek seznamu chybových zpráv
   struct Error_seq
   {
-    ErrorSpec code;		// kod chyby (urcuje funkci a parametr) - nutny
-    				// pro spravne doplneni xml tagu v EPP serveru
-    any value;		        // hodnota zadana klientem, ktera zpusobila chybu
-                                // string timestamp Long 
-    string reason;		// duvod chyby, textovy popis
+    ErrorSpec code; ///< Kód chyby pro správné doplnění xml tagu v EPP serveru
+    any value; ///< Chybná hodnota zadaná klientem - string timestamp Long 
+    string reason; ///< Důvod chyby, textový popis
   };
-  typedef sequence < Error_seq > Error;
-
-  // vracena struktura 
+  /// Typ pro předání chybových zpráv
+  typedef sequence <Error_seq> Error;
+  /// Typ pro návratovou hodnotu všech EPP funkcí
   struct Response
   {
-    short errCode;		// navratovy kod definovany EPP protokolem
-    string errMsg;              // zprava prislusejici navratovemu kodu
-    string svTRID;		// server transaction ID
-    Error errors;		// chyby
+    short errCode; ///< Návratový kód definovaný EPP protokolem
+    string errMsg; ///< Zpráva příslušející návratovému kódu (podle jazyka)
+    string svTRID; ///< Server transaction ID
+    Error errors; ///< Seznam chybových zpráv
   };
-
+  /// Typ pro předání dat po zavolání info_contact
   struct Contact
   {
-    string handle;		// handle kontaktu
-    string ROID;		// identifikator kontaktu  repository ID
-    string ClID;		// identifikator registratora ktery ma pravo na zemnu
-    string CrID;		// identifikator registratora ktery vytvoril kontak
-    string UpID;		// identifikator registratora ktery provedl zmeny
-    Status stat;		// status sequence
-    timestamp CrDate;		// datum a cas vytvoreni
-    timestamp UpDate;		// datum a cas zmeny
-    timestamp TrDate;		// datum a cas transferu
-    string Name;		// jmeno nebo nazev kontaktu
-    string Organization;	// nazev organizace
-    string Street1;		// adresa
-    string Street2;		// adresa
-    string Street3;		// adresa
-    string City;		// obec
-    string StateOrProvince;
-    string PostalCode;		// PSC
-    string CountryCode;		// ISO kod
-    string Telephone;
-    string Fax;
-    string Email;
-    string NotifyEmail;		// upozornovaci email
-    string VAT;			// DIC 
-    string SSN;			// SSN
-    SSNtyp SSNtype;             // typ SSN
-    string AuthInfoPw;		// autentifikace
-    Disclose DiscloseFlag;	// disclose flag pro nasledujici polozky
-    boolean DiscloseName;	// povolovani zobrazeni
-    boolean DiscloseOrganization;
-    boolean DiscloseAddress;
-    boolean DiscloseTelephone;
-    boolean DiscloseFax;
-    boolean DiscloseEmail;
+    string handle; ///< Handle kontaktu
+    string ROID; ///< Identifikátor kontaktu - repository ID
+    string ClID; ///< Identifikátor registrátora, který má právo na změnu
+    string CrID; ///< Identifikátor registrátora, který vytvořil kontakt
+    string UpID; ///< Identifikátor registrátora, který provedl změny
+    Status stat; ///< Seznam stavů kontaktu
+    timestamp CrDate; ///< Datum a čas vytvoření 
+    timestamp UpDate; ///< Datum a čas poslední změny
+    timestamp TrDate; ///< Datum a čas posledního transferu
+    string Name; ///< Jméno nebo název kontaktu
+    string Organization; ///< Název organizace
+    string Street1; ///< Adresa - první část
+    string Street2; ///< Adresa - druhá část
+    string Street3; ///< Adresa - třetí část
+    string City; ///< Adresa - město
+    string StateOrProvince; ///< Adresa - kraj(územní celek)
+    string PostalCode; ///< PSČ
+    string CountryCode; ///< Country Code - dvojmístný kód země ISO 
+    string Telephone; ///< Telefonní číslo 
+    string Fax; ///< Faxové číslo
+    string Email; ///< Kontaktní email pro zprávy o exiraci
+    string NotifyEmail; ///< Upozorňovací email pro zprávy o změnách
+    string VAT; ///< Daňové identifikační číslo 
+    string SSN; ///< SSN - jednoznační identifikátor kontaktu
+    SSNtyp SSNtype; ///< Typ SSN - definuje význam pole SSN
+    string AuthInfoPw; ///< Heslo pro transfer kontaktu
+    Disclose DiscloseFlag; ///< Disclose flag určující význam disclose param.
+    boolean DiscloseName; ///< Vviditelnost pro parametr Name 
+    boolean DiscloseOrganization; ///< Viditelnost pro parametr Organization
+    boolean DiscloseAddress; ///< Viditelnost pro parametr Address
+    boolean DiscloseTelephone; ///< Viditelnost pro parametr Telephone
+    boolean DiscloseFax; ///< Viditelnost pro parametr Fax
+    boolean DiscloseEmail; ///< Viditelnost pro parametr Email
   };
-
+  /// Typ pro předání dat po zavolání [create|update]_contact
   struct ContactChange
   {
-    string Name;		// jmeno nebo nazev kontaktu
-    string Organization;	// nazev organizace
-    string Street1;		// adresa
-    string Street2;		// adresa
-    string Street3;		// adresa
-    string City;		// obec
-    string StateOrProvince;
-    string PostalCode;		// PSC
-    string CC;		        // country code dvojmistny kod zeme ISO 
-    string Telephone;
-    string Fax;
-    string Email;
-    string NotifyEmail;		// upozornovaci email
-    string VAT;			// DIC 
-    string SSN;			// SSN
-    SSNtyp SSNtype;             // typ SSN
-    string AuthInfoPw;		// autentifikace
-    Disclose DiscloseFlag;	// disclose flag pro nasledujici polozky
-    boolean DiscloseName;	// povolovani zobrazeni
-    boolean DiscloseOrganization;
-    boolean DiscloseAddress;
-    boolean DiscloseTelephone;
-    boolean DiscloseFax;
-    boolean DiscloseEmail;
+    string Name; ///< Jméno nebo název kontaktu
+    string Organization; ///< Název organizace
+    string Street1; ///< Adresa - první část
+    string Street2; ///< Adresa - druhá část
+    string Street3; ///< Adresa - třetí část
+    string City; ///< Adresa - město
+    string StateOrProvince; ///< Adresa - kraj(územní celek)
+    string PostalCode; ///< PSČ
+    string CC; ///< Country Code - dvojmístný kód země ISO 
+    string Telephone; ///< Telefonní číslo 
+    string Fax; ///< Faxové číslo
+    string Email; ///< Kontaktní email pro zprávy o exiraci
+    string NotifyEmail; ///< Upozorňovací email pro zprávy o změnách
+    string VAT; ///< Daňové identifikační číslo 
+    string SSN; ///< SSN - jednoznační identifikátor kontaktu
+    SSNtyp SSNtype; ///< Typ SSN - definuje význam pole SSN
+    string AuthInfoPw; ///< Heslo pro transfer kontaktu
+    Disclose DiscloseFlag; ///< Disclose flag určující význam disclose param.
+    boolean DiscloseName; ///< Vviditelnost pro parametr Name 
+    boolean DiscloseOrganization; ///< Viditelnost pro parametr Organization
+    boolean DiscloseAddress; ///< Viditelnost pro parametr Address
+    boolean DiscloseTelephone; ///< Viditelnost pro parametr Telephone
+    boolean DiscloseFax; ///< Viditelnost pro parametr Fax
+    boolean DiscloseEmail; ///< Viditelnost pro parametr Email
   };
-
+  /// Typ pro přenos dat ve funkci info_nsset
   struct NSSet
   {
-    string ROID;
-    string handle;
-    Status stat;		// status sequence
-    string ClID;		// identifikator registratora ktery ma pravo na zemnu
-    string CrID;		// identifikator registratora ktery zaznam vytvoril
-    string UpID;		// identifikator registratora ktery zmenil zaznam
-    timestamp CrDate;		// datum a cas vytvoreni
-    timestamp UpDate;		// datum a cas update
-    timestamp TrDate;		// datum a cas transferu
-    string AuthInfoPw;		// autentifikace
-    DNSHost dns;		// hosty DNS
-    TechContact tech;		// sequence handle na technicke kontakty
+    string handle; ///< Handle nssetu
+    string ROID; ///< Identifikátor nassetu - repository ID
+    string ClID; ///< Identifikátor registrátora, který má právo na změnu
+    string CrID; ///< Identifikátor registrátora, který vytvořil kontakt
+    string UpID; ///< Identifikátor registrátora, který provedl změny
+    Status stat; ///< Seznam stavů nssetu
+    timestamp CrDate; ///< Datum a čas vytvoření 
+    timestamp UpDate; ///< Datum a čas poslední změny
+    timestamp TrDate; ///< Datum a čas posledního transferu
+    string AuthInfoPw; ///< Heslo pro transfer nssetu
+    DNSHost dns; ///< Seznam nameserverů  DNS
+    TechContact tech; ///< Seznam identifikátorů technických kontaktů
   };
-
-  // struktura pro popis domen
+  /// Typ pro přenos dat ve funkci info_domain
   struct Domain
   {
-    string ROID;
-    string name;		// fqdn nazev domeny
-    string Registrant;		// ROID registranta contactu
-    string nsset;		// handle NSSETu
-    Status stat;		// status sequence
-    string ClID;		// identifikator registratora ktery ma pravo na zemnu
-    string CrID;		// identifikator registratora ktery zaznam vytvoril 
-    string UpID;		// identifikator registratora ktery zmenil zaznam
-    timestamp CrDate;		// datum a cas vytvoreni
-    timestamp ExDate;		// taum a cas expirace domeny
-    timestamp UpDate;		// datum a cas update
-    timestamp TrDate;		// datum a cas transferu
-    string AuthInfoPw;		// autentifikace
-    AdminContact admin;		// administrativni kontakty (handle)
-    ExtensionList ext;  // obecne rozsirujici informace 
+    string ROID; ///< Identifikátor domény - repository ID
+    string name; ///< Fqdn - název domény
+    string Registrant; ///< Handle držitele domény
+    string nsset; ///< handle NSSETu
+    Status stat; ///< Seznam stavů domény
+    string ClID; ///< Identifikátor registrátora, který má právo na změnu
+    string CrID; ///< Identifikátor registrátora, který vytvořil kontakt
+    string UpID; ///< Identifikátor registrátora, který provedl změny
+    timestamp CrDate; ///< Datum a čas vytvoření 
+    timestamp UpDate; ///< Datum a čas poslední změny
+    timestamp TrDate; ///< Datum a čas posledního transferu
+    timestamp ExDate; ///< Datum a čas expirace dom=ny
+    string AuthInfoPw; ///< Heslo pro transfer domény
+    AdminContact admin; ///< Seznam administrativních kontaktů
+    ExtensionList ext; ///< Obecné rozšiřující informace 
   };
-
+  /// Typ pro předání datumu validace u ENUM domen
   struct ENUMValidationExtension {
-    date valExDate; // datum expirace overeni validity
+    date valExDate; ///< Datum vypršení platnosti přidělení čísla
   };
-
-  // pro klienty EPP  protokolu 
+  
+  
+  /// Rozhraní pro server implementující EPP protokol
   interface EPP
-  {
-    string version(out timestamp datetime); // vraceni cisla verze a datumu
-
-    // pro vraceni serverTRID 
-    Response GetTransaction (in long clientID, in string clTRID,
-			     in short errCode  );
-
-    // poll funkce
-    // potvrezeni prijeti zpravy msgID vraci pocet zbyvajicich zprav a 
-    // dalsi id zpravy
-    Response PollAcknowledgement (in long msgID, out short count,
-				  out long newmsgID, in long clientID,
-				  in string clTRID , in string XML );
-    // ziskani zpravy s msgID ze servru
-    // count  celkovy pocet zprav  msgID id zpravy  qDate datum zarazeni 
-    // do fronty mesg zprava
-    Response PollRequest (out long msgID, out short count,
-			  out timestamp qDate, out string mesg,
-			  in long clientID, in string clTRID , in string XML );
-
-    // pro prihlaseni clienta 
-    Response ClientLogin (in string ClID, in string passwd, in string newpass,
-			  in string clTRID,  in string XML ,  out long clientID,
-			  in string certID , in Languages  lang );
-    Response ClientLogout (in long clientID, in string clTRID , in string XML);
-
-    // zjisteni kontaktaktu
-    Response ContactCheck (in Check handle, out CheckResp a, in long clientID,
-			   in string clTRID, in string XML);
-    // info o kontaktni osobe
-    Response ContactInfo (in string handle, out Contact c, in long clientID,
-			  in string clTRID, in string XML);
-    // vymazani kontaktni osoby 
-    Response ContactDelete (in string handle, in long clientID,
-			    in string clTRID, in string XML);
-    // zmena udaju u kontaktni osoby 
-    // zmena je co je ve strukture  Contact chg 
-    // remove a add je pouze status
-    Response ContactUpdate (in string handle, in ContactChange c,
-			    in Status status_add, in Status status_rem,
-			    in long clientID, in string clTRID , in string XML);
-    // vytvoreni kontaktni osoby 
-    Response ContactCreate (in string handle, in ContactChange c,
-			    out timestamp crDate, in long clientID,
-			    in string clTRID, in string XML );
-
-    // prevod kontaktni osoby
-    Response ContactTransfer (in string handle, in string authInfo,
-			    in long clientID, in string clTRID , in string XML );
-
-    // listing registrovanych kontaktu
-    Response ContactList (out Lists contacts,
-			    in long clientID, in string clTRID , in string XML );
-
-    // predelano na NSSET
-    // check hostu
-    Response NSSetCheck (in Check handle, out CheckResp a, in long clientID,
-			 in string clTRID, in string XML );
-    // info o hostu
-    Response NSSetInfo (in string handle, out NSSet n, in long clientID,
-			in string clTRID, in string XML);
-    // smazani hostu
-    Response NSSetDelete (in string handle, in long clientID,
-			  in string clTRID, in string XML);
-    // vytvoreni hostu
-    Response NSSetCreate (in string handle, in string authInfoPw,
-			  in TechContact tech, in DNSHost dns,
-			  out timestamp crDate, in long clientID,
-			  in string clTRID , in string XML);
-    // zmena udaju update  change pouze authInfo 
-    // pridat nebo zrusit pouze TechContact 
-    // dns_rem zrusene dns hosty 
-    // dns_add pridane dns hosty
-    Response NSSetUpdate (in string handle, in string authInfo_chg,
-			  in DNSHost dns_add, in DNSHost dns_rem,
-			  in TechContact tech_add, in TechContact tech_rem,
-			  in Status status_add, in Status status_rem,
-			  in long clientID, in string clTRID , in string XML );
-
-    // prevod nssetu
-    Response NSSetTransfer (in string handle, in string authInfo,
-			    in long clientID, in string clTRID , in string XML );
-
-    // listing registrovanych nssetu
-    Response NSSetList (out Lists nssets,
-			    in long clientID, in string clTRID , in string XML );
-
-
-    //  funkce na spravu domen
-    Response DomainCheck (in Check fqdn, out CheckResp a, in long clientID,
-			  in string clTRID  , in string XML);
-    Response DomainInfo (in string fqdn, out Domain d, in long clientID,
-			 in string clTRID , in string XML);
-    Response DomainDelete (in string fqdn, in long clientID,
-			   in string clTRID , in string XML );
-
-    // Data elements that can be changed: registrant authInfo and nsset
-    // Data elements that can be added or removed: admin contact and status 
-    Response DomainUpdate (in string fqdn, in string registrant_chg,
-			   in string authInfo_chg, in string nsset_chg,
-			   in AdminContact admin_add,
-			   in AdminContact admin_rem, in Status status_add,
-			   in Status status_rem, in long clientID,
-			   in string clTRID, in string XML , 
-			   in ExtensionList ext);
-    Response DomainCreate (in string fqdn, in string Registrant,
-			   in string nsset, in string AuthInfoPw,
-			   in short period, in AdminContact admin,
-			   out timestamp crDate, out date exDate,
-			   in long clientID, in string clTRID, in string XML,
-			   in ExtensionList ext);
-
-    // doba prodlouzeni period je v mesicich
-    Response DomainRenew (in string fqdn, in date curExpDate,
-			  in short period, out timestamp exDate,
-			  in long clientID, in string clTRID, in string XML,
-			  in ExtensionList ext);			  
-    // transfer funkce 
-    Response DomainTransfer (in string fqdn, in string authInfo,
-              in long clientID, in string clTRID , in string XML );
-
-    // listing registrovanych domen
-    Response DomainList (out Lists domains,
-			    in long clientID, in string clTRID , in string XML );
-
-  };
-};
+  { 
+    /// Vrátí číslo verze serveru a aktuální čas
+    /** Zjištění čísla verze a aktuálního datumu pro předání v Greeting zprávě
+     * \param datetime Aktuální lokání čas 
+     * \return Číslo verze */
+    string version(
+      out timestamp datetime
+    );
+    /// Zaevidování neůspěšné operace přes EPP protokol
+    /** V případě že byla zjištěna chyba ještě na straně EPP serveru, toto 
+     volání nalezenou chybu uloží do evidence akcí a vrátí vygenerované srvTRID
+     \param clientID Identifikace session získaná při volání ClientLogin.
+     Pokud není klient přihlášen (k chybě došlo ještě před přihlášením)
+     uvede se sem hodnota 0
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param errCode Návratový kód chyby pro jeho zaevidování
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */
+    Response GetTransaction (
+      in long clientID,
+      in string clTRID,
+	  in short errCode
+	);
+    /// Potvrzení přečtení zprávy získané přes PollRequest
+    /**
+     Označí danou zprávu jako přečtenou. Pro pokračování zpracování zpráv
+     vrátí Počet byvajících zpráv a identifikaci další zprávy ve frontě
+     \param msgID Id zprávy která se potvrzuje
+     \param count Počet zpráv které jsou po odebrání této zprávy ve frontě
+	 \param newmsgID Id první další zprávy
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */
+    Response PollAcknowledgement (
+      in long msgID,
+      out short count,
+	  out long newmsgID,
+	  in long clientID,
+      in string clTRID,
+      in string XML
+    );
+    /// Získání zprávy ze serveru podle id
+    /** Vrátí obsah zprávy 
+     \param msgID ID požadované zprávy
+     \param count Počet zpráv ve frontě
+	 \param qDate Datum vložení zprávy do fronty
+	 \param mesg Text zprávy
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response PollRequest (
+      out long msgID,
+      out short count,
+	  out timestamp qDate, 
+	  out string mesg,
+	  in long clientID,
+	  in string clTRID,
+	  in string XML
+	);
+    /// Provede autentizaci klienta a přihlášení do systému
+    /** 
+     \param ClID
+     \param passwd
+     \param newpass
+     \param clTRID
+     \param XML
+     \param clientID
+     \param certID
+     \param lang
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response ClientLogin (
+      in string ClID,
+      in string passwd,
+      in string newpass,
+      in string clTRID,
+      in string XML,
+      out long clientID,
+      in string certID,
+      in Languages lang
+    );
+    /// Provede uzavření komunikace
+    /**
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response ClientLogout (
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
+    /// Ověření možnosti registrovat kontakt s daným identifikátorem
+    /** 
+     \param handle Seznam identifikátorů
+     \param a Seznam odpovědí pro jednotlivé identifikátory
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response ContactCheck (
+      in Check handle,
+      out CheckResp a,
+      in long clientID,
+	  in string clTRID,
+	  in string XML
+	);
+    /// Získání informací o zaregistrovaném kontaktu
+    /** 
+     \param handle Identifikátor požadovaného objektu
+     \param c Datová struktura s odpovědí
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response ContactInfo (
+      in string handle,
+      out Contact c,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
+    /// Vymazání zaregistrovaného kontaktu 
+    /** 
+     \param handle Identifikátor požadovaného objektu
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response ContactDelete (
+      in string handle,
+      in long clientID,
+	  in string clTRID,
+	  in string XML
+	);
+    /// Změna údajů zaregistrovaného kontaktu
+    /**
+     \param handle Identifikátor požadovaného objektu
+     \param c Struktura s požadovanými změnami v kontaktu
+     \param status_add Seznam přidávaných stavů
+     \param status_rem Seznam odebíraných stavů
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response ContactUpdate (
+      in string handle,
+      in ContactChange c,
+      in Status status_add,
+      in Status status_rem,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
+    /// Zaregistrování nového kontaktu
+    /**
+     \param handle Identifikátor požadovaného objektu
+     \param c Struktura s požadovanými hodnotamy v kontaktu
+     \param crDate Vracený datum vytvoření
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response ContactCreate (
+      in string handle,
+      in ContactChange c,
+      out timestamp crDate,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
+    /// Převod kontaktu pod jiného registrátora
+    /**
+     \param handle Identifikátor požadovaného objektu
+     \param authInfo Heslo pro kontrolu s údajem u objektu
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response ContactTransfer (
+      in string handle,
+      in string authInfo,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
+    /// Výpis všech kontaktů daného registrátora
+    /**
+     \param contacts Seznam identifikátorů kontaktů
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */       
+    Response ContactList (
+      out Lists contacts,
+	  in long clientID,
+	  in string clTRID,
+	  in string XML
+	);
+    /// Ověření možnosti registrovat nsset s daným identifikátorem
+    /** 
+     \param handle Seznam identifikátorů
+     \param a Seznam odpovědí pro jednotlivé identifikátory
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response NSSetCheck (
+      in Check handle,
+      out CheckResp a,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
+    /// Získání informací o zaregistrovaném nssetu
+    /** 
+     \param handle Identifikátor požadovaného objektu
+     \param n Datová struktura s odpovědí
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response NSSetInfo (
+      in string handle,
+      out NSSet n,
+      in long clientID,
+	  in string clTRID,
+	  in string XML
+	);
+    /// Vymazání zaregistrovaného nssetu
+    /** 
+     \param handle Identifikátor požadovaného objektu
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response NSSetDelete (
+      in string handle,
+      in long clientID,
+	  in string clTRID,
+	  in string XML
+	);
+    /// Zaregistrování nového nssetu
+    /**
+     \param handle Identifikátor požadovaného objektu
+     \param authInfoPw Heslo pro převod
+	 \param tech Seznam technických kontaktů
+	 \param dns Seznam hostů (nameserverů)
+     \param crDate Vracený datum vytvoření
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response NSSetCreate (
+      in string handle,
+      in string authInfoPw,
+	  in TechContact tech,
+	  in DNSHost dns,
+	  out timestamp crDate,
+	  in long clientID,
+	  in string clTRID,
+	  in string XML
+	);
+    /// Změna údajů zaregistrovaného nssetu
+    /**
+     \param handle Identifikátor požadovaného objektu
+     \param authInfo_chg Změna hesla pro převod
+	 \param dns_add Identifikátor přidávaného hosta
+	 \param dns_rem Identifikátor odebíraného hosta
+     \param tech_add Identifikátor přidávaného technického kontaktu
+     \param tech_rem Identifikátor odebíraného technického kontaktu
+     \param status_add Seznam přidávaných stavů
+     \param status_rem Seznam odebíraných stavů
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response NSSetUpdate (
+      in string handle,
+      in string authInfo_chg,
+	  in DNSHost dns_add,
+	  in DNSHost dns_rem,
+      in TechContact tech_add,
+      in TechContact tech_rem,
+	  in Status status_add,
+	  in Status status_rem,
+	  in long clientID,
+	  in string clTRID,
+	  in string XML
+	);
+    /// Převod nssetu pod jiného registrátora
+    /**
+     \param handle Identifikátor požadovaného objektu
+     \param authInfo Heslo pro kontrolu s údajem u objektu
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response NSSetTransfer (
+      in string handle,
+      in string authInfo,
+	  in long clientID,
+	  in string clTRID,
+	  in string XML
+	);
+    /// Výpis všech nssetů daného registrátora
+    /**
+     \param nssets Seznam identifikátorů nssetů
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */       
+    Response NSSetList (
+      out Lists nssets,
+	  in long clientID,
+	  in string clTRID,
+	  in string XML
+	);
+    /// Ověření možnosti registrovat doménu s daným názvem
+    /** 
+     \param fqdn Seznam identifikátorů
+     \param a Seznam odpovědí pro jednotlivé identifikátory
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response DomainCheck (
+      in Check fqdn,
+      out CheckResp a,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
+    /// Získání informací o zaregistrované doméně
+    /** 
+     \param fqdn Název domény
+     \param d Datová struktura s odpovědí
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response DomainInfo (
+      in string fqdn,
+      out Domain d,
+      in long clientID,
+	  in string clTRID,
+	  in string XML
+	);
+    /// Vymazání zaregistrované domény
+    /** 
+     \param fqdn Název domény
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response DomainDelete (
+      in string fqdn,
+      in long clientID,
+	  in string clTRID,
+	  in string XML
+	);
+    /// Změna údajů zaregistrované domény
+    /**
+     \param fqdn Název domény
+     \param registrant_chg Změna držitele domény
+     \param authInfo_chg Změna hesla pro převod
+     \param nsset_chg Změnna nssetu
+     \param admin_add Identifikátor přidávaného administrativního kontaktu
+     \param admin_rem Identifikátor odebíraného administrativního kontaktu
+     \param status_add Seznam přidávaných stavů
+     \param status_rem Seznam odebíraných stavů
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param ext Rozšíření obsahující další údaje (např validaci u ENUM domény)
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response DomainUpdate (
+      in string fqdn,
+      in string registrant_chg,
+      in string authInfo_chg,
+      in string nsset_chg,
+      in AdminContact admin_add,
+      in AdminContact admin_rem,
+      in Status status_add,
+	  in Status status_rem,
+	  in long clientID,
+	  in string clTRID,
+	  in string XML , 
+	  in ExtensionList ext
+	);
+    /// Zaregistrování nové domény
+    /**
+     \param fqdn Název domény
+     \param Registrant Identifikátor kontaktu držitele
+     \param nsset Identifikátor přiřazeného nssetu (nebo prázdný řetězec)
+     \param AuthInfoPw Heslo pro převod
+	 \param period Počáteční doba expirace v měsících
+	 \param admin Seznam administrativních kontaktů
+     \param crDate Vracený datum vytvoření
+	 \param exDate Vrací spočtený datum expirace na základě periody
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param ext Rozšíření obsahující další údaje (např validaci u ENUM domény)
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response DomainCreate (
+      in string fqdn,
+      in string Registrant,
+      in string nsset,
+      in string AuthInfoPw,
+	  in short period,
+	  in AdminContact admin,
+      out timestamp crDate,
+      out date exDate,
+      in long clientID,
+      in string clTRID,
+      in string XML,
+      in ExtensionList ext
+    );
+    /// Prodloužení domény o zadaný počet měsíců
+    /** 
+     \param fqdn Název domény
+     \param curExpDate Aktuální datum expirace (zjištěný z Info funkce)
+	 \param period Počet měsíců o které se prodlouží registrace
+	 \param exDate Vrací nový datum expirace
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param ext Rozšíření obsahující další údaje (např validaci u ENUM domény)
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response DomainRenew (
+      in string fqdn,
+      in date curExpDate,
+	  in short period,
+	  out timestamp exDate,
+	  in long clientID,
+	  in string clTRID,
+	  in string XML,
+      in ExtensionList ext
+    );			  
+    /// Převod domény pod jiného registrátora
+    /**
+     \param fqdn Název požadované domény
+     \param authInfo Heslo pro kontrolu s údajem u objektu
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response DomainTransfer (
+      in string fqdn,
+      in string authInfo,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
+    /// Výpis všech domén daného registrátora
+    /**
+     \param domains Seznam názvů domén
+	 \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */       
+    Response DomainList (
+      out Lists domains,
+	  in long clientID,
+	  in string clTRID,
+	  in string XML
+	);
+  }; // interface EPP
+  
+}; // module ccReg
