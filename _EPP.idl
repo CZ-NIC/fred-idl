@@ -51,13 +51,13 @@ module ccReg {
   /// Typ pro identifikaci místa v parametrech, ve kterém byla nalezena chyba
   enum ErrorSpec 
   {
-	unknow, ///< Není určené žádné konkrétní místo
-	pollAck_msgID, ///< Chyba v msgID zprávy poll
-	contactCreate_cc, ///< Chyba v kódu země při vytváření kontaktu
-	contactUpdate_cc, ///< Chyba v kódu země při update kontaktu
-	contactCreate_handle, ///< Chyba v handle při vytváření kontaktu
-	nssetCreate_handle, ///< Chyba v handle při vytváření nssetu
-	domainCreate_fqdn, ///< Chyba v názvu při vytváření domény
+    unknow, ///< Není určené žádné konkrétní místo
+    pollAck_msgID, ///< Chyba v msgID zprávy poll
+    contactCreate_cc, ///< Chyba v kódu země při vytváření kontaktu
+    contactUpdate_cc, ///< Chyba v kódu země při update kontaktu
+    contactCreate_handle, ///< Chyba v handle při vytváření kontaktu
+    nssetCreate_handle, ///< Chyba v handle při vytváření nssetu
+    domainCreate_fqdn, ///< Chyba v názvu při vytváření domény
     domainUpdate_fqdn, ///< Chyba v názvu při update domény
     domainRenew_fqdn, ///< Chyba v názvu při renew domény
     contactUpdate_status_add, ///< Chyba přidávaného stavu při update kontaktu
@@ -233,29 +233,29 @@ module ccReg {
      Pokud není klient přihlášen (k chybě došlo ještě před přihlášením)
      uvede se sem hodnota 0
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param errCode Návratový kód chyby pro jeho zaevidování
+     \param errCode Návratový kód chyby pro jeho zaevidování
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */
     Response GetTransaction (
       in long clientID,
       in string clTRID,
-	  in short errCode
-	);
+      in short errCode
+    );
     /// Potvrzení přečtení zprávy získané přes PollRequest.
     /** Označí danou zprávu jako přečtenou pokud zpráva s daným ID patří
      přihlášenému registrátorovi. Pro pokračování zpracování zpráv
      vrátí počet zbývajících zpráv a identifikaci další zprávy ve frontě.
      \param msgID Id zprávy která se potvrzuje
      \param count Počet zpráv které jsou po odebrání této zprávy ve frontě
-	 \param newmsgID Id první další zprávy
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param newmsgID Id první další zprávy
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
      \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */
     Response PollAcknowledgement (
       in long msgID,
       out short count,
-	  out long newmsgID,
-	  in long clientID,
+      out long newmsgID,
+      in long clientID,
       in string clTRID,
       in string XML
     );
@@ -264,21 +264,21 @@ module ccReg {
      nebyla označena jako přečtená a nevypršel datum její expirace.
      \param msgID ID vracené zprávy
      \param count Počet zpráv ve frontě
-	 \param qDate Datum vložení zprávy do fronty
-	 \param mesg Text zprávy
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param qDate Datum vložení zprávy do fronty
+     \param mesg Text zprávy
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response PollRequest (
       out long msgID,
       out short count,
-	  out timestamp qDate, 
-	  out string mesg,
-	  in long clientID,
-	  in string clTRID,
-	  in string XML
-	);
+      out timestamp qDate, 
+      out string mesg,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
     /// Provede autentizaci klienta a přihlášení do systému
     /** Najde v evidenci zadaného registrátora a ověří jeho heslo a 
      otisk klientského certifikátu SSL komunikace. Pokud vše sedí, uloží
@@ -304,9 +304,9 @@ module ccReg {
     );
     /// Provede uzavření komunikace
     /** V databázi uzavře záznam dané session.
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response ClientLogout (
       in long clientID,
@@ -321,24 +321,24 @@ module ccReg {
      seznamu.
      \param handle Seznam identifikátorů
      \param a Seznam odpovědí pro jednotlivé identifikátory
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response ContactCheck (
       in Check handle,
       out CheckResp a,
       in long clientID,
-	  in string clTRID,
-	  in string XML
-	);
+      in string clTRID,
+      in string XML
+    );
     /// Získání informací o zaregistrovaném kontaktu
     /** Najde kontakt s daným identifikátorem
      \param handle Identifikátor požadovaného objektu
      \param c Datová struktura s odpovědí
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response ContactInfo (
       in string handle,
@@ -352,16 +352,16 @@ module ccReg {
      objektu neobsahuje clientDeleteProhibited nebo serverDeleteProhibited, 
      provede jeho smazání.
      \param handle Identifikátor požadovaného objektu
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response ContactDelete (
       in string handle,
       in long clientID,
-	  in string clTRID,
-	  in string XML
-	);
+      in string clTRID,
+      in string XML
+    );
     /// Změna údajů zaregistrovaného kontaktu
     /** Pokud stav nebosahuje clientUpdateProhibited nebo 
      serverUpdateProhibited, aktualizuje na základě požadavků údaje u 
@@ -370,9 +370,9 @@ module ccReg {
      \param c Struktura s požadovanými změnami v kontaktu
      \param status_add Seznam přidávaných stavů
      \param status_rem Seznam odebíraných stavů
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response ContactUpdate (
       in string handle,
@@ -389,9 +389,9 @@ module ccReg {
      \param handle Identifikátor požadovaného objektu
      \param c Struktura s požadovanými hodnotamy v kontaktu
      \param crDate Vracený datum vytvoření
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response ContactCreate (
       in string handle,
@@ -407,9 +407,9 @@ module ccReg {
      určeného registrátora na 
      \param handle Identifikátor požadovaného objektu
      \param authInfo Heslo pro kontrolu s údajem u objektu
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response ContactTransfer (
       in string handle,
@@ -421,23 +421,23 @@ module ccReg {
     /// Výpis všech kontaktů daného registrátora
     /**
      \param contacts Seznam identifikátorů kontaktů
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */       
     Response ContactList (
       out Lists contacts,
-	  in long clientID,
-	  in string clTRID,
-	  in string XML
-	);
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
     /// Ověření možnosti registrovat nsset s daným identifikátorem
     /** 
      \param handle Seznam identifikátorů
      \param a Seznam odpovědí pro jednotlivé identifikátory
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response NSSetCheck (
       in Check handle,
@@ -450,113 +450,113 @@ module ccReg {
     /** 
      \param handle Identifikátor požadovaného objektu
      \param n Datová struktura s odpovědí
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response NSSetInfo (
       in string handle,
       out NSSet n,
       in long clientID,
-	  in string clTRID,
-	  in string XML
-	);
+      in string clTRID,
+      in string XML
+    );
     /// Vymazání zaregistrovaného nssetu
     /** 
      \param handle Identifikátor požadovaného objektu
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response NSSetDelete (
       in string handle,
       in long clientID,
-	  in string clTRID,
-	  in string XML
-	);
+      in string clTRID,
+      in string XML
+    );
     /// Zaregistrování nového nssetu
     /**
      \param handle Identifikátor požadovaného objektu
      \param authInfoPw Heslo pro převod
-	 \param tech Seznam technických kontaktů
-	 \param dns Seznam hostů (nameserverů)
+     \param tech Seznam technických kontaktů
+     \param dns Seznam hostů (nameserverů)
      \param crDate Vracený datum vytvoření
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response NSSetCreate (
       in string handle,
       in string authInfoPw,
-	  in TechContact tech,
-	  in DNSHost dns,
-	  out timestamp crDate,
-	  in long clientID,
-	  in string clTRID,
-	  in string XML
-	);
+      in TechContact tech,
+      in DNSHost dns,
+      out timestamp crDate,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
     /// Změna údajů zaregistrovaného nssetu
     /**
      \param handle Identifikátor požadovaného objektu
      \param authInfo_chg Změna hesla pro převod
-	 \param dns_add Identifikátor přidávaného hosta
-	 \param dns_rem Identifikátor odebíraného hosta
+     \param dns_add Identifikátor přidávaného hosta
+     \param dns_rem Identifikátor odebíraného hosta
      \param tech_add Identifikátor přidávaného technického kontaktu
      \param tech_rem Identifikátor odebíraného technického kontaktu
      \param status_add Seznam přidávaných stavů
      \param status_rem Seznam odebíraných stavů
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response NSSetUpdate (
       in string handle,
       in string authInfo_chg,
-	  in DNSHost dns_add,
-	  in DNSHost dns_rem,
+      in DNSHost dns_add,
+      in DNSHost dns_rem,
       in TechContact tech_add,
       in TechContact tech_rem,
-	  in Status status_add,
-	  in Status status_rem,
-	  in long clientID,
-	  in string clTRID,
-	  in string XML
-	);
+      in Status status_add,
+      in Status status_rem,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
     /// Převod nssetu pod jiného registrátora
     /**
      \param handle Identifikátor požadovaného objektu
      \param authInfo Heslo pro kontrolu s údajem u objektu
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response NSSetTransfer (
       in string handle,
       in string authInfo,
-	  in long clientID,
-	  in string clTRID,
-	  in string XML
-	);
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
     /// Výpis všech nssetů daného registrátora
     /**
      \param nssets Seznam identifikátorů nssetů
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */       
     Response NSSetList (
       out Lists nssets,
-	  in long clientID,
-	  in string clTRID,
-	  in string XML
-	);
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
     /// Ověření možnosti registrovat doménu s daným názvem
     /** 
      \param fqdn Seznam identifikátorů
      \param a Seznam odpovědí pro jednotlivé identifikátory
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response DomainCheck (
       in Check fqdn,
@@ -569,30 +569,30 @@ module ccReg {
     /** 
      \param fqdn Název domény
      \param d Datová struktura s odpovědí
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response DomainInfo (
       in string fqdn,
       out Domain d,
       in long clientID,
-	  in string clTRID,
-	  in string XML
-	);
+      in string clTRID,
+      in string XML
+    );
     /// Vymazání zaregistrované domény
     /** 
      \param fqdn Název domény
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response DomainDelete (
       in string fqdn,
       in long clientID,
-	  in string clTRID,
-	  in string XML
-	);
+      in string clTRID,
+      in string XML
+    );
     /// Změna údajů zaregistrované domény
     /**
      \param fqdn Název domény
@@ -603,9 +603,9 @@ module ccReg {
      \param admin_rem Identifikátor odebíraného administrativního kontaktu
      \param status_add Seznam přidávaných stavů
      \param status_rem Seznam odebíraných stavů
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \param ext Rozšíření obsahující další údaje (např validaci u ENUM domény)
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response DomainUpdate (
@@ -616,25 +616,25 @@ module ccReg {
       in AdminContact admin_add,
       in AdminContact admin_rem,
       in Status status_add,
-	  in Status status_rem,
-	  in long clientID,
-	  in string clTRID,
-	  in string XML , 
-	  in ExtensionList ext
-	);
+      in Status status_rem,
+      in long clientID,
+      in string clTRID,
+      in string XML , 
+      in ExtensionList ext
+    );
     /// Zaregistrování nové domény
     /**
      \param fqdn Název domény
      \param Registrant Identifikátor kontaktu držitele
      \param nsset Identifikátor přiřazeného nssetu (nebo prázdný řetězec)
      \param AuthInfoPw Heslo pro převod
-	 \param period Počáteční doba expirace v měsících
-	 \param admin Seznam administrativních kontaktů
+     \param period Počáteční doba expirace v měsících
+     \param admin Seznam administrativních kontaktů
      \param crDate Vracený datum vytvoření
-	 \param exDate Vrací spočtený datum expirace na základě periody
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param exDate Vrací spočtený datum expirace na základě periody
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \param ext Rozšíření obsahující další údaje (např validaci u ENUM domény)
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response DomainCreate (
@@ -642,8 +642,8 @@ module ccReg {
       in string Registrant,
       in string nsset,
       in string AuthInfoPw,
-	  in short period,
-	  in AdminContact admin,
+      in short period,
+      in AdminContact admin,
       out timestamp crDate,
       out date exDate,
       in long clientID,
@@ -655,30 +655,30 @@ module ccReg {
     /** 
      \param fqdn Název domény
      \param curExpDate Aktuální datum expirace (zjištěný z Info funkce)
-	 \param period Počet měsíců o které se prodlouží registrace
-	 \param exDate Vrací nový datum expirace
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param period Počet měsíců o které se prodlouží registrace
+     \param exDate Vrací nový datum expirace
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \param ext Rozšíření obsahující další údaje (např validaci u ENUM domény)
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response DomainRenew (
       in string fqdn,
       in date curExpDate,
-	  in short period,
-	  out timestamp exDate,
-	  in long clientID,
-	  in string clTRID,
-	  in string XML,
+      in short period,
+      out timestamp exDate,
+      in long clientID,
+      in string clTRID,
+      in string XML,
       in ExtensionList ext
-    );			  
+    );
     /// Převod domény pod jiného registrátora
     /**
      \param fqdn Název požadované domény
      \param authInfo Heslo pro kontrolu s údajem u objektu
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response DomainTransfer (
       in string fqdn,
@@ -690,16 +690,16 @@ module ccReg {
     /// Výpis všech domén daného registrátora
     /**
      \param domains Seznam názvů domén
-	 \param clientID Identifikace session získaná z ClientLogin
+     \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */       
     Response DomainList (
       out Lists domains,
-	  in long clientID,
-	  in string clTRID,
-	  in string XML
-	);
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
   }; // interface EPP
   
 }; // module ccReg
