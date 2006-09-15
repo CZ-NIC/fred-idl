@@ -213,8 +213,7 @@ module ccReg {
   struct ENUMValidationExtension {
     date valExDate; ///< Datum vypršení platnosti přidělení čísla
   };
-  
-  
+    
   /// Rozhraní pro server implementující EPP protokol
   interface EPP
   { 
@@ -333,7 +332,8 @@ module ccReg {
       in string XML
     );
     /// Získání informací o zaregistrovaném kontaktu
-    /** Najde kontakt s daným identifikátorem
+    /** Najde kontakt s daným identifikátorem. Pokud přihlášený registrátor
+     není registrátorem kontaktu, zobrazí se mu položka AuthInfoPw prázdná.
      \param handle Identifikátor požadovaného objektu
      \param c Datová struktura s odpovědí
      \param clientID Identifikace session získaná z ClientLogin
@@ -350,7 +350,8 @@ module ccReg {
     /// Vymazání zaregistrovaného kontaktu 
     /** Pokud není kontakt v nějaké vazbě s jiným objektem a pokud stav 
      objektu neobsahuje clientDeleteProhibited nebo serverDeleteProhibited, 
-     provede jeho smazání.
+     provede jeho smazání. Smazat kontakt může pouze jeho určený registrátor.
+     Před smazáním uloží kontakt do historie.
      \param handle Identifikátor požadovaného objektu
      \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
@@ -365,7 +366,9 @@ module ccReg {
     /// Změna údajů zaregistrovaného kontaktu
     /** Pokud stav nebosahuje clientUpdateProhibited nebo 
      serverUpdateProhibited, aktualizuje na základě požadavků údaje u 
-     kontaktu.
+     kontaktu. Pokud je nastaven flag clientUpdateProhibited, lze pouze
+     smazat tento příznak. Aktualizovat kontakt smí jen jeho učený registátor. Před 
+     aktualizací uloží akutální data objektu do historie.
      \param handle Identifikátor požadovaného objektu
      \param c Struktura s požadovanými změnami v kontaktu
      \param status_add Seznam přidávaných stavů
@@ -385,7 +388,9 @@ module ccReg {
     );
     /// Zaregistrování nového kontaktu
     /** Pokud identifikátor projde testem z funkce ContactCheck, založí
-     se nový kontakt a přiřadí se vytvářejícímu registrátorovi.
+     se nový kontakt a přiřadí se vytvářejícímu registrátorovi. Po založení
+     uloží nový kontakt do historie aby byla vždy aspoň jedna kopie 
+     v historii. Pokud je uvedeno prázdné heslo, vygeneruje se automaticky.
      \param handle Identifikátor požadovaného objektu
      \param c Struktura s požadovanými hodnotamy v kontaktu
      \param crDate Vracený datum vytvoření
@@ -404,7 +409,9 @@ module ccReg {
     /// Převod kontaktu pod jiného registrátora
     /** Ověří zadané heslo s heslem uvedeným u kontaktu a pokud stav objektu
      neobsahuje clientTransferProhibited nebo serverTransferProhibited změní
-     určeného registrátora na 
+     určeného registrátora na aktuálně přihlášeného registrátora. Před změnou se
+     uloží aktuální kopie do historie. Po změně se vygeneruje automaticky nové
+     heslo. 
      \param handle Identifikátor požadovaného objektu
      \param authInfo Heslo pro kontrolu s údajem u objektu
      \param clientID Identifikace session získaná z ClientLogin
@@ -419,7 +426,8 @@ module ccReg {
       in string XML
     );
     /// Výpis všech kontaktů daného registrátora
-    /**
+    /** Vrátí seznam identifikátorů kontaktů patřících přihlášenému
+     registrátorovi.
      \param contacts Seznam identifikátorů kontaktů
      \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
@@ -432,7 +440,11 @@ module ccReg {
       in string XML
     );
     /// Ověření možnosti registrovat nsset s daným identifikátorem
-    /** 
+    /** Umožňuje hromadné prozkoumání několika identifikátorů. Pro každý 
+     prozkoumá validitu použitého identifikátoru, převede ho na velká
+     písmena a zjistí jestli už není tento identifikátor zaregistrován, nebo
+     není v ochrané lhůtě po jeho smazání. Vrátí výsledek opět ve formě 
+     seznamu.
      \param handle Seznam identifikátorů
      \param a Seznam odpovědí pro jednotlivé identifikátory
      \param clientID Identifikace session získaná z ClientLogin
@@ -447,7 +459,8 @@ module ccReg {
       in string XML
     );
     /// Získání informací o zaregistrovaném nssetu
-    /** 
+    /** Najde nsset s daným identifikátorem. Pokud přihlášený registrátor
+     není registrátorem nssetu, zobrazí se mu položka AuthInfoPw prázdná.
      \param handle Identifikátor požadovaného objektu
      \param n Datová struktura s odpovědí
      \param clientID Identifikace session získaná z ClientLogin
@@ -462,7 +475,10 @@ module ccReg {
       in string XML
     );
     /// Vymazání zaregistrovaného nssetu
-    /** 
+    /** Pokud není nsset v nějaké vazbě s jiným objektem a pokud stav 
+     objektu neobsahuje clientDeleteProhibited nebo serverDeleteProhibited, 
+     provede jeho smazání. Smazat nsset může pouze jeho určený registrátor.
+     Před smazáním uloží nsset do historie.
      \param handle Identifikátor požadovaného objektu
      \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
@@ -474,29 +490,16 @@ module ccReg {
       in string clTRID,
       in string XML
     );
-    /// Zaregistrování nového nssetu
-    /**
-     \param handle Identifikátor požadovaného objektu
-     \param authInfoPw Heslo pro převod
-     \param tech Seznam technických kontaktů
-     \param dns Seznam hostů (nameserverů)
-     \param crDate Vracený datum vytvoření
-     \param clientID Identifikace session získaná z ClientLogin
-     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
-     \param XML Kompletní XML zpráva která přišla přes EPP protokol
-     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
-    Response NSSetCreate (
-      in string handle,
-      in string authInfoPw,
-      in TechContact tech,
-      in DNSHost dns,
-      out timestamp crDate,
-      in long clientID,
-      in string clTRID,
-      in string XML
-    );
     /// Změna údajů zaregistrovaného nssetu
-    /**
+    /** Pokud stav nebosahuje clientUpdateProhibited nebo 
+     serverUpdateProhibited, aktualizuje na základě požadavků údaje u 
+     nssetu. Pokud je nastaven flag clientUpdateProhibited, lze pouze
+     smazat tento příznak. Aktualizovat nsset smí jen jeho učený registátor. 
+     Před aktualizací uloží akutální data objektu do historie. Je třeba dodržet 
+     podmínky, že v nssetu musí být alespoň dva dns hosty a alespoň jeden
+     technický kontakt. Dns hosty, které mají uvedenou IP adresu (GLUE) musí
+     mít mít hostname ze zóny spravované tímto registrem. Je dovoleno
+     používat IPv4 i IPv6 adresy z veřejného rozsahu adres.
      \param handle Identifikátor požadovaného objektu
      \param authInfo_chg Změna hesla pro převod
      \param dns_add Identifikátor přidávaného hosta
@@ -522,8 +525,38 @@ module ccReg {
       in string clTRID,
       in string XML
     );
+    /// Zaregistrování nového nssetu
+    /** Pokud identifikátor projde testem z funkce NSSetCheck, založí
+     se nový nsset a přiřadí se vytvářejícímu registrátorovi. Pokud je 
+     uvedeno prázdné heslo, vygeneruje se automaticky. Po založení
+     uloží nový nsset do historie aby byla vždy aspoň jedna kopie 
+     v historii. Při vytváření platí stejná pravidla jako jsou ta zmíněna v
+     popisu funkce NSSetUpdate.
+     \param handle Identifikátor požadovaného objektu
+     \param authInfoPw Heslo pro převod
+     \param tech Seznam technických kontaktů
+     \param dns Seznam hostů (nameserverů)
+     \param crDate Vracený datum vytvoření
+     \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response NSSetCreate (
+      in string handle,
+      in string authInfoPw,
+      in TechContact tech,
+      in DNSHost dns,
+      out timestamp crDate,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    );
     /// Převod nssetu pod jiného registrátora
-    /**
+    /** Ověří zadané heslo s heslem uvedeným u nssetu a pokud stav objektu
+     neobsahuje clientTransferProhibited nebo serverTransferProhibited změní
+     určeného registrátora na aktuálně přihlášeného registrátora. Před změnou se
+     uloží aktuální kopie do historie. Po změně se vygeneruje automaticky nové
+     heslo. 
      \param handle Identifikátor požadovaného objektu
      \param authInfo Heslo pro kontrolu s údajem u objektu
      \param clientID Identifikace session získaná z ClientLogin
@@ -538,7 +571,8 @@ module ccReg {
       in string XML
     );
     /// Výpis všech nssetů daného registrátora
-    /**
+    /** Vrátí seznam identifikátorů nssetů patřících přihlášenému
+     registrátorovi.
      \param nssets Seznam identifikátorů nssetů
      \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
