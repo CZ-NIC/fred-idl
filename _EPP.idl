@@ -219,15 +219,16 @@ module ccReg {
   interface EPP
   { 
     /// Vrátí číslo verze serveru a aktuální čas
-    /** Zjištění čísla verze a aktuálního datumu pro předání v Greeting zprávě
+    /** Zjištění čísla verze a aktuálního datumu pro předání v Greeting zprávě.
      * \param datetime Aktuální lokání čas 
      * \return Číslo verze */
     string version(
       out timestamp datetime
     );
-    /// Zaevidování neůspěšné operace přes EPP protokol
+    /// Zaevidování neůspěšné operace přijaté EPP protokol.
     /** V případě že byla zjištěna chyba ještě na straně EPP serveru, toto 
-     volání nalezenou chybu uloží do evidence akcí a vrátí vygenerované srvTRID
+     volání nalezenou chybu uloží do evidence akcí a vrátí vygenerované 
+     srvTRID.
      \param clientID Identifikace session získaná při volání ClientLogin.
      Pokud není klient přihlášen (k chybě došlo ještě před přihlášením)
      uvede se sem hodnota 0
@@ -239,10 +240,10 @@ module ccReg {
       in string clTRID,
 	  in short errCode
 	);
-    /// Potvrzení přečtení zprávy získané přes PollRequest
-    /**
-     Označí danou zprávu jako přečtenou. Pro pokračování zpracování zpráv
-     vrátí Počet byvajících zpráv a identifikaci další zprávy ve frontě
+    /// Potvrzení přečtení zprávy získané přes PollRequest.
+    /** Označí danou zprávu jako přečtenou pokud zpráva s daným ID patří
+     přihlášenému registrátorovi. Pro pokračování zpracování zpráv
+     vrátí počet zbývajících zpráv a identifikaci další zprávy ve frontě.
      \param msgID Id zprávy která se potvrzuje
      \param count Počet zpráv které jsou po odebrání této zprávy ve frontě
 	 \param newmsgID Id první další zprávy
@@ -258,9 +259,10 @@ module ccReg {
       in string clTRID,
       in string XML
     );
-    /// Získání zprávy ze serveru podle id
-    /** Vrátí obsah zprávy 
-     \param msgID ID požadované zprávy
+    /// Získání další nepřečtené zprávy ze serveru.
+    /** Vrátí obsah první další zprávy přihlášeného registrátora, která ještě 
+     nebyla označena jako přečtená a nevypršel datum její expirace.
+     \param msgID ID vracené zprávy
      \param count Počet zpráv ve frontě
 	 \param qDate Datum vložení zprávy do fronty
 	 \param mesg Text zprávy
@@ -278,15 +280,17 @@ module ccReg {
 	  in string XML
 	);
     /// Provede autentizaci klienta a přihlášení do systému
-    /** 
-     \param ClID
-     \param passwd
-     \param newpass
-     \param clTRID
-     \param XML
-     \param clientID
-     \param certID
-     \param lang
+    /** Najde v evidenci zadaného registrátora a ověří jeho heslo a 
+     otisk klientského certifikátu SSL komunikace. Pokud vše sedí, uloží
+     nový záznam o session, nastaví požadovaný jazyk a případně změní heslo.
+     \param ClID Identifikátor přihlašovaného registrátora
+     \param passwd Heslo pro přihlášení
+     \param newpass Nové heslo pokud je požadavek na změnu
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \param clientID Vrátí novou identifikaci session
+     \param certID MD5 otisk klientského certifikátu použitém při přihlášení
+     \param lang Požadovaný jazyk komunikace
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response ClientLogin (
       in string ClID,
@@ -299,7 +303,7 @@ module ccReg {
       in Languages lang
     );
     /// Provede uzavření komunikace
-    /**
+    /** V databázi uzavře záznam dané session.
 	 \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
 	 \param XML Kompletní XML zpráva která přišla přes EPP protokol
@@ -310,7 +314,11 @@ module ccReg {
       in string XML
     );
     /// Ověření možnosti registrovat kontakt s daným identifikátorem
-    /** 
+    /** Umožňuje hromadné prozkoumání několika identifikátorů. Pro každý 
+     prozkoumá validitu použitého identifikátoru, převede ho na velká
+     písmena a zjistí jestli už není tento identifikátor zaregistrován, nebo
+     není v ochrané lhůtě po jeho smazání. Vrátí výsledek opět ve formě 
+     seznamu.
      \param handle Seznam identifikátorů
      \param a Seznam odpovědí pro jednotlivé identifikátory
 	 \param clientID Identifikace session získaná z ClientLogin
@@ -325,7 +333,7 @@ module ccReg {
 	  in string XML
 	);
     /// Získání informací o zaregistrovaném kontaktu
-    /** 
+    /** Najde kontakt s daným identifikátorem
      \param handle Identifikátor požadovaného objektu
      \param c Datová struktura s odpovědí
 	 \param clientID Identifikace session získaná z ClientLogin
@@ -340,7 +348,9 @@ module ccReg {
       in string XML
     );
     /// Vymazání zaregistrovaného kontaktu 
-    /** 
+    /** Pokud není kontakt v nějaké vazbě s jiným objektem a pokud stav 
+     objektu neobsahuje clientDeleteProhibited nebo serverDeleteProhibited, 
+     provede jeho smazání.
      \param handle Identifikátor požadovaného objektu
 	 \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
@@ -353,7 +363,9 @@ module ccReg {
 	  in string XML
 	);
     /// Změna údajů zaregistrovaného kontaktu
-    /**
+    /** Pokud stav nebosahuje clientUpdateProhibited nebo 
+     serverUpdateProhibited, aktualizuje na základě požadavků údaje u 
+     kontaktu.
      \param handle Identifikátor požadovaného objektu
      \param c Struktura s požadovanými změnami v kontaktu
      \param status_add Seznam přidávaných stavů
@@ -372,7 +384,8 @@ module ccReg {
       in string XML
     );
     /// Zaregistrování nového kontaktu
-    /**
+    /** Pokud identifikátor projde testem z funkce ContactCheck, založí
+     se nový kontakt a přiřadí se vytvářejícímu registrátorovi.
      \param handle Identifikátor požadovaného objektu
      \param c Struktura s požadovanými hodnotamy v kontaktu
      \param crDate Vracený datum vytvoření
@@ -389,7 +402,9 @@ module ccReg {
       in string XML
     );
     /// Převod kontaktu pod jiného registrátora
-    /**
+    /** Ověří zadané heslo s heslem uvedeným u kontaktu a pokud stav objektu
+     neobsahuje clientTransferProhibited nebo serverTransferProhibited změní
+     určeného registrátora na 
      \param handle Identifikátor požadovaného objektu
      \param authInfo Heslo pro kontrolu s údajem u objektu
 	 \param clientID Identifikace session získaná z ClientLogin
