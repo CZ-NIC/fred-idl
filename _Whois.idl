@@ -11,7 +11,7 @@ module ccReg {
     string expired; ///< Datum expirace domény
     string registrarName; ///< Jméno registrátora
     string registrarUrl; ///< Webová adresa registrátora
-    NameServers ns;	///< Seznam nameserverů
+    NameServers ns; ///< Seznam nameserverů
     TechContact tech; ///< Seznam idenitifikátorů technických kontaktů
   };
 
