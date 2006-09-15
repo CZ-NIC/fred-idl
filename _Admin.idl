@@ -63,6 +63,7 @@ module ccReg {
     ) raises (ObjectNotFound);
 
     /// Jednoduchý výpis všech identifikátorů registrátorů
+    /**
      \return Seznam identifikátorů */
     Lists ListRegistrar(); 
     /// Jednoduchý výpis všech identifikátorů domén
