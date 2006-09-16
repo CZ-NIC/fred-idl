@@ -585,7 +585,16 @@ module ccReg {
       in string XML
     );
     /// Ověření možnosti registrovat doménu s daným názvem
-    /** 
+    /** Umožňuje hromadné prozkoumání několika identifikátorů. Pro každý 
+     prozkoumá validitu použitého identifikátoru, převede ho na malá
+     písmena a zjistí jestli už není tento identifikátor zaregistrován, nebo
+     není v ochrané lhůtě po jeho smazání. Vrátí výsledek opět ve formě 
+     seznamu. Doména musí být ze zóny spravované registrem a musí
+     splňovat pravidla podle jméno domény (včetně speciálních pravidel pro
+     enum domény) daná příslušnými RFC (1035,2916). Počet úrovní nesmí
+     překročit hodnu uvedenou jako parametr zóny (např. pro cz je to 1,
+     pro enum domény je to maximální délka čísla). Není možné zaregistrovat
+     doménu pokud již existuje její naddoména nebo poddoména.
      \param fqdn Seznam identifikátorů
      \param a Seznam odpovědí pro jednotlivé identifikátory
      \param clientID Identifikace session získaná z ClientLogin
@@ -600,7 +609,13 @@ module ccReg {
       in string XML
     );
     /// Získání informací o zaregistrované doméně
-    /** 
+    /** Nejprve ověří stejným způsobem jako v DomainCheck validitu
+     identifkátoru. Najde doménu s daným jménem nebo se jménem naddomény
+     nebo poddomény. Pokud přihlášený registrátor
+     není registrátorem nalezené domény, zobrazí se mu položka AuthInfoPw 
+     prázdná. Pokud se navíc jedná o enum doménu, nezobrazí se tomuto cizímu
+     registrátoru ani držitel domény a administrativní kontakty. U enum domén
+     se vrací navíc datum validace v obecném seznamu rozšíření.
      \param fqdn Název domény
      \param d Datová struktura s odpovědí
      \param clientID Identifikace session získaná z ClientLogin
@@ -615,7 +630,10 @@ module ccReg {
       in string XML
     );
     /// Vymazání zaregistrované domény
-    /** 
+    /** Pokud stav objektu neobsahuje clientDeleteProhibited nebo 
+     serverDeleteProhibited, provede jeho smazání. Smazat doménu může
+     pouze její určený registrátor. Před smazáním uloží doména do historie.
+     Pro tuto operaci musí mít registrátor práva k zóně dané domény.
      \param fqdn Název domény
      \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
