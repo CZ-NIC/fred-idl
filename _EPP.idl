@@ -367,8 +367,9 @@ module ccReg {
     /** Pokud stav nebosahuje clientUpdateProhibited nebo 
      serverUpdateProhibited, aktualizuje na základě požadavků údaje u 
      kontaktu. Pokud je nastaven flag clientUpdateProhibited, lze pouze
-     smazat tento příznak. Aktualizovat kontakt smí jen jeho učený registátor. Před 
-     aktualizací uloží akutální data objektu do historie.
+     smazat tento příznak. Aktualizovat kontakt smí jen jeho učený registátor.
+     Před aktualizací uloží akutální data objektu do historie. Časová značka 
+     upDate se nastaví na aktuální čas.
      \param handle Identifikátor požadovaného objektu
      \param c Struktura s požadovanými změnami v kontaktu
      \param status_add Seznam přidávaných stavů
@@ -499,7 +500,8 @@ module ccReg {
      podmínky, že v nssetu musí být alespoň dva dns hosty a alespoň jeden
      technický kontakt. Dns hosty, které mají uvedenou IP adresu (GLUE) musí
      mít mít hostname ze zóny spravované tímto registrem. Je dovoleno
-     používat IPv4 i IPv6 adresy z veřejného rozsahu adres.
+     používat IPv4 i IPv6 adresy z veřejného rozsahu adres. Časová
+     značka upDate se nastaví na aktuální čas.
      \param handle Identifikátor požadovaného objektu
      \param authInfo_chg Změna hesla pro převod
      \param dns_add Identifikátor přidávaného hosta
@@ -646,7 +648,16 @@ module ccReg {
       in string XML
     );
     /// Změna údajů zaregistrované domény
-    /**
+    /** Nejprve ověří stejným způsobem jako v DomainCheck validitu
+     identifkátoru. Pokud stav nebosahuje clientUpdateProhibited nebo 
+     serverUpdateProhibited, aktualizuje na základě požadavků údaje u 
+     nssetu. Pokud je nastaven flag clientUpdateProhibited, lze pouze
+     smazat tento příznak. Aktualizovat doménu smí jen její učený registátor. 
+     Před aktualizací uloží akutální data objektu do historie. Pro tuto 
+     operaci musí mít registrátor práva k zóně dané domény. Časová
+     značka upDate se nastaví na aktuální čas. Jen u enumo domén je možné
+     uvést rozšíření obsahující datum validace. Tento datum nesmí být nastaven
+     dále do budnoucnosti než je uvedeno v parametrech zóny.
      \param fqdn Název domény
      \param registrant_chg Změna držitele domény
      \param authInfo_chg Změna hesla pro převod
@@ -675,7 +686,18 @@ module ccReg {
       in ExtensionList ext
     );
     /// Zaregistrování nové domény
-    /**
+    /** Pokud jméno domény projde testem z funkce DomainCheck a
+     registrátor má oprávnění pro danou zónu, založí se nová doména a přiřadí
+     se vytvářejícímu registrátorovi. Pokud je uvedeno prázdné heslo, 
+     vygeneruje se automaticky. Po založení
+     uloží novou doménu do historie aby byla vždy aspoň jedna kopie 
+     v historii. Pokud není uvedena perioda, nastaví se na minimální periodu 
+     podle parametrů zóny. Pokud je uvedena musí splňovat další parametry
+     zóny a to maximální periodu a násobek minimální periody. Před založením
+     se ještě zkontroluje zda pro tuto operaci je u registárora dostatek
+     kreditu a tento kredit se registrátorovi odečte. Při založení enum domény
+     je nutné zadat v rozšíření datum validace. To nesmí být větší než maximum
+     uvedené v parametrech zóny.
      \param fqdn Název domény
      \param Registrant Identifikátor kontaktu držitele
      \param nsset Identifikátor přiřazeného nssetu (nebo prázdný řetězec)
@@ -704,7 +726,13 @@ module ccReg {
       in ExtensionList ext
     );
     /// Prodloužení domény o zadaný počet měsíců
-    /** 
+    /** Nejprve ověří stejným způsobem jako v DomainCheck validitu
+     identifkátoru. Pokud stav nebosahuje clientRenewProhibited nebo 
+     serverRenewProhibited, provede prodloužení domény o zadaný počet měsíců. 
+     Zároveň je u enum domén možné prodloužit i datum expirace. Pravidla jsou
+     stejná jako při vytvoření domény. Prodloužení je opět podmíněno dostatkem
+     kreditu a oprávněním registrátora pro práci s danou zónou. Před změnou
+     údajů se záznam uloží do historie.
      \param fqdn Název domény
      \param curExpDate Aktuální datum expirace (zjištěný z Info funkce)
      \param period Počet měsíců o které se prodlouží registrace
@@ -725,7 +753,11 @@ module ccReg {
       in ExtensionList ext
     );
     /// Převod domény pod jiného registrátora
-    /**
+    /** Ověří zadané heslo s heslem uvedeným u domény a pokud stav objektu
+     neobsahuje clientTransferProhibited nebo serverTransferProhibited změní
+     určeného registrátora na aktuálně přihlášeného registrátora. Před změnou se
+     uloží aktuální kopie do historie. Po změně se vygeneruje automaticky nové
+     heslo. Pro tuto operaci musí mít registrátor práva k zóně dané domény.
      \param fqdn Název požadované domény
      \param authInfo Heslo pro kontrolu s údajem u objektu
      \param clientID Identifikace session získaná z ClientLogin
@@ -740,7 +772,8 @@ module ccReg {
       in string XML
     );
     /// Výpis všech domén daného registrátora
-    /**
+    /**Vrátí seznam jmen domén patřících přihlášenému
+     registrátorovi.
      \param domains Seznam názvů domén
      \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
