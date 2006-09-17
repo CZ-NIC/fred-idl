@@ -24,7 +24,7 @@
       <xsl:value-of select='briefdescription'/>
      </xsl:element>
      <xsl:element name='para'>
-      <xsl:value-of select='detaileddescription/para/text()'/>
+      <xsl:apply-templates select='detaileddescription/para/text()'/>
      </xsl:element>
      <xsl:apply-templates select='detaileddescription/para/parameterlist[@kind="param"]'/>
      <xsl:apply-templates select='detaileddescription/para/simplesect[@kind="return"]'/>
