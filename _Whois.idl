@@ -3,9 +3,18 @@ module ccReg {
   /// Typ pro status flag domény v whoisu
   enum WhoisDomainStatus  { WHOIS_ACTIVE, WHOIS_EXPIRED };
 
+  /// Typ chyby (výsledek klasifikace identifikátoru)
+  enum WhoisErrorType {
+    WE_DOMAIN_BAD_ZONE, ///< Handle je doména mimo registr
+    WE_DOMAIN_LONG, ///< Handle je doména nepovolené délky (zkrácena)
+    WE_INVALID, ///< Handle není validní
+    WE_NOTFOUND ///< Domena nebyla nalezena
+  };
+ 
   /// Typ pro data o doméně
   struct DomainWhois
   {
+    string fqdn; ///< Nazev domeny
     WhoisDomainStatus status; ///< Stav domény
     string created; ///< Datum vytvoření domény
     string expired; ///< Datum expirace domény
@@ -18,13 +27,14 @@ module ccReg {
   /// Rozhraní pro WHOIS
   interface Whois
   {
-    /// Vyjímka pro případ chyby
+    /// Vyjímka pro případ zavazne chyby
     exception WhoisError {
       string message; ///< Popis chyby
     };
-    /// Vyjímka v případě nenalezení zadané domény
-    exception DomainNotFound {
-      string timestamp; ///< I když doména neexistuje potřebujeme timestamp
+    /// Vyjímka v případě lehci chyby souvisejici z nazvem identifikatoru
+    exception DomainError {
+      string timestamp; ///< I když nastane chyba potřebujeme timestamp
+      WhoisErrorType type; ///< Oznacuje typ chyby
     };
 
     /// Vraci údaje o doméně pro whois podle názvu
@@ -36,6 +46,6 @@ module ccReg {
     DomainWhois getDomain(
       in string domain_name,
       out string timestamp
-    ) raises (WhoisError, DomainNotFound);
+    ) raises (WhoisError, DomainError);
   };
 };
