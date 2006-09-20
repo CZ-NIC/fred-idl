@@ -27,7 +27,7 @@ module ccReg {
      \param update_retr Update retr
      \param expiry Expiry
      \param minimum Minimum
-     \param primns Fqdn a adresa prmárního nameserveru
+     \param primns Fqdn primárního nameserveru
      \param nameservers Sekundární nameservery
      \return Chybový stav */
     long transferRequest(
@@ -39,7 +39,7 @@ module ccReg {
       out long update_retr,
       out long expiry,
       out long minimum,
-      out DNSHost_str primns,
+      out string primns,
       out DNSHost nameservers
       ) raises (ZoneGeneratorError);
 
