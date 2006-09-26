@@ -1,5 +1,59 @@
 module ccReg {
 
+  /// One row of Table
+  typedef sequence<string> TableRow;
+
+  /// Table for data
+  interface Table {
+    /// Number of rows in table
+    readonly attribute short numRows;
+    /// Number of columns in table
+    readonly attribute short numColumns;
+    /// Return names of all columns
+    TableRow getColumnNames();
+    /// Return ona row of string representation of data in table
+    TableRow getRow(in short row);
+    /// Sort data by column index
+    void sortByColumn(in short column, in boolean dir);
+    /// Output data in CSV format
+    string outputCSV();
+  };
+  
+  /// Table divided into pages
+  interface PageTable : Table {
+    /// size of one page
+    attribute short pageSize;
+    /// current page index
+    attribute short page;
+    /// start row of current page
+    readonly attribute short start;
+    /// number of pages
+    readonly attribute short numPages;
+  };
+  
+  /// Common interface for data
+  interface Filtr {
+    /// Reload data
+    void reload();
+  };
+
+  /// List of registrars
+  interface Registrars : PageTable, Filtr {
+  };
+
+  /// List of EPPActions
+  interface EPPActions : PageTable, Filtr {
+    /// Those made by specific registrar
+    attribute short registrar;
+  };
+
+
+  /// Main interface for registrar session
+  interface Session {   
+    Registrars getRegistrars();
+    EPPActions getEPPActions();
+  };
+
   /// Typ pro kredit registrátora, celé číslo v haléřích
   typedef unsigned long price;
 
@@ -45,9 +99,15 @@ module ccReg {
     CheckHandleClass handleClass; ///< Výsledek klasifikace handle
   };
 
+  typedef string SessionIDType;
+
   /// Administrátorské rozhraní
   interface Admin
   {
+    /// log into administrator interface 
+    SessionIDType login(in string username, in string password);
+    /// get session
+    Session getSession(in SessionIDType sessionID);
     /// Vyjímka pro případ nenalezení hledaného objektu
     exception ObjectNotFound {};
     /// Vrátí kompletní seznam registrátorů
