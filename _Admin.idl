@@ -32,17 +32,19 @@ module ccReg {
   };
   
   /// Common interface for data
-  interface Filtr {
+  interface Filter {
     /// Reload data
     void reload();
   };
 
   /// List of registrars
-  interface Registrars : PageTable, Filtr {
+  interface Registrars : PageTable, Filter {
+    /// Fulltext search in handle
+    attribute string fulltext;
   };
 
   /// List of EPPActions
-  interface EPPActions : PageTable, Filtr {
+  interface EPPActions : PageTable, Filter {
     /// Those made by specific registrar
     attribute short registrar;
   };
