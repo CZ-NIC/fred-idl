@@ -211,7 +211,7 @@ module ccReg {
   };
   /// Typ pro předání datumu validace u ENUM domen
   struct ENUMValidationExtension {
-    date valExDate; ///< Datum vypršení platnosti přidělení čísla
+    date valExDate; ///< Datum vypršení platnosti validace
   };
     
   /// Rozhraní pro server implementující EPP protokol
@@ -649,15 +649,15 @@ module ccReg {
     );
     /// Změna údajů zaregistrované domény
     /** Nejprve ověří stejným způsobem jako v DomainCheck validitu
-     identifkátoru. Pokud stav nebosahuje clientUpdateProhibited nebo 
+     identifkátoru. Pokud stav neobsahuje clientUpdateProhibited nebo 
      serverUpdateProhibited, aktualizuje na základě požadavků údaje u 
      nssetu. Pokud je nastaven flag clientUpdateProhibited, lze pouze
-     smazat tento příznak. Aktualizovat doménu smí jen její učený registátor. 
-     Před aktualizací uloží akutální data objektu do historie. Pro tuto 
+     smazat tento příznak. Aktualizovat doménu smí jen její určený registrátor. 
+     Před aktualizací uloží aktuální data objektu do historie. Pro tuto 
      operaci musí mít registrátor práva k zóně dané domény. Časová
-     značka upDate se nastaví na aktuální čas. Jen u enumo domén je možné
+     značka upDate se nastaví na aktuální čas. Jen u enum domén je možné
      uvést rozšíření obsahující datum validace. Tento datum nesmí být nastaven
-     dále do budnoucnosti než je uvedeno v parametrech zóny.
+     dále do budoucnosti než je uvedeno v parametrech zóny.
      \param fqdn Název domény
      \param registrant_chg Změna držitele domény
      \param authInfo_chg Změna hesla pro převod
