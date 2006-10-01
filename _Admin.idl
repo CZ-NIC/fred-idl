@@ -49,11 +49,19 @@ module ccReg {
     attribute short registrar;
   };
 
+  /// List of EPPActions
+  interface Domains : PageTable, Filter {
+    /// Those managed by specific registrar
+    attribute short registrar;
+    /// Those holding by specific registrant
+    attribute short registrant;
+  };
 
   /// Main interface for registrar session
   interface Session {   
     Registrars getRegistrars();
     EPPActions getEPPActions();
+    Domains getDomains();
   };
 
   /// Typ pro kredit registrátora, celé číslo v haléřích
