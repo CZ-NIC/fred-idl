@@ -1,10 +1,14 @@
 module ccReg {
 
+
+
   /// One row of Table
   typedef sequence<string> TableRow;
 
   /// Table for data
   interface Table {
+    /// Exception for accessing invalid row
+    exception INVALID_ROW {};
     /// Number of rows in table
     readonly attribute short numRows;
     /// Number of columns in table
@@ -12,7 +16,7 @@ module ccReg {
     /// Return names of all columns
     TableRow getColumnNames();
     /// Return ona row of string representation of data in table
-    TableRow getRow(in short row);
+    TableRow getRow(in short row) raises (INVALID_ROW);
     /// Sort data by column index
     void sortByColumn(in short column, in boolean dir);
     /// Output data in CSV format
@@ -21,14 +25,23 @@ module ccReg {
   
   /// Table divided into pages
   interface PageTable : Table {
-    /// size of one page
+    /// Exception for accessing invalid page
+    exception INVALID_PAGE {};
+    /// Size of one page
     attribute short pageSize;
-    /// current page index
-    attribute short page;
-    /// start row of current page
+    /// Current page index
+    readonly attribute short page;
+    /// Set current page
+    void setPage(in short page) raises (INVALID_PAGE);
+    /// Start row of current page
     readonly attribute short start;
-    /// number of pages
+    /// Number of pages
     readonly attribute short numPages;
+    /// Exact size of one page (always < pageSize)
+    readonly attribute short numPageRows;
+    /// Return row by index in page
+    TableRow getPageRow(in short pageRow) raises (INVALID_ROW);
+
   };
   
   /// Common interface for data
@@ -49,7 +62,7 @@ module ccReg {
     attribute short registrar;
   };
 
-  /// List of EPPActions
+  /// List of Domains
   interface Domains : PageTable, Filter {
     /// Those managed by specific registrar
     attribute short registrar;
@@ -57,11 +70,21 @@ module ccReg {
     attribute short registrant;
   };
 
+  /// List of Contacts
+  interface Contacts : PageTable, Filter {
+  };
+
+  /// List of NSSets
+  interface NSSets : PageTable, Filter {
+  };
+
   /// Main interface for registrar session
   interface Session {   
     Registrars getRegistrars();
     EPPActions getEPPActions();
     Domains getDomains();
+    Contacts getContacts();
+    NSSets getNSSets();
   };
 
   /// Typ pro kredit registrátora, celé číslo v haléřích
@@ -132,23 +155,6 @@ module ccReg {
      in string handle
     ) raises (ObjectNotFound);
 
-    /// Jednoduchý výpis všech identifikátorů registrátorů
-    /**
-     \return Seznam identifikátorů */
-    Lists ListRegistrar(); 
-    /// Jednoduchý výpis všech identifikátorů domén
-    /**
-     \return Seznam identifikátorů */
-    Lists ListDomain(); 
-    /// Jednoduchý výpis všech identifikátorů registrátorů
-    /**
-     \return Seznam identifikátorů */
-    Lists ListContact(); 
-    /// Jednoduchý výpis všech identifikátorů registrátorů
-    /**
-     \return Seznam identifikátorů */
-    Lists ListNSSet(); 
-    
     /// Klasifikuje vstupní handle podle pravidel registru
     /**
      \param handle Vstupní handle pro klasifikaci
