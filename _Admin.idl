@@ -60,22 +60,36 @@ module ccReg {
   interface EPPActions : PageTable, Filter {
     /// Those made by specific registrar
     attribute short registrar;
+    /// Those made by specific registrar byt handle
+    attribute string registrarHandle;
   };
 
   /// List of Domains
   interface Domains : PageTable, Filter {
     /// Those managed by specific registrar
     attribute short registrar;
+    /// Those made by specific registrar byt handle
+    attribute string registrarHandle;
     /// Those holding by specific registrant
     attribute short registrant;
+    /// Those holding by specific registrant by handle
+    attribute string registrantHandle;
   };
 
   /// List of Contacts
   interface Contacts : PageTable, Filter {
+    /// Those made by specific registrar byt id
+    attribute short registrar;
+    /// Those made by specific registrar byt handle
+    attribute string registrarHandle;
   };
 
   /// List of NSSets
   interface NSSets : PageTable, Filter {
+    /// Those made by specific registrar byt id
+    attribute short registrar;
+    /// Those made by specific registrar byt handle
+    attribute string registrarHandle;
   };
 
   /// Main interface for registrar session
