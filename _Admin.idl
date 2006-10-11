@@ -7,14 +7,26 @@ module ccReg {
 
   /// Table for data
   interface Table {
+    enum ColumnType {
+       CT_REGISTRAR_HANDLE,
+       CT_CONTACT_HANDLE,
+       CT_DOMAIN_HANDLE,
+       CT_NSSET_HANDLE,
+       CT_OTHER
+    };
+    struct ColumnDesc {
+       string name;
+       ColumnType type;
+    };
+    typedef sequence<ColumnDesc> ColumnHeaders;
     /// Exception for accessing invalid row
     exception INVALID_ROW {};
     /// Number of rows in table
     readonly attribute short numRows;
     /// Number of columns in table
     readonly attribute short numColumns;
-    /// Return names of all columns
-    TableRow getColumnNames();
+    /// Return descriptions of all columns
+    ColumnHeaders getColumnHeaders();
     /// Return ona row of string representation of data in table
     TableRow getRow(in short row) raises (INVALID_ROW);
     /// Sort data by column index
