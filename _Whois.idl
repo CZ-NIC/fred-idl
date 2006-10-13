@@ -14,7 +14,8 @@ module ccReg {
   /// Typ pro data o doméně
   struct DomainWhois
   {
-    string fqdn; ///< Nazev domeny
+    string  fqdn; ///< Nazev domeny
+    boolean enum_domain; ///< Pravda kdyz domena je enumova
     WhoisDomainStatus status; ///< Stav domény
     string created; ///< Datum vytvoření domény
     string expired; ///< Datum expirace domény
