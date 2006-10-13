@@ -1,10 +1,26 @@
 module ccReg {
 
-
+  /// date structure
+  struct DateType {
+    short day; ///< day of month (1..31)
+    short month; ///< month in year (1..12)
+    short year; ///< year (i.e. 2006)
+  };
+  
+  /// date interval
+  struct DateInterval {
+    DateType from; ///< start of interval - Date(0,0,0) means ignore this field
+    DateType to; ///< end of interval - Date(0,0,0) means ignore this field 
+  };
+ 
+  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+  ///          Table management
+  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
   /// One row of Table
   typedef sequence<string> TableRow;
 
+  interface Filter;
   /// Table for data
   interface Table {
     enum ColumnType {
@@ -33,6 +49,8 @@ module ccReg {
     void sortByColumn(in short column, in boolean dir);
     /// Output data in CSV format
     string outputCSV();
+    /// Return filter
+    readonly attribute Filter aFilter;   
   };
   
   /// Table divided into pages
@@ -53,55 +71,112 @@ module ccReg {
     readonly attribute short numPageRows;
     /// Return row by index in page
     TableRow getPageRow(in short pageRow) raises (INVALID_ROW);
-
   };
-  
+
+  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+  ///          Filter management
+  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
   /// Common interface for data
   interface Filter {
     /// Reload data
     void reload();
+    /// Clear filter and reload data
+    void clear();
   };
 
-  /// List of registrars
-  interface Registrars : PageTable, Filter {
+  /// Filter for common registry object
+  interface RegObjectFilter : Filter {
+    /// Those made by specific registrar
+    attribute short registrar;    
+    /// Those made by specific registrar byt handle
+    attribute string registrarHandle;
+    /// Interval of crDate
+    attribute DateInterval crDate;
+  };
+
+  /// Filter for Registrar
+  interface RegistrarsFilter : Filter {
     /// Fulltext search in handle
     attribute string fulltext;
+    /// Fulltext search in name
+    attribute string name;
+    /// Fulltext search in handle
+    attribute string handle;
   };
 
-  /// List of EPPActions
-  interface EPPActions : PageTable, Filter {
+  /// Filter for EPPActions
+  interface EPPActionsFilter : Filter {
     /// Those made by specific registrar
     attribute short registrar;
     /// Those made by specific registrar byt handle
     attribute string registrarHandle;
+    /// Those of specific type
+    attribute string type;
+    /// Those rerefing to object with this handle
+    attribute string handle;
+    /// Those with this result code
+    attribute short result;
+    /// Those processed at this date interval
+    attribute DateInterval time;
+    /// Those with specified clTRID
+    attribute string clTRID;
+    /// Those with specified svTRID
+    attribute string svTRID;
   };
 
-  /// List of Domains
-  interface Domains : PageTable, Filter {
-    /// Those managed by specific registrar
-    attribute short registrar;
-    /// Those made by specific registrar byt handle
-    attribute string registrarHandle;
+  /// Filter for Domains
+  interface DomainsFilter : RegObjectFilter {
+    /// Those having substring in fqdn
+    attribute string fqdn;
     /// Those holding by specific registrant
     attribute short registrant;
     /// Those holding by specific registrant by handle
     attribute string registrantHandle;
+    /// Those refering to specific nsset
+    attribute short nsset;
+    /// Those refering to specific nsset by handle
+    attribute string nssetHandle;
+    /// Those having specific admin contact
+    attribute short admin;
+    /// Those having specific admin contact by Handle
+    attribute string adminHandle;
+  };
+
+  /// Filter for Contacts
+  interface ContactsFilter : RegObjectFilter {
+    /// Fulltext search in handle
+    attribute string handle;
+  };
+
+  /// Filter for NSSets
+  interface NSSetsFilter : RegObjectFilter {
+    /// Fulltext search in handle
+    attribute string handle;
+  };
+
+  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+  ///          Concrete object tables
+  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+  /// List of registrars
+  interface Registrars : PageTable, RegistrarsFilter {
+  };
+
+  /// List of EPPActions
+  interface EPPActions : PageTable, EPPActionsFilter {
+  };
+
+  /// List of Domains
+  interface Domains : PageTable, DomainsFilter {
   };
 
   /// List of Contacts
-  interface Contacts : PageTable, Filter {
-    /// Those made by specific registrar byt id
-    attribute short registrar;
-    /// Those made by specific registrar byt handle
-    attribute string registrarHandle;
+  interface Contacts : PageTable, ContactsFilter {
   };
 
   /// List of NSSets
-  interface NSSets : PageTable, Filter {
-    /// Those made by specific registrar byt id
-    attribute short registrar;
-    /// Those made by specific registrar byt handle
-    attribute string registrarHandle;
+  interface NSSets : PageTable, NSSetsFilter {
   };
 
   /// Main interface for registrar session
@@ -133,7 +208,27 @@ module ccReg {
     string fax; ///< Faxové číslo
     string email; ///< Kontaktní email
     string url; ///< URL 
-    price credit; ///< Aktuální víše kreditu
+    price credit; ///< Aktuální výše kreditu
+    string password; ///< Heslo
+    string md5Cert; ///< md5 certifikátu
+  };
+
+  struct EPPAction {
+    short id;
+    string time;
+    string xml;
+    string type;
+    string registrarHandle;
+    short result;
+    string clTRID;
+    string svTRID;
+  };
+ 
+  struct RegObject {
+     short id;
+     string handle;
+     string registrarHandle;
+     string crDate;
   };
 
   // Typ pro seznam registrátorů 
@@ -169,6 +264,8 @@ module ccReg {
     Session getSession(in SessionIDType sessionID);
     /// Vyjímka pro případ nenalezení hledaného objektu
     exception ObjectNotFound {};
+    /// Vyjímka pro případ nepovedeného updatu objektu
+    exception UpdateFailed {};
     /// Vrátí kompletní seznam registrátorů
     /**
      \return Seznam registrátorů */
@@ -179,6 +276,18 @@ module ccReg {
      \return Nalezený registrátor pokud není vyjímka */
     Registrar getRegistrarByHandle(
      in string handle
+    ) raises (ObjectNotFound);
+    void putRegistrar(
+      in Registrar regData
+    ) raises (UpdateFailed);
+    RegObject getContactByHandle(
+     in string handle
+    ) raises (ObjectNotFound);
+    RegObject getNSSetByHandle(
+     in string handle
+    ) raises (ObjectNotFound);
+    RegObject getDomainByFQDN(
+     in string fqdn
     ) raises (ObjectNotFound);
 
     /// Klasifikuje vstupní handle podle pravidel registru
