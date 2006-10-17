@@ -30,7 +30,8 @@ module ccReg {
     NotExist, ///< Objekt neexistuje a je možné ho registrovat
     BadFormat, ///< Špatný formát identifikátoru
     BlackList, ///< Je zakázáno tento objekt registrovat
-    DelPeriod ///< Handle je v ochrané lhůtě pro registraci
+    DelPeriod, ///< Handle je v ochrané lhůtě pro registraci
+    NotApplicable ///<Domena tvar domeny je spravny ale neni zahrnuta v zone napriklad domain.edu
   };
   /// Typ pro jeden prvek seznamu výsledků funkcí check
   struct CheckSeq 
