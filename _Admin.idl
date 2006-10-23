@@ -243,7 +243,7 @@ module ccReg {
      string createRegistrarHandle;
      string updateRegistrarHandle;
      string authInfo;
-     short registrantHandle;
+     string registrantHandle;
      string expirationDate;
      string valExDate;
      ContactHandleSeq admins;
