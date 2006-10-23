@@ -246,6 +246,7 @@ module ccReg {
      string registrantHandle;
      string expirationDate;
      string valExDate;
+     string nssetHandle;
      ContactHandleSeq admins;
   };
 
