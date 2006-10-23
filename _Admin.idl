@@ -231,6 +231,43 @@ module ccReg {
      string crDate;
   };
 
+  typedef sequence<string> ContactHandleSeq;
+  struct DomainDetail {
+     short id;
+     string fqdn;
+     string roid;
+     string registrarHandle;
+     string createDate;
+     string transferDate;
+     string updateDate;
+     string createRegistrarHandle;
+     string updateRegistrarHandle;
+     string authInfo;
+     short registrantHandle;
+     string expirationDate;
+     string valExDate;
+     ContactHandleSeq admins;
+  };
+
+  struct ContactDetail {
+     short id;
+     string handle;
+     string roid;
+     string registrarHandle;
+     string createDate;
+     string transferDate;
+     string updateDate;
+     string createRegistrarHandle;
+     string updateRegistrarHandle;
+     string authInfo;
+     string name;
+     string organization;
+     string street;
+     string city;
+     string telephone;
+     string email;
+  };
+
   // Typ pro seznam registrátorů 
   typedef sequence<Registrar> RegistrarList;
 
@@ -280,13 +317,13 @@ module ccReg {
     void putRegistrar(
       in Registrar regData
     ) raises (UpdateFailed);
-    RegObject getContactByHandle(
+    ContactDetail getContactByHandle(
      in string handle
     ) raises (ObjectNotFound);
     RegObject getNSSetByHandle(
      in string handle
     ) raises (ObjectNotFound);
-    RegObject getDomainByFQDN(
+    DomainDetail getDomainByFQDN(
      in string fqdn
     ) raises (ObjectNotFound);
 
