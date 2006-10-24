@@ -263,10 +263,18 @@ module ccReg {
      string authInfo;
      string name;
      string organization;
-     string street;
+     string street1;
+     string street2;
+     string street3;
+     string province;
+     string postalcode;
      string city;
+     string country;
      string telephone;
+     string fax;
      string email;
+     string notifyEmail;
+     string ssn;
   };
 
   // Typ pro seznam registrátorů 
