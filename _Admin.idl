@@ -141,6 +141,10 @@ module ccReg {
     attribute short admin;
     /// Those having specific admin contact by Handle
     attribute string adminHandle;
+    /// Those having expiration date in supplied interval
+    attribute DateInterval exDate;
+    /// Those having validation date in supplied interval
+    attribute DateInterval valExDate;
   };
 
   /// Filter for Contacts
