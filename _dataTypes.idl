@@ -1,5 +1,7 @@
 module ccReg {
 
+  const string SET_NULL_VALUE = "$$SET_NULL_VALUE$$" ; /// definice stringu ktery udela SQL update a vlozi NULL hodnotu
+
   /// Typ pro vyjádření datumu a času podle rfc3339
   /** YYYY-MM-DD  (jen datum)
    *  YYYY-MM-DDTHH:MM:SS.ssZ 

@@ -1,5 +1,4 @@
 module ccReg {
-  const string SET_NULL_VALUE = "$$SET_NULL_VALUE$$" ; /// definice stringu ktery udela SQL update a vlozi NULL hodnotu
 
   /// Typ pro stanovení jazyka ve kterím se budou vracet textoví zprávy
   enum Languages  
