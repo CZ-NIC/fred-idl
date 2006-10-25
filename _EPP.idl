@@ -244,7 +244,7 @@ module ccReg {
     /** Označí danou zprávu jako přečtenou pokud zpráva s daným ID patří
      přihlášenému registrátorovi. Pro pokračování zpracování zpráv
      vrátí počet zbývajících zpráv a identifikaci další zprávy ve frontě.
-     \param msgID Id zprávy která se potvrzuje
+     \param msgID Id zprávy která se potvrzujejen ciselna hodnota je spravna ale muze zadat i token
      \param count Počet zpráv které jsou po odebrání této zprávy ve frontě
      \param newmsgID Id první další zprávy
      \param clientID Identifikace session získaná z ClientLogin
@@ -252,9 +252,9 @@ module ccReg {
      \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */
     Response PollAcknowledgement (
-      in long msgID,
+      in string msgID,
       out short count,
-      out long newmsgID,
+      out string newmsgID,
       in long clientID,
       in string clTRID,
       in string XML
@@ -271,7 +271,7 @@ module ccReg {
      \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
     Response PollRequest (
-      out long msgID,
+      out string msgID,
       out short count,
       out timestamp qDate, 
       out string mesg,
