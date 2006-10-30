@@ -347,7 +347,8 @@ module ccReg {
     DomainDetail getDomainByFQDN(
      in string fqdn
     ) raises (ObjectNotFound);
-
+    long getEnumDomainCount();
+    long getEnumNumberCount();
     /// Klasifikuje vstupní handle podle pravidel registru
     /**
      \param handle Vstupní handle pro klasifikaci
