@@ -91,8 +91,20 @@ module ccReg {
     attribute short registrar;    
     /// Those made by specific registrar byt handle
     attribute string registrarHandle;
+    /// Those created by specific registrar
+    attribute short createRegistrar;    
+    /// Those created by specific registrar byt handle
+    attribute string createRegistrarHandle;
+    /// Those updated by specific registrar
+    attribute short updateRegistrar;    
+    /// Those updated by specific registrar byt handle
+    attribute string updateRegistrarHandle;
     /// Interval of crDate
     attribute DateInterval crDate;
+    /// Interval of trDate
+    attribute DateInterval trDate;
+    /// Interval of upDate
+    attribute DateInterval upDate;
   };
 
   /// Filter for Registrar
@@ -153,14 +165,30 @@ module ccReg {
 
   /// Filter for Contacts
   interface ContactsFilter : RegObjectFilter {
-    /// Fulltext search in handle
+    /// Search in handle
     attribute string handle;
+    /// Search in name
+    attribute string name;
+    /// Search in organization
+    attribute string org;
+    /// Search in identification number
+    attribute string ident;
+    /// Search in email
+    attribute string email;
+    /// Search in email
+    attribute string vat;
   };
 
   /// Filter for NSSets
   interface NSSetsFilter : RegObjectFilter {
-    /// Fulltext search in handle
+    /// Search in handle
     attribute string handle;
+    /// Search in admin
+    attribute string adminHandle;
+    /// Search in hostname
+    attribute string hostname;
+    /// Search in ip
+    attribute string ip;
   };
 
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
