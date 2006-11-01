@@ -145,6 +145,10 @@ module ccReg {
     attribute DateInterval exDate;
     /// Those having validation date in supplied interval
     attribute DateInterval valExDate;
+    /// Those having nsset with this tech admin 
+    attribute string techAdminHandle;
+    /// Those having nsset with IP address
+    attribute string nssetIP;
   };
 
   /// Filter for Contacts
