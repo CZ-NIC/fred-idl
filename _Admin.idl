@@ -1,18 +1,45 @@
 module ccReg {
 
-  /// date structure
+  /// Structure for handling day
   struct DateType {
     short day; ///< day of month (1..31)
     short month; ///< month in year (1..12)
     short year; ///< year (i.e. 2006)
   };
   
-  /// date interval
+  /// Structure for handling interval of days
   struct DateInterval {
     DateType from; ///< start of interval - Date(0,0,0) means ignore this field
     DateType to; ///< end of interval - Date(0,0,0) means ignore this field 
   };
- 
+  
+  /// Structure for handling date and time
+  struct DateTimeType {
+    DateType date;
+    short hour; ///< hour (0..23)
+    short minute; ///< minute (0..59)
+    short second; ///< second (0..59)
+  };
+  
+  /// Structure for handling interval of times
+  struct DateTimeInterval {
+    DateTimeType from; ///< start of interval 
+    DateTimeType to; ///< end of interval
+  };
+
+  /// Type for EPP commands
+  typedef string EPPActionType;
+  
+  /// List of EPP command types
+  typedef sequence<EPPActionType> EPPActionTypeSeq;
+
+  typedef string CountryCode;
+  struct CountryDesc {
+    CountryCode cc;
+    string name;
+  };
+  typedef sequence<CountryDesc> CountryDescSeq;
+
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   ///          Table management
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -28,6 +55,8 @@ module ccReg {
        CT_CONTACT_HANDLE,
        CT_DOMAIN_HANDLE,
        CT_NSSET_HANDLE,
+       CT_DATE,
+       CT_TIME,
        CT_OTHER
     };
     struct ColumnDesc {
@@ -50,7 +79,9 @@ module ccReg {
     /// Output data in CSV format
     string outputCSV();
     /// Return filter
-    readonly attribute Filter aFilter;   
+    readonly attribute Filter aFilter;
+    /// Return id of record at index
+    long getRowId(in short pageRow) raises (INVALID_ROW);
   };
   
   /// Table divided into pages
@@ -71,6 +102,8 @@ module ccReg {
     readonly attribute short numPageRows;
     /// Return row by index in page
     TableRow getPageRow(in short pageRow) raises (INVALID_ROW);
+    /// Return id of record at index
+    long getPageRowId(in short pageRow) raises (INVALID_ROW);
   };
 
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -124,13 +157,15 @@ module ccReg {
     /// Those made by specific registrar byt handle
     attribute string registrarHandle;
     /// Those of specific type
-    attribute string type;
-    /// Those rerefing to object with this handle
+    attribute EPPActionType type;
+    /// Those refefing to object with this handle
     attribute string handle;
+    /// Those having substring in xml
+    attribute string xml;
     /// Those with this result code
     attribute short result;
     /// Those processed at this date interval
-    attribute DateInterval time;
+    attribute DateTimeInterval time;
     /// Those with specified clTRID
     attribute string clTRID;
     /// Those with specified svTRID
@@ -224,40 +259,49 @@ module ccReg {
     NSSets getNSSets();
   };
 
-  /// Typ pro kredit registrátora, celé číslo v haléřích
-  typedef unsigned long price;
+  /// Money type in smallest unit (hallers)
+  typedef unsigned long Money;
 
-  /// Struktura s detailem registrátora
+  /// Access structure
+  struct EPPAccess {
+    string password; ///< epp login password
+    string md5Cert; ///< md5 of certificate
+  };
+  
+  /// List of access structures
+  typedef sequence<EPPAccess> EPPAccessSeq;
+  
+  /// Registrar detail structure
   struct Registrar {
-    long id; ///< ID
-    string handle; ///< Identifkátor
-    string name; ///< Jméno
-    string organization; ///< Název organizace
-    string street1; ///< Adresa 1
-    string street2; ///< Adresa 2
-    string street3; ///< Adresa 3
-    string city; ///< Město
-    string stateorprovince; ///< Kraj
-    string postalcode; ///< PSČ
-    string country; ///< Kód země
-    string telephone; ///< Telefonní číslo
-    string fax; ///< Faxové číslo
-    string email; ///< Kontaktní email
-    string url; ///< URL 
-    price credit; ///< Aktuální výše kreditu
-    string password; ///< Heslo
-    string md5Cert; ///< md5 certifikátu
+    long id; ///< registrar ID
+    string handle; ///< registrar identification
+    string name; ///< registrar name
+    string organization; ///< organization name
+    string street1; ///< address part 1
+    string street2; ///< address part 2
+    string street3; ///< address part 3
+    string city; ///< city of registrar headquaters
+    string stateorprovince; ///< address part
+    string postalcode; ///< address part
+    CountryCode country; ///< country code
+    string telephone; ///< phne number
+    string fax; ///< fax number
+    string email; ///< contact email
+    string url; ///< URL
+    Money credit; ///< actual credit
+    EPPAccessSeq access; ///< list of epp access data
   };
 
   struct EPPAction {
-    short id;
-    string time;
-    string xml;
-    string type;
-    string registrarHandle;
-    short result;
-    string clTRID;
-    string svTRID;
+    short id; ///< id of action
+    string time; /// < processing time
+    string xml; ///< xml of request
+    EPPActionType type; ///< type of request
+    string objectHandle; ///< handle of major object
+    string registrarHandle; ///< handle of registrar processiong request
+    short result; ///< result code
+    string clTRID; ///< token provided by registrar
+    string svTRID; ///< token attached by server
   };
  
   typedef sequence<string> ContactHandleSeq;
@@ -344,7 +388,7 @@ module ccReg {
   };
 
   typedef string SessionIDType;
-
+  
   /// Administrátorské rozhraní
   interface Admin
   {
@@ -389,5 +433,14 @@ module ccReg {
       in string handle,
       out CheckHandleType ch
     );
+    EPPAction getEPPActionById(
+      in long id
+    ) raises (ObjectNotFound);
+    /// Return list of epp action types
+    EPPActionTypeSeq getEPPActionTypeList();
+    /// Return country code list
+    CountryDescSeq getCountryDescList();
+    /// Return default country code
+    CountryCode getDefaultCountry();
   };
 };
