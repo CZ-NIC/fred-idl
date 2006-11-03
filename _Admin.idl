@@ -401,28 +401,23 @@ module ccReg {
     /// Vyjímka pro případ nepovedeného updatu objektu
     exception UpdateFailed {};
     /// Vrátí kompletní seznam registrátorů
-    /**
+    /** 
      \return Seznam registrátorů */
     RegistrarList getRegistrars();
     /// Najde jednoho registrátora podle zadaného handle
     /**
      \param handle Identifikátor hledaného registrátora
      \return Nalezený registrátor pokud není vyjímka */
-    Registrar getRegistrarByHandle(
-     in string handle
-    ) raises (ObjectNotFound);
-    void putRegistrar(
-      in Registrar regData
-    ) raises (UpdateFailed);
-    ContactDetail getContactByHandle(
-     in string handle
-    ) raises (ObjectNotFound);
-    NSSetDetail getNSSetByHandle(
-     in string handle
-    ) raises (ObjectNotFound);
-    DomainDetail getDomainByFQDN(
-     in string fqdn
-    ) raises (ObjectNotFound);
+    Registrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
+    /// Uloží registrátora
+    void putRegistrar(in Registrar regData) raises (UpdateFailed);
+    ContactDetail getContactByHandle(in string handle) raises (ObjectNotFound);
+    ContactDetail getContactById(in long id) raises (ObjectNotFound);
+    NSSetDetail getNSSetByHandle(in string handle) raises (ObjectNotFound);
+    NSSetDetail getNSSetById(in long id) raises (ObjectNotFound);
+    DomainDetail getDomainByFQDN(in string fqdn) raises (ObjectNotFound);
+    DomainDetail getDomainById(in long id) raises (ObjectNotFound);
+    EPPAction getEPPActionById(in long id) raises (ObjectNotFound);
     long getEnumDomainCount();
     long getEnumNumberCount();
     /// Klasifikuje vstupní handle podle pravidel registru
@@ -433,9 +428,6 @@ module ccReg {
       in string handle,
       out CheckHandleType ch
     );
-    EPPAction getEPPActionById(
-      in long id
-    ) raises (ObjectNotFound);
     /// Return list of epp action types
     EPPActionTypeSeq getEPPActionTypeList();
     /// Return country code list
