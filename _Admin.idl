@@ -39,6 +39,16 @@ module ccReg {
     string name;
   };
   typedef sequence<CountryDesc> CountryDescSeq;
+  
+  /// Description structure for object status
+  struct ObjectStatusDesc {
+    short id;
+    string name;
+  };
+  /// Sequence of status descriptions 
+  typedef sequence<ObjectStatusDesc> ObjectStatusDescSeq;
+  /// Sequence of status values
+  typedef sequence<short> ObjectStatusSeq;
 
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   ///          Table management
@@ -138,6 +148,8 @@ module ccReg {
     attribute DateInterval trDate;
     /// Interval of upDate
     attribute DateInterval upDate;
+    /// Search in status - 'and' operator between values
+    attribute ObjectStatusSeq status;
   };
 
   /// Filter for Registrar
@@ -152,6 +164,12 @@ module ccReg {
 
   /// Filter for EPPActions
   interface EPPActionsFilter : Filter {
+    /// Result classification type
+    enum ResultType {
+     RT_OK, ///< result < 2000
+     RT_FAIL, ///< result >= 2000 or no result code at all
+     RT_ALL ///< all actions
+    };
     /// Those made by specific registrar
     attribute short registrar;
     /// Those made by specific registrar byt handle
@@ -164,6 +182,8 @@ module ccReg {
     attribute string xml;
     /// Those with this result code
     attribute short result;
+    /// Those having proper result classification
+    attribute ResultType resultClass;
     /// Those processed at this date interval
     attribute DateTimeInterval time;
     /// Those with specified clTRID
@@ -321,6 +341,7 @@ module ccReg {
      string valExDate;
      string nssetHandle;
      ContactHandleSeq admins;
+     ObjectStatusSeq statusList;
   };
 
   struct ContactDetail {
@@ -348,6 +369,15 @@ module ccReg {
      string email;
      string notifyEmail;
      string ssn;
+     string ssnType;
+     string vat;
+     boolean discloseName;
+     boolean discloseOrganization;
+     boolean discloseEmail;
+     boolean discloseAddress;
+     boolean discloseTelephone;
+     boolean discloseFax;
+     ObjectStatusSeq statusList;
   };
 
   struct NSSetDetail {
@@ -363,6 +393,7 @@ module ccReg {
      string authInfo;
      ContactHandleSeq admins;
      DNSHost hosts;
+     ObjectStatusSeq statusList;     
   };
 
   // Typ pro seznam registrátorů 
@@ -411,19 +442,28 @@ module ccReg {
     Registrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
     /// Uloží registrátora
     void putRegistrar(in Registrar regData) raises (UpdateFailed);
+    /// Return contact detail for specified handel
     ContactDetail getContactByHandle(in string handle) raises (ObjectNotFound);
+    /// Return contact detail for specified id
     ContactDetail getContactById(in long id) raises (ObjectNotFound);
+    /// Return nsset detail for specified handel
     NSSetDetail getNSSetByHandle(in string handle) raises (ObjectNotFound);
+    /// Return nsset detail for specified id
     NSSetDetail getNSSetById(in long id) raises (ObjectNotFound);
+    /// Return domain detail for specified handel
     DomainDetail getDomainByFQDN(in string fqdn) raises (ObjectNotFound);
+    /// Return domain detail for specified id
     DomainDetail getDomainById(in long id) raises (ObjectNotFound);
+    /// Return EPP action detail for specified id
     EPPAction getEPPActionById(in long id) raises (ObjectNotFound);
+    /// Return count of registred ENUM domains
     long getEnumDomainCount();
+    /// Return count of numbers described by all registred ENUM domains
     long getEnumNumberCount();
-    /// Klasifikuje vstupní handle podle pravidel registru
+    /// Classify input handle according to registry policy
     /**
-     \param handle Vstupní handle pro klasifikaci
-     \param ch Výstupní struktura s klasifikací */
+     \param handle Input handle for classification
+     \param ch Output structure with classification */
     void checkHandle(
       in string handle,
       out CheckHandleType ch
@@ -434,5 +474,11 @@ module ccReg {
     CountryDescSeq getCountryDescList();
     /// Return default country code
     CountryCode getDefaultCountry();
+    /// Return list with descriptions of available object status for domain
+    ObjectStatusDescSeq getDomainStatusDescList();
+    /// Return list with descriptions of available object status for contact
+    ObjectStatusDescSeq getContactStatusDescList();
+    /// Return list with descriptions of available object status for nsset
+    ObjectStatusDescSeq getNSSetStatusDescList();
   };
 };
