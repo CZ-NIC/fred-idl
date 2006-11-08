@@ -109,7 +109,7 @@ module ccReg {
   struct Error_seq
   {
     ErrorSpec code; ///< Kód chyby pro správné doplnění xml tagu v EPP serveru
-    any value; ///< Chybná hodnota zadaná klientem - string timestamp Long 
+    string value; ///< Chybná hodnota zadaná klientem - string timestamp Long 
     string reason; ///< Důvod chyby, textový popis
   };
   /// Typ pro předání chybových zpráv
