@@ -39,6 +39,18 @@ module ccReg {
     CheckAvail avail; ///< Jaký je výsledek check operace
     string reason; ///< Pokud avail!=NotExist, je zde uveden textový dúvod
   };
+   enum TimeUnit
+   {
+     unit_month,
+     unit_year
+   };
+   /// Typ pro predavani periody platnosti domeny
+   struct Period_str
+   {
+     short count; ///< Pocet jednotek casu
+     TimeUnit unit; ///< Jednotka casu
+   };
+
   /// Typ pro obecný seznam rozšíření
   typedef sequence <any> ExtensionList;  
   /// Typ pro návratovou hodnotu funkcí check
@@ -717,7 +729,7 @@ module ccReg {
       in string Registrant,
       in string nsset,
       in string AuthInfoPw,
-      in short period,
+      in Period_str period,
       in AdminContact admin,
       out timestamp crDate,
       out date exDate,
@@ -746,7 +758,7 @@ module ccReg {
     Response DomainRenew (
       in string fqdn,
       in date curExpDate,
-      in short period,
+      in Period_str period,
       out timestamp exDate,
       in long clientID,
       in string clTRID,
