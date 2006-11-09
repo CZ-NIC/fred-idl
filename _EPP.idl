@@ -39,17 +39,18 @@ module ccReg {
     CheckAvail avail; ///< Jaký je výsledek check operace
     string reason; ///< Pokud avail!=NotExist, je zde uveden textový dúvod
   };
-   enum TimeUnit
-   {
-     unit_month,
-     unit_year
-   };
-   /// Typ pro predavani periody platnosti domeny
-   struct Period_str
-   {
-     short count; ///< Pocet jednotek casu
-     TimeUnit unit; ///< Jednotka casu
-   };
+  /// Jednotka casu pouzivana pri specifikaci platnosti domeny
+  enum TimeUnit
+  {
+    unit_month,
+    unit_year
+  };
+  /// Typ pro predavani periody platnosti domeny
+  struct Period_str
+  {
+    short count; ///< Pocet jednotek casu
+    TimeUnit unit; ///< Jednotka casu
+  };
 
   /// Typ pro obecný seznam rozšíření
   typedef sequence <any> ExtensionList;  
