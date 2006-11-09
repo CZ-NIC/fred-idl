@@ -238,6 +238,10 @@ module ccReg {
     string version(
       out timestamp datetime
     );
+
+    /// ulozi vystupni XML z mod_eppd do tabulky action_xml 
+    boolean SaveOutXML( in string svTRID , in string XML );
+ 
     /// Zaevidování neůspěšné operace přijaté EPP protokol.
     /** V případě že byla zjištěna chyba ještě na straně EPP serveru, toto 
      volání nalezenou chybu uloží do evidence akcí a vrátí vygenerované 
