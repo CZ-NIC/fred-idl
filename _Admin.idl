@@ -245,6 +245,51 @@ module ccReg {
     /// Search in ip
     attribute string ip;
   };
+  
+  module AuthInfoRequest {
+    enum RequestType {
+      RT_EPP,
+      RT_AUTO_PIF,
+      RT_EMAIL_PIF,
+      RT_POST_PIF
+    };
+    enum RequestStatus {
+      RS_NEW,
+      RS_ANSWERED,
+      RS_INVALID
+    } ;
+    enum ObjectType {
+      OT_DOMAIN,
+      OT_CONTACT,
+      OT_NSSET
+    } ;
+    interface Filter : ccReg::Filter {
+      attribute long id;
+      attribute string handle;
+      attribute RequestStatus status;
+      attribute RequestType type;
+      attribute DateTimeInterval crTime;
+      attribute DateTimeInterval closeTime;
+      attribute string reason;
+      attribute string svTRID;
+      attribute string email;
+    };
+    struct Detail {
+      long id;
+      string handle;
+      RequestStatus status;
+      RequestType type;
+      string crTime;
+      string closeTime;
+      string reason;
+      string svTRID;
+      string email;
+      long answerEmailId;
+      ObjectType oType;
+      long objectId;
+      string registrar;
+    }; 
+  };
 
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   ///          Concrete object tables
@@ -269,6 +314,9 @@ module ccReg {
   /// List of NSSets
   interface NSSets : PageTable, NSSetsFilter {
   };
+ 
+  interface AuthInfoRequests: PageTable, AuthInfoRequest::Filter {
+  };
 
   /// Main interface for registrar session
   interface Session {   
@@ -277,6 +325,7 @@ module ccReg {
     Domains getDomains();
     Contacts getContacts();
     NSSets getNSSets();
+    AuthInfoRequests getAuthInfoRequests();
   };
 
   /// Money type in smallest unit (hallers)
@@ -423,14 +472,16 @@ module ccReg {
   /// Administrátorské rozhraní
   interface Admin
   {
-    /// log into administrator interface 
-    SessionIDType login(in string username, in string password);
-    /// get session
-    Session getSession(in SessionIDType sessionID);
     /// Vyjímka pro případ nenalezení hledaného objektu
     exception ObjectNotFound {};
     /// Vyjímka pro případ nepovedeného updatu objektu
     exception UpdateFailed {};
+    /// exception when authentification failed
+    exception AuthFailed {};
+    /// log into administrator interface 
+    SessionIDType login(in string username, in string password) raises (AuthFailed);
+    /// get session
+    Session getSession(in SessionIDType sessionID) raises (ObjectNotFound);
     /// Vrátí kompletní seznam registrátorů
     /** 
      \return Seznam registrátorů */
@@ -440,6 +491,8 @@ module ccReg {
      \param handle Identifikátor hledaného registrátora
      \return Nalezený registrátor pokud není vyjímka */
     Registrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
+    /// Return registrar detail for specified id
+    Registrar getRegistrarById(in long id) raises (ObjectNotFound);
     /// Uloží registrátora
     void putRegistrar(in Registrar regData) raises (UpdateFailed);
     /// Return contact detail for specified handel
@@ -456,6 +509,8 @@ module ccReg {
     DomainDetail getDomainById(in long id) raises (ObjectNotFound);
     /// Return EPP action detail for specified id
     EPPAction getEPPActionById(in long id) raises (ObjectNotFound);
+    /// Return AuthInfoRequest detail for specified id
+    AuthInfoRequest::Detail getAuthInfoRequestById(in long id) raises (ObjectNotFound);
     /// Return count of registred ENUM domains
     long getEnumDomainCount();
     /// Return count of numbers described by all registred ENUM domains
@@ -480,5 +535,32 @@ module ccReg {
     ObjectStatusDescSeq getContactStatusDescList();
     /// Return list with descriptions of available object status for nsset
     ObjectStatusDescSeq getNSSetStatusDescList();
+    
+    /// Type of auth_info request
+    enum RequestType 
+    {
+      RT_EPP, ///< Request was created by registrar through EPP
+      RT_AUTO_PIF, ///< Request for automatic answer created through PIF
+      RT_EMAIL_PIF, ///< Request waiting for autorization by signed email
+      RT_POST_PIF ///< Request waiting for autorization by checked letter
+    };
+    /// Exception for unspecified email in ([AUTO|POST]_PIF) request
+    exception BAD_EMAIL {};
+    /// Exception for bad object id
+    exception OBJECT_NOT_FOUND {};
+    /// Exception for bad EPP action id in EPP request
+    exception ACTION_NOT_FOUND {};
+    /// Exception for bad EPP action id in EPP request
+    exception SQL_ERROR {};
+    /// Create request for auth_info
+    long createAuthInfoRequest(
+      in long objectId, ///< id of object to take auth_info from
+      in RequestType type, ///< type of request
+      in long eppActionId, ///< id of EPP action (EPP)
+      in string requestReason, ///< reason from PIF (*_PIF)
+      in string emailToAnswer ///< email to answer ([AUTO|POST]_PIF)
+    ) raises (BAD_EMAIL, OBJECT_NOT_FOUND, ACTION_NOT_FOUND, SQL_ERROR);
+    /// Process request by sending email with auth_info
+    void processAuthInfoRequest(in long id) raises (SQL_ERROR);
   };
 };

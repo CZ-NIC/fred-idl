@@ -1,0 +1,125 @@
+module ccReg {
+
+  /// Struktura pro zadani hodnot do hlavicky emailu
+  struct MailHeader
+  {
+    string h_to;
+    string h_from;
+    string h_cc;
+    string h_bcc;
+    string h_reply_to;
+    string h_errors_to;
+    string h_organization;
+    string h_subject;
+  };
+  /// Struktura klic-hodnota
+  struct KeyValue
+  {
+    string key;
+    string value;
+  };
+  /// Seznam paru klic-hodnota
+  typedef sequence <KeyValue> KeyValues;
+  /// Struktura plne popisujici polozku z mail archivu
+  struct Mail
+  {
+    long mailid; ///< Id mailu (prvni cislo pred teckou v message-id header)
+    timestamp crdate; ///< Datum vlozeni polozky do archivu
+    timestamp moddate;///< Datum posledni modifikace statusu polozky
+    long status; ///< Status (0 = OK, jinak primo chyba sendmailu)
+    string content; ///< Obsah mailu se vsim vsudy bez binarnich priloh
+    Lists handles; ///< List asociovanych handlu k mailu
+    Lists attachments; ///< Nazvy binarnich priloh
+  };
+  /// Filter na vyhledavani v mail archivu
+  struct MailFilter
+  {
+    long mailid; ///< Vyhledavej podle id mailu (neaktivni pokud je -1)
+    long status; ///< Vyhledavej podle statusu (neaktivni pokud je -1)
+    string handle; ///< Vyhledavej podle asociovaneho handlu (neaktivni pokud je prazdny string)
+  };
+  typedef sequence < Mail > MailList;
+
+  /// Rozhraní pro Mailer
+  interface Mailer
+  {
+    /** Vyjimka pro pripad zavazne interni chyby (napr. chyba databaze,
+        sendmailu). */
+    exception InternalError {
+      string message; ///< Popis chyby
+    };
+    /// Neznamy nazev sablony
+    exception UnknownTemplateName {
+        string templateName;
+    };
+    /// Chyba pri parsovani sablony
+    exception BadTemplate {
+      string message; ///< Chyba od parseru templatu
+    };
+    /// Attachment nenalezen
+    exception AttachmentNotFound {
+        string attachmentName;
+    };
+    /// Chyba pri odesilani mailu
+    exception SendMailError {
+    };
+    /// Zadano nezname ID transakce (searche)
+    exception UnknownSearchID {
+    };
+    /// Zformatuje a rozesle zpravu
+    /**
+     \param tplNames Names of a templates which should be applied.
+     \param header Hodnoty do hlavicky mailu, prebijejici defaulty.
+     \param data Pary klic-hodnota urcujici vstupni data pro templaty.
+     \param handles Handly kontaktu asociovanych se zpravou.
+     \param attachs ID attachmentu.
+     \param preview Pokud true, tak se nic neposle ani nearchivuje a vysledna
+            zprava se vrati jako string.
+     \param msgPreview Pokud je preview true vrati se vysledny mail, ktery by
+            se poslal, jinak se vrati prazdny string.
+     \return ID of email.
+    */
+    long mailNotify(
+                    in Lists tplNames,
+                    in MailHeader header,
+                    in KeyValues data,
+                    in Lists handles,
+                    in Lists attachs,
+                    in boolean preview,
+                    out string msgPreview
+                    ) raises (
+                       InternalError,
+                       UnknownTemplateName,
+                       BadTemplate,
+                       AttachmentNotFound,
+                       SendMailError
+                    );
+
+    // Funkce vyuzivane pro admin componentu
+
+    /**
+     Vyhleda data dle zadaneho filtru.
+     Data jsou postupne ziskana po klientem stanovenem mnozstvi pomoci
+     funkce getSearchResult().
+     \param filter Filter podle ktereho se ridi vyhledavani v archivu.
+     \return Cislo transakce ktere se pouzije ve volanich pro ziskani
+             dat vysledku.
+     */
+    long searchMail(in MailFilter filter) raises (InternalError);
+    /**
+     Vrati stanoveny pocet polozek vyhledanych pomoci funkce searchMail().
+     \param trid Cislo transakce, z ktere se maji vratit data.
+     \param count Pocet polozek ktere se maji vratit.
+     \return Seznam mailu vyhovujicich filtru zadanemu v mailSearch().
+     */
+    MailList getSearchResult(in long trid, in long count)
+    raises (InternalError, UnknownSearchID);
+    /**
+     Uvolni zdroje alokovane na strane serveru pro vyhledavaci operaci.
+     Kazde vyhledavani musi na konci sve cinosti zavolat tuto funkci!
+     \param trid Cislo transakce ktera se ma uvolnit.
+     */
+    void closeSearch(in long trid) raises (InternalError, UnknownSearchID);
+  };
+
+};

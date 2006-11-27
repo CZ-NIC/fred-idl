@@ -1,0 +1,39 @@
+module ccReg {
+
+  /// Struktura plne popisujici polozku z mail archivu
+  typedef sequence < octet > BinaryData;
+
+  /// Rozhraní pro File Manager
+  interface FileManager
+  {
+    /** Vyjimka pro pripad zavazne interni chyby. */
+    exception InternalError {
+      string message; ///< Popis chyby
+    };
+    /// Zadane jmeno souboru neni platne
+    exception InvalidName {
+    	string filename;
+    };
+    /// Soubor nenalezen
+    exception FileNotFound {
+    	string filename;
+    };
+    /// Ulozi data do souboru
+    /**
+     \param name Nazev souboru (path).
+     \param data Binarni data pro ulozeni do souboru.
+    */
+    void save(in string name, in BinaryData data)
+    raises (InternalError, InvalidName);
+
+    /// Nahraje data ze souboru
+    /**
+     \param name Nazev souboru (path).
+     \return Binarni data - obsah souboru.
+    */
+    BinaryData load(in string name, out string mimetype)
+    raises (InternalError, InvalidName, FileNotFound);
+
+  };
+
+};
