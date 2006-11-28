@@ -247,21 +247,26 @@ module ccReg {
   };
   
   module AuthInfoRequest {
-    enum RequestType {
-      RT_EPP,
-      RT_AUTO_PIF,
-      RT_EMAIL_PIF,
-      RT_POST_PIF
+    /// Type of auth_info request
+    enum RequestType 
+    {
+      RT_IGNORE, ///< For filter ignoring
+      RT_EPP, ///< Request was created by registrar through EPP
+      RT_AUTO_PIF, ///< Request for automatic answer created through PIF
+      RT_EMAIL_PIF, ///< Request waiting for autorization by signed email
+      RT_POST_PIF ///< Request waiting for autorization by checked letter
     };
     enum RequestStatus {
-      RS_NEW,
-      RS_ANSWERED,
-      RS_INVALID
+      RS_IGNORE, ///< For filter ignoring
+      RS_NEW, ///< Unresolved request
+      RS_ANSWERED, ///< Answered request
+      RS_INVALID ///< Request closed as invalid
     } ;
     enum ObjectType {
-      OT_DOMAIN,
-      OT_CONTACT,
-      OT_NSSET
+      OT_IGNORE, ///< For filter ignoring
+      OT_DOMAIN, ///< Request for authinfo in domain object
+      OT_CONTACT, ///< Request for authinfo in contact object
+      OT_NSSET ///< Request for authinfo in nsset object
     } ;
     interface Filter : ccReg::Filter {
       attribute long id;
@@ -536,14 +541,8 @@ module ccReg {
     /// Return list with descriptions of available object status for nsset
     ObjectStatusDescSeq getNSSetStatusDescList();
     
-    /// Type of auth_info request
-    enum RequestType 
-    {
-      RT_EPP, ///< Request was created by registrar through EPP
-      RT_AUTO_PIF, ///< Request for automatic answer created through PIF
-      RT_EMAIL_PIF, ///< Request waiting for autorization by signed email
-      RT_POST_PIF ///< Request waiting for autorization by checked letter
-    };
+    /// Exception for common invalid input data
+    exception INVALID_INPUT {};
     /// Exception for unspecified email in ([AUTO|POST]_PIF) request
     exception BAD_EMAIL {};
     /// Exception for bad object id
@@ -555,12 +554,14 @@ module ccReg {
     /// Create request for auth_info
     long createAuthInfoRequest(
       in long objectId, ///< id of object to take auth_info from
-      in RequestType type, ///< type of request
+      in AuthInfoRequest::RequestType type, ///< type of request
       in long eppActionId, ///< id of EPP action (EPP)
       in string requestReason, ///< reason from PIF (*_PIF)
       in string emailToAnswer ///< email to answer ([AUTO|POST]_PIF)
-    ) raises (BAD_EMAIL, OBJECT_NOT_FOUND, ACTION_NOT_FOUND, SQL_ERROR);
+      ) raises (BAD_EMAIL, OBJECT_NOT_FOUND, ACTION_NOT_FOUND, 
+                SQL_ERROR, INVALID_INPUT);
     /// Process request by sending email with auth_info
-    void processAuthInfoRequest(in long id) raises (SQL_ERROR);
+    void processAuthInfoRequest(in long id, in boolean invalid) 
+      raises (OBJECT_NOT_FOUND, SQL_ERROR);
   };
 };
