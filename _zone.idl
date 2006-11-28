@@ -3,6 +3,7 @@ module ccReg {
   /// Struktura pro načítání parametrů zóny
   struct Zone
   {
+   long id; 
    string  fqdn; ///< Název zóny (např. cz)
    short ex_period_min; ///< Minimální perioda pro prodloužení
    short ex_period_max; ///< parametry zony
