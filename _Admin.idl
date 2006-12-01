@@ -1,5 +1,8 @@
 module ccReg {
 
+  /// ID type for objects
+  typedef unsigned long long TID;
+
   /// Structure for handling day
   struct DateType {
     short day; ///< day of month (1..31)
@@ -91,7 +94,7 @@ module ccReg {
     /// Return filter
     readonly attribute Filter aFilter;
     /// Return id of record at index
-    long getRowId(in short pageRow) raises (INVALID_ROW);
+    TID getRowId(in short pageRow) raises (INVALID_ROW);
   };
   
   /// Table divided into pages
@@ -113,7 +116,7 @@ module ccReg {
     /// Return row by index in page
     TableRow getPageRow(in short pageRow) raises (INVALID_ROW);
     /// Return id of record at index
-    long getPageRowId(in short pageRow) raises (INVALID_ROW);
+    TID getPageRowId(in short pageRow) raises (INVALID_ROW);
   };
 
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -126,20 +129,22 @@ module ccReg {
     void reload();
     /// Clear filter and reload data
     void clear();
+    /// Real size of result of this filter
+    readonly attribute unsigned long long resultSize;
   };
 
   /// Filter for common registry object
   interface RegObjectFilter : Filter {
     /// Those made by specific registrar
-    attribute short registrar;    
+    attribute TID registrar;    
     /// Those made by specific registrar byt handle
     attribute string registrarHandle;
     /// Those created by specific registrar
-    attribute short createRegistrar;    
+    attribute TID createRegistrar;    
     /// Those created by specific registrar byt handle
     attribute string createRegistrarHandle;
     /// Those updated by specific registrar
-    attribute short updateRegistrar;    
+    attribute TID updateRegistrar;    
     /// Those updated by specific registrar byt handle
     attribute string updateRegistrarHandle;
     /// Interval of crDate
@@ -171,7 +176,7 @@ module ccReg {
      RT_ALL ///< all actions
     };
     /// Those made by specific registrar
-    attribute short registrar;
+    attribute TID registrar;
     /// Those made by specific registrar byt handle
     attribute string registrarHandle;
     /// Those of specific type
@@ -197,15 +202,15 @@ module ccReg {
     /// Those having substring in fqdn
     attribute string fqdn;
     /// Those holding by specific registrant
-    attribute short registrant;
+    attribute TID registrant;
     /// Those holding by specific registrant by handle
     attribute string registrantHandle;
     /// Those refering to specific nsset
-    attribute short nsset;
+    attribute TID nsset;
     /// Those refering to specific nsset by handle
     attribute string nssetHandle;
     /// Those having specific admin contact
-    attribute short admin;
+    attribute TID admin;
     /// Those having specific admin contact by Handle
     attribute string adminHandle;
     /// Those having expiration date in supplied interval
@@ -247,7 +252,7 @@ module ccReg {
   };
   
   module AuthInfoRequest {
-    /// Type of auth_info request
+    /// Type of AuthInfo request
     enum RequestType 
     {
       RT_IGNORE, ///< For filter ignoring
@@ -256,43 +261,46 @@ module ccReg {
       RT_EMAIL_PIF, ///< Request waiting for autorization by signed email
       RT_POST_PIF ///< Request waiting for autorization by checked letter
     };
+    /// Status of AuthInfo request 
     enum RequestStatus {
       RS_IGNORE, ///< For filter ignoring
       RS_NEW, ///< Unresolved request
       RS_ANSWERED, ///< Answered request
       RS_INVALID ///< Request closed as invalid
     } ;
+    /// Type of object queried in AuthInfo request
     enum ObjectType {
       OT_IGNORE, ///< For filter ignoring
       OT_DOMAIN, ///< Request for authinfo in domain object
       OT_CONTACT, ///< Request for authinfo in contact object
       OT_NSSET ///< Request for authinfo in nsset object
     } ;
+    /// Filter for selection of set of AuthInfo requests
     interface Filter : ccReg::Filter {
-      attribute long id;
-      attribute string handle;
-      attribute RequestStatus status;
-      attribute RequestType type;
-      attribute DateTimeInterval crTime;
-      attribute DateTimeInterval closeTime;
-      attribute string reason;
-      attribute string svTRID;
-      attribute string email;
+      attribute TID id; ///< filter for id
+      attribute string handle; ///< filter for surveyed object handle
+      attribute RequestStatus status; ///< filter for request status
+      attribute RequestType type; ///< filter for request type
+      attribute DateTimeInterval crTime; ///< filter for create time interval
+      attribute DateTimeInterval closeTime; ///< filter for close time interval
+      attribute string reason; ///< filter in reason specified in PIF
+      attribute string svTRID; ///< filter for EPP action svTRID
+      attribute string email; ///< filter for email specified in PIF
     };
     struct Detail {
-      long id;
-      string handle;
-      RequestStatus status;
-      RequestType type;
-      string crTime;
-      string closeTime;
-      string reason;
-      string svTRID;
-      string email;
-      long answerEmailId;
-      ObjectType oType;
-      long objectId;
-      string registrar;
+      TID id; ///< request id
+      string handle; ///< surveyed object handle
+      RequestStatus status; ///< request status
+      RequestType type; ///< request type
+      string crTime; ///< time of creation of request
+      string closeTime; ///< time of request resolution
+      string reason; ///< reason provided through PIF
+      string svTRID; ///< EPP action id when created by registrar
+      string email; ///< email provided through PIF
+      long answerEmailId; ///< id of email with request answer
+      ObjectType oType; ///< type of surveyed object
+      TID objectId; ///< id of surveyed object
+      string registrar; ///< registrar initiating request through EPP
     }; 
   };
 
@@ -347,7 +355,7 @@ module ccReg {
   
   /// Registrar detail structure
   struct Registrar {
-    long id; ///< registrar ID
+    TID id; ///< registrar ID
     string handle; ///< registrar identification
     string name; ///< registrar name
     string organization; ///< organization name
@@ -364,10 +372,11 @@ module ccReg {
     string url; ///< URL
     Money credit; ///< actual credit
     EPPAccessSeq access; ///< list of epp access data
+    boolean hidden; ///< hidden in PIF
   };
 
   struct EPPAction {
-    short id; ///< id of action
+    TID id; ///< id of action
     string time; /// < processing time
     string xml; ///< xml of request
     EPPActionType type; ///< type of request
@@ -380,7 +389,7 @@ module ccReg {
  
   typedef sequence<string> ContactHandleSeq;
   struct DomainDetail {
-     short id;
+     TID id;
      string fqdn;
      string roid;
      string registrarHandle;
@@ -399,7 +408,7 @@ module ccReg {
   };
 
   struct ContactDetail {
-     short id;
+     TID id;
      string handle;
      string roid;
      string registrarHandle;
@@ -435,7 +444,7 @@ module ccReg {
   };
 
   struct NSSetDetail {
-     short id;
+     TID id;
      string handle;
      string roid;
      string registrarHandle;
@@ -484,7 +493,8 @@ module ccReg {
     /// exception when authentification failed
     exception AuthFailed {};
     /// log into administrator interface 
-    SessionIDType login(in string username, in string password) raises (AuthFailed);
+    SessionIDType login(in string username, in string password) 
+      raises (AuthFailed);
     /// get session
     Session getSession(in SessionIDType sessionID) raises (ObjectNotFound);
     /// Vrátí kompletní seznam registrátorů
@@ -497,25 +507,28 @@ module ccReg {
      \return Nalezený registrátor pokud není vyjímka */
     Registrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
     /// Return registrar detail for specified id
-    Registrar getRegistrarById(in long id) raises (ObjectNotFound);
+    Registrar getRegistrarById(in TID id) raises (ObjectNotFound);
     /// Uloží registrátora
     void putRegistrar(in Registrar regData) raises (UpdateFailed);
     /// Return contact detail for specified handel
     ContactDetail getContactByHandle(in string handle) raises (ObjectNotFound);
     /// Return contact detail for specified id
-    ContactDetail getContactById(in long id) raises (ObjectNotFound);
+    ContactDetail getContactById(in TID id) raises (ObjectNotFound);
     /// Return nsset detail for specified handel
     NSSetDetail getNSSetByHandle(in string handle) raises (ObjectNotFound);
     /// Return nsset detail for specified id
-    NSSetDetail getNSSetById(in long id) raises (ObjectNotFound);
+    NSSetDetail getNSSetById(in TID id) raises (ObjectNotFound);
     /// Return domain detail for specified handel
     DomainDetail getDomainByFQDN(in string fqdn) raises (ObjectNotFound);
     /// Return domain detail for specified id
-    DomainDetail getDomainById(in long id) raises (ObjectNotFound);
+    DomainDetail getDomainById(in TID id) raises (ObjectNotFound);
+    /// Return EPP action detail for specified svTRID
+    EPPAction getEPPActionBySvTRID(in string svTRID) raises (ObjectNotFound);
     /// Return EPP action detail for specified id
-    EPPAction getEPPActionById(in long id) raises (ObjectNotFound);
+    EPPAction getEPPActionById(in TID id) raises (ObjectNotFound);
     /// Return AuthInfoRequest detail for specified id
-    AuthInfoRequest::Detail getAuthInfoRequestById(in long id) raises (ObjectNotFound);
+    AuthInfoRequest::Detail getAuthInfoRequestById(in TID id) 
+      raises (ObjectNotFound);
     /// Return count of registred ENUM domains
     long getEnumDomainCount();
     /// Return count of numbers described by all registred ENUM domains
@@ -552,16 +565,16 @@ module ccReg {
     /// Exception for bad EPP action id in EPP request
     exception SQL_ERROR {};
     /// Create request for auth_info
-    long createAuthInfoRequest(
-      in long objectId, ///< id of object to take auth_info from
+    TID createAuthInfoRequest(
+      in TID objectId, ///< id of object to take auth_info from
       in AuthInfoRequest::RequestType type, ///< type of request
-      in long eppActionId, ///< id of EPP action (EPP)
+      in TID eppActionId, ///< id of EPP action (EPP)
       in string requestReason, ///< reason from PIF (*_PIF)
       in string emailToAnswer ///< email to answer ([AUTO|POST]_PIF)
       ) raises (BAD_EMAIL, OBJECT_NOT_FOUND, ACTION_NOT_FOUND, 
                 SQL_ERROR, INVALID_INPUT);
     /// Process request by sending email with auth_info
-    void processAuthInfoRequest(in long id, in boolean invalid) 
+    void processAuthInfoRequest(in TID id, in boolean invalid) 
       raises (OBJECT_NOT_FOUND, SQL_ERROR);
   };
 };
