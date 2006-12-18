@@ -3,33 +3,6 @@ module ccReg {
   /// ID type for objects
   typedef unsigned long long TID;
 
-  /// Structure for handling day
-  struct DateType {
-    short day; ///< day of month (1..31)
-    short month; ///< month in year (1..12)
-    short year; ///< year (i.e. 2006)
-  };
-  
-  /// Structure for handling interval of days
-  struct DateInterval {
-    DateType from; ///< start of interval - Date(0,0,0) means ignore this field
-    DateType to; ///< end of interval - Date(0,0,0) means ignore this field 
-  };
-  
-  /// Structure for handling date and time
-  struct DateTimeType {
-    DateType date;
-    short hour; ///< hour (0..23)
-    short minute; ///< minute (0..59)
-    short second; ///< second (0..59)
-  };
-  
-  /// Structure for handling interval of times
-  struct DateTimeInterval {
-    DateTimeType from; ///< start of interval 
-    DateTimeType to; ///< end of interval
-  };
-
   /// Type for EPP commands
   typedef string EPPActionType;
   
@@ -304,6 +277,31 @@ module ccReg {
     }; 
   };
 
+  module Mailing {
+    /// Filter for selection of set of mails
+    interface Filter : ccReg::Filter {
+      attribute TID id; ///< filter for id 
+      attribute long status; ///< filter for status (-1=ignore)
+      attribute string handle; ///< filter for asociated handle
+      attribute string attachment; ///< filter for attachement id
+      attribute string fulltext; ///< filter for fulltext in email
+      attribute unsigned short type; ///< filter for email type
+      attribute DateTimeInterval createTime; ///< filter for create time interval
+    };
+    typedef sequence<TID> AttachmentSeq;
+    /// Email detail
+    struct Detail {
+      TID id; ///< Id mailu (prvni cislo pred teckou v message-id header)
+      string createTime; ///< Datum vlozeni polozky do archivu
+      string modTime;///< Datum posledni modifikace statusu polozky
+      long status; ///< Status (0 = OK, jinak primo chyba sendmailu)
+      unsigned short type; ///< Type 
+      string content; ///< Obsah mailu se vsim vsudy bez binarnich priloh
+      Lists handles; ///< List asociovanych handlu k mailu
+      AttachmentSeq attachments; ///< Nazvy binarnich priloh
+    };
+  };
+
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   ///          Concrete object tables
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -331,6 +329,9 @@ module ccReg {
   interface AuthInfoRequests: PageTable, AuthInfoRequest::Filter {
   };
 
+  interface Mails: PageTable, Mailing::Filter {
+  };
+
   /// Main interface for registrar session
   interface Session {   
     Registrars getRegistrars();
@@ -339,6 +340,7 @@ module ccReg {
     Contacts getContacts();
     NSSets getNSSets();
     AuthInfoRequests getAuthInfoRequests();
+    Mails getMails();
   };
 
   /// Money type in smallest unit (hallers)
@@ -459,27 +461,41 @@ module ccReg {
      ObjectStatusSeq statusList;     
   };
 
-  // Typ pro seznam registrátorů 
+  // Type for list of registrars
   typedef sequence<Registrar> RegistrarList;
 
-  /// Typ pro výsledek klasifikace identifikátoru
+  // Type of handle in handle classification
+  enum HandleType {
+    HT_ENUM_NUMBER, ///< Handle is number (converting)
+    HT_ENUM_DOMAIN, ///< Handle is enum domain
+    HT_DOMAIN, ///< Handle is non enum domain
+    HT_CONTACT, ///< Handle is contact
+    HT_NSSET, ///< Handle is nsset
+    HT_REGISTRAR, ///< Handle is registrar
+    HT_OTHER ///< Invalid handle
+  };
+
+  /// Type of detail of handle status
   enum CheckHandleClass {
-    CH_ENUM_BAD_ZONE, ///< Handle je enum číslo minmo registr
-    CH_ENUM, ///< Handle je enum číslo
-    CH_DOMAIN_PART, ///< Handle je část domény (připojí se defaultní koncovka)
-    CH_DOMAIN_BAD_ZONE, ///< Handle je doména mimo registr
-    CH_DOMAIN_LONG, ///< Handle je doména nepovolené délky (zkrácena)
-    CH_DOMAIN, ///< Handle je doména
-    CH_NSSET, ///< Handle je nsset
-    CH_CONTACT, ///< Handle je kontakt
-    CH_INVALID ///< Handle není validní
+    CH_UNREGISTRABLE, ///< Handle is outside of register
+    CH_UNREGISTRABLE_LONG, ///< Handle is too long
+    CH_REGISTRED, ///< Handle is registred
+    CH_REGISTRED_PARENT, ///< Handle id registred under super domain
+    CH_REGISTRED_CHILD, /// < Handle has registred subdomain
+    CH_PROTECTED, //< Handle is in protected period or on blacklist
+    CH_FREE ///< Handle is free for registration or has unknown stattus
   };
   
-  /// Typ návratové hodnoty funkce checkHandle
+  /// Type for one classification record
   struct CheckHandleType {
-    string newHandle; ///< Přeložený handle pokud je třeba
+    string newHandle; ///< Translated handle
+    string conflictHandle; ///< Handle in conflict
     CheckHandleClass handleClass; ///< Výsledek klasifikace handle
+    HandleType hType; ///< Type of handle
   };
+
+  /// Return type for checkHandle function
+  typedef sequence<CheckHandleType> CheckHandleTypeSeq;
 
   typedef string SessionIDType;
   
@@ -529,6 +545,9 @@ module ccReg {
     /// Return AuthInfoRequest detail for specified id
     AuthInfoRequest::Detail getAuthInfoRequestById(in TID id) 
       raises (ObjectNotFound);
+    /// Return mail detail for specified id
+    Mailing::Detail getEmailById(in TID id) 
+      raises (ObjectNotFound);
     /// Return count of registred ENUM domains
     long getEnumDomainCount();
     /// Return count of numbers described by all registred ENUM domains
@@ -539,7 +558,7 @@ module ccReg {
      \param ch Output structure with classification */
     void checkHandle(
       in string handle,
-      out CheckHandleType ch
+      out CheckHandleTypeSeq ch
     );
     /// Return list of epp action types
     EPPActionTypeSeq getEPPActionTypeList();

@@ -9,28 +9,62 @@ module ccReg {
   /// Typ pro seznam položek zóny
   typedef sequence<ZoneItem> ZoneSeq; 
 
-  /// Interface (zatim jen) pro generovani zony
-  interface ZoneGenerator {
+  /// Interface pro ziskani dat ze zony
+  interface ZoneData {
 
-    /// Vyjímka pro předání chyby při generování
-    exception ZoneGeneratorError {
+    /// Vyjimka pro pripad zavazne interni chyby.
+    exception InternalError {
       string message; ///< Detail chyby
     };
+    /** Vyjimka pokud ZoneHolder object neni jiz aktivni. */
+    exception NotActive {
+    };
 
-    /// Spustí přenos dat zóny
     /**
-     \param zonename Název zóny pro kterou se generuje
-     \param ttl TTL
-     \param hostmaster Hostmaster
-     \param serial Serial
-     \param refresh Refresh
-     \param update_retr Update retr
-     \param expiry Expiry
-     \param minimum Minimum
-     \param primns Fqdn primárního nameserveru
-     \param nameservers Sekundární nameservery
-     \return Chybový stav */
-    long transferRequest(
+     Vrati stanoveny pocet polozek ze zony.
+     \param count Pocet polozek (domen), ktere se maji vratit.
+     \return List domen urcenych pro generaci.
+     */
+    ZoneSeq getNext(in long count) raises (InternalError, NotActive);
+    /**
+     Zrusi objekt zony na strane serveru.
+     */
+    void destroy() raises (InternalError);
+  };
+
+  /// Interface pro generovani zony
+  interface ZoneGenerator {
+
+    /// Vyjimka pro pripad zavazne interni chyby (napr. chyba databaze).
+    exception InternalError {
+      string message; ///< Detail chyby
+    };
+    /// Nezname jmeno zony zadano.
+    exception UnknownZone {
+    };
+
+    /// Vrati objekt pro zonu pres ktery lze transferovat data zony.
+    /**
+     \param zonename Název zóny pro kterou se generuje.
+     \return Objekt pres ktery lze transferovat data ze zony.
+     */
+    ZoneData generateZone(in string zonename) raises (InternalError,UnknownZone);
+
+    /// Vrati SOA zaznam pro zonu (lze pouzit pro zakladni testovani funkcnosti)
+    /**
+     \param zonename Název zóny pro kterou se generuje.
+     \param ttl TTL.
+     \param hostmaster Hostmaster.
+     \param serial Serial.
+     \param refresh Refresh.
+     \param update_retr Update retr.
+     \param expiry Expiry.
+     \param minimum Minimum.
+     \param soans Fqdn SOA nameserveru.
+     \param nameservers Nameservery pro zonu.
+     \return Nazev zony
+     */
+    string getSOA(
       in string zonename,
       out long ttl,
       out string hostmaster,
@@ -39,25 +73,9 @@ module ccReg {
       out long update_retr,
       out long expiry,
       out long minimum,
-      out string primns,
+      out string soans,
       out DNSHost nameservers
-      ) raises (ZoneGeneratorError);
+      ) raises (InternalError, UnknownZone);
 
-    /// Vrátí data zóny
-    /**
-     \param trID Identifikace transakce
-     \param count Počet požadovaných prvků
-     \return Seznam prvků zóny */
-    ZoneSeq getZoneData(
-      in long trID,
-      in long count
-    ) raises (ZoneGeneratorError);
-
-    /// Uzavře transfer zóny
-    /** 
-     \param trID Číslo transakci */
-    void transferDelete(
-      in long trID
-    ) raises (ZoneGeneratorError);
   };
 };

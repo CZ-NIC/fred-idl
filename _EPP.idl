@@ -57,6 +57,16 @@ module ccReg {
     short count; ///< Pocet jednotek casu
     TimeUnit unit; ///< Jednotka casu
   };
+
+  struct ZoneCredit_str
+  {
+    string zone_fqdn; ///< nazev zony
+    unsigned long price; ///< castka v halirich  
+  };
+
+  /// Typ pro vypis creditu registratora  
+  typedef sequence<ZoneCredit_str> ZoneCredit;
+
   /// Typ pro obecný seznam rozšíření
   typedef sequence <any> ExtensionList;  
   /// Typ pro návratovou hodnotu funkcí check
@@ -71,41 +81,28 @@ module ccReg {
   enum ErrorSpec 
   {
     unknow, ///< Není určené žádné konkrétní místo
-    pollAck_msgID, ///< Chyba v msgID zprávy poll
-    pollAck_msgID_missing, ///< Parametr msgID chybi v xml
-    contactCreate_handle, ///< Chyba v handle při vytváření kontaktu
-    contactCreate_cc, ///< Chyba v kódu země při vytváření kontaktu
-    contactInfo_handle, ///< Špatný identifikátor kontaktu
-    contactUpdate_cc, ///< Chyba v kódu země při update kontaktu
-    contactUpdate_identtype_missing, ///< Atribut type u ident chybi v xml
-    nssetCreate_handle, ///< Chyba v handle při vytváření nssetu
-    nssetCreate_tech, ///< Chyba v technickém kontaktu při vytváření nssetu
-    nssetCreate_ns_name, ///< Chyba v názvu nameserveru při vytváření nssetu
-    nssetCreate_ns_addr, ///< Chyba v adrese nameserveru při vytváření nssetu
-    nssetInfo_handle, ///< Špatný identifikátor nssetu
-    nssetUpdate_ns_name_add, ///< Chyba v názvu nameserveru při přidávání ns
-    nssetUpdate_ns_addr_add, ///< Chyba v adrese nameserveru při přidávání ns
-    nssetUpdate_ns_name_rem, ///< Chyba v názvu nameserveru při odebírání ns
-    nssetUpdate_ns_addr_rem, ///< Chyba v adrese nameserveru při odebírání ns
-    nssetUpdate_tech_add, ///< Chyba v přidávaném technickém kontaktu
-    nssetUpdate_tech_rem, ///< Chyba v odebíraném technickém kontaktu
-    domainCreate_fqdn, ///< Chyba v názvu při vytváření domény
-    domainCreate_registrant, ///< Chyba v držiteli při vytváření domény
-    domainCreate_nsset, ///< Chyba v nssetu při vytváření domény
-    domainCreate_period, ///< Chyba v periodě při vytváření domény
-    domainCreate_admin, ///< Chyba v admin. kontaktu při vytváření domény
-    domainCreate_ext_valDate, ///< Chyba v datumu validace při vytváření domény
-    domainInfo_fqdn, ///< Špatný název domény
-    domainRenew_fqdn, ///< Chyba v názvu při renew domény
-    domainRenew_curExpDate, ///< Chyba v současném datumu expirace u domény
-    domainRenew_period, ///< Chyba v periodě u renew domény
-    domainRenew_ext_valDate, ///< Chyba v datumu validace u renew domény
-    domainUpdate_fqdn, ///< Chyba v názvu při update domény
-    domainUpdate_registrant, ///< Chyba v držiteli při update domény
-    domainUpdate_nsset, ///< Chyba v nssetu při update domény
-    domainUpdate_admin_add, ///< Chyba v přidávaném admin. kontaktu
-    domainUpdate_admin_rem, ///< Chyba v odebíraném admin. kontaktu
-    domainUpdate_ext_valDate, ///< Chyba v datumu validace při update domény
+    poll_msgID, ///< Chyba v msgID zprávy poll
+    poll_msgID_missing, ///< Parametr msgID chybi v xml
+    contact_handle, ///< Chyba v handle při vytváření kontaktu
+    contact_cc, ///< Chyba v kódu země při vytváření kontaktu
+    contact_identtype_missing, ///< Atribut type u ident chybi v xml
+    nsset_handle, ///< Chyba v handle při vytváření nssetu
+    nsset_tech, ///< Chyba v technickém kontaktu při vytváření nssetu
+    nsset_dns_name, ///< Chyba v názvu nameserveru při vytváření nssetu
+    nsset_dns_addr, ///< Chyba v adrese nameserveru při vytváření nssetu
+    nsset_dns_name_add, ///< Chyba v názvu nameserveru při přidávání ns
+    nsset_dns_name_rem, ///< Chyba v názvu nameserveru při odebírání ns
+    nsset_tech_add, ///< Chyba v přidávaném technickém kontaktu
+    nsset_tech_rem, ///< Chyba v odebíraném technickém kontaktu
+    domain_fqdn, ///< Chyba v názvu při vytváření domény
+    domain_registrant, ///< Chyba v držiteli při vytváření domény
+    domain_nsset, ///< Chyba v nssetu při vytváření domény
+    domain_period, ///< Chyba v periodě při vytváření domény
+    domain_admin, ///< Chyba v admin. kontaktu při vytváření domény
+    domain_ext_valDate, ///< Chyba v datumu validace při vytváření domény
+    domain_curExpDate, ///< Chyba v zad zadanem atumu expirace u domény
+    domain_admin_add, ///< Chyba v přidávaném admin. kontaktu
+    domain_admin_rem, ///< Chyba v odebíraném admin. kontaktu
     transfer_op ///< Chybi parametr op u transferu v XML
   };
   /// Typ pro prvek seznamu chybových zpráv
@@ -336,6 +333,21 @@ module ccReg {
       in string clTRID,
       in string XML
     ) raises (ServerIntError);
+
+    ///  vrati vysi creditu registratora pro jednotlive zony
+    /** 
+     \param clientID Identifikace session získaná z ClientLogin
+     \param credit vyse  credit ( ze vsech prijatych plateb) podle jednotlivych zone
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */   
+    Response ClientCredit (
+      out ZoneCredit credit,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    ) raises (ServerIntError);
+
     /// Ověření možnosti registrovat kontakt s daným identifikátorem
     /** Umožňuje hromadné prozkoumání několika identifikátorů. Pro každý 
      prozkoumá validitu použitého identifikátoru, převede ho na velká

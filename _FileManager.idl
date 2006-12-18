@@ -1,7 +1,51 @@
 module ccReg {
 
-  /// Struktura plne popisujici polozku z mail archivu
+  /// Pro prenaseni dat souboru
   typedef sequence < octet > BinaryData;
+
+  /// Filter na vyhledavani ve spravovanych souborech -- zatim nepouzivane
+  struct FileFilter
+  {
+    long id; ///< Vyhledavej podle id (neaktivni pokud je -1)
+    string name; ///< Vyhledavej podle nazvu souboru (neaktivni pokud je prazdny string)
+    string path; ///< Vyhledavej podle cesty k souboru (neaktivni pokud je prazdny string)
+    string mimetype; ///< Vyhledavej podle MIME typu (neaktivni pokud je prazdny string)
+    DateTimeInterval crdate; ///< Vyhledavej podle datumu vytvoreni.
+  };
+
+  /// Struktura informaci o spravovanem souboru
+  struct FileInfo {
+    long id; ///< ID souboru
+    string name; ///< Lidsky privetive jmeno souboru
+    string path; ///< Cesta k souboru
+    string mimetype; ///< MIME typ
+    timestamp crdate; ///< Datum vlozeni do databaze
+    unsigned long size; ///< Velikost v bytech
+  };
+  typedef sequence < FileInfo > FileInfos;
+
+  /// Objekt zpristupnujici vysledky vyhledavani
+  interface FileSearch
+  {
+    /** Vyjimka pro pripad zavazne interni chyby (napr. chyba databaze). */
+    exception InternalError {
+      string message; ///< Popis chyby
+    };
+    /** Vyjimka pokud search objekt neni jiz aktivni. */
+    exception NotActive {
+    };
+    /**
+     Vrati stanoveny pocet polozek z vysledku vyhledavani vyhovujicich filtru
+     z konstruktoru.
+     \param count Pocet polozek, ktere se maji vratit.
+     \return Seznam vyslednych mailu.
+     */
+    FileInfos getNext(in long count) raises (InternalError, NotActive);
+    /**
+     Zrusi vyhledavaci objekt na strane serveru.
+     */
+    void destroy() raises (InternalError);
+  };
 
   /// Rozhraní pro File Manager
   interface FileManager
@@ -10,30 +54,44 @@ module ccReg {
     exception InternalError {
       string message; ///< Popis chyby
     };
-    /// Zadane jmeno souboru neni platne
-    exception InvalidName {
-    	string filename;
-    };
     /// Soubor nenalezen
     exception FileNotFound {
-    	string filename;
+    };
+    /// ID nenalezeno
+    exception IdNotFound {
     };
     /// Ulozi data do souboru
     /**
-     \param name Nazev souboru (path).
+     \param name Nazev pod kterym vystupuje souboru v databazi.
+     \param mimetype MIME typ souboru.
      \param data Binarni data pro ulozeni do souboru.
+     \return ID souboru prirazene filemanagerem.
     */
-    void save(in string name, in BinaryData data)
-    raises (InternalError, InvalidName);
+    long save(in string name, in string mimetype, in BinaryData data)
+    raises (InternalError);
 
     /// Nahraje data ze souboru
     /**
-     \param name Nazev souboru (path).
+     \param name Nazev pod kterym vystupuje souboru v databazi.
+     \param mimetype MIME typ souboru.
      \return Binarni data - obsah souboru.
     */
-    BinaryData load(in string name, out string mimetype)
-    raises (InternalError, InvalidName, FileNotFound);
+    BinaryData load(in long id) raises (InternalError, IdNotFound, FileNotFound);
+
+    /// Vrati popisne informace o spravovanem souboru
+    /**
+     \param id ID pod kterym vystupuje souboru v databazi.
+     \return Struktura ktera popisuje soubor.
+     */
+    FileInfo info(in long id) raises (InternalError, IdNotFound);
+
+    /**
+     Vyhleda data dle zadaneho filtru.
+     Vraceny objekt se pouziva pro pristup k datum.
+     \param filter Filter podle ktereho se ridi vyhledavani.
+     \return Object ktery zpristupnuje vysledky vyhledavani.
+     */
+    FileSearch createSearchObject(in FileFilter filter) raises (InternalError);
 
   };
-
 };

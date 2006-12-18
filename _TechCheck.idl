@@ -1,0 +1,51 @@
+module ccReg {
+  /// Urovne zavaznosti technickych testu
+  enum CheckLevel {
+  	CHECK_ERROR,
+  	CHECK_WARNING,
+  	CHECK_INFO
+  };
+  /// Duvod vyvolani kontroly
+  enum CheckReason {
+  	CHKR_EPP,
+  	CHKR_MANUAL,
+  	CHKR_REGULAR
+  };
+  /// Vysledek jednoho technickeho testu
+  struct OneCheckResult {
+  	string name; ///< Nazev testu.
+	boolean result; ///< Test probehl v poradku = True, jinak False.
+	string note; ///< Doprovodna poznamka k vysledku testu.
+	CheckLevel level; ///< Zavaznost testu.
+  };
+  typedef sequence <OneCheckResult> CheckResultList;
+  /// Vysledek technickych testu
+  struct CheckResult {
+	long id; ///< ID technicke kontroly.
+  	boolean status; ///< OK je true, Failed je false.
+	CheckResultList results; ///< Vysledky dilcich testu.
+  };
+
+  /// Rozhraní pro File Manager
+  interface TechCheck
+  {
+    /** Vyjimka pro pripad zavazne interni chyby. */
+    exception InternalError {
+      string message; ///< Popis chyby
+    };
+    /** Pokud domena urcena ke kontrole nema prirazen nsset. */
+    exception NoAssociatedNsset {
+    };
+    /** Pokud domena neexistuje. */
+    exception DomainNotFound {
+    };
+    /// Zkontroluje domenu a ji pridruzeny nsset
+    /**
+     \param domain Nazev domeny.
+     \return Vysledky testu.
+    */
+    CheckResult checkDomain(in string domain, in CheckReason reason)
+    raises (InternalError, NoAssociatedNsset, DomainNotFound);
+  };
+
+};

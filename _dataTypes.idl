@@ -29,4 +29,31 @@ module ccReg {
   /// Typ pro seznam záznamů jednotlivých nameserverů
   typedef sequence < DNSHost_str > DNSHost;
   
+  /// Structure for handling day
+  struct DateType {
+    short day; ///< day of month (1..31)
+    short month; ///< month in year (1..12)
+    short year; ///< year (i.e. 2006)
+  };
+  
+  /// Structure for handling interval of days
+  struct DateInterval {
+    DateType from; ///< start of interval - Date(0,0,0) means ignore this field
+    DateType to; ///< end of interval - Date(0,0,0) means ignore this field 
+  };
+  
+  /// Structure for handling date and time
+  struct DateTimeType {
+    DateType date;
+    short hour; ///< hour (0..23)
+    short minute; ///< minute (0..59)
+    short second; ///< second (0..59)
+  };
+  
+  /// Structure for handling interval of times
+  struct DateTimeInterval {
+    DateTimeType from; ///< start of interval 
+    DateTimeType to; ///< end of interval
+  };
+
 };

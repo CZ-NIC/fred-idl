@@ -6,6 +6,8 @@
 #include "_Whois.idl"
 #include "_ZoneGenerator.idl"
 #include "_Mailer.idl"
+#include "_TechCheck.idl"
+#include "_FileManager.idl"
 
 // pro nacteni zone
 #include "_zone.idl"
