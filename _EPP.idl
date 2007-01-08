@@ -80,7 +80,7 @@ module ccReg {
   /// Typ pro identifikaci místa v parametrech, ve kterém byla nalezena chyba
   enum ErrorSpec 
   {
-    unknow, ///< Není určené žádné konkrétní místo
+    unknown, ///< Není určené žádné konkrétní místo
     poll_msgID, ///< Chyba v msgID zprávy poll
     poll_msgID_missing, ///< Parametr msgID chybi v xml
     contact_handle, ///< Chyba v handle při vytváření kontaktu

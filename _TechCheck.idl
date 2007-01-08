@@ -1,10 +1,4 @@
 module ccReg {
-  /// Urovne zavaznosti technickych testu
-  enum CheckLevel {
-  	CHECK_ERROR,
-  	CHECK_WARNING,
-  	CHECK_INFO
-  };
   /// Duvod vyvolani kontroly
   enum CheckReason {
   	CHKR_EPP,
@@ -16,7 +10,7 @@ module ccReg {
   	string name; ///< Nazev testu.
 	boolean result; ///< Test probehl v poradku = True, jinak False.
 	string note; ///< Doprovodna poznamka k vysledku testu.
-	CheckLevel level; ///< Zavaznost testu.
+	short level; ///< Zavaznost testu.
   };
   typedef sequence <OneCheckResult> CheckResultList;
   /// Vysledek technickych testu
@@ -26,7 +20,7 @@ module ccReg {
 	CheckResultList results; ///< Vysledky dilcich testu.
   };
 
-  /// Rozhraní pro File Manager
+  /// Rozhraní pro Daemona Technickych kontrol
   interface TechCheck
   {
     /** Vyjimka pro pripad zavazne interni chyby. */
@@ -46,6 +40,14 @@ module ccReg {
     */
     CheckResult checkDomain(in string domain, in CheckReason reason)
     raises (InternalError, NoAssociatedNsset, DomainNotFound);
+
+    /// Vyvola technickou kontrolu vsech registrovanych domen
+    /**
+     \param domain Nazev domeny.
+     \return Vysledky testu.
+    */
+    void checkAll()
+    raises (InternalError);
   };
 
 };
