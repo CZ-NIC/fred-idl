@@ -198,6 +198,7 @@ module ccReg {
     string AuthInfoPw; ///< Heslo pro transfer nssetu
     DNSHost dns; ///< Seznam nameserverů  DNS
     TechContact tech; ///< Seznam identifikátorů technických kontaktů
+    short level; ///< Uroven technickych testu
   };
   /// Typ pro přenos dat ve funkci info_domain
   struct Domain
@@ -540,6 +541,7 @@ module ccReg {
      \param dns_rem Identifikátor odebíraného hosta
      \param tech_add Identifikátor přidávaného technického kontaktu
      \param tech_rem Identifikátor odebíraného technického kontaktu
+     \param level Uroven technickych testu (-1 znamena nezadano)
      \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
      \param XML Kompletní XML zpráva která přišla přes EPP protokol
@@ -551,6 +553,7 @@ module ccReg {
       in DNSHost dns_rem,
       in TechContact tech_add,
       in TechContact tech_rem,
+      in short level,
       in long clientID,
       in string clTRID,
       in string XML
@@ -566,6 +569,7 @@ module ccReg {
      \param authInfoPw Heslo pro převod
      \param tech Seznam technických kontaktů
      \param dns Seznam hostů (nameserverů)
+     \param level Uroven technickych testu (-1 znamena nezadano)
      \param crDate Vracený datum vytvoření
      \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
@@ -576,6 +580,7 @@ module ccReg {
       in string authInfoPw,
       in TechContact tech,
       in DNSHost dns,
+      in short level,
       out timestamp crDate,
       in long clientID,
       in string clTRID,
@@ -610,6 +615,21 @@ module ccReg {
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */       
     Response NSSetList (
       out Lists nssets,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    ) raises (ServerIntError);
+    /// Asynchronní vyvolání technické kontroly nssetu.
+    /**
+     \param handle Identifikátor nssetu.
+     \param fqdn Doménové jméno, které má být otestováno s nssetem.
+     \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */       
+    Response nssetTest (
+      in string handle,
+      in string fqdn,
       in long clientID,
       in string clTRID,
       in string XML

@@ -5,18 +5,25 @@ module ccReg {
   	CHKR_MANUAL,
   	CHKR_REGULAR
   };
-  /// Vysledek jednoho technickeho testu
+  /// Vysledek jednoho skriptu technickeho testu
   struct OneCheckResult {
   	string name; ///< Nazev testu.
-	boolean result; ///< Test probehl v poradku = True, jinak False.
-	string note; ///< Doprovodna poznamka k vysledku testu.
+	/** 0 - Nsset je v poradku,
+	    1 - Nsset neprosel testem,
+	    2 - Test selhal z neznamych duvodu. */
+	short status;
+	string note; ///< Vystup ze skriptu (stderr).
+	string data; ///< Data se specifickym vyznamem pro dany test (stdout).
 	short level; ///< Zavaznost testu.
   };
   typedef sequence <OneCheckResult> CheckResultList;
-  /// Vysledek technickych testu
+  /// Vysledek technickeho testu
   struct CheckResult {
-	long id; ///< ID technicke kontroly.
-  	boolean status; ///< OK je true, Failed je false.
+	/** 0 - Vsechny testy probehli v poradku,
+	    1 - Minimalne jeden test neprosel,
+	    2 - Minimalne jeden test selhal z neznamych duvodu.
+	    1 ma prednost pred 2. */
+  	short status;
 	CheckResultList results; ///< Vysledky dilcich testu.
   };
 
@@ -27,27 +34,50 @@ module ccReg {
     exception InternalError {
       string message; ///< Popis chyby
     };
-    /** Pokud domena urcena ke kontrole nema prirazen nsset. */
-    exception NoAssociatedNsset {
+    /** Pokud nsset s danym handlem neexistuje. */
+    exception NssetNotFound {
     };
-    /** Pokud domena neexistuje. */
-    exception DomainNotFound {
+    /** Pokud registrator s danym handlem neexistuje. */
+    exception RegistrarNotFound {
     };
-    /// Zkontroluje domenu a ji pridruzeny nsset
+    /// Zkontroluje nsset a vrati vysledky testu.
     /**
-     \param domain Nazev domeny.
+     \param nsset Handle nssetu.
+     \param level Level k pouziti (pokud je 0, pouzije se level nssetu).
+     \param dig Pridat k listu fqdn domen, domeny pridruzene k nssetu.
+     \param archive Zda-li zalohovat provedenou kontrolu do databaze.
+     \param reason Duvod technickeho testu.
+     \param fqdns Seznam fqdn domen, ktere se maji otestovat s nssetem.
+     	Pokud je seznam prazdny a dig nezpusobi pridani zadneho fqdn,
+     	provedou se pouze testy nesouvisejici s fqdn domen.
      \return Vysledky testu.
     */
-    CheckResult checkDomain(in string domain, in CheckReason reason)
-    raises (InternalError, NoAssociatedNsset, DomainNotFound);
+    CheckResult checkNsset(in string nsset, in short level, in boolean dig,
+    	in boolean archive, in CheckReason reason, in Lists fqdns)
+    raises (InternalError, NssetNotFound);
+
+    /** Zada ukol kontroly nssetu a vrati se bez provadeni testovani.
+     * Vysledek testovani se zprostredkuje zarazenim poll zpravy do fronty
+     * zprav pro registratora.
+     *
+     \param regid Handle registratora, pro ktereho ma byt zarazena zprava
+        o vysledku testu.
+     \param nsset Handle nssetu.
+     \param level Level k pouziti (pokud je 0, pouzije se level nssetu).
+     \param dig Pridat k listu fqdn domen, domeny pridruzene k nssetu.
+     \param archive Zda-li zalohovat provedenou kontrolu do databaze.
+     \param reason Duvod technickeho testu.
+     \param fqdns Seznam fqdn domen, ktere se maji otestovat s nssetem.
+     	Pokud je seznam prazdny a dig nezpusobi pridani zadneho fqdn,
+     	provedou se pouze testy nesouvisejici s fqdn domen.
+    */
+    void checkNssetAsynch(in string regid, in string nsset, in short level,
+        in boolean dig, in boolean archive, in CheckReason reason,
+	in Lists fqdns)
+    raises (InternalError, NssetNotFound, RegistrarNotFound);
 
     /// Vyvola technickou kontrolu vsech registrovanych domen
-    /**
-     \param domain Nazev domeny.
-     \return Vysledky testu.
-    */
-    void checkAll()
-    raises (InternalError);
+    void checkAll() raises (InternalError);
   };
 
 };
