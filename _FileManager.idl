@@ -1,97 +1,188 @@
 module ccReg {
 
-  /// Pro prenaseni dat souboru
+  /// Data type used for transfer of bytes of a file.
   typedef sequence < octet > BinaryData;
 
-  /// Filter na vyhledavani ve spravovanych souborech -- zatim nepouzivane
+  /// Item in code list of file types.
+  struct FileEnumType
+  {
+    short id;    ///< Numeric ID of file type.
+    string name; ///< Name of file type.
+  };
+  /// Code list of file types (pairs of code and file type name).
+  typedef sequence < FileEnumType > FileEnumTypes;
+
+  /// Definition of search filter, which is used for looking up managed files.
   struct FileFilter
   {
-    long id; ///< Vyhledavej podle id (neaktivni pokud je -1)
-    string name; ///< Vyhledavej podle nazvu souboru (neaktivni pokud je prazdny string)
-    string path; ///< Vyhledavej podle cesty k souboru (neaktivni pokud je prazdny string)
-    string mimetype; ///< Vyhledavej podle MIME typu (neaktivni pokud je prazdny string)
-    DateTimeInterval crdate; ///< Vyhledavej podle datumu vytvoreni.
+    long id;         ///< Id of the file (inactive if -1).
+    string name;     ///< Filename (inactive if empty string).
+    string path;     ///< Path to file on filesystem (inactive if empty string).
+    string mimetype; ///< MIME type of the file (inactive if empty string).
+    /** Numeric ID of file type (inactive if -1; 0 represents files with not
+     *  assigned type).
+     */
+    short filetype;
+    /** Creation timestamp of the file must lie in this interval (inactive if
+     *  filled with zeros). By creation we mean upload to file repository.
+     */
+    DateTimeInterval crdate;
   };
 
-  /// Struktura informaci o spravovanem souboru
+  /// Structure describing managed file.
   struct FileInfo {
-    long id; ///< ID souboru
-    string name; ///< Lidsky privetive jmeno souboru
-    string path; ///< Cesta k souboru
-    string mimetype; ///< MIME typ
-    timestamp crdate; ///< Datum vlozeni do databaze
-    unsigned long size; ///< Velikost v bytech
+    long id;            ///< Numeric ID of the file.
+    string name;        ///< Filename of the file (does not have to be unique).
+    string path;        ///< Path to the file on a filesystem.
+    string mimetype;    ///< MIME type of the file.
+    short filetype;     ///< Numeric ID of file type (0 if without type).
+    timestamp crdate;   ///< Date of file creation.
+    unsigned long size; ///< Size in bytes.
   };
+  /// List of file descriptive structures.
   typedef sequence < FileInfo > FileInfos;
 
-  /// Objekt zpristupnujici vysledky vyhledavani
+  /// Object making accessible results of file search.
   interface FileSearch
   {
-    /** Vyjimka pro pripad zavazne interni chyby (napr. chyba databaze). */
+    /// Exception thrown in case of internal error (i.e. database error).
     exception InternalError {
-      string message; ///< Popis chyby
+      string message; ///< Textual description of error.
     };
-    /** Vyjimka pokud search objekt neni jiz aktivni. */
+
+    /** Exception thrown if search object is no more active (not used for
+     *  a long time.
+     */
     exception NotActive {
     };
-    /**
-     Vrati stanoveny pocet polozek z vysledku vyhledavani vyhovujicich filtru
-     z konstruktoru.
-     \param count Pocet polozek, ktere se maji vratit.
-     \return Seznam vyslednych mailu.
+
+    /** Returns specified number of items from result of search.
+     *  If empty list is returned it means that all results have been already
+     *  retrieved.
+     *
+     *  \param count   Number of items which should be retrieved.
+     *  \return        List of results of search. The list might be actually
+     *                 shorter than specified by count parameter in case that
+     *                 there is not so many results.
      */
     FileInfos getNext(in long count) raises (InternalError, NotActive);
-    /**
-     Zrusi vyhledavaci objekt na strane serveru.
+
+    /** Destroy the search object at server-side.
+     *  This SHOULD be called whenever client finishes download of results,
+     *  allthough server has mechanism for cleaning of not used objects.
      */
     void destroy() raises (InternalError);
   };
 
-  /// Rozhraní pro File Manager
+  /// Object for downloading of a file
+  interface FileDownload
+  {
+    /// Exception thrown in case of internal error (i.e. database error).
+    exception InternalError {
+      string message; ///< Textual description of error.
+    };
+
+    /** Exception thrown if download object is no more active (not used for
+     *  a long time.
+     */
+    exception NotActive {
+    };
+
+    /** Returns a specified number of bytes from file.
+     *  If no bytes are returned it means that the download is finished.
+     *
+     *  \param nbytes  Number of bytes to download.
+     *  \return        Bytes of file.
+     */
+    BinaryData download(in long nbytes) raises (InternalError, NotActive);
+
+    /** Destroy the download object at server-side.
+     *  This SHOULD be called whenever client finishes download of a file,
+     *  allthough server has mechanism for cleaning of not used objects.
+     */
+    void finalize_download() raises (InternalError);
+  };
+
+  /// Object for uploading of a file
+  interface FileUpload
+  {
+    /// Exception thrown in case of internal error (i.e. database error).
+    exception InternalError {
+      string message; ///< Textual description of error.
+    };
+
+    /** Exception thrown if upload object is no more active (not used for
+     *  a long time.
+     */
+    exception NotActive {
+    };
+
+    /** Uploads a specified number of bytes from a file.
+     *
+     *  \param data    Uploaded bytes of a file.
+     */
+    void upload(in BinaryData data) raises (InternalError, NotActive);
+
+    /** Destroy the upload object at server-side.
+     *  This SHOULD be called whenever client finishes upload of a file.
+     *  It is a signal for the server that a whole file was successfully
+     *  uploaded.
+     *
+     *  \return           Numeric ID of the file assigned by file manager.
+     */
+    long finalize_upload() raises (InternalError);
+  };
+
+  /// Interface of file manager.
   interface FileManager
   {
-    /** Vyjimka pro pripad zavazne interni chyby. */
+    /// Exception thrown in case of internal error (i.e. database error).
     exception InternalError {
-      string message; ///< Popis chyby
+      string message; ///< Textual description of error.
     };
-    /// Soubor nenalezen
+    /// Exception thrown if requested file is in database but not on filesystem.
     exception FileNotFound {
     };
-    /// ID nenalezeno
+    /// Exception thrown if requested file is not in database.
     exception IdNotFound {
     };
-    /// Ulozi data do souboru
-    /**
-     \param name Nazev pod kterym vystupuje souboru v databazi.
-     \param mimetype MIME typ souboru.
-     \param data Binarni data pro ulozeni do souboru.
-     \return ID souboru prirazene filemanagerem.
-    */
-    long save(in string name, in string mimetype, in BinaryData data)
+    /** Method returns code list of file types.
+     *
+     *  \return    Code list of file types.
+     */
+    FileEnumTypes getTypeEnum() raises (InternalError);
+
+    /** Method uploads file in file manager.
+     *
+     *  \param name       File name (does not have to be unique).
+     *  \param mimetype   MIME type of the file.
+     *  \param filetype   Type of the file (0 means no type).
+     *  \return           FileUpload object used for transfer of bytes.
+     */
+    FileUpload save(in string name, in string mimetype, in short filetype)
     raises (InternalError);
 
-    /// Nahraje data ze souboru
-    /**
-     \param name Nazev pod kterym vystupuje souboru v databazi.
-     \param mimetype MIME typ souboru.
-     \return Binarni data - obsah souboru.
-    */
-    BinaryData load(in long id) raises (InternalError, IdNotFound, FileNotFound);
+    /** Method downloads a file from file manager.
+     *
+     *  \param id     Numeric ID of wanted file.
+     *  \return       FileDownload object used for transfer of bytes.
+     */
+    FileDownload load(in long id)
+    raises (InternalError, IdNotFound, FileNotFound);
 
-    /// Vrati popisne informace o spravovanem souboru
-    /**
-     \param id ID pod kterym vystupuje souboru v databazi.
-     \return Struktura ktera popisuje soubor.
+    /** Method returns file descriptive structure for a given file.
+     *
+     *  \param id     Numeric ID of file.
+     *  \return       Structure describing the file.
      */
     FileInfo info(in long id) raises (InternalError, IdNotFound);
 
-    /**
-     Vyhleda data dle zadaneho filtru.
-     Vraceny objekt se pouziva pro pristup k datum.
-     \param filter Filter podle ktereho se ridi vyhledavani.
-     \return Object ktery zpristupnuje vysledky vyhledavani.
+    /** Search in file repository based on a filter.
+     *  Returned object is used to retrieved results of the search.
+     *
+     *  \param filter Constraints which must be fulfilled by files.
+     *  \return       Object through which are accessible results of the search.
      */
     FileSearch createSearchObject(in FileFilter filter) raises (InternalError);
-
   };
 };

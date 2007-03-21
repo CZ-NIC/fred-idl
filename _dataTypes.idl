@@ -1,32 +1,33 @@
 module ccReg {
 
-  const string SET_NULL_VALUE = "$$SET_NULL_VALUE$$" ; /// definice stringu ktery udela SQL update a vlozi NULL hodnotu
+  /// definition of stringu that prepare SQL update and insert NULL value
+  const string SET_NULL_VALUE = "$$SET_NULL_VALUE$$" ; 
 
-  /// Typ pro vyjádření datumu a času podle rfc3339
-  /** YYYY-MM-DD  (jen datum)
+  /// Types for expresion of date and time according to rfc3339
+  /** YYYY-MM-DD  (just date)
    *  YYYY-MM-DDTHH:MM:SS.ssZ 
-   *  (datum a čas v UTC zulu time sec. na 2 des. místa)
+   *  (date and time in UTC zulu time, sec. with 2 decimal places)
    *  YYYY-MM-DDTHH:MM:SS.ss(+/-)HH:MM 
-   *  (datum a čas plus offset časové zóny, sec. na 2 des. místa)  
+   *  (date and time plus timezone offset, sec. with 2 decimal places)  
    */
   typedef string timestamp;
-  /// Typ pro datum ve formátu YYYY-MM-DD  
+  /// Type for date in format YYYY-MM-DD  
   typedef string date;
-  /// Typ pro seznam názvů nameserverů
+  /// Type for a list of nameservers
   typedef sequence < string > NameServers;
-  /// Typ pro seznam identifikátorů technických kontaktů
+  /// Type for a list of handles of technical contacts
   typedef sequence < string > TechContact;
-  /// Typ pro obecný seznam řetězců
+  /// Type for common list of strings
   typedef sequence < string > Lists;
-  /// Typ pro seznam IP adres
+  /// Type for a list of IP addresses
   typedef sequence < string > InetAddress;
-  /// Typ pro jeden prvek seznamu záznamů pro jednotlivé nameservery
+  /// Type for an element of list of records about individual nameservers
   struct DNSHost_str
   {
-    string fqdn; ///< Fqdn DNS serveru
-    InetAddress inet; ///< Pole IP adres 
+    string fqdn; ///< Fqdn of DNS server
+    InetAddress inet; ///< List of IP addresses
   };
-  /// Typ pro seznam záznamů jednotlivých nameserverů
+  /// Type for a list  of records about individual nameservers
   typedef sequence < DNSHost_str > DNSHost;
   
   /// Structure for handling day

@@ -1,49 +1,53 @@
 module ccReg {
 
-  /// Typ pro status flag domény v whoisu
+  /// Status of registered domain in repository.
   enum WhoisDomainStatus  { WHOIS_ACTIVE, WHOIS_EXPIRED };
 
-  /// Typ chyby (výsledek klasifikace identifikátoru)
+  /// Type of whois error (result of fqdn classification).
   enum WhoisErrorType {
-    WE_DOMAIN_BAD_ZONE, ///< Handle je doména mimo registr
-    WE_DOMAIN_LONG, ///< Handle je doména nepovolené délky (zkrácena)
-    WE_INVALID, ///< Handle není validní
-    WE_NOTFOUND ///< Domena nebyla nalezena
+    WE_DOMAIN_BAD_ZONE, ///< Domain is not in zone managed by register.
+    WE_DOMAIN_LONG,     ///< Domain fqdn is too long.
+    WE_INVALID,         ///< Domain fqdn is not valid.
+    WE_NOTFOUND         ///< Domain is not registered.
   };
  
-  /// Typ pro data o doméně
+  /// Structure containing data about a domain needed by whois.
   struct DomainWhois
   {
-    string  fqdn; ///< Nazev domeny
-    boolean enum_domain; ///< Pravda kdyz domena je enumova
-    WhoisDomainStatus status; ///< Stav domény
-    string created; ///< Datum vytvoření domény
-    string expired; ///< Datum expirace domény
-    string registrarName; ///< Jméno registrátora
-    string registrarUrl; ///< Webová adresa registrátora
-    NameServers ns; ///< Seznam nameserverů
-    TechContact tech; ///< Seznam idenitifikátorů technických kontaktů
+    string fqdn;         ///< Fqdn of the domain.
+    boolean enum_domain; ///< True if domain is ENUM domain.
+    string created;      ///< Date of domain registration.
+    string expired;      ///< Date of domain expiration.
+    string registrarName;///< Name of registrar.
+    string registrarUrl; ///< Web site address of registrar.
+    NameServers ns;      ///< List of nameservers.
+    TechContact tech;    ///< List of technical contacts for the domain.
+    WhoisDomainStatus status; ///< Status of the domain (see WhoisDomainStatus).
   };
 
-  /// Rozhraní pro WHOIS
+  /// Whois interface.
   interface Whois
   {
-    /// Vyjímka pro případ zavazne chyby
+    /// Exception thrown in case of internal error (i.e. database error).
     exception WhoisError {
-      string message; ///< Popis chyby
-    };
-    /// Vyjímka v případě lehci chyby souvisejici z nazvem identifikatoru
-    exception DomainError {
-      string timestamp; ///< I když nastane chyba potřebujeme timestamp
-      WhoisErrorType type; ///< Oznacuje typ chyby
+      string message; ///< Textual description of error.
     };
 
-    /// Vraci údaje o doméně pro whois podle názvu
-    /** 
-     \param domain_name Název požadované domény
-     \param timestamp Vrací čas vyřízení požadavku
-     \return
-    */
+    /** Exception thrown in case of softer error resulting from classification
+     *  of a domain.
+     */
+    exception DomainError {
+      /// Timestamp is needed for response even if error occurred.
+      string timestamp;
+      WhoisErrorType type; ///< Identifier of error (see WhoisErrorType).
+    };
+
+    /** Retrieves information about a domain needed by whois from register.
+     *
+     *  \param domain_name   Fqdn of a domain.
+     *  \param timestamp     Timestamp of information retrieval.
+     *  \return              Information about the domain.
+     */
     DomainWhois getDomain(
       in string domain_name,
       out string timestamp

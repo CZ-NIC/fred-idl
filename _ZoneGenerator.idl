@@ -1,68 +1,80 @@
 module ccReg {
 
-  /// Záznam o doméně v zónovém souboru
+  /// Structure containing all data about a domain needed for zone generation.
   struct ZoneItem {
-    string name;    ///< Fqdn
-    DNSHost nameservers; ///< Seznam nameserverů včetně jejich adres
-                         ///< pokud jsou potřebné (GLUE RR)
+    string name; ///< Fqdn of a domain.
+    /// List of nameservers including their IP addresses if needed (GLUE RR).
+    DNSHost nameservers;
   };
-  /// Typ pro seznam položek zóny
+
+  /// List of domains with information needed for zone generation.
   typedef sequence<ZoneItem> ZoneSeq; 
 
-  /// Interface pro ziskani dat ze zony
-  interface ZoneData {
-
-    /// Vyjimka pro pripad zavazne interni chyby.
+  /// Object used to retrive domain information needed for zone generation.
+  interface ZoneData
+  {
+    /// Exception thrown in case of internal error (i.e. database error).
     exception InternalError {
-      string message; ///< Detail chyby
+      string message; ///< Textual description of error.
     };
-    /** Vyjimka pokud ZoneHolder object neni jiz aktivni. */
+
+    /** Exception thrown if zone object is no more active (not used for
+     *  a long time.
+     */
     exception NotActive {
     };
 
-    /**
-     Vrati stanoveny pocet polozek ze zony.
-     \param count Pocet polozek (domen), ktere se maji vratit.
-     \return List domen urcenych pro generaci.
+    /** Returns specified number of domains for zone generation.
+     *  If empty list is returned it means that all domains have been already
+     *  transfered.
+     *
+     *  \param count   Number of domains which should be retrieved.
+     *  \return        List of domains. The list might be actually
+     *                 shorter than specified by count parameter in case that
+     *                 there is not so many domains to transfer already.
      */
     ZoneSeq getNext(in long count) raises (InternalError, NotActive);
-    /**
-     Zrusi objekt zony na strane serveru.
+
+    /** Destroy the search object at server-side.
+     *  This SHOULD be called whenever client finishes zone generation,
+     *  allthough server has mechanism for cleaning of not used objects.
      */
     void destroy() raises (InternalError);
   };
 
-  /// Interface pro generovani zony
+  /// Interface of zone generator.
   interface ZoneGenerator {
 
-    /// Vyjimka pro pripad zavazne interni chyby (napr. chyba databaze).
+    /// Exception thrown in case of internal error (i.e. database error).
     exception InternalError {
-      string message; ///< Detail chyby
+      string message; ///< Textual description of error.
     };
-    /// Nezname jmeno zony zadano.
+
+    /// Exception thrown if generation of unknown zone was requested.
     exception UnknownZone {
     };
 
-    /// Vrati objekt pro zonu pres ktery lze transferovat data zony.
-    /**
-     \param zonename Název zóny pro kterou se generuje.
-     \return Objekt pres ktery lze transferovat data ze zony.
+    /** Method returns object which is used to retrieve data needed for zone
+     *  generation.
+     *
+     *  \param zonename  Name of zone which is generated.
+     *  \return          Object through which are accessible zone data.
      */
     ZoneData generateZone(in string zonename) raises (InternalError,UnknownZone);
 
-    /// Vrati SOA zaznam pro zonu (lze pouzit pro zakladni testovani funkcnosti)
-    /**
-     \param zonename Název zóny pro kterou se generuje.
-     \param ttl TTL.
-     \param hostmaster Hostmaster.
-     \param serial Serial.
-     \param refresh Refresh.
-     \param update_retr Update retr.
-     \param expiry Expiry.
-     \param minimum Minimum.
-     \param soans Fqdn SOA nameserveru.
-     \param nameservers Nameservery pro zonu.
-     \return Nazev zony
+    /** Method returns all data needed for SOA record of a zone.
+     *
+     *  \param zonename    Name of zone for which are requested SOA data.
+     *  \param ttl         TTL.
+     *  \param hostmaster  Hostmaster.
+     *  \param serial      Serial.
+     *  \param refresh     Refresh.
+     *  \param update_retr Update retr.
+     *  \param expiry      Expiry.
+     *  \param minimum     Minimum.
+     *  \param soans       Fqdn of primary nameserver.
+     *  \param nameservers Nameservers of zone.
+     *  \return            Zone name.
      */
     string getSOA(
       in string zonename,
@@ -76,6 +88,5 @@ module ccReg {
       out string soans,
       out DNSHost nameservers
       ) raises (InternalError, UnknownZone);
-
   };
 };

@@ -1,117 +1,151 @@
 module ccReg {
 
-  /// List identifikatoru attachmentu
+  /// List of identifiers of attachments.
   typedef sequence < long > Attachment_seq;
 
-  /// Tabulka ID typu emailu, nazev typu emailu
+  /// Item in code list of email types.
   struct MailTypeCode
   {
-    long id;
-    string name;
+    long id;     ///< Numeric ID of email type.
+    string name; ///< Name of email type.
   };
+  /// Code list of email types (pairs of code and email type name).
   typedef sequence < MailTypeCode > MailTypeCodes;
 
-  /// Struktura pro zadani hodnot do hlavicky emailu
+  /** Structure for specification of email headers (for some of them are
+   *  provided default values.
+   */
   struct MailHeader
   {
-    string h_to;
-    string h_from;
-    string h_cc;
-    string h_bcc;
-    string h_reply_to;
-    string h_errors_to;
-    string h_organization;
+    string h_to;           ///< Email header 'To'.
+    string h_from;         ///< Email header 'From'.
+    string h_cc;           ///< Email header 'Cc'.
+    string h_bcc;          ///< Email header 'Bcc'.
+    string h_reply_to;     ///< Email header 'Reply-To'.
+    string h_errors_to;    ///< Email header 'Errors-To'.
+    string h_organization; ///< Email header 'Organization'.
   };
-  /// Struktura klic-hodnota
+
+  /// Structure representing key-value pair.
   struct KeyValue
   {
-    string key;
-    string value;
+    string key;   ///< Key.
+    string value; ///< Value.
   };
-  /// Seznam paru klic-hodnota
+
+  /// List of key-value pairs used for templating.
   typedef sequence <KeyValue> KeyValues;
-  /// Struktura plne popisujici polozku z mail archivu
+
+  /// Structure describing sent email.
   struct Mail
   {
-    long mailid; ///< Id mailu (prvni cislo pred teckou v message-id header)
-    long mailtype; ///< Typ mailu (pouzity pri jeho vytvoreni)
-    timestamp crdate; ///< Datum vlozeni polozky do archivu
-    timestamp moddate;///< Datum posledni modifikace statusu polozky
-    long status; ///< Status (0 = OK, jinak primo chyba sendmailu)
-    string content; ///< Obsah mailu se vsim vsudy bez binarnich priloh
-    Lists handles; ///< List asociovanych handlu k mailu
-    Attachment_seq attachments; ///< Nazvy binarnich priloh
+    long mailid;      ///< Numeric ID of the email.
+    long mailtype;    ///< Numeric ID of email type.
+    timestamp crdate; ///< Date of insertion in archive (= date of submission).
+    timestamp moddate;///< Date of last modification of email status.
+    long status;      ///< Email status is return code of sendmail.
+    Lists handles;    ///< List of associated object handles.
+    /** Content of the email including headers excluding file attachments and
+     *  signature.
+     */
+    string content;
+    Attachment_seq attachments; ///< List of file attachments' IDs.
   };
-  /// Filter na vyhledavani v mail archivu
+
+  /// Definition of search filter, which is used for looking up emails.
   struct MailFilter
   {
-    long mailid; ///< Vyhledavej podle id mailu (neaktivni pokud je -1)
-    long mailtype; ///< Typ emailu (neaktivni pokud je -1)
-    long status; ///< Vyhledavej podle statusu (neaktivni pokud je -1)
-    string handle; ///< Vyhledavej podle asociovaneho handlu (neaktivni pokud je prazdny string)
-    long attachid; ///< Vyhledavej podle attachmentu (neaktivni pokud je -1)
-    DateTimeInterval crdate; ///< Vyhledavej podle datumu vytvoreni.
-    string fulltext; ///< Vyhledava podle stringu v emailu (neaktivni pokud je prazdny string)
+    long mailid;     ///< ID of the email (inactive if -1).
+    long mailtype;   ///< Numeric ID of type of the email (inactive if -1).
+    long status;     ///< Email status (inactive if -1).
+    string handle;   ///< Associated handle (inactive if empty string).
+    long attachid;   ///< File attachment's ID (inactive if -1).
+    /** Full-text search on email content including headers excluding file
+     *  attachments (inactive if empty string).
+     */
+    string fulltext;
+    /** Date of email archivation (=submission).
+     *  Is inactive if filled with zeros.
+     */
+    DateTimeInterval crdate;
   };
+  /// List of email descriptive structures.
   typedef sequence < Mail > MailList;
 
-  /// Objekt zpristupnujici vysledky vyhledavani
+  /// Object making accessible results of email search.
   interface MailSearch
   {
-    /** Vyjimka pro pripad zavazne interni chyby (napr. chyba databaze). */
+    /// Exception thrown in case of internal error (i.e. database error).
     exception InternalError {
-      string message; ///< Popis chyby
+      string message; ///< Textual description of error.
     };
-    /** Vyjimka pokud search object neni jiz aktivni. */
+
+    /** Exception thrown if search object is no more active (not used for
+     *  a long time.
+     */
     exception NotActive {
     };
-    /**
-     Vrati stanoveny pocet polozek z vysledku vyhledavani vyhovujicich filtru
-     z konstruktoru.
-     \param count Pocet polozek (mailu), ktere se maji vratit.
-     \return Seznam vyslednych mailu.
+
+    /** Returns specified number of items from result of search.
+     *  If empty list is returned it means that all results have been already
+     *  retrieved.
+     *
+     *  \param count   Number of items which should be retrieved.
+     *  \return        List of results of search. The list might be actually
+     *                 shorter than specified by count parameter in case that
+     *                 there is not so many results.
      */
     MailList getNext(in long count) raises (InternalError, NotActive);
-    /**
-     Zrusi vyhledavaci objekt na strane serveru.
+
+    /** Destroy the search object at server-side.
+     *  This SHOULD be called whenever client finishes download of results,
+     *  allthough server has mechanism for cleaning of not used objects.
      */
     void destroy() raises (InternalError);
   };
 
-  /// Rozhraní pro Mailer
+  /// Interface of mailer.
   interface Mailer
   {
-    /** Vyjimka pro pripad zavazne interni chyby (napr. chyba databaze,
-        sendmailu). */
+    /// Exception thrown in case of internal error (i.e. database error).
     exception InternalError {
-      string message; ///< Popis chyby
+      string message;    ///< Textual description of error.
     };
-    /// Neznamy typ emailu
+
+    /// Exception thrown if unknown email type was specified.
     exception UnknownMailType {
-        string typename;
+        string typename; ///< Name of unknown email type.
     };
-    /// Attachment nenalezen
+
+    /// Exception thrown if any of specified attachments does not exist.
     exception AttachmentNotFound {
-        long attachid;
+        long attachid;   ///< ID of attachment.
     };
-    /// Chyba pri odesilani mailu
+
+    /// Exception thrown if sendmail command failed.
     exception SendMailError {
     };
-    /// Zformatuje a rozesle zpravu
-    /**
-     \param mailtype Name of email type.
-     \param header Hodnoty do hlavicky mailu, prebijejici defaulty.
-     \param data Pary klic-hodnota urcujici vstupni data pro templaty.
-     \param handles Handly kontaktu asociovanych se zpravou.
-     \param attachs ID attachmentu.
-     \param preview Pokud true, tak se nic neposle ani nearchivuje a vysledna
-            zprava se vrati jako string.
-     \param msgPreview Pokud je preview true vrati se vysledny mail, ktery by
-            se poslal, jinak se vrati prazdny string.
-     \return ID of email.
-    */
+
+    /** Method returns mapping between email type names and their IDs.
+     *  \return          Code list of email types.
+     */
+    MailTypeCodes getMailTypes() raises (InternalError);
+
+    /** Basic method for generating and sending of email.
+     *
+     *  \param mailtype  Type of generated email.
+     *  \param header    Email headers.
+     *  \param data      Key-value pairs specifying input data for templates.
+     *  \param handles   Object handles somehow associated with the email.
+     *  \param attachs   Numeric IDs of file attachments.
+     *  \param preview   If true, the email is not send but only generated
+     *                   and returned to caller in output parameter msgPreview.
+     *  \param msgPreview If preview is true, then here is stored generated
+     *                   email including signature.
+     *  \return          Numeric ID of generated email.
+     */
     long mailNotify(
-		    in string mailtype,
+                    in string mailtype,
                     in MailHeader header,
                     in KeyValues data,
                     in Lists handles,
@@ -125,19 +159,12 @@ module ccReg {
                        SendMailError
                     );
 
-    /**
-     Vyhleda data dle zadaneho filtru.
-     Vraceny objekt se pouziva pro pristup k datum.
-     \param filter Filter podle ktereho se ridi vyhledavani v archivu.
-     \return Object ktery zpristupnuje vysledky vyhledavani.
+    /** Search in email archive based on a filter.
+     *  Returned object is used to retrieved results of the search.
+     *
+     *  \param filter Constraints which must be fulfilled by emails.
+     *  \return       Object through which are accessible results of the search.
      */
     MailSearch createSearchObject(in MailFilter filter) raises (InternalError);
-
-    /**
-     Vrati ciselnik typu emailu.
-     \return Ciselnik typu emailu
-     */
-    MailTypeCodes getMailTypes() raises (InternalError);
   };
-
 };

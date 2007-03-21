@@ -1,4 +1,4 @@
-// IDL rozhrani pro volani CORBA funkci
+// IDL interface for CORBA functions
 // interfaces: EPP , Whois , Admin
 #include "_dataTypes.idl"
 #include "_Admin.idl"
@@ -9,6 +9,6 @@
 #include "_TechCheck.idl"
 #include "_FileManager.idl"
 
-// pro nacteni zone
+// for zone handling
 #include "_zone.idl"
 

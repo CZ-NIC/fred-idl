@@ -291,17 +291,108 @@ module ccReg {
     typedef sequence<TID> AttachmentSeq;
     /// Email detail
     struct Detail {
-      TID id; ///< Id mailu (prvni cislo pred teckou v message-id header)
-      string createTime; ///< Datum vlozeni polozky do archivu
-      string modTime;///< Datum posledni modifikace statusu polozky
-      long status; ///< Status (0 = OK, jinak primo chyba sendmailu)
-      unsigned short type; ///< Type 
-      string content; ///< Obsah mailu se vsim vsudy bez binarnich priloh
-      Lists handles; ///< List asociovanych handlu k mailu
-      AttachmentSeq attachments; ///< Nazvy binarnich priloh
+      TID id; ///< unique mail id (number before dot in message-id header)
+      string createTime; ///< time of inserting record into db
+      string modTime;///< date of last modification of status 
+      long status; ///< status (0 = OK, otherwise sendamail return status)
+      unsigned short type; ///< type
+      string content; ///< complete email content without binary attachements
+      Lists handles; ///< list of assocciated emails
+      AttachmentSeq attachments; ///< names of binary attachements
     };
   };
 
+  typedef string Money;
+  module Invoicing {
+    struct Payment {
+      TID id;
+      string number;
+      Money price;
+      Money balance;
+    };
+    typedef sequence<Payment> PaymentList;
+    struct Action {
+      TID objectId;
+      string objectName;
+      string actionTime;
+      string exDate;
+      unsigned short actionType;
+      unsigned short unitsCount;
+      Money pricePerUnit;
+      Money price;
+    };
+    typedef sequence<Action> ActionList;
+    enum InvoiceType {
+      IT_ADVANCE,
+      IT_ACCOUNT,
+      IT_NONE //< for disabling filter
+    };
+    struct Invoice {
+      TID id;
+      TID zone;
+      string crTime;
+      string taxDate;
+      string fromDate;
+      string toDate;
+      InvoiceType type;
+      string number;
+      TID registrarId;
+      string registrarHandle;
+      Money credit;
+      Money price;
+      unsigned short vatRate;
+      Money total;
+      Money totalVAT;
+      string varSymbol;
+      TID filePDF;
+      TID fileXML;
+      PaymentList payments;
+      ActionList actions;
+    };
+    interface Filter :  ccReg::Filter {
+      attribute TID id;
+      attribute string number;
+      attribute DateInterval crDate;
+      attribute TID registrarId;
+      attribute string registrarHandle;
+      attribute TID zone;
+      attribute InvoiceType type;
+      attribute string varSymbol;
+      attribute DateInterval taxDate;
+      attribute string objectName;
+      attribute TID objectId;
+      attribute string advanceNumber;
+    };
+  };
+  
+  module Banking {
+    struct OnlinePayment {
+      TID id;
+      string accountNumber;
+      string accountBankCode;
+      string constSymbol;
+      string varSymbol;
+      string specSymbol;
+      Money price;
+      string memo;
+      TID invoiceId;
+      TID accountId;
+      string crDate;
+      string accountName;
+      string ident;
+    };
+    interface StatementsFilter : ccReg::Filter {
+      attribute TID id;
+    };
+    interface OnlineFilter : ccReg::Filter {
+      attribute TID id;
+    };
+    interface Statements : StatementsFilter {
+    };
+    interface OnlinePayments : OnlineFilter {
+    };
+  };
+  
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   ///          Concrete object tables
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -326,10 +417,16 @@ module ccReg {
   interface NSSets : PageTable, NSSetsFilter {
   };
  
+  /// List of AuthInfo requests
   interface AuthInfoRequests: PageTable, AuthInfoRequest::Filter {
   };
 
+  /// List of emails
   interface Mails: PageTable, Mailing::Filter {
+  };
+  
+  ///List of invoices
+  interface Invoices: PageTable, Invoicing::Filter {
   };
 
   /// Main interface for registrar session
@@ -341,10 +438,11 @@ module ccReg {
     NSSets getNSSets();
     AuthInfoRequests getAuthInfoRequests();
     Mails getMails();
+    Invoices getInvoices();
   };
 
   /// Money type in smallest unit (hallers)
-  typedef unsigned long Money;
+  //  typedef unsigned long MMoney;
 
   /// Access structure
   struct EPPAccess {
@@ -499,53 +597,48 @@ module ccReg {
 
   typedef string SessionIDType;
   
-  /// Administrátorské rozhraní
+  /// interface for administration application
   interface Admin
   {
-    /// Vyjímka pro případ nenalezení hledaného objektu
+    /// exception thwown in case of failed search
     exception ObjectNotFound {};
-    /// Vyjímka pro případ nepovedeného updatu objektu
+    /// exception thrown in case of update failure
     exception UpdateFailed {};
-    /// exception when authentification failed
+    /// exception thrown when authentification failed
     exception AuthFailed {};
     /// log into administrator interface 
     SessionIDType login(in string username, in string password) 
       raises (AuthFailed);
     /// get session
     Session getSession(in SessionIDType sessionID) raises (ObjectNotFound);
-    /// Vrátí kompletní seznam registrátorů
-    /** 
-     \return Seznam registrátorů */
+    /// return complete list of registrars
     RegistrarList getRegistrars();
-    /// Najde jednoho registrátora podle zadaného handle
-    /**
-     \param handle Identifikátor hledaného registrátora
-     \return Nalezený registrátor pokud není vyjímka */
+    /// return one registrar with specified handle
     Registrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
-    /// Return registrar detail for specified id
+    /// return registrar detail for specified id
     Registrar getRegistrarById(in TID id) raises (ObjectNotFound);
-    /// Uloží registrátora
+    /// store data of registrar in database
     void putRegistrar(in Registrar regData) raises (UpdateFailed);
-    /// Return contact detail for specified handel
+    /// return contact detail for specified handle
     ContactDetail getContactByHandle(in string handle) raises (ObjectNotFound);
-    /// Return contact detail for specified id
+    /// return contact detail for specified id
     ContactDetail getContactById(in TID id) raises (ObjectNotFound);
-    /// Return nsset detail for specified handel
+    /// return nsset detail for specified handel
     NSSetDetail getNSSetByHandle(in string handle) raises (ObjectNotFound);
-    /// Return nsset detail for specified id
+    /// return nsset detail for specified id
     NSSetDetail getNSSetById(in TID id) raises (ObjectNotFound);
-    /// Return domain detail for specified handel
+    /// return domain detail for specified handel
     DomainDetail getDomainByFQDN(in string fqdn) raises (ObjectNotFound);
-    /// Return domain detail for specified id
+    /// return domain detail for specified id
     DomainDetail getDomainById(in TID id) raises (ObjectNotFound);
-    /// Return EPP action detail for specified svTRID
+    /// return EPP action detail for specified svTRID
     EPPAction getEPPActionBySvTRID(in string svTRID) raises (ObjectNotFound);
-    /// Return EPP action detail for specified id
+    /// return EPP action detail for specified id
     EPPAction getEPPActionById(in TID id) raises (ObjectNotFound);
-    /// Return AuthInfoRequest detail for specified id
+    /// return AuthInfoRequest detail for specified id
     AuthInfoRequest::Detail getAuthInfoRequestById(in TID id) 
       raises (ObjectNotFound);
-    /// Return mail detail for specified id
+    /// return mail detail for specified id
     Mailing::Detail getEmailById(in TID id) 
       raises (ObjectNotFound);
     /// Return count of registred ENUM domains
@@ -553,12 +646,9 @@ module ccReg {
     /// Return count of numbers described by all registred ENUM domains
     long getEnumNumberCount();
     /// Classify input handle according to registry policy
-    /**
-     \param handle Input handle for classification
-     \param ch Output structure with classification */
     void checkHandle(
-      in string handle,
-      out CheckHandleTypeSeq ch
+      in string handle, ///< input handle for classification
+      out CheckHandleTypeSeq ch ///< output structure with classification
     );
     /// Return list of epp action types
     EPPActionTypeSeq getEPPActionTypeList();
@@ -595,5 +685,9 @@ module ccReg {
     /// Process request by sending email with auth_info
     void processAuthInfoRequest(in TID id, in boolean invalid) 
       raises (OBJECT_NOT_FOUND, SQL_ERROR);
+    typedef sequence<octet> Buffer;
+    Buffer getAuthInfoRequestPDF(in TID id, in string lang)
+      raises (OBJECT_NOT_FOUND, SQL_ERROR);      
+    Invoicing::Invoice getInvoiceById(in TID id);
   };
 };
