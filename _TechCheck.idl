@@ -153,21 +153,23 @@ module ccReg {
      *  argument) only technical test, which do not require domain fqdns, are
      *  executed.
      *
-     *  \param regid   Handle of registrator, for which is generated a poll
-     *                 message containing results of tests.
-     *  \param nsset   Handle of checked nsset.
-     *  \param level   If level is value greater than 0, then it overrides
-     *                 default level of nsset.
-     *  \param dig     Domain fqdns of domains associated with nsset are added
-     *                 to fqdn list if dig is true.
-     *  \param archive Archive executed technical check in database.
-     *  \param reason  Reason of technical check.
-     *  \param fqdns   Explicit list domain fqdns which should be added to fqdn
-     *                 list.
+     *  \param regid    Handle of registrator, for which is generated a poll
+     *                  message containing results of tests.
+     *  \param nsset    Handle of checked nsset.
+     *  \param level    If level is value greater than 0, then it overrides
+     *                  default level of nsset.
+     *  \param dig      Domain fqdns of domains associated with nsset are added
+     *                  to fqdn list if dig is true.
+     *  \param archive  Archive executed technical check in database.
+     *  \param reason   Reason of technical check.
+     *  \param fqdns    Explicit list domain fqdns which should be added to fqdn
+     *                  list.
+     *  \param cltestid ClTRID of request, empty string if clTRID was not
+     *                  provided.
      */
     void checkNssetAsynch(in string regid, in string nsset, in short level,
 	in boolean dig, in boolean archive, in CheckReason reason,
-	in Lists fqdns)
+	in Lists fqdns, in string cltestid)
     raises (InternalError, NssetNotFound, RegistrarNotFound);
 
     /** Search in archive of technical checks based on a filter.

@@ -83,21 +83,22 @@ module ccReg {
   enum ParamError 
   {
     poll_msgID, ///< Chyba v msgID zprávy poll
-    contact_handle, ///< Chyba v handle při vytváření kontaktu
-    contact_cc, ///< Chyba v kódu země při vytváření kontaktu
-    nsset_handle, ///< Chyba v handle při vytváření nssetu
-    nsset_tech, ///< Chyba v technickém kontaktu při vytváření nssetu
-    nsset_dns_name, ///< Chyba v názvu nameserveru při vytváření nssetu
-    nsset_dns_addr, ///< Chyba v adrese nameserveru při vytváření nssetu
-    nsset_dns_name_add, ///< Chyba v názvu nameserveru při přidávání ns
-    nsset_dns_name_rem, ///< Chyba v názvu nameserveru při odebírání ns
+    contact_handle, ///< Chyba v handle kontaktu
+    contact_cc, ///< Chyba v kódu země kontaktu
+    nsset_handle, ///< Chyba v handle nssetu
+    nsset_tech, ///< Chyba v technickém kontaktu nssetu
+    nsset_dns_name, ///< Chyba v názvu nameserveru nssetu
+    nsset_dns_addr, ///< Chyba v adrese nameserveru nssetu
+    nsset_dns_name_add, ///< Chyba v názvu nameserveru ns
+    nsset_dns_name_rem, ///< Chyba v názvu nameserveru ns
     nsset_tech_add, ///< Chyba v přidávaném technickém kontaktu
     nsset_tech_rem, ///< Chyba v odebíraném technickém kontaktu
-    domain_fqdn, ///< Chyba v názvu při vytváření domény
-    domain_registrant, ///< Chyba v držiteli při vytváření domény
-    domain_nsset, ///< Chyba v nssetu při vytváření domény
-    domain_period, ///< Chyba v periodě při vytváření domény
-    domain_admin, ///< Chyba v admin. kontaktu při vytváření domény
+    domain_fqdn, ///< Chyba v názvu domény
+    domain_registrant, ///< Chyba v držiteli domény
+    domain_nsset, ///< Chyba v nssetu domény
+    domain_period, ///< Chyba v periodě domény
+    domain_admin, ///< Chyba v admin kontaktu domény
+    domain_tmpcontact, ///< Chyba v temp kontaktu domény
     domain_ext_valDate, ///< Chyba v datumu validace při vytváření domény
     domain_ext_valDate_missing, ///< Datumu validace chybi pro ENUM domenu
     domain_curExpDate, ///< Chyba v zad zadanem atumu expirace u domény
@@ -228,6 +229,7 @@ module ccReg {
     string AuthInfoPw; ///< Heslo pro transfer domény
     AdminContact admin; ///< Seznam administrativních kontaktů
     ExtensionList ext; ///< Obecné rozšiřující informace 
+    AdminContact tmpcontact; ///< Seznam administrativních kontaktů
   };
   /// Typ pro předání datumu validace u ENUM domen
   struct ENUMValidationExtension {
@@ -650,14 +652,16 @@ module ccReg {
     /// Asynchronní vyvolání technické kontroly nssetu.
     /**
      \param handle Identifikátor nssetu.
-     \param fqdn Doménové jméno, které má být otestováno s nssetem.
+     \param fqdns Doménova jména, které máji být otestována s nssetem.
+     \param level Uroven technickych testu (pokud je -1 bere se level nssetu).
      \param clientID Identifikace session získaná z ClientLogin
      \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
      \param XML Kompletní XML zpráva která přišla přes EPP protokol
      \return Obecná odpověď s výsledkem operace a chybovými hláškami */       
     Response nssetTest (
       in string handle,
-      in string fqdn,
+      in short level,
+      in Lists fqdns,
       in long clientID,
       in string clTRID,
       in string XML
@@ -752,6 +756,7 @@ module ccReg {
       in string nsset_chg,
       in AdminContact admin_add,
       in AdminContact admin_rem,
+      in AdminContact tmpcontact_rem,
       in long clientID,
       in string clTRID,
       in string XML , 

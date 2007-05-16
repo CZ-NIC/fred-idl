@@ -43,7 +43,7 @@ module ccReg {
     long mailtype;    ///< Numeric ID of email type.
     timestamp crdate; ///< Date of insertion in archive (= date of submission).
     timestamp moddate;///< Date of last modification of email status.
-    long status;      ///< Email status is return code of sendmail.
+    long status;      ///< Email status (sent, not sent, wait for confirmation).
     Lists handles;    ///< List of associated object handles.
     /** Content of the email including headers excluding file attachments and
      *  signature.
@@ -117,19 +117,32 @@ module ccReg {
         string typename; ///< Name of unknown email type.
     };
 
-    /// Exception thrown if any of specified attachments does not exist.
-    exception AttachmentNotFound {
-        long attachid;   ///< ID of attachment.
-    };
-
     /// Exception thrown if sendmail command failed.
     exception SendMailError {
+    };
+
+    /// Exception thrown if resend is called with mailid which doesn't exist.
+    exception UnknownMailid {
+        long mailid;   ///< The unknown mailid.
+    };
+
+    /// Invalid header (currently has only one meaning: header 'to' is empty).
+    exception InvalidHeader {
+        string header;   ///< Name of header which caused the error.
     };
 
     /** Method returns mapping between email type names and their IDs.
      *  \return          Code list of email types.
      */
     MailTypeCodes getMailTypes() raises (InternalError);
+
+    /** Resend an email.
+     *  This function may be called on any email which is stored in
+     *  mail archive no matter if it was already sent or not.
+     *
+     *  \param mailid    ID of email in mail archive.
+     */
+    void resend(in long mailid) raises (UnknownMailid, InternalError);
 
     /** Basic method for generating and sending of email.
      *
@@ -154,8 +167,8 @@ module ccReg {
                     out string msgPreview
                     ) raises (
                        InternalError,
+		       InvalidHeader,
                        UnknownMailType,
-                       AttachmentNotFound,
                        SendMailError
                     );
 
