@@ -14,7 +14,8 @@ module ccReg {
     OP, ///< identity card number
     PASS, ///< passport number
     ICO, ///< identification number of organization
-    MPSV ///< identification number of MPSV
+    MPSV, ///< identification number of MPSV
+    BIRTHDAY ///< date of birth
   };
   /// type for meaning of disclose parameters
   enum Disclose 
@@ -167,6 +168,9 @@ module ccReg {
     boolean DiscloseTelephone; ///< Viditelnost pro parametr Telephone
     boolean DiscloseFax; ///< Viditelnost pro parametr Fax
     boolean DiscloseEmail; ///< Viditelnost pro parametr Email
+    boolean DiscloseVAT; ///< Viditelnost pro parametr VAT
+    boolean DiscloseIdent; ///< Viditelnost pro parametr ident
+    boolean DiscloseNotifyEmail; ///< Viditelnost pro parametr NotifyEmail
   };
   /// Typ pro předání dat po zavolání [create|update]_contact
   struct ContactChange
@@ -193,6 +197,9 @@ module ccReg {
     boolean DiscloseTelephone; ///< Viditelnost pro parametr Telephone
     boolean DiscloseFax; ///< Viditelnost pro parametr Fax
     boolean DiscloseEmail; ///< Viditelnost pro parametr Email
+    boolean DiscloseVAT; ///< Viditelnost pro parametr VAT
+    boolean DiscloseIdent; ///< Viditelnost pro parametr ident
+    boolean DiscloseNotifyEmail; ///< Viditelnost pro parametr NotifyEmail
   };
   /// Typ pro přenos dat ve funkci info_nsset
   struct NSSet
@@ -235,16 +242,20 @@ module ccReg {
   struct ENUMValidationExtension {
     date valExDate; ///< Datum vypršení platnosti validace
   };
+  /// Typ info funkce.
+  enum InfoType {
+    IT_LIST_CONTACTS,
+    IT_LIST_DOMAINS,
+    IT_LIST_NSSETS,
+    IT_DOMAINS_BY_NSSET,
+    IT_DOMAINS_BY_CONTACT,
+    IT_NSSETS_BY_CONTACT,
+    IT_NSSETS_BY_NS
+  };
  
   /// Rozhraní pro server implementující EPP protokol
   interface EPP
   {
-    /** Vyjimka kterou muze vratit jakakoliv z EPP funkci v pripade zavazne
-     *  chyby na strane serveru.
-     */
-    exception ServerIntError {
-      string reason; ///< Volitelny string popisujici duvod vyjimky
-    };
     /** Vyjimka kterou muze vratit jakakoliv z EPP funkci v pripade chybne
      *  zadaneho parametru nebo proste kdykoliv kdy odpoved je chybova
      *  (to znamena kod 2xxx).
@@ -267,7 +278,7 @@ module ccReg {
      * \return Číslo verze */
     string version(
       out timestamp datetime
-    ) raises (ServerIntError);
+    );
 
     /// ulozi vystupni XML z mod_eppd do tabulky action_xml 
     boolean SaveOutXML( in string svTRID , in string XML );
@@ -290,7 +301,7 @@ module ccReg {
       in string clTRID,
       in XmlErrors errorCodes,
       out ErrorStrings errStrings
-    ) raises (ServerIntError);
+    ) raises (EppError);
     /// Potvrzení přečtení zprávy získané přes PollRequest.
     /** Označí danou zprávu jako přečtenou pokud zpráva s daným ID patří
      přihlášenému registrátorovi. Pro pokračování zpracování zpráv
@@ -309,7 +320,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError, NoMessages);
+    ) raises (EppError, NoMessages);
     /// Získání další nepřečtené zprávy ze serveru.
     /** Vrátí obsah první další zprávy přihlášeného registrátora, která ještě 
      nebyla označena jako přečtená a nevypršel datum její expirace.
@@ -329,7 +340,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError, NoMessages);
+    ) raises (EppError, NoMessages);
     /// Provede autentizaci klienta a přihlášení do systému
     /** Najde v evidenci zadaného registrátora a ověří jeho heslo a 
      otisk klientského certifikátu SSL komunikace. Pokud vše sedí, uloží
@@ -352,7 +363,7 @@ module ccReg {
       out long clientID,
       in string certID,
       in Languages lang
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Provede uzavření komunikace
     /** V databázi uzavře záznam dané session.
      \param clientID Identifikace session získaná z ClientLogin
@@ -363,7 +374,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
 
     ///  vrati vysi creditu registratora pro jednotlive zony
     /** 
@@ -377,7 +388,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
 
     /// Ověření možnosti registrovat kontakt s daným identifikátorem
     /** Umožňuje hromadné prozkoumání několika identifikátorů. Pro každý 
@@ -397,7 +408,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Získání informací o zaregistrovaném kontaktu
     /** Najde kontakt s daným identifikátorem. Pokud přihlášený registrátor
      není registrátorem kontaktu, zobrazí se mu položka AuthInfoPw prázdná.
@@ -413,7 +424,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Vymazání zaregistrovaného kontaktu 
     /** Pokud není kontakt v nějaké vazbě s jiným objektem a pokud stav 
      objektu neobsahuje clientDeleteProhibited nebo serverDeleteProhibited, 
@@ -429,7 +440,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Změna údajů zaregistrovaného kontaktu
     /** Pokud stav nebosahuje clientUpdateProhibited nebo 
      serverUpdateProhibited, aktualizuje na základě požadavků údaje u 
@@ -449,7 +460,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Zaregistrování nového kontaktu
     /** Pokud identifikátor projde testem z funkce ContactCheck, založí
      se nový kontakt a přiřadí se vytvářejícímu registrátorovi. Po založení
@@ -469,7 +480,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Převod kontaktu pod jiného registrátora
     /** Ověří zadané heslo s heslem uvedeným u kontaktu a pokud stav objektu
      neobsahuje clientTransferProhibited nebo serverTransferProhibited změní
@@ -488,7 +499,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Výpis všech kontaktů daného registrátora
     /** Vrátí seznam identifikátorů kontaktů patřících přihlášenému
      registrátorovi.
@@ -502,7 +513,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Ověření možnosti registrovat nsset s daným identifikátorem
     /** Umožňuje hromadné prozkoumání několika identifikátorů. Pro každý 
      prozkoumá validitu použitého identifikátoru, převede ho na velká
@@ -521,7 +532,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Získání informací o zaregistrovaném nssetu
     /** Najde nsset s daným identifikátorem. Pokud přihlášený registrátor
      není registrátorem nssetu, zobrazí se mu položka AuthInfoPw prázdná.
@@ -537,7 +548,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Vymazání zaregistrovaného nssetu
     /** Pokud není nsset v nějaké vazbě s jiným objektem a pokud stav 
      objektu neobsahuje clientDeleteProhibited nebo serverDeleteProhibited, 
@@ -553,7 +564,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Změna údajů zaregistrovaného nssetu
     /** Pokud stav nebosahuje clientUpdateProhibited nebo 
      serverUpdateProhibited, aktualizuje na základě požadavků údaje u 
@@ -587,7 +598,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Zaregistrování nového nssetu
     /** Pokud identifikátor projde testem z funkce NSSetCheck, založí
      se nový nsset a přiřadí se vytvářejícímu registrátorovi. Pokud je 
@@ -615,7 +626,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Převod nssetu pod jiného registrátora
     /** Ověří zadané heslo s heslem uvedeným u nssetu a pokud stav objektu
      neobsahuje clientTransferProhibited nebo serverTransferProhibited změní
@@ -634,7 +645,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Výpis všech nssetů daného registrátora
     /** Vrátí seznam identifikátorů nssetů patřících přihlášenému
      registrátorovi.
@@ -648,7 +659,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Asynchronní vyvolání technické kontroly nssetu.
     /**
      \param handle Identifikátor nssetu.
@@ -665,7 +676,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Ověření možnosti registrovat doménu s daným názvem
     /** Umožňuje hromadné prozkoumání několika identifikátorů. Pro každý 
      prozkoumá validitu použitého identifikátoru, převede ho na malá
@@ -689,7 +700,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Získání informací o zaregistrované doméně
     /** Nejprve ověří stejným způsobem jako v DomainCheck validitu
      identifkátoru. Najde doménu s daným jménem nebo se jménem naddomény
@@ -710,7 +721,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Vymazání zaregistrované domény
     /** Pokud stav objektu neobsahuje clientDeleteProhibited nebo 
      serverDeleteProhibited, provede jeho smazání. Smazat doménu může
@@ -726,7 +737,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Změna údajů zaregistrované domény
     /** Nejprve ověří stejným způsobem jako v DomainCheck validitu
      identifkátoru. Pokud stav neobsahuje clientUpdateProhibited nebo 
@@ -761,7 +772,7 @@ module ccReg {
       in string clTRID,
       in string XML , 
       in ExtensionList ext
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Zaregistrování nové domény
     /** Pokud jméno domény projde testem z funkce DomainCheck a
      registrátor má oprávnění pro danou zónu, založí se nová doména a přiřadí
@@ -801,7 +812,7 @@ module ccReg {
       in string clTRID,
       in string XML,
       in ExtensionList ext
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Prodloužení domény o zadaný počet měsíců
     /** Nejprve ověří stejným způsobem jako v DomainCheck validitu
      identifkátoru. Pokud stav nebosahuje clientRenewProhibited nebo 
@@ -828,7 +839,7 @@ module ccReg {
       in string clTRID,
       in string XML,
       in ExtensionList ext
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Převod domény pod jiného registrátora
     /** Ověří zadané heslo s heslem uvedeným u domény a pokud stav objektu
      neobsahuje clientTransferProhibited nebo serverTransferProhibited změní
@@ -847,7 +858,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Výpis všech domén daného registrátora
     /**Vrátí seznam jmen domén patřících přihlášenému
      registrátorovi.
@@ -861,7 +872,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Vyzadani si authinfa pro drzetele domeny
     /**
      \param fqdn Nazev domeny pro kterou se vyzaduje authInfo
@@ -874,7 +885,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Vyzadani si authinfa pro drzetele kontaktu
     /**
      \param handle Handle kontaktu pro ktery se vyzaduje authInfo
@@ -887,7 +898,7 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
     /// Vyzadani si authinfa pro drzetele nssetu
     /**
      \param handle Handle nssetu pro ktery se vyzaduje authInfo
@@ -900,7 +911,37 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
-    ) raises (ServerIntError, EppError);
+    ) raises (EppError);
+    /// Tato funkce zapouzdruje vsechny rozsirujici info funkce
+    /**
+     \param type Typ vyhledavaci funkce, viz enum InfoType.
+     \param handle Handle podle ktereho se ma vyhledavat.
+     \param count Pocet nalezenych vysledku.
+     \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */       
+    Response info (
+      in InfoType type,
+      in string handle,
+      out long count,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    ) raises (EppError);
+    /// Ziskej seznam vysledku info funkce
+    /**
+     \param handles Seznam vracenych handlu.
+     \param clientID Identifikace session získaná z ClientLogin
+     \param clTRID Klientem poskytnuté číslo transakce pro jeho zaevidování
+     \param XML Kompletní XML zpráva která přišla přes EPP protokol
+     \return Obecná odpověď s výsledkem operace a chybovými hláškami */       
+    Response getInfoResults (
+      out Lists handles,
+      in long clientID,
+      in string clTRID,
+      in string XML
+    ) raises (EppError);
   }; // interface EPP
   
 }; // module ccReg
