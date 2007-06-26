@@ -504,6 +504,7 @@ module ccReg {
      string valExDate;
      string nssetHandle;
      ContactHandleSeq admins;
+     ContactHandleSeq temps;
      ObjectStatusSeq statusList;
   };
 
