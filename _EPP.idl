@@ -34,215 +34,215 @@ module ccReg {
     DelPeriod, ///< handle is in protection period
     NotApplicable ///< domain has invalid zone for this registry
   };
-  /// Typ pro jeden prvek seznamu výsledků funkcí check
+  /// Type for one item of check functions results list
   struct CheckSeq 
   {
-    CheckAvail avail; ///< Jaký je výsledek check operace
-    string reason; ///< Pokud avail!=NotExist, je zde uveden textový dúvod
+    CheckAvail avail; ///< How is result of check operation
+    string reason; ///< If it is avail!=NotExist, here is also shown text reason
   };
-  /// Jednotka casu pouzivana pri specifikaci platnosti domeny
+  /// Time unit used at specification of domain validation
   enum TimeUnit
   {
     unit_month,
     unit_year
   };
-  /// Typ pro predavani statusu objektu
+  /// Type for object state transfer
   struct Status_str
   {
-    string value; ///< Nazev status flagu
-    string text; ///< Doprovodny text ke status flagu
+    string value; ///< Flag state name 
+    string text; ///< Supporting text to flag sate
   };
-  /// Typ pro predavani periody platnosti domeny
+  /// Type for validation domain period transfer 
   struct Period_str
   {
-    short count; ///< Pocet jednotek casu
-    TimeUnit unit; ///< Jednotka casu
+    short count; /// Number of time units
+    TimeUnit unit; /// Time unit
   };
 
   struct ZoneCredit_str
   {
-    string zone_fqdn; ///< nazev zony
-    unsigned long price; ///< castka v halirich  
+    string zone_fqdn; ///< Zone name 
+    unsigned long price; ///< price in pennies  
   };
 
-  /// Typ pro vypis creditu registratora  
+  /// Type for registrar credit statement  
   typedef sequence<ZoneCredit_str> ZoneCredit;
 
-  /// Typ pro obecný seznam rozšíření
+  /// Type for general list of extension
   typedef sequence <any> ExtensionList;  
-  /// Typ pro návratovou hodnotu funkcí check
+  /// Type for returning value of check functions
   typedef sequence <CheckSeq> CheckResp;
-  /// Typ pro nadefinování seznamu identifikátorů v parametru funkcí check
+  /// Type for definition of identifiers list in check function parameter
   typedef sequence <string> Check;
-  /// Typ pro nadefinování seznamu stavů objektů
+  /// Type for definition of object states list
   typedef sequence <Status_str> Status;
-  /// Typ pro nadefinování seznamu identifikátorů administrativních kontaktů
+  /// Type for definition of administrative contacts list
   typedef sequence <string> AdminContact;
-  /// Typ pro predavani prelozenych chybovych stringu
+  /// Type for transfer of translated error strings 
   typedef sequence <string> ErrorStrings;
-  /// Typ pro identifikaci místa v parametrech, ve kterém byla nalezena chyba
+  /// Type for indetification of place in parameters, in which error was found
   enum ParamError 
   {
-    poll_msgID, ///< Chyba v msgID zprávy poll
-    contact_handle, ///< Chyba v handle kontaktu
-    contact_cc, ///< Chyba v kódu země kontaktu
-    nsset_handle, ///< Chyba v handle nssetu
-    nsset_tech, ///< Chyba v technickém kontaktu nssetu
-    nsset_dns_name, ///< Chyba v názvu nameserveru nssetu
-    nsset_dns_addr, ///< Chyba v adrese nameserveru nssetu
-    nsset_dns_name_add, ///< Chyba v názvu nameserveru ns
-    nsset_dns_name_rem, ///< Chyba v názvu nameserveru ns
-    nsset_tech_add, ///< Chyba v přidávaném technickém kontaktu
-    nsset_tech_rem, ///< Chyba v odebíraném technickém kontaktu
-    domain_fqdn, ///< Chyba v názvu domény
-    domain_registrant, ///< Chyba v držiteli domény
-    domain_nsset, ///< Chyba v nssetu domény
-    domain_period, ///< Chyba v periodě domény
-    domain_admin, ///< Chyba v admin kontaktu domény
-    domain_tmpcontact, ///< Chyba v temp kontaktu domény
-    domain_ext_valDate, ///< Chyba v datumu validace při vytváření domény
-    domain_ext_valDate_missing, ///< Datumu validace chybi pro ENUM domenu
-    domain_curExpDate, ///< Chyba v zad zadanem atumu expirace u domény
-    domain_admin_add, ///< Chyba v přidávaném admin. kontaktu
-    domain_admin_rem ///< Chyba v odebíraném admin. kontaktu
+    poll_msgID, ///< Error in msgID poll message
+    contact_handle, ///< Error in contact handle
+    contact_cc, ///< Error in country code of contact
+    nsset_handle, ///< Error in nsset handle
+    nsset_tech, ///< Error in nsset of technical contact
+    nsset_dns_name, ///< Error in name of nameserver nsset
+    nsset_dns_addr, ///< Error in address of nameserver nsset
+    nsset_dns_name_add, ///< Error in nameserver name ns
+    nsset_dns_name_rem, ///< Error in nameserver name ns 
+    nsset_tech_add, ///< Error in added technical contact
+    nsset_tech_rem, ///< Error in removed technical contact
+    domain_fqdn, ///< Error in domain name
+    domain_registrant, ///< Error in domain registrant
+    domain_nsset, ///< Error in nsset of domain
+    domain_period, ///< Error in domain period
+    domain_admin, ///< Error in administrative contact of domain
+    domain_tmpcontact, ///< Error in temp contact of domain
+    domain_ext_valDate, ///< Error in validation date at domain creation
+    domain_ext_valDate_missing, ///< Validation date is missing for ENUM domain
+    domain_curExpDate, ///< Error in entered date of domain expiration 
+    domain_admin_add, ///< Error in added administrative contact 
+    domain_admin_rem ///< Error in removed administrative contact 
   };
-  /// Specifikace chyb detekovanych uz pri zpravovani XML v mod_eppd
+  /// Errors specification already detected at XML processing in mod_eppd 
   enum XmlError
   {
-    xml_not_valid, ///< Chyba validace validatorem libxml
-    poll_msgID_missing, ///< Parametr msgID chybi v xml
-    contact_identtype_missing, ///< Atribut type u ident chybi v xml
-    transfer_op ///< Chybi parametr op u transferu v XML
+    xml_not_valid, ///< libxml validation error
+    poll_msgID_missing, ///< Parameter msgID is missing in xml
+    contact_identtype_missing, ///< Attribute type at ident is missing in xml
+    transfer_op ///< Parameter op is missing at transfer in XML 
   };
-  /// Sekvence specifikace chyb detekovanych uz v mod_eppd
+  /// Sequence of error specification already detected in mod_eppd
   typedef sequence <XmlError> XmlErrors;
-  /// Identifikace chybneho elementu v listu (potencialne zanorenych listech)
+  /// Indetification of missing elements in list (potentionaly buried in lists)
 //   typedef sequence <short> ErrorPosition;
-  /// Typ pro prvek seznamu chybových zpráv
+  /// Type for item of error messages list
   struct Error
   {
-    ParamError code; ///< Kód chyby identifikujici chybny parametr
-    string reason; ///< Důvod chyby, textový popis
-    short position; ///< Identifikace mista chyby v listu
+    ParamError code; ///< Error code identified wrong parameter 
+    string reason; ///< Error reason, text description
+    short position; ///< Identification of error place in list 
   };
-  /// Typ pro předání chybových zpráv
+  /// Type for error messages transfer
   typedef sequence <Error> Errors;
-  /// Typ pro návratovou hodnotu všech EPP funkcí
+  /// Type for returning value of all EPP function
   struct Response
   {
-    short code; ///< Návratový kód definovaný EPP protokolem
-    string msg; ///< Zpráva příslušející návratovému kódu (podle jazyka)
+    short code; ///< Returning code defined via EPP protocol
+    string msg; ///< Message belongs to returning code (according to language)
     string svTRID; ///< Server transaction ID
   };
-  /// Typ pro předání dat po zavolání info_contact
+  /// Type for transfer data after info_contact call 
   struct Contact
   {
-    string handle; ///< Handle kontaktu
-    string ROID; ///< Identifikátor kontaktu - repository ID
-    string ClID; ///< Identifikátor registrátora, který má právo na změnu
-    string CrID; ///< Identifikátor registrátora, který vytvořil kontakt
-    string UpID; ///< Identifikátor registrátora, který provedl změny
-    Status stat; ///< Seznam stavů kontaktu
-    timestamp CrDate; ///< Datum a čas vytvoření 
-    timestamp UpDate; ///< Datum a čas poslední změny
-    timestamp TrDate; ///< Datum a čas posledního transferu
-    string Name; ///< Jméno nebo název kontaktu
-    string Organization; ///< Název organizace
-    Lists Streets; ///< Adresa - maximalne 3 casti
-    string City; ///< Adresa - město
-    string StateOrProvince; ///< Adresa - kraj(územní celek)
-    string PostalCode; ///< PSČ
-    string CountryCode; ///< Country Code - dvojmístný kód země ISO 
-    string Telephone; ///< Telefonní číslo 
-    string Fax; ///< Faxové číslo
-    string Email; ///< Kontaktní email pro zprávy o exiraci
-    string NotifyEmail; ///< Upozorňovací email pro zprávy o změnách
-    string VAT; ///< Daňové identifikační číslo 
-    string ident; ///< ident - jednoznační identifikátor kontaktu
-    identtyp identtype; ///< Typ ident - definuje význam pole ident
-    string AuthInfoPw; ///< Heslo pro transfer kontaktu
-    Disclose DiscloseFlag; ///< Disclose flag určující význam disclose param.
-    boolean DiscloseName; ///< Vviditelnost pro parametr Name 
-    boolean DiscloseOrganization; ///< Viditelnost pro parametr Organization
-    boolean DiscloseAddress; ///< Viditelnost pro parametr Address
-    boolean DiscloseTelephone; ///< Viditelnost pro parametr Telephone
-    boolean DiscloseFax; ///< Viditelnost pro parametr Fax
-    boolean DiscloseEmail; ///< Viditelnost pro parametr Email
-    boolean DiscloseVAT; ///< Viditelnost pro parametr VAT
-    boolean DiscloseIdent; ///< Viditelnost pro parametr ident
-    boolean DiscloseNotifyEmail; ///< Viditelnost pro parametr NotifyEmail
+    string handle; ///< Contact handle
+    string ROID; ///< Contact Identifier - ID repository 
+    string ClID; ///< Registrar identifier, which has to right for change
+    string CrID; ///< Registrar identifier, which created a contact
+    string UpID; ///< Registrar identifier, which realized changes
+    Status stat; ///< List of contact states
+    timestamp CrDate; ///< Creation date and time 
+    timestamp UpDate; ///< Date and time of last change
+    timestamp TrDate; ///< Date and time of last transfer
+    string Name; ///< Contact name or title
+    string Organization; ///< Organisation name
+    Lists Streets; ///< Address - maximum is 3 parts
+    string City; ///< Address - city
+    string StateOrProvince; ///< Address - region (country part)
+    string PostalCode; ///< ZIP code
+    string CountryCode; ///< Country Code - 2 placed ISO country code 
+    string Telephone; ///< Telephone number 
+    string Fax; ///< Fax number
+    string Email; ///< Contact e-mail for messages about expiration
+    string NotifyEmail; ///< Alerting e-mail for messages about changes 
+    string VAT; ///< Value Added Tax 
+    string ident; ///< ident - unique identifier of contact
+    identtyp identtype; ///< Ident type - defines meaning of ident field 
+    string AuthInfoPw; ///< password for contact transfer
+    Disclose DiscloseFlag; ///< disclose flag determines meaning of disclose param.
+    boolean DiscloseName; ///< Visibility for Name parameter 
+    boolean DiscloseOrganization; ///< Visibility for Organisation parameter
+    boolean DiscloseAddress; ///< Visibility for Addrss parameter
+    boolean DiscloseTelephone; ///< Visibility for Telephone parametr
+    boolean DiscloseFax; ///< Visibility for Fax parameter
+    boolean DiscloseEmail; ///< Visibility for Email parameter
+    boolean DiscloseVAT; ///< Visibility for VAT parameter
+    boolean DiscloseIdent; ///< Visibility for ident parameter
+    boolean DiscloseNotifyEmail; ///< Visibility for NotifyEmail parameter
   };
-  /// Typ pro předání dat po zavolání [create|update]_contact
+  /// Type for transfer data after call [create|update]_contact
   struct ContactChange
   {
-    string Name; ///< Jméno nebo název kontaktu
-    string Organization; ///< Název organizace
-    Lists Streets; ///< Adresa - maximalne 3 casti
-    string City; ///< Adresa - město
-    string StateOrProvince; ///< Adresa - kraj(územní celek)
-    string PostalCode; ///< PSČ
-    string CC; ///< Country Code - dvojmístný kód země ISO 
-    string Telephone; ///< Telefonní číslo 
-    string Fax; ///< Faxové číslo
-    string Email; ///< Kontaktní email pro zprávy o exiraci
-    string NotifyEmail; ///< Upozorňovací email pro zprávy o změnách
-    string VAT; ///< Daňové identifikační číslo 
-    string ident; ///< ident - jednoznační identifikátor kontaktu
-    identtyp identtype; ///< Typ ident - definuje význam pole ident
-    string AuthInfoPw; ///< Heslo pro transfer kontaktu
-    Disclose DiscloseFlag; ///< Disclose flag určující význam disclose param.
-    boolean DiscloseName; ///< Vviditelnost pro parametr Name 
-    boolean DiscloseOrganization; ///< Viditelnost pro parametr Organization
-    boolean DiscloseAddress; ///< Viditelnost pro parametr Address
-    boolean DiscloseTelephone; ///< Viditelnost pro parametr Telephone
-    boolean DiscloseFax; ///< Viditelnost pro parametr Fax
-    boolean DiscloseEmail; ///< Viditelnost pro parametr Email
-    boolean DiscloseVAT; ///< Viditelnost pro parametr VAT
-    boolean DiscloseIdent; ///< Viditelnost pro parametr ident
-    boolean DiscloseNotifyEmail; ///< Viditelnost pro parametr NotifyEmail
+    string Name; ///< Contact name or title
+    string Organization; ///< Organisation name
+    Lists Streets; ///< Address - maximum is 3 parts
+    string City; ///< Address - city
+    string StateOrProvince; ///< Address - region(country part)
+    string PostalCode; ///< ZIP code
+    string CC; ///< Country Code - 2 placed ISO country code 
+    string Telephone; ///< Telephone number 
+    string Fax; ///< Fax number
+    string Email; ///< Contact e-mail for messages about expiration
+    string NotifyEmail; ///< Alerting email for messages about changes
+    string VAT; ///< Value Added Tax 
+    string ident; ///< ident - unique contact identifier
+    identtyp identtype; ///< Ident type - defines meaning of ident field
+    string AuthInfoPw; ///< Password for contact transfer 
+    Disclose DiscloseFlag; ///< Disclose flag determines meaning of disclose param.
+    boolean DiscloseName; ///< Visibility for Name parameter 
+    boolean DiscloseOrganization; ///< Visibility for Organisation parameter
+    boolean DiscloseAddress; ///< Visibility for Address parameter
+    boolean DiscloseTelephone; ///< Visibility for Telephone parameter
+    boolean DiscloseFax; ///< Visibility for Fax parameter
+    boolean DiscloseEmail; ///< Visibility for Email parameter
+    boolean DiscloseVAT; ///< Visibility for VAT parameter
+    boolean DiscloseIdent; ///< Visibility for ident parameter
+    boolean DiscloseNotifyEmail; ///< Visibility for NotifyEmail parameter
   };
-  /// Typ pro přenos dat ve funkci info_nsset
+  /// Type for transfer data in info_nsset function
   struct NSSet
   {
-    string handle; ///< Handle nssetu
-    string ROID; ///< Identifikátor nassetu - repository ID
-    string ClID; ///< Identifikátor registrátora, který má právo na změnu
-    string CrID; ///< Identifikátor registrátora, který vytvořil kontakt
-    string UpID; ///< Identifikátor registrátora, který provedl změny
-    Status stat; ///< Seznam stavů nssetu
-    timestamp CrDate; ///< Datum a čas vytvoření 
-    timestamp UpDate; ///< Datum a čas poslední změny
-    timestamp TrDate; ///< Datum a čas posledního transferu
-    string AuthInfoPw; ///< Heslo pro transfer nssetu
-    DNSHost dns; ///< Seznam nameserverů  DNS
-    TechContact tech; ///< Seznam identifikátorů technických kontaktů
-    short level; ///< Uroven technickych testu
+    string handle; ///< Nsset handle 
+    string ROID; ///< Nsset identifier - repository ID
+    string ClID; ///< Registrar identifier, which has to right for change
+    string CrID; ///< Registrar identifier, which created contact
+    string UpID; ///< Registrar identifier, which realized changes
+    Status stat; ///< nsset states list
+    timestamp CrDate; ///< Creation date and time 
+    timestamp UpDate; ///< Date and time of last change
+    timestamp TrDate; ///< Date and time of last transfer
+    string AuthInfoPw; ///< Password for nsset transfer
+    DNSHost dns; ///< List of DNS nameservers 
+    TechContact tech; ///< List of technical contacts identifier
+    short level; ///< Technical tests level
   };
-  /// Typ pro přenos dat ve funkci info_domain
+  /// Type for transfer data info_domain function
   struct Domain
   {
-    string ROID; ///< Identifikátor domény - repository ID
-    string name; ///< Fqdn - název domény
-    string Registrant; ///< Handle držitele domény
-    string nsset; ///< handle NSSETu
-    Status stat; ///< Seznam stavů domény
-    string ClID; ///< Identifikátor registrátora, který má právo na změnu
-    string CrID; ///< Identifikátor registrátora, který vytvořil kontakt
-    string UpID; ///< Identifikátor registrátora, který provedl změny
-    timestamp CrDate; ///< Datum a čas vytvoření 
-    timestamp UpDate; ///< Datum a čas poslední změny
-    timestamp TrDate; ///< Datum a čas posledního transferu
-    timestamp ExDate; ///< Datum a čas expirace dom=ny
-    string AuthInfoPw; ///< Heslo pro transfer domény
-    AdminContact admin; ///< Seznam administrativních kontaktů
-    ExtensionList ext; ///< Obecné rozšiřující informace 
-    AdminContact tmpcontact; ///< Seznam administrativních kontaktů
+    string ROID; ///< Domain identifier - repository ID
+    string name; ///< Fqdn - domain name
+    string Registrant; ///< Handle of domain registrant
+    string nsset; ///< NSSET handle
+    Status stat; ///< Domain state list
+    string ClID; ///< Registrar identifier, which has right for change
+    string CrID; ///< Registrar identifier, which created contact
+    string UpID; ///< Registrar identifier, which realized changes
+    timestamp CrDate; ///< Creation date and time 
+    timestamp UpDate; ///< Date and time of last changes
+    timestamp TrDate; ///< Date and time of last transfer
+    timestamp ExDate; ///< Date and time of domain expiration
+    string AuthInfoPw; ///< Password for domain transfer
+    AdminContact admin; ///< List of administrative contacts
+    ExtensionList ext; ///< General extension information  
+    AdminContact tmpcontact; ///< List of admnistrative contacts
   };
-  /// Typ pro předání datumu validace u ENUM domen
+  /// Type for validation date disposition at ENUM domain
   struct ENUMValidationExtension {
-    date valExDate; ///< Datum vypršení platnosti validace
+    date valExDate; ///< Expiration date of valadation validity
   };
-  /// Typ info funkce.
+  /// Info function type.
   enum InfoType {
     IT_LIST_CONTACTS,
     IT_LIST_DOMAINS,
@@ -253,29 +253,29 @@ module ccReg {
     IT_NSSETS_BY_NS
   };
  
-  /// Rozhraní pro server implementující EPP protokol
+  /// Server interface for EPP protocol implementation 
   interface EPP
   {
-    /** Vyjimka kterou muze vratit jakakoliv z EPP funkci v pripade chybne
-     *  zadaneho parametru nebo proste kdykoliv kdy odpoved je chybova
-     *  (to znamena kod 2xxx).
+    /** Exception that can return anyone from EPP functions in case 
+     *  that parameter was wrongly entered or whenever answer is wrong  
+     *  (code 2xxx).
      */
     exception EppError {
-      short errCode; ///< Návratový kód definovaný EPP protokolem
-      string errMsg; ///< Zpráva příslušející návratovému kódu (podle jazyka)
+      short errCode; ///< Returning code defined with EPP protocol
+      string errMsg; ///< Message belonged to returning code (according to language)
       string svTRID; ///< Server transaction ID
-      Errors errorList; ///< Seznam chyb
+      Errors errorList; ///< Error list
     };
-    /** Vyjimka ktera se vrati na poll prikazy pokud je message queue prazdna. */
+    /** Exception which returns at poll commands if message queue is empty. */
     exception NoMessages {
-      short code; ///< Návratový kód definovaný EPP protokolem
-      string msg; ///< Zpráva příslušející návratovému kódu (podle jazyka)
+      short code; ///< Returning code defined with EPP protocol
+      string msg; ///< Message belonged to returning code (according to language)
       string svTRID; ///< Server transaction ID
     };
-    /// Vrátí číslo verze serveru a aktuální čas
-    /** Zjištění čísla verze a aktuálního datumu pro předání v Greeting zprávě.
-     * \param datetime Aktuální lokání čas 
-     * \return Číslo verze */
+    /// It returns version number of server and actual time 
+    /** Detect version number and actual date for Greeting message.
+     * \param datetime actual local time 
+     * \return version number */
     string version(
       out timestamp datetime
     );

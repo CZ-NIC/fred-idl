@@ -4,14 +4,14 @@
 
  <xsl:output method='xml'/>
 
- <!-- sablona seznam funkci -->
+ <!-- functions list template -->
  <xsl:template match='compounddef[@kind="interface"]'>
   <orderedlist>
    <xsl:apply-templates select='.//memberdef'/>
   </orderedlist>
  </xsl:template>
 
- <!-- sablona funkce -->
+ <!-- function template -->
  <xsl:template match='memberdef[@kind="function"]'>
   <listitem>
    <formalpara>
