@@ -305,7 +305,7 @@ module ccReg {
     /** It marks given message as readed if a message with given ID belongs to logged registrar.
       It returns number of remaining messages and identification of next messages in front for continue of processing messages.
      \param msgID Id messages which confirmates only number value is right 
-     \param msgID czech translation Id zprávy která se potvrzujejen ciselna hodnota je sprav nee mu  zatim e zadat i token
+     \param msgID Id of accepted message
      \param count Messages Number which are after removing of this message in front
      \param newmsgID Id of next first message
      \param clientID Session identification obtained from ClientLogin
@@ -736,16 +736,16 @@ module ccReg {
       in string XML
     ) raises (EppError);
     /// Data change of registered domain
-    /** Nejprve ověří stejným způsobem jako v DomainCheck validitu
-     identifkátoru. Pokud stav neobsahuje clientUpdateProhibited nebo 
-     serverUpdateProhibited, aktualizuje na základě požadavků údaje u 
-     nssetu. Pokud je nastaven flag clientUpdateProhibited, lze pouze
-     smazat tento příznak. Aktualizovat doménu smí jen její určený registrátor. 
-     Před aktualizací uloží aktuální data objektu do historie. Pro tuto 
-     operaci musí mít registrátor práva k zóně dané domény. Časová
-     značka upDate se nastaví na aktuální čas. Jen u enum domén je možné
-     uvést rozšíření obsahující datum validace. Tento datum nesmí být nastaven
-     dále do budoucnosti než je uvedeno v parametrech zóny.
+    /** First consider validy of domain as in operation DomainCheck.
+     If domain status doesn't contain serverUpdateProhibited, domain 
+     domain is updated by requested data. Only owning registrar can
+     update domain. After update, domain data are copied into history.
+     Registrar need accress rights for zone of this domain. Timestamp upDate
+     is set to current time. Extenstion with date of validation can appear
+     only in ENUM domains. There is a limit of 6 month into the future for
+     this attribute. There is a period of 14 days before the date of 
+     validation when validation can be set as just on the day of 
+     validation
      \param fqdn Domain name
      \param registrant_chg Password domain registrant
      \param authInfo_chg Password change for transfer
@@ -771,18 +771,17 @@ module ccReg {
       in ExtensionList ext
     ) raises (EppError);
     /// New domain registration
-    /** Pokud jméno domény projde testem z funkce DomainCheck a
-     registrátor má oprávnění pro danou zónu, založí se nová doména a přiřadí
-     se vytvářejícímu registrátorovi. Pokud je uvedeno prázdné heslo, 
-     vygeneruje se automaticky. Po založení
-     uloží novou doménu do historie aby byla vždy aspoň jedna kopie 
-     v historii. Pokud není uvedena perioda, nastaví se na minimální periodu 
-     podle parametrů zóny. Pokud je uvedena musí splňovat další parametry
-     zóny a to maximální periodu a násobek minimální periody. Před založením
-     se ještě zkontroluje zda pro tuto operaci je u registárora dostatek
-     kreditu a tento kredit se registrátorovi odečte. Při založení enum domény
-     je nutné zadat v rozšíření datum validace. To nesmí být větší než maximum
-     uvedené v parametrech zóny.
+    /** If domain name is accepted in test from DomainCheck operation and 
+     registrar has access rights for zone of this domain, new domain is
+     created. New authInfo password is generated automaticaly in case it is
+     empty. After creation, domain data are copied into history. 
+     If there is no period specified, expiration is set to minimal period 
+     according to zone parameters. If it is specified it must correspond to 
+     other zone parametrs maximal period and step of minimal period. There
+     should be enough credit for this operation and this credit id updated
+     according to price list. In creation of ENUM domain, there must be
+     filled extension with validation date. It cannot be greater then 6 month
+     from date of creation.
      \param fqdn Domain name
      \param Registrant Contact identifier of registrant
      \param nsset Identifier of associated nsset (or empty string)
@@ -810,22 +809,22 @@ module ccReg {
       in string XML,
       in ExtensionList ext
     ) raises (EppError);
-    /// Prodloužení domény o zadaný počet měsíců
-    /** Nejprve ověří stejným způsobem jako v DomainCheck validitu
-     identifkátoru. Pokud stav nebosahuje clientRenewProhibited nebo 
-     serverRenewProhibited, provede prodloužení domény o zadaný počet měsíců. 
-     Zároveň je u enum domén možné prodloužit i datum expirace. Pravidla jsou
-     stejná jako při vytvoření domény. Prodloužení je opět podmíněno dostatkem
-     kreditu a oprávněním registrátora pro práci s danou zónou. Před změnou
-     údajů se záznam uloží do historie.
+    /// Move expiration date by requested period
+    /** First consider validy of domain as in operation DomainCheck.
+     If domain status doesn't contain serverRenewProhibited, add period 
+     to current expiration date. Enum domains can change last date of 
+     validation in this command. There are the same rules as during 
+     creation of domain. Renew id allowed only if there id enough credit
+     and registrar has access rights to this zone. After change domain is
+     copied into history.
      \param fqdn Domain name
-     \param curExpDate Actual date of expiration (detected fromm Info function)
-     \param period Počet měsíců o které se prodlouží registrace
-     \param exDate Vrací nový datum expirace
+     \param curExpDate Actual date of expiration (detected from Info function)
+     \param period Number of moth added to expiration date
+     \param exDate New expiration date
      \param clientID Session identification obtained from ClientLogin
      \param clTRID Transaction number given by client for its evidence
      \param XML Complete XML message which cames through EPP protocol
-     \param ext Rozšíření obsahující další údaje (např validaci u ENUM domény)
+     \param ext Extenstion with addional informations (validation date)
      \return General reply with operation result and error messages */   
     Response DomainRenew (
       in string fqdn,
@@ -838,13 +837,14 @@ module ccReg {
       in ExtensionList ext
     ) raises (EppError);
     /// Domain transfer to other registrar
-    /** Ověří zadané heslo s heslem uvedeným u domény a pokud stav objektu
-     neobsahuje clientTransferProhibited nebo serverTransferProhibited změní
-     určeného registrátora na aktuálně přihlášeného registrátora. Před změnou se
-     uloží aktuální kopie do historie. Po změně se vygeneruje automaticky nové
-     heslo. Pro tuto operaci musí mít registrátor práva k zóně dané domény.
-     \param fqdn Název požadované domény
-     \param authInfo Heslo pro kontrolu s údajem u objektu
+    /** Compare given password with password stored in domain and if status 
+     od domain doesn't include serverTransferProhibited, change current
+     registrar of domain to calling registrar. Current data are copied into
+     history after change. After switch new authinfo id generated 
+     automaticaly. Registrar must have access rights to zone of requested
+     domain for this operation.
+     \param fqdn Domain name which is going to be transfered
+     \param authInfo Pasword for transfer authorization
      \param clientID Session identification obtained from ClientLogin
      \param clTRID Transaction number given by client for its evidence
      \param XML Complete XML message which cames through EPP protocol
@@ -884,7 +884,7 @@ module ccReg {
     ) raises (EppError);
     /// Requesting of authinfo for contact holder
     /**
-     \param handle Handle kontaktu pro ktery se vyzaduje authInfo
+     \param handle Handle of contact for which is required authInfo
      \param clientID Session identification obtained from ClientLogin
      \param clTRID Transaction number given by client for its evidence
      \param XML Complete XML message which cames through EPP protocol
@@ -897,7 +897,7 @@ module ccReg {
     ) raises (EppError);
     /// Requesting of authinfo for nsset holder
     /**
-     \param handle Handle nssetu pro ktery se vyzaduje authInfo
+     \param handle Handle of nsset for which is required authInfo
      \param clientID Session identification obtained from ClientLogin
      \param clTRID Transaction number given by client for its evidence
      \param XML Complete XML message which cames through EPP protocol
