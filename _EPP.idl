@@ -10,7 +10,6 @@ module ccReg {
   enum identtyp 
   {
     EMPTY, ///< unidentified
-    RC, ///< born number
     OP, ///< identity card number
     PASS, ///< passport number
     ICO, ///< identification number of organization
@@ -253,6 +252,65 @@ module ccReg {
     IT_NSSETS_BY_NS
   };
  
+  /// Type of poll message.
+  enum PollType
+  {
+    polltype_none, ///< No message in queue.
+    polltype_transfer_contact, ///< Contact was transferred.
+    polltype_delete_contact,   ///< Contact was deleted because not used.
+    polltype_transfer_nsset,   ///< Nsset was transferred.
+    polltype_delete_nsset,     ///< Contact was deleted because not used.
+    polltype_techcheck,        ///< Technical check results.
+    polltype_transfer_domain,  ///< Domain was transferred.
+    polltype_impexpiration,    ///< Domain will expire in near future.
+    polltype_expiration,       ///< Domain expired.
+    polltype_impvalidation,    ///< Domain validation will expire in near future
+    polltype_validation,       ///< Domain validation expired.
+    polltype_outzone,          ///< Domain was outaged from zone.
+    polltype_delete_domain,    ///< Domain was deleted.
+    polltype_lowcredit         ///< Warning about low credit of registrator.
+  };
+
+  /// Poll message structure used for transfers.
+  struct PollMsg_HandleDateReg
+  {
+    string handle;   ///< Object handle.
+    string date;     ///< Date of event.
+    string clID;     ///< Registrar's handle.
+  };
+
+  /// Poll message structure used for impexpiration, expiration, outzone types.
+  struct PollMsg_HandleDate
+  {
+    string handle;   ///< Object handle.
+    string date;     ///< Date of event.
+  };
+
+  /// Information about one technical test.
+  struct TechcheckItem
+  {
+    string testname;   ///< Name (identifier) of technical test.
+    boolean status;    ///< Result (true = OK or Unknown, false = Failure).
+    string note;       ///< Optional text note (not used yet).
+  };
+
+  typedef sequence <TechcheckItem> TechcheckList;
+
+  /// Poll message containing results of all executed technical tests.
+  struct PollMsg_Techcheck
+  {
+    string handle;       ///< Handle of tested nsset.
+    Lists  fqdns;        ///< Extra list of tested domains.
+    TechcheckList tests; ///< List of executed tests.
+  };
+
+  struct PollMsg_LowCredit
+  {
+    string zone;
+    unsigned long limit;
+    unsigned long credit;
+  };
+
   /// Server interface for EPP protocol implementation 
   interface EPP
   {
@@ -335,7 +393,8 @@ module ccReg {
       out string msgID,
       out short count,
       out timestamp qDate,
-      out string mesg,
+      out PollType type,
+      out any mesg,
       in long clientID,
       in string clTRID,
       in string XML

@@ -598,6 +598,22 @@ module ccReg {
 
   typedef string SessionIDType;
   
+  /// Sequence of domains is used in inverse whois queries
+  typedef sequence<DomainDetail> DomainDetails;
+  /// Sequence of nssets is used in inverse whois queries
+  typedef sequence<NSSetDetail> NSSetDetails;
+  /// Type of inverse key used for domain search
+  enum DomainInvKeyType {
+    DIKT_REGISTRANT,
+    DIKT_ADMIN,
+    DIKT_TEMP,
+    DIKT_NSSET
+  };
+  /// Type of inverse key used for nsset search
+  enum NSSetInvKeyType {
+    NIKT_NS,
+    NIKT_TECH
+  };
   /// interface for administration application
   interface Admin
   {
@@ -690,5 +706,11 @@ module ccReg {
     Buffer getAuthInfoRequestPDF(in TID id, in string lang)
       raises (OBJECT_NOT_FOUND, SQL_ERROR);      
     Invoicing::Invoice getInvoiceById(in TID id);
+
+    /// get domains by registrant, admin or nsset handle
+    DomainDetails getDomainsByInverseKey(in string key, in DomainInvKeyType type, in long limit);
+    /// get nsset by nameserver or technical contact handle
+    NSSetDetails getNSSetsByInverseKey(in string key, in NSSetInvKeyType type, in long limit);
+
   };
 };
