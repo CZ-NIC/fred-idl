@@ -630,6 +630,8 @@ module ccReg {
     Session getSession(in SessionIDType sessionID) raises (ObjectNotFound);
     /// return complete list of registrars
     RegistrarList getRegistrars();
+    /// return complete list of registrars by access to zone
+    RegistrarList getRegistrarsByZone(in string zone);
     /// return one registrar with specified handle
     Registrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
     /// return registrar detail for specified id
