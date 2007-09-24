@@ -338,6 +338,9 @@ module ccReg {
       out timestamp datetime
     );
 
+    /// session cleanup on closing tcp session
+    void sessionClosed(in long clientID);
+
     /// save output XML from mod_eppd into action_xml tabel 
     boolean SaveOutXML( in string svTRID , in string XML );
 
