@@ -661,7 +661,7 @@ module ccReg {
     Mailing::Detail getEmailById(in TID id) 
       raises (ObjectNotFound);
     /// Return count of registred ENUM domains
-    long getEnumDomainCount();
+    long getDomainCount(in string zone);
     /// Return count of numbers described by all registred ENUM domains
     long getEnumNumberCount();
     /// Classify input handle according to registry policy
@@ -676,11 +676,11 @@ module ccReg {
     /// Return default country code
     CountryCode getDefaultCountry();
     /// Return list with descriptions of available object status for domain
-    ObjectStatusDescSeq getDomainStatusDescList();
+    ObjectStatusDescSeq getDomainStatusDescList(in string lang);
     /// Return list with descriptions of available object status for contact
-    ObjectStatusDescSeq getContactStatusDescList();
+    ObjectStatusDescSeq getContactStatusDescList(in string lang);
     /// Return list with descriptions of available object status for nsset
-    ObjectStatusDescSeq getNSSetStatusDescList();
+    ObjectStatusDescSeq getNSSetStatusDescList(in string lang);
     
     /// Exception for common invalid input data
     exception INVALID_INPUT {};
