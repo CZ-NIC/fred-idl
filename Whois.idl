@@ -1,2 +1,1 @@
-#include "_dataTypes.idl"
-#include "_Whois.idl"
+#include "Admin.idl"
