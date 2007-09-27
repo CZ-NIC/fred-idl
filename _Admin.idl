@@ -541,6 +541,9 @@ module ccReg {
      boolean discloseAddress;
      boolean discloseTelephone;
      boolean discloseFax;
+     boolean discloseIdent;
+     boolean discloseVat;
+     boolean discloseNotifyEmail;
      ObjectStatusSeq statusList;
   };
 
