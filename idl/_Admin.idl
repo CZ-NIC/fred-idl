@@ -41,6 +41,7 @@ module ccReg {
        CT_CONTACT_HANDLE,
        CT_DOMAIN_HANDLE,
        CT_NSSET_HANDLE,
+       CT_FILE_ID,
        CT_DATE,
        CT_TIME,
        CT_OTHER
@@ -716,6 +717,11 @@ module ccReg {
     DomainDetails getDomainsByInverseKey(in string key, in DomainInvKeyType type, in long limit);
     /// get nsset by nameserver or technical contact handle
     NSSetDetails getNSSetsByInverseKey(in string key, in NSSetInvKeyType type, in long limit);
-
+    
+    /// return credit for registrer and zone
+    Money getCreditByZone(in string registrar, in TID zone)
+      raises (SQL_ERROR);
+    /// generate letter with warning about registration expiration
+    void generateLetters();
   };
 };
