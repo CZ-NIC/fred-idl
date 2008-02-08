@@ -1,0 +1,11 @@
+2008-02-09  Jaromir Talir <jaromir.talir@nic.cz> 
+
+    * release 1.8.0
+    
+    * new function for getting registrar credit in _Admin.idl
+    
+    * new type for table columns FILE_ID in _Admin.idl
+
+    * new function for inhibit letters generation in _Admin.idl
+
+    * autotools distribution
