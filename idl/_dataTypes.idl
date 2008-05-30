@@ -1,4 +1,24 @@
+#ifndef _DATATYPES_IDL_
+#define _DATATYPES_IDL_
+
 module ccReg {
+ 
+  /// Types of filters
+  enum FilterType {
+    FT_FILTER,
+    FT_REGISTRAR,
+    FT_OBJ,
+    FT_CONTACT,
+    FT_NSSET,
+    FT_DOMAIN,
+    FT_ACTION,
+    FT_INVOICE,
+    FT_PUBLICREQUEST,
+    FT_MAIL
+  };
+ 
+  /// ID type for objects
+  typedef unsigned long long TID;
 
   /// definition of stringu that prepare SQL update and insert NULL value
   const string SET_NULL_VALUE = "$$SET_NULL_VALUE$$" ; 
@@ -37,12 +57,6 @@ module ccReg {
     short year; ///< year (i.e. 2006)
   };
   
-  /// Structure for handling interval of days
-  struct DateInterval {
-    DateType from; ///< start of interval - Date(0,0,0) means ignore this field
-    DateType to; ///< end of interval - Date(0,0,0) means ignore this field 
-  };
-  
   /// Structure for handling date and time
   struct DateTimeType {
     DateType date;
@@ -51,10 +65,38 @@ module ccReg {
     short second; ///< second (0..59)
   };
   
+  enum DateTimeIntervalType {
+    NONE, ///< filter is empty
+    DAY, ///< take just from part as interval
+    INTERVAL, ///< take both from and to as interval
+    LAST_HOUR, ///< hour that current time belongs to (- offset)
+    LAST_DAY, ///< day that current time belongs to (- offset)
+    LAST_WEEK, ///< week that current time belongs to (- offset)
+    LAST_MONTH, ///< month that current time belongs to (- offset)
+    LAST_YEAR, ///< year that current time belongs to (- offset)
+    PAST_HOUR, ///< hour from current time backward (* offset)
+    PAST_DAY, ///< day from current time backward (* offset)
+    PAST_WEEK, ///< week from current time backward (* offset)
+    PAST_MONTH, ///< month from current time backward (* offset)
+    PAST_YEAR ///< year from current time backward (* offset)
+  };
+
+  /// Structure for handling interval of days
+  struct DateInterval {
+    DateType from; ///< start of interval - Date(0,0,0) means ignore this field
+    DateType to; ///< end of interval - Date(0,0,0) means ignore this field 
+    DateTimeIntervalType type; ///< interval type (_HOUR has no meaning)
+    short offset; ///< offset for 
+  };
+  
   /// Structure for handling interval of times
   struct DateTimeInterval {
     DateTimeType from; ///< start of interval 
     DateTimeType to; ///< end of interval
+    DateTimeIntervalType type; ///< interval type
+    short offset; ///< offset for 
   };
 
 };
+
+#endif

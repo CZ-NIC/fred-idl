@@ -1,0 +1,150 @@
+#include "_dataTypes.idl"
+
+module ccReg {
+
+  module Filters {
+  
+    interface Base
+    {
+      readonly attribute string name;
+      attribute boolean neg;
+      /// Returns true, when attribute 'value' was set
+      boolean isActive();
+    };
+    
+    interface Iterator
+    {
+      void reset();
+      void setNext();
+      boolean hasNext();
+      Base getFilter();
+      void clearF();
+    };
+
+    interface Simple : Base
+    {
+    };
+  
+    interface Int : Simple
+    {
+      attribute short value;
+    };
+
+    interface Id : Simple
+    {
+      attribute TID value;
+    };
+
+    interface Date : Simple
+    {
+      attribute DateInterval value;
+    };
+
+    interface DateTime : Simple
+    {
+      attribute DateTimeInterval value;
+    };
+  
+    interface Str : Simple
+    {
+      attribute string value;
+    };
+
+    interface Compound : Base
+    {
+      Iterator getIterator();
+    };
+
+    interface Registrar : Compound
+    {
+      Str addHandle();
+      Str addName();
+      Str addOrganization();
+      Str addCity();
+      Str addCountry();
+    };
+
+    interface Obj : Compound
+    {
+      Str addHandle();
+      Str addAuthInfo();
+      DateTime addCreateTime();
+      DateTime addUpdateTime();
+      DateTime addTransferTime();
+      DateTime addDeleteTime();
+      Registrar addCreateRegistrar();
+      Registrar addUpdateRegistrar();
+      Registrar addRegistrar();
+    };
+
+    interface Contact : Obj
+    {
+      Str addName();
+      Str addOrganization();
+      Str addCity();
+      Str addEmail();
+      Str addNotifyEmail();
+      Str addVat();
+      Str addSsn();
+    };
+    
+    interface NSSet : Obj
+    {
+      Str addHostFQDN();
+      Str addHostIP();
+      Contact addTechContact();
+    };
+
+    interface Domain : Obj
+    {
+      Date addExpirationDate();
+      //Date addValidationExpirationDate();
+      Contact addRegistrant();
+      Contact addAdminContact();
+      Contact addTempContact();
+      NSSet addNSSet();
+    };
+
+    interface Action : Compound
+    {
+      Registrar addRegistrar();
+      Int addType();
+      Obj addObject();
+      Int addResponse();
+      DateTime addTime();
+      Str addClTRID();
+      Str addSvTRID();
+    };
+
+    interface Filter : Compound
+    {
+      Id addUserId(); // virtual filter (userid column will not be in result set)
+      Id addGroupId();
+      Int addType();
+    };
+
+    interface PublicRequest : Compound
+    {
+      Int addType();
+      Int addStatus();
+      DateTime addCreateTime();
+      DateTime addResolveTime();
+      Str addReason();
+      Str addEmailToAnswer();
+      Object addObject();
+      Action addEppAction();
+    };
+
+    interface Table
+    {
+      Compound add();
+      void reload();
+      void clear();
+      Iterator getIterator();
+      void loadFilter(in TID filterId);  //maybe move these two to Filters pagetable
+      void saveFilter(in string name);
+    };
+
+  };
+
+};
