@@ -57,6 +57,7 @@ module ccReg {
 
     interface Registrar : Compound
     {
+      Id addId();
       Str addHandle();
       Str addName();
       Str addOrganization();
@@ -79,6 +80,7 @@ module ccReg {
 
     interface Contact : Obj
     {
+      Id addId();
       Str addName();
       Str addOrganization();
       Str addCity();
@@ -90,6 +92,7 @@ module ccReg {
     
     interface NSSet : Obj
     {
+      Id addId();
       Str addHostFQDN();
       Str addHostIP();
       Contact addTechContact();
@@ -97,6 +100,7 @@ module ccReg {
 
     interface Domain : Obj
     {
+      Id addId();
       Date addExpirationDate();
       //Date addValidationExpirationDate();
       Contact addRegistrant();
@@ -125,6 +129,7 @@ module ccReg {
 
     interface PublicRequest : Compound
     {
+      Id addId();
       Int addType();
       Int addStatus();
       DateTime addCreateTime();
