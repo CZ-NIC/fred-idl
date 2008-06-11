@@ -666,6 +666,8 @@ module ccReg {
     void authenticateUser(in string username, in string password) raises (AuthFailed);
     /// create new session for administrator interface 
     SessionIDType createSession(in string username) raises (AuthFailed);
+    /// destroy session
+    void destroySession(in string sessionID);
     /// get session
     Session getSession(in SessionIDType sessionID) raises (ObjectNotFound);
     /// return complete list of registrars
