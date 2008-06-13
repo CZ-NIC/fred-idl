@@ -2,8 +2,7 @@
 
 module ccReg {
 
-  module Filters {
-  
+  module Filters {  
     interface Base
     {
       readonly attribute string name;
@@ -14,10 +13,11 @@ module ccReg {
     
     interface Iterator
     {
+      exception INVALID {};
       void reset();
       void setNext();
       boolean hasNext();
-      Base getFilter();
+      Base getFilter() raises (INVALID);
       void clearF();
     };
 
