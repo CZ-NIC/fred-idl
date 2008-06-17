@@ -14,7 +14,8 @@ module ccReg {
     FT_ACTION,
     FT_INVOICE,
     FT_PUBLICREQUEST,
-    FT_MAIL
+    FT_MAIL,
+    FT_FILE
   };
  
   /// ID type for objects

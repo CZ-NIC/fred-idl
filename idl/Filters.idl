@@ -140,6 +140,18 @@ module ccReg {
       Action addEppAction();
     };
 
+    interface Invoice : Compound
+    {
+      Id addZoneId();
+      Int addType();
+      Str addNumber();
+      DateTime addCreateTime();
+      Date addTaxDate();
+      Registrar addRegistrar();
+      Obj addObject();
+      //File addFile();
+    };
+
     interface Table
     {
       Compound add();
