@@ -140,6 +140,17 @@ module ccReg {
       Action addEppAction();
     };
 
+    interface File : Compound 
+    {
+      Id addId();
+      Str addName();
+      Str addPath();
+      Str addMimeType();
+      DateTime addCreateTime();
+      Int addSize();
+      Int addType();
+    };
+
     interface Invoice : Compound
     {
       Id addZoneId();
@@ -149,7 +160,20 @@ module ccReg {
       Date addTaxDate();
       Registrar addRegistrar();
       Obj addObject();
-      //File addFile();
+      File addFile();
+    };
+    
+    interface Mail : Compound
+    {
+      Id addId();
+      Int addType();
+      Str addHandle();
+      DateTime addCreateTime();
+      DateTime addModifyTime();
+      Int addStatus();
+      Int addAttempt();
+      Str addMessage();
+      File addAttachment();
     };
 
     interface Table
