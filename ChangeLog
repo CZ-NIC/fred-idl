@@ -1,3 +1,17 @@
+2008-06-24 Jiri Sadek
+
+   * release 1.10.0
+
+   * New domain filters added (outzone date, cancel date)
+
+   * New Mail, File and Invoice filters added
+
+   * Filter Iterator::getFilter method throwing exception 
+
+   * Added destroySession(session_id) method for Admin object
+
+   * Some Id filters exposed to CORBA due to ticket #1520
+
 2008-05-30 Jaromir Talir <jaromir.talir@nic.cz> 
 
    * release 1.9.0
