@@ -81,7 +81,7 @@ module ccReg {
     /// Sort data by column index
     void sortByColumn(in short column, in boolean dir);
     /// Return sorted by column index; -1 mean sorted by ID
-    short getSortedBy();
+    void getSortedBy(out short column, out boolean dir);
     /// Output data in CSV format
     string outputCSV();
     /// Return filter
