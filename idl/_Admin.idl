@@ -514,6 +514,7 @@ module ccReg {
     TID id; ///< id of action
     string time; /// < processing time
     string xml; ///< xml of request
+    string xml_out; ///< xml of response
     string type; ///< typename of request
     string objectHandle; ///< handle of major object
     string registrarHandle; ///< handle of registrar processiong request

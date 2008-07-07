@@ -120,6 +120,7 @@ module ccReg {
       DateTime addTime();
       Str addClTRID();
       Str addSvTRID();
+      Str addRequestHandle();
     };
 
     interface Filter : Compound
