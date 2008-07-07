@@ -3,7 +3,11 @@
 module ccReg {
 
   /// Type for EPP commands
-  typedef string EPPActionType;
+  struct EPPActionType
+  {
+    long id;
+    string name;
+  };
   
   /// List of EPP command types
   typedef sequence<EPPActionType> EPPActionTypeSeq;
@@ -510,7 +514,7 @@ module ccReg {
     TID id; ///< id of action
     string time; /// < processing time
     string xml; ///< xml of request
-    EPPActionType type; ///< type of request
+    string type; ///< typename of request
     string objectHandle; ///< handle of major object
     string registrarHandle; ///< handle of registrar processiong request
     short result; ///< result code
