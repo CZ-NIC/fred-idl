@@ -116,6 +116,8 @@ module ccReg {
     TableRow getPageRow(in short pageRow) raises (INVALID_ROW);
     /// Return id of record at index
     TID getPageRowId(in short pageRow) raises (INVALID_ROW);
+    /// Return true if row result size is limited
+    boolean numRowsOverLimit();
   };
 
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
