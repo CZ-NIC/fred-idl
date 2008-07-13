@@ -1,3 +1,20 @@
+2008-07-13 Jiri Sadek
+
+   * release 1.11.0
+
+   * Added method numRowsOverLimit() to PageTable to detect 
+     if number of rows in result set was limited by defined constant
+
+   * Updated EppAction 
+     - filter for Requested Handle -> object doesn't need to be in registry
+     - output xml added to detail
+
+   * EppActionType changed from string only to id - name pair for proper 
+     filtering
+
+   * getSortedBy() method rewritten in order to getting sort column and also 
+     sort direction
+	
 2008-06-24 Jiri Sadek
 
    * release 1.10.0
