@@ -89,5 +89,11 @@ module ccReg {
       out string soans,
       out DNSHost nameservers
       ) raises (InternalError, UnknownZone);
+    
+    /// List of names for zones
+    typedef sequence<string> ZoneNameSeq;
+    
+    /// Return list of all zones managed by register
+    ZoneNameSeq getZoneNameList();
   };
 };
