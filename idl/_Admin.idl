@@ -60,6 +60,7 @@ module ccReg {
        CT_CONTACT_HANDLE,
        CT_DOMAIN_HANDLE,
        CT_NSSET_HANDLE,
+       CT_KEYSET_HANDLE,
        CT_FILE_ID,
        CT_DATE,
        CT_TIME,
@@ -208,6 +209,10 @@ module ccReg {
     attribute TID nsset;
     /// Those refering to specific nsset by handle
     attribute string nssetHandle;
+    /// Those referring to specific keyset
+    attribute TID keyset;
+    /// Those regering to specific keyset by handle
+    attribute string keysetHandle;
     /// Those having specific admin contact
     attribute TID admin;
     /// Those having specific admin contact by Handle
@@ -249,6 +254,14 @@ module ccReg {
     /// Search in ip
     attribute string ip;
   };
+
+  /// Filter for KeySets
+  interface KeySetsFilter : RegObjectFilter {
+      /// Search in handle
+      attribute string handle;
+      /// Search in admin
+      attribute string adminHandle;
+  };
   
   module AuthInfoRequest {
     /// Type of AuthInfo request
@@ -272,7 +285,8 @@ module ccReg {
       OT_IGNORE, ///< For filter ignoring
       OT_DOMAIN, ///< Request for authinfo in domain object
       OT_CONTACT, ///< Request for authinfo in contact object
-      OT_NSSET ///< Request for authinfo in nsset object
+      OT_NSSET, ///< Request for authinfo in nsset object
+      OT_KEYSET ///< Request for authinfo in keyset object
     } ;
     /// Filter for selection of set of AuthInfo requests
     interface Filter : ccReg::Filter {
@@ -331,7 +345,8 @@ module ccReg {
     enum ObjectType {
       OT_CONTACT,
       OT_NSSET,
-      OT_DOMAIN
+      OT_DOMAIN,
+      OT_KEYSET
     };
 
     struct OID {
@@ -542,6 +557,7 @@ module ccReg {
      string expirationDate;
      string valExDate;
      string nssetHandle;
+     string keysetHandle;
      ContactHandleSeq admins;
      ContactHandleSeq temps;
      ObjectStatusSeq statusList;
@@ -602,6 +618,22 @@ module ccReg {
      ObjectStatusSeq statusList;     
   };
 
+  struct KeySetDetail {
+      TID id;
+      string handle;
+      string roid;
+      string registrarHandle;
+      string createDate;
+      string transferDate;
+      string updateDate;
+      string createRegistrarHandle;
+      string updateRegistrarHandle;
+      string authInfo;
+      ContactHandleSeq admins;
+      DSRecord dsrecords;
+      ObjectStatusSeq  statusList;
+  };
+
   // Type for list of registrars
   typedef sequence<Registrar> RegistrarList;
 
@@ -612,6 +644,7 @@ module ccReg {
     HT_DOMAIN, ///< Handle is non enum domain
     HT_CONTACT, ///< Handle is contact
     HT_NSSET, ///< Handle is nsset
+    HT_KEYSET, ///< Handle is keyset
     HT_REGISTRAR, ///< Handle is registrar
     HT_OTHER ///< Invalid handle
   };
@@ -644,17 +677,24 @@ module ccReg {
   typedef sequence<DomainDetail> DomainDetails;
   /// Sequence of nssets is used in inverse whois queries
   typedef sequence<NSSetDetail> NSSetDetails;
+  /// Sequence of keysets is used in inverse whois queries
+  typedef sequence<KeySetDetail> KeySetDetails;
   /// Type of inverse key used for domain search
   enum DomainInvKeyType {
     DIKT_REGISTRANT,
     DIKT_ADMIN,
     DIKT_TEMP,
-    DIKT_NSSET
+    DIKT_NSSET,
+    DIKT_KEYSET
   };
   /// Type of inverse key used for nsset search
   enum NSSetInvKeyType {
     NIKT_NS,
     NIKT_TECH
+  };
+  /// Type of inverse key used for keyset search
+  enum KeySetInvKeyType {
+      KIKT_TECH
   };
   
   /// forward declaration
@@ -677,6 +717,7 @@ module ccReg {
     void destroySession(in string sessionID);
     /// get session
     Session getSession(in SessionIDType sessionID) raises (ObjectNotFound);
+
     /// return complete list of registrars
     RegistrarList getRegistrars();
     /// return complete list of registrars by access to zone
@@ -687,18 +728,35 @@ module ccReg {
     Registrar getRegistrarById(in TID id) raises (ObjectNotFound);
     /// store data of registrar in database
     void putRegistrar(in Registrar regData) raises (UpdateFailed);
+
     /// return contact detail for specified handle
     ContactDetail getContactByHandle(in string handle) raises (ObjectNotFound);
     /// return contact detail for specified id
     ContactDetail getContactById(in TID id) raises (ObjectNotFound);
+
     /// return nsset detail for specified handel
     NSSetDetail getNSSetByHandle(in string handle) raises (ObjectNotFound);
     /// return nsset detail for specified id
     NSSetDetail getNSSetById(in TID id) raises (ObjectNotFound);
+
+    /// return keyset detail for specified handle
+    KeySetDetail getKeySetByHandle(in string handle) raises (ObjectNotFound);
+    /// return keyset detail for specified id
+    KeySetDetail getKeySetById(in TID id) raises (ObjectNotFound);
+    /// return list of keyset details with specified admin contact id
+    KeySetDetails getKeySetsByContactId(in TID id, in long limit) raises (ObjectNotFound);
+    /// return list of keyset details with specified admin contact handle
+    KeySetDetails getKeySetsByContactHandle(in string handle, in long limit) raises (ObjectNotFound);
+
     /// return domain detail for specified handel
     DomainDetail getDomainByFQDN(in string fqdn) raises (ObjectNotFound);
     /// return domain detail for specified id
     DomainDetail getDomainById(in TID id) raises (ObjectNotFound);
+    /// Return list of domain details with specified keyset id
+    DomainDetails getDomainsByKeySetId(in TID id, in long limit) raises (ObjectNotFound);
+    /// Return list of domain details with specified keyset handle
+    DomainDetails getDomainsByKeySetHandle(in string handle, in long limit) raises (ObjectNotFound);
+
     /// return EPP action detail for specified svTRID
     EPPAction getEPPActionBySvTRID(in string svTRID) raises (ObjectNotFound);
     /// return EPP action detail for specified id
@@ -730,6 +788,8 @@ module ccReg {
     ObjectStatusDescSeq getContactStatusDescList(in string lang);
     /// Return list with descriptions of available object status for nsset
     ObjectStatusDescSeq getNSSetStatusDescList(in string lang);
+    /// Return list with descriptions of available object status for keyset
+    ObjectStatusDescSeq getKeySetStatusDescList(in string lang);
     
     /// Exception for common invalid input data
     exception INVALID_INPUT {};
@@ -769,6 +829,8 @@ module ccReg {
     DomainDetails getDomainsByInverseKey(in string key, in DomainInvKeyType type, in long limit);
     /// get nsset by nameserver or technical contact handle
     NSSetDetails getNSSetsByInverseKey(in string key, in NSSetInvKeyType type, in long limit);
+    /// get keyset by technical contact handle
+    KeySetDetails getKeySetsByInverseKey(in string key, in KeySetInvKeyType type, in long limit);
     
     /// return credit for registrer and zone
     Money getCreditByZone(in string registrar, in TID zone)
@@ -784,6 +846,7 @@ module ccReg {
     User getUser();
 
     void updateRegistrar(in Registrar registrar_data) raises (ccReg::Admin::UpdateFailed, ccReg::Admin::ObjectNotFound);
+    void setHistory(in boolean history);
   };
 
 };

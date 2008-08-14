@@ -1,0 +1,588 @@
+//#include "Filters.idl"
+
+module Registry {
+
+  /// Type for EPP commands
+  struct EPPActionType
+  {
+    long id;
+    string name;
+  };
+  
+  /// List of EPP command types
+  typedef sequence<EPPActionType> EPPActionTypeSeq;
+
+  typedef string CountryCode;
+  struct CountryDesc {
+    CountryCode cc;
+    string name;
+  };
+  typedef sequence<CountryDesc> CountryDescSeq;
+  
+  /// Description structure for object status
+  struct ObjectStatusDesc {
+    short id;
+    string name;
+  };
+  /// Sequence of status descriptions 
+  typedef sequence<ObjectStatusDesc> ObjectStatusDescSeq;
+  /// Sequence of status values
+  typedef sequence<short> ObjectStatusSeq;
+
+  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+  ///          User management
+  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+  /// Negative permission
+  typedef string NPermission;
+
+  interface User {
+    attribute ccReg::TID id;
+    attribute string username;
+    attribute string firstname;
+    attribute string surname;
+    boolean hasNPermission(in NPermission np);
+  };
+
+  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+  ///          Table management
+  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+  /// One row of Table
+  typedef sequence<any> TableRow;
+
+  /// Table for data
+  interface Table : ccReg::Filters::Table {
+    enum ColumnType {
+       CT_OID,
+       CT_OID_ICON, // OID but instead handle is displayed icon
+       CT_DATE,
+       CT_TIME,
+       CT_OTHER
+    };
+    struct ColumnDesc {
+       string name;
+       ColumnType type;
+    };
+    typedef sequence<ColumnDesc> ColumnHeaders;
+    /// Exception for accessing invalid row
+    exception INVALID_ROW {};
+    /// Number of rows in table
+    readonly attribute short numRows;
+    /// Number of columns in table
+    readonly attribute short numColumns;
+    /// Real size of result of this filter
+    readonly attribute unsigned long long resultSize;
+    /// Return descriptions of all columns
+    ColumnHeaders getColumnHeaders();
+    /// Return ona row of string representation of data in table
+    TableRow getRow(in short row) raises (INVALID_ROW);
+    /// Sort data by column index
+    void sortByColumn(in short column, in boolean dir);
+    /// Return sorted by column index; -1 mean sorted by ID
+    void getSortedBy(out short column, out boolean dir);
+    /// Output data in CSV format
+    string outputCSV();
+    /// Return filter
+    /// readonly attribute Filter aFilter;
+    /// Return id of record at index
+    ccReg::TID getRowId(in short pageRow) raises (INVALID_ROW);
+  };
+  
+  /// Table divided into pages
+  interface PageTable : Table {
+    /// Exception for accessing invalid page
+    exception INVALID_PAGE {};
+    /// Size of one page
+    attribute short pageSize;
+    /// Current page index
+    readonly attribute short page;
+    /// Set current page
+    void setPage(in short page) raises (INVALID_PAGE);
+    /// Start row of current page
+    readonly attribute short start;
+    /// Number of pages
+    readonly attribute short numPages;
+    /// Exact size of one page (always < pageSize)
+    readonly attribute short numPageRows;
+    /// Type of filter applied on page table
+    readonly attribute ccReg::TID filter;
+    /// Return row by index in page
+    TableRow getPageRow(in short pageRow) raises (INVALID_ROW);
+    /// Return id of record at index
+    ccReg::TID getPageRowId(in short pageRow) raises (INVALID_ROW);
+  };
+
+  
+  struct OID {
+    ccReg::TID id;
+    string handle;
+    ccReg::FilterType type;
+  };
+
+  typedef sequence<OID> OIDSeq;
+
+  struct HistoryRecord {
+    any value;
+    ccReg::TID actionId;
+    ccReg::DateTimeType from;
+    ccReg::DateTimeType to;
+  };
+
+  typedef sequence<HistoryRecord> HistoryRecordList;
+
+  module PublicRequest {
+    /// Type of public requests
+    enum Type {
+      PRT_AUTHINFO_AUTO_RIF,         ///< Request for authinfo was created by registrar through RIF (EPP)
+      PRT_AUTHINFO_AUTO_PIF,         ///< Request for authinfo automatic answer created through PIF
+      PRT_AUTHINFO_EMAIL_PIF,        ///< Request for authinfo waiting for autorization by signed email
+      PRT_AUTHINFO_POST_PIF,         ///< Request for authinfo waiting for autorization by checked letter
+      PRT_BLOCK_CHANGES_EMAIL_PIF,    ///< Request for block update object waiting for autorization by signed email
+      PRT_BLOCK_CHANGES_POST_PIF,     ///< Request for block update object waiting for autorization by checked letter
+      PRT_BLOCK_TRANSFER_EMAIL_PIF,  ///< Request for block transfer object waiting for autorization by signed email
+      PRT_BLOCK_TRANSFER_POST_PIF,   ///< Request for block transfer object waiting for autorization by checked letter
+      PRT_UNBLOCK_CHANGES_EMAIL_PIF,  ///< Request for unblock update object waiting for autorization by signed email
+      PRT_UNBLOCK_CHANGES_POST_PIF,   ///< Request for unblock update object waiting for autorization by checked letter
+      PRT_UNBLOCK_TRANSFER_EMAIL_PIF,///< Request for unblock transfer object waiting for autorization by signed email
+      PRT_UNBLOCK_TRANSFER_POST_PIF  ///< Request for unblock transfer object waiting for autorization by checked letter
+    };
+
+    /// Status of request 
+    enum Status {
+      PRS_NEW,       ///< Unresolved request
+      PRS_ANSWERED,  ///< Answered request
+      PRS_INVALID    ///< Request closed as invalid
+    };
+
+    /// Object type of request
+    enum ObjectType {
+      OT_CONTACT,
+      OT_NSSET,
+      OT_DOMAIN
+    };
+
+ 
+    struct Detail {
+      ccReg::TID id;                       ///< request id
+      PublicRequest::Status status; ///< request status
+      PublicRequest::Type type;     ///< request type
+      string createTime;            ///< time of creation of request
+      string resolveTime;           ///< time of request resolution
+      string reason;                ///< reason provided through PIF
+      string email;                 ///< email provided through PIF
+      long answerEmailId;           ///< id of email with request answer
+      string svTRID;                ///< action svtrid when created by registrar through EPP
+      OID registrar;                ///< registrar initiating request through EPP
+      OIDSeq objects;               ///< objects of this public request
+    };
+  };
+
+  module Mailing {
+    /// Filter for selection of set of mails
+    interface Filter : ccReg::Filter {
+      attribute ccReg::TID id; ///< filter for id 
+      attribute long status; ///< filter for status (-1=ignore)
+      attribute string handle; ///< filter for asociated handle
+      attribute string attachment; ///< filter for attachement id
+      attribute string fulltext; ///< filter for fulltext in email
+      attribute unsigned short type; ///< filter for email type
+      attribute ccReg::DateTimeInterval createTime; ///< filter for create time interval
+    };
+    //typedef sequence<ccReg::TID> AttachmentSeq;
+    /// Email detail
+    struct Detail {
+      ccReg::TID id; ///< unique mail id (number before dot in message-id header)
+      string createTime; ///< time of inserting record into db
+      string modTime;///< date of last modification of status 
+      long status; ///< status (0 = OK, otherwise sendamail return status)
+      unsigned short type; ///< type
+      string content; ///< complete email content without binary attachements
+      //Lists handles; ///< list of assocciated emails
+      OIDSeq objects; /// objects asociated to emails
+      //AttachmentSeq attachments; ///< names of binary attachements
+      OIDSeq attachments; /// attachments of mails
+    };
+  };
+
+  typedef string Money;
+  module Invoicing {
+    struct Payment {
+      ccReg::TID id;
+      string number;
+      Money price;
+      Money balance;
+    };
+    typedef sequence<Payment> PaymentList;
+    struct Action {
+      ccReg::TID objectId;
+      string objectName;
+      string actionTime;
+      string exDate;
+      unsigned short actionType;
+      unsigned short unitsCount;
+      Money pricePerUnit;
+      Money price;
+    };
+    typedef sequence<Action> ActionList;
+    enum InvoiceType {
+      IT_ADVANCE,
+      IT_ACCOUNT
+      //IT_NONE //< for disabling filter
+    };
+    struct Detail {
+      ccReg::TID id;
+      ccReg::TID zone;
+      string crTime;
+      string taxDate;
+      string fromDate;
+      string toDate;
+      InvoiceType type;
+      string number;
+      // ccReg::TID registrarId;
+      // string registrarHandle;
+      OID registrar;
+      Money credit;
+      Money price;
+      unsigned short vatRate;
+      Money total;
+      Money totalVAT;
+      string varSymbol;
+      //ccReg::TID filePDF;
+      OID filePDF;
+      //ccReg::TID fileXML;
+      OID fileXML;
+      PaymentList payments;
+      ActionList actions;
+    };
+  };
+  
+  module Banking {
+    struct OnlinePayment {
+      ccReg::TID id;
+      string accountNumber;
+      string accountBankCode;
+      string constSymbol;
+      string varSymbol;
+      string specSymbol;
+      Money price;
+      string memo;
+      ccReg::TID invoiceId;
+      ccReg::TID accountId;
+      string crDate;
+      string accountName;
+      string ident;
+    };
+    interface StatementsFilter : ccReg::Filter {
+      attribute ccReg::TID id;
+    };
+    interface OnlineFilter : ccReg::Filter {
+      attribute ccReg::TID id;
+    };
+    interface Statements : StatementsFilter {
+    };
+    interface OnlinePayments : OnlineFilter {
+    };
+  };
+  
+
+  /// Money type in smallest unit (hallers)
+  //  typedef unsigned long MMoney;
+
+  module Registrar {
+    /// Access structure
+    struct EPPAccess {
+      string password; ///< epp login password
+      string md5Cert; ///< md5 of certificate
+    };
+    
+    /// List of access structures
+    typedef sequence<EPPAccess> EPPAccessSeq;
+    
+    /// Registrar detail structure
+    struct Detail {
+      ccReg::TID id; ///< registrar ID
+      string ico;
+      string dic;
+      string varSymb;
+      boolean vat;
+      string handle; ///< registrar identification
+      string name; ///< registrar name
+      string organization; ///< organization name
+      string street1; ///< address part 1
+      string street2; ///< address part 2
+      string street3; ///< address part 3
+      string city; ///< city of registrar headquaters
+      string stateorprovince; ///< address part
+      string postalcode; ///< address part
+      CountryCode country; ///< country code
+      string telephone; ///< phne number
+      string fax; ///< fax number
+      string email; ///< contact email
+      string url; ///< URL
+      Money credit; ///< actual credit
+      EPPAccessSeq access; ///< list of epp access data
+      boolean hidden; ///< hidden in PIF
+    };
+  };
+  
+  module EPPAction {
+    struct Detail {
+      ccReg::TID id; ///< id of action
+      string time; /// < processing time
+      string xml; ///< xml of request
+      string type; ///< typename of request
+      string objectHandle; ///< handle of major object
+      string registrarHandle; ///< handle of registrar processiong request
+      short result; ///< result code
+      string clTRID; ///< token provided by registrar
+      string svTRID; ///< token attached by server
+    };
+  };
+
+  module Domain {
+    //typedef sequence<string> ContactHandleSeq;
+    struct Detail {
+      ccReg::TID id;
+      string handle;
+      string roid;
+      //string registrarHandle;
+      HistoryRecordList registrar; // value type = OID
+      string createDate;
+      string transferDate;
+      string updateDate;
+      string deleteDate;
+      string outZoneDate;
+      //string createRegistrarHandle;
+      OID createRegistrar;
+      //string updateRegistrarHandle;
+      OID updateRegistrar;
+      HistoryRecordList authInfo; // value type = string
+      //string registrantHandle;
+      HistoryRecordList registrant; // value type = OID
+      //string expirationDate;
+      HistoryRecordList expirationDate; // value type = string
+      //string valExDate;
+      HistoryRecordList valExDate; // value type = string
+      //string nssetHandle;
+      HistoryRecordList nsset; // value type = OID
+      HistoryRecordList keyset; // value type = OID
+      //ContactHandleSeq admins;
+      HistoryRecordList admins; // value type = OIDSeq
+      //ContactHandleSeq temps;
+      HistoryRecordList temps; // value type = OIDSeq
+      //ObjectStatusSeq statusList;
+      HistoryRecordList statusList; // value type = ObjectStatusSeq
+    };
+  };
+
+  module Contact {
+    struct Detail {
+      ccReg::TID id;
+      string handle;
+      string roid;
+      //string registrarHandle;
+      HistoryRecordList registrar; // value type = OID
+      string createDate;
+      string transferDate;
+      string updateDate;
+      string deleteDate;
+      //string createRegistrarHandle;
+      OID createRegistrar;
+      //string updateRegistrarHandle;
+      OID updateRegistrar;
+      //string authInfo;
+      HistoryRecordList authInfo; // value type = string
+      //string name;
+      HistoryRecordList name; // value type = string
+      //string organization;
+      HistoryRecordList organization; // value type = string
+      //string street1;
+      HistoryRecordList street1; // value type = string
+      //string street2;
+      HistoryRecordList street2; // value type = string
+      //string street3;
+      HistoryRecordList street3; // value type = string
+      //string province;
+      HistoryRecordList province; // value type = string
+      //string postalcode;
+      HistoryRecordList postalcode; // value type = string
+      //string city;
+      HistoryRecordList city; // value type = string
+      //string country;
+      HistoryRecordList country; // value type = string
+      //string telephone;
+      HistoryRecordList telephone; // value type = string
+      //string fax;
+      HistoryRecordList fax; // value type = string
+      //string email;
+      HistoryRecordList email; // value type = string
+      //string notifyEmail;
+      HistoryRecordList notifyEmail; // value type = string
+      //string ssn;
+      HistoryRecordList ident; // value type = string
+      //string ssnType;
+      HistoryRecordList identType; // value type = string
+      //string vat;
+      HistoryRecordList vat; // value type = string
+      //boolean discloseName;
+      HistoryRecordList discloseName; // value type = boolean
+      //boolean discloseOrganization;
+      HistoryRecordList discloseOrganization; // value type = boolean
+      //boolean discloseEmail;
+      HistoryRecordList discloseEmail; // value type = boolean
+      //boolean discloseAddress;
+      HistoryRecordList discloseAddress; // value type = boolean
+      //boolean discloseTelephone;
+      HistoryRecordList discloseTelephone; // value type = boolean
+      //boolean discloseFax;
+      HistoryRecordList discloseFax; // value type = boolean
+      //boolean discloseIdent;
+      HistoryRecordList discloseIdent; // value type = boolean
+      //boolean discloseVat;
+      HistoryRecordList discloseVat; // value type = boolean
+      //boolean discloseNotifyEmail;
+      HistoryRecordList discloseNotifyEmail; // value type = boolean
+      //ObjectStatusSeq statusList;
+      HistoryRecordList statusList; // value type = ObjectStatusSeq
+    };
+  };
+
+  module NSSet {
+    struct Detail {
+      ccReg::TID id;
+      string handle;
+      string roid;
+      //string registrarHandle;
+      HistoryRecordList registrar; // value type = OID
+      string createDate;
+      string transferDate;
+      string updateDate;
+      string deleteDate;
+      //string createRegistrarHandle;
+      OID createRegistrar;
+      //string updateRegistrarHandle;
+      OID updateRegistrar;
+      //string authInfo;
+      HistoryRecordList authInfo; // value type = string
+      //ContactHandleSeq admins;
+      HistoryRecordList admins; // value type = OIDSeq
+      //DNSHost hosts;
+      HistoryRecordList hosts; // value type = DNSHost
+      //ObjectStatusSeq statusList;
+      HistoryRecordList statusList; // value type = ObjectStatusSeq
+    };
+  };
+
+  module KeySet {
+    struct Detail {
+      ccReg::TID id;
+      string handle;
+      string roid;
+      //string registrarHandle;
+      HistoryRecordList registrar; // value type = OID
+      string createDate;
+      string transferDate;
+      string updateDate;
+      string deleteDate;
+      //string createRegistrarHandle;
+      OID createRegistrar;
+      //string updateRegistrarHandle;
+      OID updateRegistrar;
+      //string authInfo;
+      HistoryRecordList authInfo; // value type = string
+      //ContactHandleSeq admins;
+      HistoryRecordList admins; // value type = OIDSeq
+      //DSrecods
+      HistoryRecordList dsrecords; // value type = DSrecords
+      //ObjectStatusSeq statusList;
+      HistoryRecordList statusList; // value type = ObjectStatusSeq
+    };
+  };
+    
+  typedef string SessionIDType;
+
+  /// forward declaration
+  interface Session;
+
+  /// interface for administration application
+  interface Admin {
+    /// exception thwown in case of failed search
+    exception ObjectNotFound {};
+    /// exception thrown in case of update failure
+    exception UpdateFailed {};
+    /// exception thrown when authentification failed
+    exception AuthFailed {};
+    /// authenticate user against database
+    void authenticateUser(in string username, in string password) raises (AuthFailed);
+    /// create new session for administrator interface 
+    SessionIDType createSession(in string username) raises (AuthFailed);
+    /// destroy session
+    void destroySession(in string sessionID);
+    /// get session
+    Session getSession(in SessionIDType sessionID) raises (ObjectNotFound);
+    /// return complete list of registrars
+    long getDomainCount(in string zone);
+    /// Return count of numbers described by all registred ENUM domains
+    long getEnumNumberCount();
+    /// Return list of epp action types
+    EPPActionTypeSeq getEPPActionTypeList();
+    /// Return country code list
+    CountryDescSeq getCountryDescList();
+    /// Return default country code
+    CountryCode getDefaultCountry();
+    /// Return list with descriptions of available object status for domain
+    ObjectStatusDescSeq getDomainStatusDescList(in string lang);
+    /// Return list with descriptions of available object status for contact
+    ObjectStatusDescSeq getContactStatusDescList(in string lang);
+    /// Return list with descriptions of available object status for nsset
+    ObjectStatusDescSeq getNSSetStatusDescList(in string lang);
+    
+    /// Exception for common invalid input data
+    exception INVALID_INPUT {};
+    /// Exception for unspecified email in ([AUTO|POST]_PIF) request
+    exception BAD_EMAIL {};
+    /// Exception for bad object id
+    exception OBJECT_NOT_FOUND {};
+    /// Exception for bad EPP action id in EPP request
+    exception ACTION_NOT_FOUND {};
+    /// Exception for bad EPP action id in EPP request
+    exception SQL_ERROR {};
+    /// Exception for unsent emails
+    exception MAILER_ERROR {};
+    /// Exception for request blocation
+    exception REQUEST_BLOCKED {};
+    
+    typedef sequence<ccReg::TID> ObjectIdList;
+    ccReg::TID createPublicRequest(
+      in PublicRequest::Type type,
+      in ccReg::TID eppActionId,
+	  in string reason,
+	  in string emailToAnswer,
+	  in ObjectIdList objectIds
+	) raises (
+	  BAD_EMAIL, OBJECT_NOT_FOUND, ACTION_NOT_FOUND, SQL_ERROR, 
+	  INVALID_INPUT, REQUEST_BLOCKED
+	);
+    /// Process request by sending email with auth_info
+    void processPublicRequest(in ccReg::TID id, in boolean invalid) 
+      raises (OBJECT_NOT_FOUND, SQL_ERROR, MAILER_ERROR, REQUEST_BLOCKED);
+
+    /// return credit for registrer and zone
+    Money getCreditByZone(in string registrar, in ccReg::TID zone)
+      raises (SQL_ERROR);
+    /// generate letter with warning about registration expiration
+    void generateLetters();
+  };
+
+  /// Main interface for registrar session
+  interface Session {
+    PageTable getPageTable(in ccReg::TID type);
+    any getDetail(in ccReg::TID type, in ccReg::TID id) raises (ccReg::Admin::ObjectNotFound);
+    User getUser();
+
+    void updateRegistrar(in Registrar::Detail registrar_data) raises (ccReg::Admin::UpdateFailed, ccReg::Admin::ObjectNotFound);
+    void setHistory(in boolean history);
+  };
+
+};

@@ -1,3 +1,5 @@
+#include "_dataTypes.idl"
+
 module ccReg {
 
   /// type for setting langugage of output text messages
@@ -96,6 +98,7 @@ module ccReg {
     domain_fqdn, ///< Error in domain name
     domain_registrant, ///< Error in domain registrant
     domain_nsset, ///< Error in nsset of domain
+    domain_keyset,
     domain_period, ///< Error in domain period
     domain_admin, ///< Error in administrative contact of domain
     domain_tmpcontact, ///< Error in temp contact of domain
@@ -103,7 +106,14 @@ module ccReg {
     domain_ext_valDate_missing, ///< Validation date is missing for ENUM domain
     domain_curExpDate, ///< Error in entered date of domain expiration 
     domain_admin_add, ///< Error in added administrative contact 
-    domain_admin_rem ///< Error in removed administrative contact 
+    domain_admin_rem, ///< Error in removed administrative contact 
+    keyset_handle,  ///< Error in keyset handle
+    keyset_tech, ///< Error in keyset technical contact
+    keyset_dsrecord,    ///< Error in DSRecord
+    keyset_dsrecord_add, ///< Error in added dsrecord
+    keyset_dsrecord_rem, ///< Error in removed dsrecord
+    keyset_tech_add, ///< Error in added technical contact
+    keyset_tech_rem  ///< Error in removed technical contact
   };
   /// Errors specification already detected at XML processing in mod_eppd 
   enum XmlError
@@ -217,6 +227,22 @@ module ccReg {
     TechContact tech; ///< List of technical contacts identifier
     short level; ///< Technical tests level
   };
+  /// Type for transfer data in info_keyset function
+  struct KeySet
+  {
+      string handle; ///< KeySet handle
+      string ROID; ///< KeySet identifier - repository ID
+      string ClID; ///< registrar identifier, which has to right for change
+      string CrID; ///< Registrar identifier, which created contact
+      string UpID; ///< Registrar identifier, which realized changes
+      Status stat; ///< KeySet states list
+      timestamp CrDate; ///< Creation date and time
+      timestamp UpDate; ///< Date and time of last change
+      timestamp TrDate; ///< Date and time of last transfer
+      string AuthInfoPw; ///< Password for keyset transfer
+      DSRecord dsrec; ///< List of ds records
+      TechContact tech; ///< List of technical contacts identifier
+  };
   /// Type for transfer data info_domain function
   struct Domain
   {
@@ -224,6 +250,7 @@ module ccReg {
     string name; ///< Fqdn - domain name
     string Registrant; ///< Handle of domain registrant
     string nsset; ///< NSSET handle
+    string keyset; ///< KEYSET handle
     Status stat; ///< Domain state list
     string ClID; ///< Registrar identifier, which has right for change
     string CrID; ///< Registrar identifier, which created contact
@@ -246,10 +273,13 @@ module ccReg {
     IT_LIST_CONTACTS,
     IT_LIST_DOMAINS,
     IT_LIST_NSSETS,
+    IT_LIST_KEYSETS,
     IT_DOMAINS_BY_NSSET,
     IT_DOMAINS_BY_CONTACT,
+    IT_DOMAINS_BY_KEYSET,
     IT_NSSETS_BY_CONTACT,
-    IT_NSSETS_BY_NS
+    IT_NSSETS_BY_NS,
+    IT_KEYSETS_BY_CONTACT
   };
  
   /// Type of poll message.
@@ -259,7 +289,9 @@ module ccReg {
     polltype_transfer_contact, ///< Contact was transferred.
     polltype_delete_contact,   ///< Contact was deleted because not used.
     polltype_transfer_nsset,   ///< Nsset was transferred.
-    polltype_delete_nsset,     ///< Contact was deleted because not used.
+    polltype_delete_nsset,     ///< Nsset was deleted because not used.
+    polltype_transfer_keyset,  ///< KeySet was transferred.
+    polltype_delete_keyset,    ///< KeySet was deleted because not used.
     polltype_techcheck,        ///< Technical check results.
     polltype_transfer_domain,  ///< Domain was transferred.
     polltype_impexpiration,    ///< Domain will expire in near future.
@@ -736,6 +768,61 @@ module ccReg {
       in string clTRID,
       in string XML
     ) raises (EppError);
+    Response KeySetCheck (
+        in Check handle,
+        out CheckResp a,
+        in long clientID,
+        in string clTRID,
+        in string XML
+    ) raises (EppError);
+    Response KeySetInfo(
+        in string handle,
+        out KeySet k,
+        in long clientID,
+        in string clTRID,
+        in string XML
+    ) raises (EppError);
+    Response KeySetDelete (
+        in string handle,
+        in long clientID,
+        in string clTRID,
+        in string XML
+    ) raises (EppError);
+    Response KeySetUpdate (
+        in string handle,
+        in string authInfo_chg,
+        in TechContact tech_add,
+        in TechContact tech_rem,
+        in DSRecord dsrec_add,
+        in DSRecord dsrec_rem,
+        in long clientID,
+        in string clTRID,
+        in string XML
+    ) raises (EppError);
+    Response KeySetCreate (
+        in string handle,
+        in string authInfoPw,
+        in TechContact tech,
+        in DSRecord dsrec,
+        out timestamp crDate,
+        in long clientID,
+        in string clTRID,
+        in string XML
+    ) raises (EppError);
+    Response KeySetTransfer (
+        in string handle,
+        in string authInfo,
+        in long clientID,
+        in string clTRID,
+        in string XML
+    ) raises (EppError);
+    Response KeySetList (
+        out Lists keysets,
+        in long clientID,
+        in string clTRID,
+        in string XML
+    ) raises (EppError);
+
     /// Checking possibility to register domain with given name
     /** It enables mass searchig of several identifiers. It discovers 
      validity of used identifier for each, it converts it to lower case and 
@@ -812,6 +899,7 @@ module ccReg {
      \param registrant_chg Password domain registrant
      \param authInfo_chg Password change for transfer
      \param nsset_chg Nsset change
+     \param keyset_chg KeySet chage
      \param admin_add Identifier of added administrative contact
      \param admin_rem Identifier of removed administrative contact
      \param clientID Session identification obtained from ClientLogin
@@ -824,6 +912,7 @@ module ccReg {
       in string registrant_chg,
       in string authInfo_chg,
       in string nsset_chg,
+      in string keyset_chg,
       in AdminContact admin_add,
       in AdminContact admin_rem,
       in AdminContact tmpcontact_rem,
@@ -847,6 +936,7 @@ module ccReg {
      \param fqdn Domain name
      \param Registrant Contact identifier of registrant
      \param nsset Identifier of associated nsset (or empty string)
+     \param keyset Identifier of associated keyset (or empty string)
      \param AuthInfoPw Password for transfer
      \param period Initial period of expiration in months
      \param admin List of administrative contacts
@@ -861,6 +951,7 @@ module ccReg {
       in string fqdn,
       in string Registrant,
       in string nsset,
+      in string keyset,
       in string AuthInfoPw,
       in Period_str period,
       in AdminContact admin,
@@ -969,6 +1060,19 @@ module ccReg {
       in long clientID,
       in string clTRID,
       in string XML
+    ) raises (EppError);
+    /// Requesting of authinfo for keyset holder
+    /**
+     \param handle Handle of keyset for which is required authInfo
+     \param clientID Session identification obtained from ClientLogin
+     \param clTRID Transaction number given by client for its evidence
+     \param XML Complete XML message which cames through EPP protocol
+     \return General reply with operation result and error messages */
+    Response keysetSendAuthInfo (
+        in string handle,
+        in long clientID,
+        in string clTRID,
+        in string XML
     ) raises (EppError);
     /// This function incases all extension info function
     /**

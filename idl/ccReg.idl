@@ -3,6 +3,7 @@
 #include "_dataTypes.idl"
 #include "_Mailer.idl"
 #include "_Admin.idl"
+#include "_Registry.idl"
 #include "_EPP.idl"
 #include "_Whois.idl"
 #include "_ZoneGenerator.idl"

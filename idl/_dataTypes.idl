@@ -10,6 +10,7 @@ module ccReg {
     FT_OBJ,
     FT_CONTACT,
     FT_NSSET,
+    FT_KEYSET,
     FT_DOMAIN,
     FT_ACTION,
     FT_INVOICE,
@@ -50,6 +51,18 @@ module ccReg {
   };
   /// Type for a list  of records about individual nameservers
   typedef sequence < DNSHost_str > DNSHost;
+
+  /// Type for an element of list of DS records
+  struct DSRecord_str
+  {
+      long keyTag;
+      long alg;
+      long digestType;
+      string digest;
+      long maxSigLife;
+  };
+  /// Type for a list of DS records
+  typedef sequence <DSRecord_str> DSRecord;
   
   /// Structure for handling day
   struct DateType {

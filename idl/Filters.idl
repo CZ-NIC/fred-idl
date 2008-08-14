@@ -98,6 +98,12 @@ module ccReg {
       Contact addTechContact();
     };
 
+    interface KeySet : Obj
+    {
+        Id addId();
+        Contact addTechContact();
+    };
+
     interface Domain : Obj
     {
       Id addId();
@@ -109,6 +115,7 @@ module ccReg {
       Contact addAdminContact();
       Contact addTempContact();
       NSSet addNSSet();
+      KeySet addKeySet();
     };
 
     interface Action : Compound
