@@ -111,6 +111,8 @@ module Registry {
     TableRow getPageRow(in short pageRow) raises (INVALID_ROW);
     /// Return id of record at index
     ccReg::TID getPageRowId(in short pageRow) raises (INVALID_ROW);
+    /// Return true if row result size is limited
+    boolean numRowsOverLimit();
   };
 
   
