@@ -1,3 +1,15 @@
+2008-08-15 Jiri Sadek, Ales Dolezal, Jaromir Talir
+
+   * release 2.0.0
+
+   * DNSSEC implementation, keyset object handled by all interfaces (EPP, Whois and Administration)
+
+   * History of changes in objects handled in administration interface
+
+   * Administration interface support enhanced inter object linkage driven by id of objects
+
+   * First version of new interface _Registry.idl that will replace old _Admin.idl
+
 2008-07-13 Jiri Sadek
 
    * release 1.11.0
