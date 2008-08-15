@@ -106,7 +106,7 @@ module Registry {
     /// Exact size of one page (always < pageSize)
     readonly attribute short numPageRows;
     /// Type of filter applied on page table
-    readonly attribute ccReg::TID filter;
+    readonly attribute ccReg::FilterType filter;
     /// Return row by index in page
     TableRow getPageRow(in short pageRow) raises (INVALID_ROW);
     /// Return id of record at index

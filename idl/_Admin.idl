@@ -1,5 +1,12 @@
 #include "Filters.idl"
 
+// TEMP: XXX forward declaration of PageTable
+//       for returning new type from Session::getPageTable()
+//       method (will be removed when using only Registry module)
+module Registry {
+  interface PageTable;
+};
+
 module ccReg {
 
   /// Type for EPP commands
@@ -840,8 +847,9 @@ module ccReg {
   };
 
   /// Main interface for registrar session
+
   interface Session {
-    PageTable getPageTable(in FilterType type);
+    Registry::PageTable getPageTable(in FilterType type);
     any getDetail(in FilterType type, in TID id) raises (ccReg::Admin::ObjectNotFound);
     User getUser();
 
