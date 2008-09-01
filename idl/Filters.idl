@@ -30,6 +30,11 @@ module ccReg {
       attribute short value;
     };
 
+    interface IntInterval : Simple
+    {
+      attribute ccReg::IntInterval value;
+    };
+
     interface Id : Simple
     {
       attribute TID value;
@@ -128,6 +133,7 @@ module ccReg {
       Str addClTRID();
       Str addSvTRID();
       Str addRequestHandle();
+      IntInterval addEppCodeResponse();
     };
 
     interface Filter : Compound

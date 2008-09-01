@@ -111,6 +111,11 @@ module ccReg {
     short offset; ///< offset for 
   };
 
+  struct IntInterval {
+    short from;
+    short to;
+  };
+
 };
 
 #endif
