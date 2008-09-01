@@ -178,9 +178,8 @@ module ccReg {
   interface EPPActionsFilter : Filter {
     /// Result classification type
     enum ResultType {
-     RT_OK, ///< result < 2000
-     RT_FAIL, ///< result >= 2000 or no result code at all
-     RT_ALL ///< all actions
+      RT_FAIL, ///< result >= 2000 or no result code at all
+      RT_OK    ///< result < 2000
     };
     /// Those made by specific registrar
     attribute TID registrar;

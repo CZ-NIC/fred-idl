@@ -128,12 +128,12 @@ module ccReg {
       Registrar addRegistrar();
       Int addType();
       Obj addObject();
-      Int addResponse();
       DateTime addTime();
       Str addClTRID();
       Str addSvTRID();
       Str addRequestHandle();
-      IntInterval addEppCodeResponse();
+      Int addResponse();
+      Int addEppCodeResponse();
     };
 
     interface Filter : Compound
