@@ -133,6 +133,15 @@ module Registry {
 
   typedef sequence<HistoryRecord> HistoryRecordList;
 
+  struct State {
+    ccReg::TID id;
+    Registry::OIDSeq linked;
+    ccReg::DateTimeType from;
+    ccReg::DateTimeType to;
+  };
+
+  typedef sequence<State> StateList;
+
   module PublicRequest {
     /// Type of public requests
     enum Type {
@@ -375,7 +384,7 @@ module Registry {
       //ContactHandleSeq temps;
       HistoryRecordList temps; // value type = OIDSeq
       //ObjectStatusSeq statusList;
-      HistoryRecordList statusList; // value type = ObjectStatusSeq
+      StateList states;
     };
   };
 
@@ -447,7 +456,7 @@ module Registry {
       //boolean discloseNotifyEmail;
       HistoryRecordList discloseNotifyEmail; // value type = boolean
       //ObjectStatusSeq statusList;
-      HistoryRecordList statusList; // value type = ObjectStatusSeq
+      StateList states;
     };
   };
 
@@ -473,7 +482,7 @@ module Registry {
       //DNSHost hosts;
       HistoryRecordList hosts; // value type = DNSHost
       //ObjectStatusSeq statusList;
-      HistoryRecordList statusList; // value type = ObjectStatusSeq
+      StateList states;
     };
   };
 
@@ -499,7 +508,7 @@ module Registry {
       //DSrecods
       HistoryRecordList dsrecords; // value type = DSrecords
       //ObjectStatusSeq statusList;
-      HistoryRecordList statusList; // value type = ObjectStatusSeq
+      StateList states;
     };
   };
     
