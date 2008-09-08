@@ -209,8 +209,8 @@ module Registry {
       long status; ///< status (0 = OK, otherwise sendamail return status)
       unsigned short type; ///< type
       string content; ///< complete email content without binary attachements
-      //Lists handles; ///< list of assocciated emails
-      OIDSeq objects; /// objects asociated to emails
+      ccReg::Lists objects; ///< list of assocciated emails - to remove (until we don't know full OID of mail associated object)
+      //OIDSeq objects; /// objects asociated to emails - new approach (see above)
       //AttachmentSeq attachments; ///< names of binary attachements
       OIDSeq attachments; /// attachments of mails
     };
