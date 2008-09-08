@@ -205,7 +205,7 @@ module Registry {
     struct Detail {
       ccReg::TID id; ///< unique mail id (number before dot in message-id header)
       string createTime; ///< time of inserting record into db
-      string modTime;///< date of last modification of status 
+      string modifyTime;///< date of last modification of status 
       long status; ///< status (0 = OK, otherwise sendamail return status)
       unsigned short type; ///< type
       string content; ///< complete email content without binary attachements
