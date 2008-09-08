@@ -225,7 +225,7 @@ module Registry {
       Money balance;
     };
     typedef sequence<Payment> PaymentList;
-    struct Action {
+    struct PaymentAction {
       ccReg::TID objectId;
       string objectName;
       string actionTime;
@@ -235,7 +235,7 @@ module Registry {
       Money pricePerUnit;
       Money price;
     };
-    typedef sequence<Action> ActionList;
+    typedef sequence<PaymentAction> PaymentActionList;
     enum InvoiceType {
       IT_ADVANCE,
       IT_ACCOUNT
@@ -264,7 +264,7 @@ module Registry {
       //ccReg::TID fileXML;
       OID fileXML;
       PaymentList payments;
-      ActionList actions;
+      PaymentActionList actions;
     };
   };
   
