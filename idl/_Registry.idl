@@ -175,15 +175,15 @@ module Registry {
 
  
     struct Detail {
-      ccReg::TID id;                       ///< request id
+      ccReg::TID id;                ///< request id
       PublicRequest::Status status; ///< request status
       PublicRequest::Type type;     ///< request type
       string createTime;            ///< time of creation of request
       string resolveTime;           ///< time of request resolution
       string reason;                ///< reason provided through PIF
       string email;                 ///< email provided through PIF
-      long answerEmailId;           ///< id of email with request answer
-      string svTRID;                ///< action svtrid when created by registrar through EPP
+      OID answerEmail;              ///< id of email with request answer
+      OID action;                   ///< action svtrid when created by registrar through EPP
       OID registrar;                ///< registrar initiating request through EPP
       OIDSeq objects;               ///< objects of this public request
     };
