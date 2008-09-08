@@ -244,7 +244,7 @@ module Registry {
     struct Detail {
       ccReg::TID id;
       ccReg::TID zone;
-      string crTime;
+      string createTime;
       string taxDate;
       string fromDate;
       string toDate;
