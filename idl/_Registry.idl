@@ -229,7 +229,7 @@ module Registry {
       ccReg::TID objectId;
       string objectName;
       string actionTime;
-      string exDate;
+      string expirationDate;
       unsigned short actionType;
       unsigned short unitsCount;
       Money pricePerUnit;
@@ -264,7 +264,7 @@ module Registry {
       //ccReg::TID fileXML;
       OID fileXML;
       PaymentList payments;
-      PaymentActionList actions;
+      PaymentActionList paymentActions;
     };
   };
   
