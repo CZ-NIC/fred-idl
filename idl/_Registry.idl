@@ -226,8 +226,9 @@ module Registry {
     };
     typedef sequence<Payment> PaymentList;
     struct PaymentAction {
-      ccReg::TID objectId;
-      string objectName;
+      //ccReg::TID objectId;
+      //string objectName;
+      OID paidObject;
       string actionTime;
       string expirationDate;
       unsigned short actionType;
