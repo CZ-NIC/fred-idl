@@ -29,6 +29,7 @@ module ccReg {
   /// Description structure for object status
   struct ObjectStatusDesc {
     short id;
+    string abbrv;
     string name;
   };
   /// Sequence of status descriptions 
@@ -796,6 +797,8 @@ module ccReg {
     ObjectStatusDescSeq getNSSetStatusDescList(in string lang);
     /// Return list with descriptions of available object status for keyset
     ObjectStatusDescSeq getKeySetStatusDescList(in string lang);
+    /// Return list with descriptions of all available object states
+    ObjectStatusDescSeq getObjectStatusDescList(in string lang);
     
     /// Exception for common invalid input data
     exception INVALID_INPUT {};
