@@ -70,6 +70,13 @@ module ccReg {
       Str addCountry();
     };
 
+    interface ObjectState : Compound 
+    {
+      Id addStateId();
+      DateTime addValidFrom();
+      DateTime addValidTo();
+    };
+
     interface Obj : Compound
     {
       Str addHandle();
@@ -81,6 +88,7 @@ module ccReg {
       Registrar addCreateRegistrar();
       Registrar addUpdateRegistrar();
       Registrar addRegistrar();
+      ObjectState addObjectState();
     };
 
     interface Contact : Obj
