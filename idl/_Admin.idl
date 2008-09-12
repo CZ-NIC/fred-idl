@@ -29,7 +29,7 @@ module ccReg {
   /// Description structure for object status
   struct ObjectStatusDesc {
     short id;
-    string abbrv;
+    string abbrev;
     string name;
   };
   /// Sequence of status descriptions 
