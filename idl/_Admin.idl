@@ -28,7 +28,7 @@ module ccReg {
   
   /// Description structure for object status
   struct ObjectStatusDesc {
-    short id;
+    ccReg::TID id;
     string shortName;
     string name;
   };
