@@ -1,3 +1,21 @@
+2008-09-18 Jiri Sadek
+
+   * release 2.0.1
+ 
+   * Refactoring
+     - Invoicing naming changes
+     - Public request details type change
+     - Mail detail attribute name and type change                
+
+   * Object states
+     - Filter added
+     - History of states into object details
+
+   * EPP action update
+     - xml output
+     - fixing response OK/Failed filter
+     - adding new filter for response code
+
 2008-08-15 Jiri Sadek, Ales Dolezal, Jaromir Talir
 
    * release 2.0.0
