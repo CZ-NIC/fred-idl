@@ -113,7 +113,8 @@ module ccReg {
     keyset_dsrecord_add, ///< Error in added dsrecord
     keyset_dsrecord_rem, ///< Error in removed dsrecord
     keyset_tech_add, ///< Error in added technical contact
-    keyset_tech_rem  ///< Error in removed technical contact
+    keyset_tech_rem,  ///< Error in removed technical contact
+    registrar_autor ///< Registrar is not owner of object
   };
   /// Errors specification already detected at XML processing in mod_eppd 
   enum XmlError
