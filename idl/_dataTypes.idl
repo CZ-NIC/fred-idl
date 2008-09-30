@@ -63,7 +63,18 @@ module ccReg {
   };
   /// Type for a list of DS records
   typedef sequence <DSRecord_str> DSRecord;
-  
+
+  /// Type for an element of list of DNSKey records
+  struct DNSKey_str
+  {
+      unsigned short flags;
+      unsigned short protocol;
+      unsigned short alg;
+      string         key;
+  };
+  /// Type for a list of DNSKey records
+  typedef sequence <DNSKey_str> DNSKey;
+
   /// Structure for handling day
   struct DateType {
     short day; ///< day of month (1..31)
