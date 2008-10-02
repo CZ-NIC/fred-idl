@@ -508,6 +508,7 @@ module Registry {
       HistoryRecordList admins; // value type = OIDSeq
       //DSrecods
       HistoryRecordList dsrecords; // value type = DSrecords
+      HistoryRecordList dnskeys;   // value type = DNSKey
       //ObjectStatusSeq statusList;
       StateList states;
     };
