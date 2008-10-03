@@ -112,9 +112,12 @@ module ccReg {
     keyset_dsrecord,    ///< Error in DSRecord
     keyset_dsrecord_add, ///< Error in added dsrecord
     keyset_dsrecord_rem, ///< Error in removed dsrecord
-    keyset_tech_add, ///< Error in added technical contact
-    keyset_tech_rem,  ///< Error in removed technical contact
-    registrar_autor ///< Registrar is not owner of object
+    keyset_tech_add,    ///< Error in added technical contact
+    keyset_tech_rem,    ///< Error in removed technical contact
+    registrar_autor,    ///< Registrar is not owner of object
+    keyset_dnskey,      ///< Error in dnskey
+    keyset_dnskey_add,  ///< Error in dnskey to add
+    keyset_dnskey_rem   ///< Error in dnskey to remove
   };
   /// Errors specification already detected at XML processing in mod_eppd 
   enum XmlError
@@ -796,6 +799,8 @@ module ccReg {
         in TechContact tech_rem,
         in DSRecord dsrec_add,
         in DSRecord dsrec_rem,
+        in DNSKey dnsk_add,
+        in DNSKey dnsk_rem,
         in long clientID,
         in string clTRID,
         in string XML
@@ -805,6 +810,7 @@ module ccReg {
         in string authInfoPw,
         in TechContact tech,
         in DSRecord dsrec,
+        in DNSKey dnsk,
         out timestamp crDate,
         in long clientID,
         in string clTRID,
