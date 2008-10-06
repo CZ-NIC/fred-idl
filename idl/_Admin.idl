@@ -638,6 +638,7 @@ module ccReg {
       string authInfo;
       ContactHandleSeq admins;
       DSRecord dsrecords;
+      DNSKey dnskeys;
       ObjectStatusSeq  statusList;
   };
 

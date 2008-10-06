@@ -245,6 +245,7 @@ module ccReg {
       timestamp TrDate; ///< Date and time of last transfer
       string AuthInfoPw; ///< Password for keyset transfer
       DSRecord dsrec; ///< List of ds records
+      DNSKey dnsk;      ///< List of dnskeys
       TechContact tech; ///< List of technical contacts identifier
   };
   /// Type for transfer data info_domain function
