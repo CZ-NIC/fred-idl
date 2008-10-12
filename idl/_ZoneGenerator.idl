@@ -6,6 +6,7 @@ module ccReg {
     /// List of nameservers including their IP addresses if needed (GLUE RR).
     DNSHost nameservers;
     DSRecord dsrecords;
+    DNSKey dnskeys;
   };
 
   /// List of domains with information needed for zone generation.
