@@ -9,6 +9,7 @@
 #include "_ZoneGenerator.idl"
 #include "_TechCheck.idl"
 #include "_FileManager.idl"
+#include "_Logger.idl"
 
 // for zone handling
 #include "_zone.idl"

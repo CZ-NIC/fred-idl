@@ -1,2 +1,3 @@
 #include "Admin.idl"
 #include "_Registry.idl"
+#include "_Logger.idl"

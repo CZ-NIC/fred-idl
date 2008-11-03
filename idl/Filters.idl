@@ -35,6 +35,17 @@ module ccReg {
       attribute ccReg::IntInterval value;
     };
 
+   // types encapsulating enums from Logging
+    interface LogComponent : Simple
+    {
+      attribute ccReg::LogComponent value;
+    };   
+
+    interface LogEventType : Simple
+    {
+      attribute ccReg::LogEventType value;
+    };
+
     interface Id : Simple
     {
       attribute TID value;
@@ -89,6 +100,17 @@ module ccReg {
       Registrar addUpdateRegistrar();
       Registrar addRegistrar();
       ObjectState addObjectState();
+    };
+
+    interface LogEntry : Compound
+    {
+      Id addId();
+      DateTime addDateTime();
+      Str addSourceIp();
+      LogEventType addFlag();
+      LogComponent addComponent();
+      Str addContent();
+      Int addClientId();
     };
 
     interface Contact : Obj

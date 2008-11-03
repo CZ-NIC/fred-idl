@@ -16,9 +16,22 @@ module ccReg {
     FT_INVOICE,
     FT_PUBLICREQUEST,
     FT_MAIL,
-    FT_FILE
+    FT_FILE,
+    FT_LOGGER
   };
- 
+
+  /// types for logd
+  enum LogEventType {LT_REQUEST, LT_RESPONSE};
+  enum LogComponent {LC_UNIX_WHOIS, LC_WEB_WHOIS, LC_EPP, LC_WEBADMIN};
+
+  struct LogProperty {
+	string name;
+	string value;
+  };
+
+  typedef sequence <LogProperty> LogProperties;
+
+
   /// ID type for objects
   typedef unsigned long long TID;
 
