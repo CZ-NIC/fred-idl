@@ -1,7 +1,7 @@
 module ccReg {
 
 	interface Log {
-		boolean message(in string sourceIP, in LogComponent comp, in LogEventType event, in string content, in LogProperties props, in long clientID);
+		boolean message(in string sourceIP, in LogComponent comp, in LogEventType event, in string content, in LogProperties props);
 	};
 };
 

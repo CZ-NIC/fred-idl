@@ -110,7 +110,6 @@ module ccReg {
       LogEventType addFlag();
       LogComponent addComponent();
       Str addContent();
-      Int addClientId();
     };
 
     interface Contact : Obj
