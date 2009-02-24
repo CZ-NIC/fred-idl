@@ -2,13 +2,7 @@
 
 module ccReg {
 
-  /// type for setting langugage of output text messages
-  enum Languages  
-  { 
-    EN, ///< english (default)
-    CS ///< czech
-  };
-  /// type of identification possibilities, define meaning of ident string
+    /// type of identification possibilities, define meaning of ident string
   enum identtyp 
   {
     EMPTY, ///< unidentified
