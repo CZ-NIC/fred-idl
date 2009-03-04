@@ -769,9 +769,6 @@ module ccReg {
     EPPAction getEPPActionBySvTRID(in string svTRID) raises (ObjectNotFound);
     /// return EPP action detail for specified id
     EPPAction getEPPActionById(in TID id) raises (ObjectNotFound);
-    /// return AuthInfoRequest detail for specified id
-    AuthInfoRequest::Detail getAuthInfoRequestById(in TID id) 
-      raises (ObjectNotFound);
     /// return mail detail for specified id
     Mailing::Detail getEmailById(in TID id) 
       raises (ObjectNotFound);
