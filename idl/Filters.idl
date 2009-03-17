@@ -46,6 +46,11 @@ module ccReg {
       attribute TID value;
     };
 
+    interface Bool : Simple
+    {
+      attribute boolean value;
+    };
+
     interface Date : Simple
     {
       attribute DateInterval value;
@@ -97,6 +102,25 @@ module ccReg {
       ObjectState addObjectState();
     };
 
+    interface LogPropertyName : Compound
+    {
+      Str addName();
+    };
+
+    interface LogPropertyValue : Compound
+    {
+      Str addValue();
+      Id  addLogPropertyNameId();
+      Bool addOutputFlag();
+      LogPropertyName addLogPropertyName();
+    };
+
+    interface LogRawContent : Compound
+    {
+      Str addContent();
+      Bool addResponseFlag();
+    };
+
     interface LogEntry : Compound
     {
       Id addId();
@@ -104,6 +128,8 @@ module ccReg {
       DateTime addTimeEnd();
       Str addSourceIp();
       LogServiceType addServiceType();      
+      LogRawContent addLogRawContent();
+      LogPropertyValue addLogPropertyValue();
     };
 
     interface Contact : Obj
