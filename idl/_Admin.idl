@@ -844,6 +844,8 @@ module ccReg {
       raises (SQL_ERROR);
     /// generate letter with warning about registration expiration
     void generateLetters();
+    /// manually insert domain into the zone
+    boolean setInZoneStatus(in TID domainId);
   };
 
   /// Main interface for registrar session
