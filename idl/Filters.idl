@@ -36,9 +36,9 @@ module ccReg {
     };
 
    // types encapsulating enums from Logging
-    interface LogServiceType : Simple
+    interface RequestServiceType : Simple
     {
-      attribute ccReg::LogServiceType value;
+      attribute ccReg::RequestServiceType value;
     };   
 
     interface Id : Simple
@@ -102,34 +102,34 @@ module ccReg {
       ObjectState addObjectState();
     };
 
-    interface LogPropertyName : Compound
+    interface RequestProperty : Compound
     {
       Str addName();
     };
 
-    interface LogPropertyValue : Compound
+    interface RequestPropertyValue : Compound
     {
       Str addValue();
-      Id  addLogPropertyNameId();
+      Id  addRequestPropertyId();
       Bool addOutputFlag();
-      LogPropertyName addLogPropertyName();
+      RequestProperty addRequestProperty();
     };
 
-    interface LogRawContent : Compound
+    interface RequestData : Compound
     {
       Str addContent();
       Bool addResponseFlag();
     };
 
-    interface LogEntry : Compound
+    interface Request : Compound
     {
       Id addId();
       DateTime addTimeBegin();
       DateTime addTimeEnd();
       Str addSourceIp();
-      LogServiceType addServiceType();      
-      LogRawContent addLogRawContent();
-      LogPropertyValue addLogPropertyValue();
+      RequestServiceType addServiceType();      
+      RequestData addRequestData();
+      RequestPropertyValue addRequestPropertyValue();
     };
 
     interface Contact : Obj

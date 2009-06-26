@@ -5,7 +5,7 @@ module ccReg {
  
   /// Types of filters
   enum FilterType {
-    FT_FILTER,
+    FT_FILTER, 
     FT_REGISTRAR,
     FT_OBJ,
     FT_CONTACT,
@@ -27,17 +27,30 @@ module ccReg {
     CS ///< czech
   };
 
-  /// type for logd
-  enum LogServiceType {LC_UNIX_WHOIS, LC_WEB_WHOIS, LC_PUBLIC_REQUEST, LC_EPP, LC_WEBADMIN};
+  /// types for logd
+  /// enum RequestServiceType {LC_UNIX_WHOIS, LC_WEB_WHOIS, LC_PUBLIC_REQUEST, LC_EPP, LC_WEBADMIN, LC_INTRANET, LC_MAX_SERVICE };
+  /// this enum is now defined in the database
 
-  struct LogProperty {
+  typedef long RequestServiceType;
+
+  struct RequestProperty {
 	string name;
 	string value;
 	boolean output; 
 	boolean child;
   };
+  
+  typedef long RequestActionType;
 
-  typedef sequence <LogProperty> LogProperties;
+  struct RequestActionListItem {
+	RequestServiceType service;
+  	RequestActionType id;
+  	string status;
+  };
+
+  typedef sequence <RequestActionListItem> RequestActionList;  
+  
+  typedef sequence <RequestProperty> RequestProperties;
 
   /// ID type for objects
   typedef unsigned long long TID;
