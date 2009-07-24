@@ -353,6 +353,23 @@ module Registry {
     };
   };
 
+  module Request {
+    struct Detail {
+	ccReg::TID id;
+	string timeBegin;
+	string timeEnd;
+	string	sourceIp;
+	ccReg::RequestServiceType service_type;
+	ccReg::RequestActionType action_type;
+	ccReg::TID session_id;
+	boolean is_monitoring;
+	
+	string raw_request;
+	string raw_response;
+	ccReg::RequestProperties props;  		
+    };
+  };
+
   module Domain {
     //typedef sequence<string> ContactHandleSeq;
     struct Detail {

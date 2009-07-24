@@ -41,6 +41,11 @@ module ccReg {
       attribute ccReg::RequestServiceType value;
     };   
 
+    interface RequestActionType : Simple
+    {
+      attribute ccReg::RequestActionType value;
+    };
+
     interface Id : Simple
     {
       attribute TID value;
@@ -127,7 +132,9 @@ module ccReg {
       DateTime addTimeBegin();
       DateTime addTimeEnd();
       Str addSourceIp();
-      RequestServiceType addServiceType();      
+      RequestServiceType addService();      
+	/// TODO
+      /// RequestActionType  addActionType();
       RequestData addRequestData();
       RequestPropertyValue addRequestPropertyValue();
     };
