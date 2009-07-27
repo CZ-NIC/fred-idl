@@ -139,6 +139,15 @@ module ccReg {
       RequestPropertyValue addRequestPropertyValue();
     };
 
+    interface Session: Compound
+    {
+      Id addId();
+      Str addName();
+      DateTime addLoginDate();
+      DateTime addLogoutDate();
+      Str addLang();
+    };
+
     interface Contact : Obj
     {
       Id addId();
