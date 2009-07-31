@@ -18,7 +18,8 @@ module ccReg {
     FT_MAIL,
     FT_FILE,
     FT_LOGGER,
-    FT_SESSION
+    FT_SESSION,
+    FT_STATEMENT_ITEM
   };
 
   /// type for setting langugage of output text messages

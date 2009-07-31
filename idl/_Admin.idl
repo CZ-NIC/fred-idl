@@ -858,5 +858,37 @@ module ccReg {
     void updateRegistrar(in Registrar registrar_data) raises (ccReg::Admin::UpdateFailed, ccReg::Admin::ObjectNotFound);
     void setHistory(in boolean history);
   };
+  interface BankingInvoicing {
+      enum OperationType {
+          OT_CREATE,
+          OT_RENEW
+      };
+      boolean addBankAccount(in string zoneName, in string accountNumber,
+              in string accountName, in string bankCode);
+      void archiveInvoices(in boolean send);
+      boolean createInvoiceForPayment(in unsigned long long paymentId,
+              in unsigned long long registrarId);
+      boolean addPrefix(in string zoneName, in long type, in long year,
+              in unsigned long long prefix);
+      boolean pairInvoices();
+      boolean createCreditInvoice(in TID zone, in TID registrar,
+              in Money price, in date taxdate, in timestamp crdate);
+      boolean factoring(in TID zone, in TID registrar,
+              in date todate, in date taxdate);
+      boolean addPrice(in TID zone, in OperationType operation,
+              in timestamp validFrom, in timestamp validTo,
+              in Money price, in long period);
+  };
+
+  interface BankingInvoicing {
+      boolean addBankAccount(in string zoneName, in string accountNumber,
+        in string accountName, in string bankCode);
+      void archiveInvoices(in boolean send);
+      boolean createInvoiceForPayment(in unsigned long long paymentId,
+        in unsigned long long registrarId);
+      boolean addPrefix(in string zoneName, in long type, in long year,
+        in unsigned long long prefix);
+      boolean pairInvoices();
+  };
 
 };

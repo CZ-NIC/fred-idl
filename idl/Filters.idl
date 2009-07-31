@@ -267,6 +267,22 @@ module ccReg {
       void saveFilter(in string name);
     };
 
+    interface StatementItem: Compound
+    {
+        Id addId();
+        Str addAccountNumber();
+        Str addBankCode();
+        Int addCode();
+        Int addType();
+        Str addConstSymb();
+        Str addVarSymb();
+        Str addAccountEvid();
+        Date addAccountDate();
+        Id addInvoiceId();
+        Str addAccountName();
+        DateTime addCrTime();
+    };
+
   };
 
 };
