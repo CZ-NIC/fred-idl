@@ -880,15 +880,4 @@ module ccReg {
               in Money price, in long period);
   };
 
-  interface BankingInvoicing {
-      boolean addBankAccount(in string zoneName, in string accountNumber,
-        in string accountName, in string bankCode);
-      void archiveInvoices(in boolean send);
-      boolean createInvoiceForPayment(in unsigned long long paymentId,
-        in unsigned long long registrarId);
-      boolean addPrefix(in string zoneName, in long type, in long year,
-        in unsigned long long prefix);
-      boolean pairInvoices();
-  };
-
 };
