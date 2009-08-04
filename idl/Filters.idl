@@ -107,17 +107,11 @@ module ccReg {
       ObjectState addObjectState();
     };
 
-    interface RequestProperty : Compound
-    {
-      Str addName();
-    };
-
     interface RequestPropertyValue : Compound
     {
+      Str addName();
       Str addValue();
-      Id  addRequestPropertyId();
       Bool addOutputFlag();
-      RequestProperty addRequestProperty();
     };
 
     interface RequestData : Compound
