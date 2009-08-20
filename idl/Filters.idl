@@ -213,6 +213,7 @@ module ccReg {
       Str addEmailToAnswer();
       Object addObject();
       Action addEppAction();
+      Registrar addRegistrar();
     };
 
     interface File : Compound 
