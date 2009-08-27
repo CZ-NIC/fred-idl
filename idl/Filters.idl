@@ -212,7 +212,6 @@ module ccReg {
       Str addReason();
       Str addEmailToAnswer();
       Object addObject();
-      Action addEppAction();
       Registrar addRegistrar();
     };
 
