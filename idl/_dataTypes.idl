@@ -45,7 +45,6 @@ module ccReg {
   typedef long RequestActionType;
 
   struct RequestActionListItem {
-	RequestServiceType service;
   	RequestActionType id;
   	string status;
   };
