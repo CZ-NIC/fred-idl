@@ -127,8 +127,7 @@ module ccReg {
       DateTime addTimeEnd();
       Str addSourceIp();
       RequestServiceType addService();      
-	/// TODO
-      /// RequestActionType  addActionType();
+      RequestActionType  addActionType();
       RequestData addRequestData();
       RequestPropertyValue addRequestPropertyValue();
     };
