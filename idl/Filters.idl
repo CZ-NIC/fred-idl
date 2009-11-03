@@ -2,7 +2,7 @@
 
 module ccReg {
 
-  module Filters {  
+  module Filters {
     interface Base
     {
       readonly attribute string name;
@@ -10,7 +10,7 @@ module ccReg {
       /// Returns true, when attribute 'value' was set
       boolean isActive();
     };
-    
+
     interface Iterator
     {
       exception INVALID {};
@@ -76,14 +76,61 @@ module ccReg {
       Iterator getIterator();
     };
 
+
+    interface ZoneNs : Compound
+    {
+        Id addId();
+        Id addZoneId();
+        Str addFqdn();
+        Str addAddrs();
+    };
+
+    interface Zone : Compound
+    {
+      Id addId();
+      Str addFqdn();
+      Int addExPeriodMin();
+      Int addExPeriodMax();
+      Int addValPeriod();
+      Int addDotsMax();
+      Bool addEnumZone();
+      ZoneNs addZoneNs();
+    };
+
+    interface ZoneSoa : Zone
+    {
+    	Id addZoneId();
+    	Int addTtl();
+    	Str addHostmaster();
+    	Int addSerial();
+    	Int addRefresh();
+    	Int addUpdateRetr();
+    	Int addExpiry();
+    	Int addMinimum();
+    	Str addNsFqdn();
+    };
+
+
     interface Registrar : Compound
     {
       Id addId();
+      Str addIco();
+      Str addDic();
+      Str addVarSymbol();
+      Bool addVat();
       Str addHandle();
       Str addName();
       Str addOrganization();
+      Str addStreet();
       Str addCity();
-      Str addCountry();
+      Str addStateOrProvince();
+      Str addPostalCode();
+      Str addCountryCode();
+      Str addTelephone();
+      Str addFax();
+      Str addEmail();
+      Str addUrl();
+      Zone addActiveZone();
     };
 
     interface ObjectState : Compound 

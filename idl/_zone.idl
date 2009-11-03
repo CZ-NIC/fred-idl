@@ -11,7 +11,69 @@ module ccReg {
    short dots_max; ///< Maximal number of parts in zone
    boolean enum_zone; ///< This zone is for ENUM
   };
+
   /// Zone list
   typedef sequence < Zone > Zones;
 
+  ///Zone interface
+  interface ZoneIf
+  {
+	  boolean createZone(
+			  in string fqdn,
+              in long ex_period_min,
+              in long ex_period_max,
+              in long ttl,
+              in string hostmaster,
+              in long refresh,
+              in long update_retr,
+              in long expiry,
+              in long minimum,
+              in string ns_fqdn);
+
+	  boolean updateZone(
+			  in string fqdn,
+              in long ex_period_min,
+              in long ex_period_max,
+              in long ttl,
+              in string hostmaster,
+              in long refresh,
+              in long update_retr,
+              in long expiry,
+              in long minimum,
+              in string ns_fqdn);
+
+	  boolean createZoneNs(
+			  in string zone_fqdn,
+			  in string fqdn,
+			  in string addr);
+
+      boolean updateZoneNs(
+    		  in TID id,
+			  in string zone_fqdn,
+			  in string fqdn,
+			  in string addr);
+
+	  boolean createZoneSoa(
+			  in string zone_fqdn,
+			  in long ttl,
+			  in string hostmaster,
+			  in long serial,
+			  in long refresh,
+			  in long update_retr,
+			  in long expiry,
+			  in long minimum,
+			  in string ns_fqdn);
+
+      boolean updateZoneSoa(
+    		  in string zone_fqdn,
+			  in long ttl,
+			  in string hostmaster,
+			  in long serial,
+			  in long refresh,
+			  in long update_retr,
+			  in long expiry,
+			  in long minimum,
+			  in string ns_fqdn);
+
+  };//interface Zone
 };
