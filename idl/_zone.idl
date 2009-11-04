@@ -30,7 +30,20 @@ module ccReg {
               in long minimum,
               in string ns_fqdn);
 
-	  boolean updateZone(
+	  boolean updateZoneByFqdn(
+			  in string fqdn,
+              in long ex_period_min,
+              in long ex_period_max,
+              in long ttl,
+              in string hostmaster,
+              in long refresh,
+              in long update_retr,
+              in long expiry,
+              in long minimum,
+              in string ns_fqdn);
+
+	  boolean updateZoneById(
+			  in TID id,
 			  in string fqdn,
               in long ex_period_min,
               in long ex_period_max,
@@ -52,28 +65,6 @@ module ccReg {
 			  in string zone_fqdn,
 			  in string fqdn,
 			  in string addr);
-
-	  boolean createZoneSoa(
-			  in string zone_fqdn,
-			  in long ttl,
-			  in string hostmaster,
-			  in long serial,
-			  in long refresh,
-			  in long update_retr,
-			  in long expiry,
-			  in long minimum,
-			  in string ns_fqdn);
-
-      boolean updateZoneSoa(
-    		  in string zone_fqdn,
-			  in long ttl,
-			  in string hostmaster,
-			  in long serial,
-			  in long refresh,
-			  in long update_retr,
-			  in long expiry,
-			  in long minimum,
-			  in string ns_fqdn);
 
   };//interface Zone
 };
