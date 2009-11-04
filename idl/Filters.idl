@@ -173,6 +173,7 @@ module ccReg {
       DateTime addTimeBegin();
       DateTime addTimeEnd();
       Str addSourceIp();
+      Bool addIsMonitoring();
       RequestServiceType addService();      
       RequestActionType  addActionType();
       RequestData addRequestData();
