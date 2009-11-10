@@ -359,8 +359,8 @@ module Registry {
 	string timeBegin;
 	string timeEnd;
 	string	sourceIp;
-	ccReg::RequestServiceType service_type;
-	ccReg::RequestActionType action_type;
+	string service_type;
+	string action_type;
 	ccReg::TID session_id;
 	boolean is_monitoring;
 	
