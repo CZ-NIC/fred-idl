@@ -301,6 +301,38 @@ module Registry {
   /// Money type in smallest unit (hallers)
   //  typedef unsigned long MMoney;
 
+
+module Zone
+{
+      ///Nameserver structure
+      struct Ns
+      {
+          ccReg::TID id;
+          string fqdn;
+          string addr;
+      };
+
+      ///Nameserver sequence
+      typedef sequence<Ns> NsSeq;
+
+      ///Zone detail structure
+      struct Detail
+      {
+          ccReg::TID id;
+          string fqdn;
+          long ex_period_min;
+          long ex_period_max;
+          long ttl;
+          string hostmaster;
+          long refresh;
+          long update_retr;
+          long expiry;
+          long minimum;
+          string ns_fqdn;
+          NsSeq ns;
+      };
+};
+
   module Registrar {
     /// Access structure
     struct EPPAccess {
