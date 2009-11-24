@@ -343,6 +343,19 @@ module Zone
     /// List of access structures
     typedef sequence<EPPAccess> EPPAccessSeq;
     
+    /// Active Zone
+    struct AZone
+    {
+        ccReg::TID id; ///record id
+        string name; ///zone name
+        Money credit;  ///credit for zone
+        string fromDate;  ///start of registrar access to zone
+        string toDate; ///end of registrar access to zone
+    };//struct AZone
+
+    /// List of zone structures
+    typedef sequence<AZone> AZoneSeq;
+
     /// Registrar detail structure
     struct Detail {
       ccReg::TID id; ///< registrar ID
@@ -366,6 +379,7 @@ module Zone
       string url; ///< URL
       Money credit; ///< actual credit
       EPPAccessSeq access; ///< list of epp access data
+      AZoneSeq zones; ///< list of active registrar's zones
       boolean hidden; ///< hidden in PIF
     };
   };
@@ -395,10 +409,9 @@ module Zone
 	string action_type;
 	ccReg::TID session_id;
 	boolean is_monitoring;
-	
 	string raw_request;
 	string raw_response;
-	ccReg::RequestProperties props;  		
+	ccReg::RequestProperties props;
     };
   };
 
