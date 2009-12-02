@@ -131,6 +131,7 @@ module ccReg {
       Str addEmail();
       Str addUrl();
       Zone addActiveZone();
+      Str addZoneFqdn();
     };
 
     interface ObjectState : Compound 
