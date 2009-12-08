@@ -325,6 +325,20 @@ module ccReg {
         DateTime addCrTime();
     };
 
+    interface StatementHead : Compound
+    {
+        Id addId();
+        Id addAccountId();
+        Date addCreateDate();
+        Date addBalanceOldDate();
+        Str addAccountNumber();
+        Str addBankCode();
+        Str addConstSymbol();
+        Str addVarSymbol();
+        Str addSpecSymbol();
+        Id addInvoiceId();
+    };
+
   };
 
 };

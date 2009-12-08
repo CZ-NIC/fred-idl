@@ -268,8 +268,53 @@ module Registry {
       PaymentActionList paymentActions;
     };
   };
+
   
   module Banking {
+        // this is used? at least the name is obsolete...
+    module BankItem {
+      struct Detail {
+        ccReg::TID id;
+        ccReg::TID statementId;
+        string accountNumber;
+        string bankCodeId;
+        long code;
+        long type;
+        string konstSym;
+        string varSymb;
+        string specSymb;
+        Money price;
+        string accountEvid;
+        string accountDate;
+        string accountMemo;
+        ccReg::TID invoiceId;
+        string accountName;
+        string crTime;
+        // TODO other fields
+
+      };
+    };
+
+    typedef sequence<BankItem::Detail> BankItemDetailList;
+
+    module BankHead {
+      struct Detail {
+        ccReg::TID id;
+        ccReg::TID accountId;
+        long num;
+        string createDate;
+        string balanceOldDate;
+        Money balanceOld;
+        Money balanceNew;
+        Money balanceCredit;
+        Money balanceDebet;
+        ccReg::TID fileId;
+        // TODO - other objects
+
+        BankItemDetailList bankItems;
+      };
+
+    };
     struct OnlinePayment {
       ccReg::TID id;
       string accountNumber;
