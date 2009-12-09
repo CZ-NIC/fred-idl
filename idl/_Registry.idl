@@ -484,6 +484,8 @@ module Zone
       HistoryRecordList expirationDate; // value type = string
       //string valExDate;
       HistoryRecordList valExDate; // value type = string
+       
+      HistoryRecordList publish; // value type = boolean
       //string nssetHandle;
       HistoryRecordList nsset; // value type = OID
       HistoryRecordList keyset; // value type = OID

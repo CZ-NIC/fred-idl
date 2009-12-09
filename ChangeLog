@@ -1,6 +1,12 @@
+2009-11-09 Jiri Sadek, Juraj Vicenik (2.2.0)
+
+   * Interface for enum dictionary project
+
+   * Fixed public requests interface
+
 2009-06-30 Ales Dolezal (2.1.1)
 
-	* New function which allow manually add domain into the zone.
+   * New function which allow manually add domain into the zone.
 
 2008-10-18 Jiri Sadek, Ales Dolezal (2.1.0)
 

@@ -228,6 +228,8 @@ module ccReg {
     attribute DateInterval exDate;
     /// Those having validation date in supplied interval
     attribute DateInterval valExDate;
+    /// Those having publishing allowed
+    attribute boolean publish;
     /// Those having nsset with this tech admin 
     attribute string techAdminHandle;
     /// Those having nsset with IP address
@@ -563,6 +565,7 @@ module ccReg {
      string registrantHandle;
      string expirationDate;
      string valExDate;
+     boolean publish; 
      string nssetHandle;
      string keysetHandle;
      ContactHandleSeq admins;
@@ -704,13 +707,35 @@ module ccReg {
   enum KeySetInvKeyType {
       KIKT_TECH
   };
-  
+
   /// forward declaration
   interface Session;
+
+  /// types for ENUM dictionary
+  struct TAddress {
+    string street1;
+    string street2;
+    string street3;
+    string city;
+    string postalcode;
+    string province;
+    string country;
+  };
+
+  struct EnumDictRow {
+    string name;
+    TAddress address;
+    string domain;
+  };
+
+  typedef sequence<EnumDictRow> EnumDictList;
+
 
   /// interface for administration application
   interface Admin
   {
+    /// Exception for internal server error
+    exception InternalServerError {};
     /// exception thwown in case of failed search
     exception ObjectNotFound {};
     /// exception thrown in case of update failure
@@ -814,7 +839,7 @@ module ccReg {
     ObjectStatusDescSeq getKeySetStatusDescList(in string lang);
     /// Return list with descriptions of all available object states
     ObjectStatusDescSeq getObjectStatusDescList(in string lang);
-    
+
     /// Exception for common invalid input data
     exception INVALID_INPUT {};
     /// Exception for unspecified email in ([AUTO|POST]_PIF) request
@@ -829,11 +854,10 @@ module ccReg {
     exception MAILER_ERROR {};
     /// Exception for request blocation
     exception REQUEST_BLOCKED {};
-    
+
     typedef sequence<TID> ObjectIdList;
     TID createPublicRequest(
       in PublicRequest::Type type,
-      in TID eppActionId,
 	  in string reason,
 	  in string emailToAnswer,
 	  in ObjectIdList objectIds
@@ -863,6 +887,10 @@ module ccReg {
     void generateLetters();
     /// manually insert domain into the zone
     boolean setInZoneStatus(in TID domainId);
+
+    unsigned long long countEnumDomainsByRegistrant(in string name, in boolean by_person, in boolean by_org) raises (InternalServerError);
+    EnumDictList getEnumDomainsByRegistrant(in string name, in boolean by_person, in boolean by_org, in long offset, in long limit) raises (InternalServerError);
+    EnumDictList getEnumDomainsRecentEntries(in long count) raises (InternalServerError);
   };
 
   /// Main interface for registrar session
@@ -897,4 +925,12 @@ module ccReg {
               in Money price, in long period);
   };
 
+/*
+  interface EnumDict {
+    EnumDictList getEnumDomainsByRegistrant(in string handle, in boolean by_name, in boolean by_org);
+    EnumDictList getEnumDomainsRecentEntries(in long count);
+  };
+*/
+
 };
+

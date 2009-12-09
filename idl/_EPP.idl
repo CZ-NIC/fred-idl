@@ -266,6 +266,7 @@ module ccReg {
   /// Type for validation date disposition at ENUM domain
   struct ENUMValidationExtension {
     date valExDate; ///< Expiration date of valadation validity
+    Disclose publish; ///< Should the ENUM domain be published in ENUM dictionary
   };
   /// Info function type.
   enum InfoType {

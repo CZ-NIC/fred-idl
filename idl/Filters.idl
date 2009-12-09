@@ -228,6 +228,7 @@ module ccReg {
       Contact addTempContact();
       NSSet addNSSet();
       KeySet addKeySet();
+      Bool addPublish();
     };
 
     interface Action : Compound
