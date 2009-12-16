@@ -908,14 +908,6 @@ module ccReg {
 
   /// Main interface for registrar session
 
-  interface Session {
-    Registry::PageTable getPageTable(in FilterType type);
-    any getDetail(in FilterType type, in TID id) raises (ccReg::Admin::ObjectNotFound);
-    User getUser();
-
-    void updateRegistrar(in Registrar registrar_data) raises (ccReg::Admin::UpdateFailed, ccReg::Admin::ObjectNotFound);
-    void setHistory(in boolean history);
-  };
   interface BankingInvoicing {
       enum OperationType {
           OT_CREATE,
@@ -924,8 +916,10 @@ module ccReg {
       boolean addBankAccount(in string zoneName, in string accountNumber,
               in string accountName, in string bankCode);
       void archiveInvoices(in boolean send);
-      boolean createInvoiceForPayment(in unsigned long long paymentId,
+      boolean pairPaymentRegistrarId(in unsigned long long paymentId,
               in unsigned long long registrarId);
+      boolean pairPaymentRegistrarHandle(in  unsigned long long paymentId,
+              in string registrarHandle);
       boolean addPrefix(in string zoneName, in long type, in long year,
               in unsigned long long prefix);
       boolean pairInvoices();
@@ -937,7 +931,16 @@ module ccReg {
               in timestamp validFrom, in timestamp validTo,
               in Money price, in long period);
   };
+  interface Session {
+    Registry::PageTable getPageTable(in FilterType type);
+    any getDetail(in FilterType type, in TID id) raises (ccReg::Admin::ObjectNotFound);
+    BankingInvoicing getBankingInvoicing();
+    User getUser();
 
+    void updateRegistrar(in Registrar registrar_data) raises (ccReg::Admin::UpdateFailed, ccReg::Admin::ObjectNotFound);
+    void setHistory(in boolean history);
+  };
+  
 /*
   interface EnumDict {
     EnumDictList getEnumDomainsByRegistrant(in string handle, in boolean by_name, in boolean by_org);
