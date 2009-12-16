@@ -388,18 +388,18 @@ module Zone
     /// List of access structures
     typedef sequence<EPPAccess> EPPAccessSeq;
     
-    /// Active Zone
-    struct AZone
+    ///Zone access
+    struct ZoneAccess
     {
         ccReg::TID id; ///record id
         string name; ///zone name
         Money credit;  ///credit for zone
         string fromDate;  ///start of registrar access to zone
         string toDate; ///end of registrar access to zone
-    };//struct AZone
+    };//struct ZoneAccess
 
     /// List of zone structures
-    typedef sequence<AZone> AZoneSeq;
+    typedef sequence<ZoneAccess> ZoneAccessSeq;
 
     /// Registrar detail structure
     struct Detail {
@@ -424,7 +424,7 @@ module Zone
       string url; ///< URL
       Money credit; ///< actual credit
       EPPAccessSeq access; ///< list of epp access data
-      AZoneSeq zones; ///< list of active registrar's zones
+      ZoneAccessSeq zones; ///< list of active registrar's zones
       boolean hidden; ///< hidden in PIF
     };
   };
