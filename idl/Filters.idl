@@ -130,7 +130,6 @@ module ccReg {
       Str addFax();
       Str addEmail();
       Str addUrl();
-      Zone addActiveZone();
       Str addZoneFqdn();
     };
 
