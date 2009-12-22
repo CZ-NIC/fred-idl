@@ -1,4 +1,5 @@
 //#include "Filters.idl"
+#include "_dataTypes.idl"
 
 module Registry {
 
@@ -394,8 +395,8 @@ module Zone
         ccReg::TID id; ///record id
         string name; ///zone name
         Money credit;  ///credit for zone
-        string fromDate;  ///start of registrar access to zone
-        string toDate; ///end of registrar access to zone
+        ccReg::DateType fromDate;  ///start of registrar access to zone
+        ccReg::DateType toDate; ///end of registrar access to zone
     };//struct ZoneAccess
 
     /// List of zone structures
