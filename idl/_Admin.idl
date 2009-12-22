@@ -515,8 +515,8 @@ module ccReg {
   {
       ccReg::TID id; ///record id
       string name; ///zone name
-      string fromDate;  ///start of registrar's access to zone
-      string toDate; ///end of registrar's access to zone
+      DateType fromDate;  ///start of registrar's access to zone
+      DateType toDate; ///end of registrar's access to zone
   };//struct ZoneAccess
 
   /// List of zone structures
