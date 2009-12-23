@@ -423,7 +423,8 @@ module Zone
       string fax; ///< fax number
       string email; ///< contact email
       string url; ///< URL
-      Money credit; ///< actual credit
+      Money credit; ///< total credit
+      Money unspec_credit; ///< unspecified credit
       EPPAccessSeq access; ///< list of epp access data
       ZoneAccessSeq zones; ///< list of active registrar's zones
       boolean hidden; ///< hidden in PIF
