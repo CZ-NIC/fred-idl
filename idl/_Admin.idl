@@ -937,7 +937,7 @@ module ccReg {
     BankingInvoicing getBankingInvoicing();
     User getUser();
 
-    void updateRegistrar(in Registrar registrar_data) raises (ccReg::Admin::UpdateFailed, ccReg::Admin::ObjectNotFound);
+    TID updateRegistrar(in Registrar registrar_data) raises (ccReg::Admin::UpdateFailed, ccReg::Admin::ObjectNotFound);
     void setHistory(in boolean history);
   };
   
