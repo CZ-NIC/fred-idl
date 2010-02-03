@@ -911,11 +911,11 @@ module ccReg {
   /// Main interface for registrar session
 
   interface BankingInvoicing {
-/*
-      enum OperationType {
+      enum OperringddPriceonType {
           OT_CREATE,
           OT_RENEW
       };
+/*
       boolean addBankAccount(in string zoneName, in string accountNumber,
               in string accountName, in string bankCode);
       void archiveInvoices(in boolean send);
