@@ -911,7 +911,7 @@ module ccReg {
   /// Main interface for registrar session
 
   interface BankingInvoicing {
-      enum OperringddPriceonType {
+      enum OperationType {
           OT_CREATE,
           OT_RENEW
       };
