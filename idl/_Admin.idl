@@ -774,24 +774,6 @@ module ccReg {
     Registrar getRegistrarById(in TID id) raises (ObjectNotFound);
     /// store data of registrar in database
     void putRegistrar(in Registrar regData) raises (UpdateFailed);
-
-    ///add registrar to zone
-    void addRegistrarToZone
-    (
-		in string registrar_handle,/// registrar handle
-		in string zone_fqdn, ///zone name for which has registrar an access
-		in date fromdate,///date when began registrar work in a zone
-		in date todate///after this date registrar is not allowed to register
-    ) raises (UpdateFailed);
-
-    ///update registrar access to zone
-    void updateRegistrarAccessToZone
-    (
-    	in TID id,//record id
-		in date fromdate,///date when began registrar work in a zone
-		in date todate///after this date registrar is not allowed to register
-    ) raises (UpdateFailed);
-
     /// return contact detail for specified handle
     ContactDetail getContactByHandle(in string handle) raises (ObjectNotFound);
     /// return contact detail for specified id
