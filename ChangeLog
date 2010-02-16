@@ -1,3 +1,11 @@
+2010-02-16 Juraj Vicenik, Jan Zima, Jiri Sadek (2.3.0)
+
+   * Interface for audit (Logger) component
+
+   * Interface for banking module
+
+   * Registar and Zone access inteface refactoring
+
 2009-11-09 Jiri Sadek, Juraj Vicenik (2.2.0)
 
    * Interface for enum dictionary project
