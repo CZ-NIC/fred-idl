@@ -811,6 +811,8 @@ module ccReg {
       raises (ObjectNotFound);
     /// Return count of registred ENUM domains
     long getDomainCount(in string zone);
+    /// Return count of signed domains
+    long getSignedDomainCount(in string _fqdn);
     /// Return count of numbers described by all registred ENUM domains
     long getEnumNumberCount();
     /// Classify input handle according to registry policy
