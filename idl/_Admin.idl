@@ -908,6 +908,7 @@ module ccReg {
               in unsigned long long registrarId);
       boolean pairPaymentRegistrarHandle(in  unsigned long long paymentId,
               in string registrarHandle);
+      boolean setPaymentType(in unsigned long long payment_id, in short payment_type);
 /*
       boolean addPrefix(in string zoneName, in long type, in long year,
               in unsigned long long prefix);
