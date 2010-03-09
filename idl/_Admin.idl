@@ -749,6 +749,8 @@ module ccReg {
   {
     /// Exception for internal server error
     exception InternalServerError {};
+    /// exception thrown i.e. in case adifd needs to call logd but it's not running
+    exception ServiceUnavailable {};
     /// exception thwown in case of failed search
     exception ObjectNotFound {};
     /// exception thrown in case of update failure
@@ -923,8 +925,8 @@ module ccReg {
 */
   };
   interface Session {
-    Registry::PageTable getPageTable(in FilterType type);
-    any getDetail(in FilterType type, in TID id) raises (ccReg::Admin::ObjectNotFound);
+    Registry::PageTable getPageTable(in FilterType type) raises (ccReg::Admin::ServiceUnavailable);
+    any getDetail(in FilterType type, in TID id) raises (ccReg::Admin::ObjectNotFound, ccReg::Admin::ServiceUnavailable);
     BankingInvoicing getBankingInvoicing();
     User getUser();
 
