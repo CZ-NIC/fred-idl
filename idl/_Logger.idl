@@ -9,7 +9,7 @@ module ccReg {
 		boolean CloseSession (in TID id);
 		RequestActionList GetServiceActions(in RequestServiceType serv);		
 // methods which allow to run logd on separate database/host
-                Registry::PageTable getPageTable(in string session_id);
+                Registry::PageTable createPageTable(in string session_id);
                 void deletePageTable(in string session_id);
 
                 Registry::Request::Detail getDetail(in TID id) raises (ccReg::Admin::ObjectNotFound);
