@@ -1,3 +1,15 @@
+2010-03-09 Jiri Sadek, Juraj Vicenik (2.3.2)
+
+   * Method for changing bank payment type method
+     added to banking interface
+
+   * Logger - Admin filtering interface separated
+     (moved from Admin to Logger)
+
+2010-02-24 Jan Zima (2.3.1)
+
+   * Interface method for signed domains count
+
 2010-02-16 Juraj Vicenik, Jan Zima, Jiri Sadek (2.3.0)
 
    * Interface for audit (Logger) component
