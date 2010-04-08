@@ -775,7 +775,7 @@ module ccReg {
     /// return registrar detail for specified id
     Registrar getRegistrarById(in TID id) raises (ObjectNotFound);
     /// store data of registrar in database
-    void putRegistrar(in Registrar regData) raises (UpdateFailed);
+    //void putRegistrar(in Registrar regData) raises (UpdateFailed);
     /// return contact detail for specified handle
     ContactDetail getContactByHandle(in string handle) raises (ObjectNotFound);
     /// return contact detail for specified id
