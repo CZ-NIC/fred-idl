@@ -624,7 +624,7 @@ module Zone
       StateList states;
     };
   };
-    
+/*    
   typedef string SessionIDType;
 
   /// forward declaration
@@ -709,5 +709,5 @@ module Zone
     void updateRegistrar(in Registrar::Detail registrar_data) raises (ccReg::Admin::UpdateFailed, ccReg::Admin::ObjectNotFound);
     void setHistory(in boolean history);
   };
-
+*/
 };
