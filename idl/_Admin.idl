@@ -5,8 +5,18 @@
 //       method (will be removed when using only Registry module)
 module Registry {
   interface PageTable;
-  interface RegistrarCertification;
-  interface RegistrarGroup;
+
+  module Registrar
+  {
+      module Certification
+      {
+          interface Manager;
+      };
+      module Group
+      {
+          interface Manager;
+      };
+  };
 };
 
 module ccReg {
@@ -893,8 +903,10 @@ module ccReg {
     EnumDictList getEnumDomainsByRegistrant(in string name, in boolean by_person, in boolean by_org, in long offset, in long limit) raises (InternalServerError);
     EnumDictList getEnumDomainsRecentEntries(in long count) raises (InternalServerError);
 
-    Registry::RegistrarCertification getRegistrarCertification();
-    Registry::RegistrarGroup getRegistrarGroup();
+
+    Registry::Registrar::Certification::Manager getCertificationManager();
+    Registry::Registrar::Group::Manager getGroupManager();
+
  };
 
   /// Main interface for registrar session

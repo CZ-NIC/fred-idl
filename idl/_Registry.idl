@@ -429,6 +429,92 @@ module Zone
       ZoneAccessSeq zones; ///< list of active registrar's zones
       boolean hidden; ///< hidden in PIF
     };
+
+    /// Exception for internal server error
+    exception InternalServerError {};
+    /// Exception for invalid input with description
+    exception InvalidValue {string what;};
+
+    module Certification
+    {
+        /// Registrar certification structure
+        struct CertificationData 
+        {
+            ccReg::TID id;
+            ccReg::DateType from;
+            ccReg::DateType to;
+            short score;
+            ccReg::TID evaluation_file_id;
+        };//struct Certification
+    
+        /// Registrar certification sequence
+        typedef sequence < CertificationData > CertificationList;
+
+        interface Manager
+        {
+            /// create registar certification
+            ccReg::TID createCertification(in ccReg::TID reg_id
+            , in ccReg::DateType from, in ccReg::DateType to, in short score
+            , in ccReg::TID evaluation_file_id) 
+            raises (InvalidValue, InternalServerError);
+            /// shorten duration of registar certification
+            void shortenCertification(in ccReg::TID cert_id, in ccReg::DateType to)
+                raises (InvalidValue, InternalServerError);
+        };//interface certification::Manager
+    
+    };//module Certification
+
+    module Group 
+    {
+        /// Registrar group structure
+        struct GroupData 
+        {
+            ccReg::TID id;
+            string name;
+            ccReg::DateTimeType cancelled;
+        };
+
+        /// Registrar group membership structure
+        struct Membership 
+        {
+            ccReg::TID id;
+            ccReg::TID registrar_group_id;
+            ccReg::DateType from;
+            ccReg::DateType to;
+        };
+
+        /// Registrar group sequence
+        typedef sequence < GroupData > GroupList;
+
+        /// Registrar group membership sequence
+        typedef sequence < Membership > MembershipList;
+
+        interface Manager
+        {
+            /// create registar group
+            ccReg::TID  createGroup(in string name) 
+                raises (InvalidValue, InternalServerError);
+            /// delete registar group
+            void deleteGroup(in ccReg::TID group_id)
+                raises (InvalidValue, InternalServerError);
+            /// rename registar group     
+            void updateGroup(in ccReg::TID group_id, in string name)
+                raises (InvalidValue, InternalServerError);
+            /// add registar to the group        
+            void addRegistrarToGroup(in ccReg::TID reg_id, in ccReg::TID group_id)
+                raises (InvalidValue, InternalServerError);
+            /// remove registar from the group
+            void removeRegistrarFromGroup(in ccReg::TID reg_id, in ccReg::TID group_id)
+                raises (InvalidValue, InternalServerError);
+            /// list of all groups
+            GroupList getGroups()
+                raises (InternalServerError);
+            /// list of memberships by registrar
+            MembershipList getMembershipsByRegistar(in ccReg::TID registrar_id)
+                raises (InvalidValue, InternalServerError);  
+        };//interface Group::Manager
+    };//module Group
+
   };//module Registrar
   
   module EPPAction {
@@ -448,17 +534,17 @@ module Zone
 
   module Request {
     struct Detail {
-	ccReg::TID id;
-	string timeBegin;
-	string timeEnd;
-	string	sourceIp;
-	string service_type;
-	string action_type;
-	ccReg::TID session_id;
-	boolean is_monitoring;
-	string raw_request;
-	string raw_response;
-	ccReg::RequestProperties props;
+    ccReg::TID id;
+    string timeBegin;
+    string timeEnd;
+    string    sourceIp;
+    string service_type;
+    string action_type;
+    ccReg::TID session_id;
+    boolean is_monitoring;
+    string raw_request;
+    string raw_response;
+    ccReg::RequestProperties props;
     };
   };
 
@@ -627,88 +713,6 @@ module Zone
 
 
 
-  interface RegistrarCertification
-  {
-    /// Exception for internal server error
-    exception InternalServerError {};
-    /// Exception for invalid input
-    exception InvalidValue {string what;};
-  
-    /// Registrar certification structure
-    struct Certification {
-        ccReg::TID id;
-        ccReg::DateType from;
-        ccReg::DateType to;
-        short score;
-        ccReg::TID evaluation_file_id;
-    };
 
-    /// Registrar certification sequence
-    typedef sequence < Certification > CertificationList;
-
-    /// create registar certification
-    ccReg::TID createRegistrarCertification(in ccReg::TID reg_id
-    , in ccReg::DateType from, in ccReg::DateType to, in short classification
-    , in ccReg::TID eval_file_id) raises (InvalidValue, InternalServerError);
-    /// shorten duration of registar certification
-    void shortenRegistrarCertification(in ccReg::TID cert_id, in ccReg::DateType to)
-    	raises (InvalidValue, InternalServerError);
-  
-  };
-  
-  interface RegistrarGroup
-  {
-    /// Exception for internal server error
-    exception InternalServerError {};
-    /// Exception for invalid input
-    exception InvalidValue {string what;};
-  
-    /// Registrar group structure
-    struct Group {
-        ccReg::TID id;
-        string name;
-        ccReg::DateTimeType cancelled;
-    };
-    
-    /// Registrar group membership structure
-    struct GroupMembership {
-        ccReg::TID id;
-        ccReg::TID registrar_id;
-        ccReg::TID registrar_group_id;
-        ccReg::DateType from;
-        ccReg::DateType to;
-    };
-    
-    /// Registrar group sequence
-    typedef sequence < Group > GroupList;
-    
-    /// Registrar group membership sequence
-    typedef sequence < GroupMembership > GroupMembershipList;
-
-    /// create registar group
-    ccReg::TID  createRegistrarGroup(in string name) 
-    	raises (InvalidValue, InternalServerError);
-    /// delete registar group
-    void deleteRegistrarGroup(in ccReg::TID group_id)
-    	raises (InvalidValue, InternalServerError);
-    /// rename registar group 	
-    void updateRegistrarGroup(in ccReg::TID group_id, in string name)
-    	raises (InvalidValue, InternalServerError);
-    /// add registar to the group    	
-    void addRegistrarToGroup(in ccReg::TID reg_id, in ccReg::TID group_id)
-    	raises (InvalidValue, InternalServerError);
-    /// remove registar from the group
-    void removeRegistrarFromGroup(in ccReg::TID reg_id, in ccReg::TID group_id)
-    	raises (InvalidValue, InternalServerError);
-    /// list of all groups
-    GroupList getRegistarGroups()
-        raises (InternalServerError);
-    /// list of memberships by registrar
-    GroupMembershipList getRegistarMemberships(in ccReg::TID registrar_id)
-        raises (InvalidValue, InternalServerError);  
-    /// list of memberships by group
-    GroupMembershipList getGroupMemberships(in ccReg::TID group_id)
-        raises (InvalidValue, InternalServerError);  
-  };
 
 };
