@@ -666,7 +666,7 @@ module Zone
     /// Registrar group structure
     struct Group {
         ccReg::TID id;
-        string short_name;
+        string name;
         ccReg::DateTimeType cancelled;
     };
     
