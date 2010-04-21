@@ -474,11 +474,19 @@ module Zone
             ccReg::DateTimeType cancelled;
         };
 
-        /// Registrar group membership structure
-        struct Membership 
+        /// Registrar membership in group by registrar structure
+        struct MembershipByRegistrar  
         {
             ccReg::TID id;
-            ccReg::TID registrar_group_id;
+            ccReg::TID group_id;
+            ccReg::DateType from;
+            ccReg::DateType to;
+        };
+        /// Registrar membership in group by group structure        
+        struct MembershipByGroup
+        {
+            ccReg::TID id;
+            ccReg::TID registrar_id;
             ccReg::DateType from;
             ccReg::DateType to;
         };
@@ -487,7 +495,10 @@ module Zone
         typedef sequence < GroupData > GroupList;
 
         /// Registrar group membership sequence
-        typedef sequence < Membership > MembershipList;
+        typedef sequence < MembershipByRegistrar > MembershipByRegistrarList;
+
+        /// Registrar group membership sequence
+        typedef sequence < MembershipByGroup > MembershipByGroupList;
 
         interface Manager
         {
@@ -510,8 +521,12 @@ module Zone
             GroupList getGroups()
                 raises (InternalServerError);
             /// list of memberships by registrar
-            MembershipList getMembershipsByRegistar(in ccReg::TID registrar_id)
+            MembershipByRegistrarList getMembershipsByRegistar(in ccReg::TID registrar_id)
                 raises (InvalidValue, InternalServerError);  
+            /// list of memberships by group
+            MembershipByGroupList getMembershipsByGroup(in ccReg::TID group_id)
+                raises (InvalidValue, InternalServerError);  
+
         };//interface Group::Manager
     };//module Group
 
