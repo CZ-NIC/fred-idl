@@ -460,6 +460,7 @@ module Zone
             /// shorten duration of registar certification
             void shortenCertification(in ccReg::TID cert_id, in ccReg::DateType to)
                 raises (InvalidValue, InternalServerError);
+            CertificationList getCertificationsByRegistrar(in ccReg::TID registrar_id);
         };//interface certification::Manager
     
     };//module Certification
