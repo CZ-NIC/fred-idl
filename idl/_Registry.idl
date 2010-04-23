@@ -508,7 +508,7 @@ module Zone
         interface Manager
         {
             /// create registar group
-            ccReg::TID  createGroup(in string name) 
+            ccReg::TID createGroup(in string name) 
                 raises (InvalidValue, InternalServerError);
             /// delete registar group
             void deleteGroup(in ccReg::TID group_id)
@@ -517,7 +517,7 @@ module Zone
             void updateGroup(in ccReg::TID group_id, in string name)
                 raises (InvalidValue, InternalServerError);
             /// add registar to the group        
-            void addRegistrarToGroup(in ccReg::TID reg_id, in ccReg::TID group_id)
+            ccReg::TID addRegistrarToGroup(in ccReg::TID reg_id, in ccReg::TID group_id)
                 raises (InvalidValue, InternalServerError);
             /// remove registar from the group
             void removeRegistrarFromGroup(in ccReg::TID reg_id, in ccReg::TID group_id)
