@@ -2,6 +2,15 @@
 
 module ccReg {
 
+    /// common EPP params for create,update,delete and transfer operations
+  struct EppParams {
+      long requestID;  ///<ID of fred-logd request which represents this call
+                        /// setting it to 0 means no request ID will be saved in history 
+      long sessionID;  ///<ID of fred-logd session  (was login table before)
+      string clTRID;    ///< client transaction ID
+      string XML;       ///< raw content of EPP command
+  };
+
     /// type of identification possibilities, define meaning of ident string
   enum identtyp 
   {
@@ -530,9 +539,7 @@ module ccReg {
      \return General reply with operation result and error messages */   
     Response ContactDelete (
       in string handle,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Data change of registered contact
     /** If state doesn't contain clientUpdateProhibited or serverUpdateProhibited,
@@ -550,9 +557,7 @@ module ccReg {
     Response ContactUpdate (
       in string handle,
       in ContactChange c,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// New contact registration
     /** If identifier passes test from ContactCheck function, new contact 
@@ -570,9 +575,7 @@ module ccReg {
       in string handle,
       in ContactChange c,
       out timestamp crDate,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Contact transfer to another registrar
     /** Verify entered password with password given at contact and if object
@@ -589,9 +592,7 @@ module ccReg {
     Response ContactTransfer (
       in string handle,
       in string authInfo,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Statement of all contacts at given registrar 
     /** Return list of contact identifiers belongs to logged registrar. 
@@ -653,9 +654,7 @@ module ccReg {
      \return General reply with operation result and error messages */   
     Response NSSetDelete (
       in string handle,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Date change of registered nsset 
     /** If state doesn't contain clientUpdateProhibited or serverUpdateProhibited,
@@ -687,9 +686,7 @@ module ccReg {
       in TechContact tech_add,
       in TechContact tech_rem,
       in short level,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Registration of new nsset
     /** If identifier passes test from NSSetCheck function, new nsset 
@@ -715,9 +712,7 @@ module ccReg {
       in DNSHost dns,
       in short level,
       out timestamp crDate,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Nsset transfer to another registrar
     /** Verify entered password with password given at nsset and if object
@@ -734,9 +729,7 @@ module ccReg {
     Response NSSetTransfer (
       in string handle,
       in string authInfo,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// List of all nssets of given registrar
     /** Returns list of nssets identifier belongs to logged registrar
@@ -784,9 +777,7 @@ module ccReg {
     ) raises (EppError);
     Response KeySetDelete (
         in string handle,
-        in long clientID,
-        in string clTRID,
-        in string XML
+        in EppParams params
     ) raises (EppError);
     Response KeySetUpdate (
         in string handle,
@@ -797,9 +788,7 @@ module ccReg {
         in DSRecord dsrec_rem,
         in DNSKey dnsk_add,
         in DNSKey dnsk_rem,
-        in long clientID,
-        in string clTRID,
-        in string XML
+        in EppParams params
     ) raises (EppError);
     Response KeySetCreate (
         in string handle,
@@ -808,16 +797,12 @@ module ccReg {
         in DSRecord dsrec,
         in DNSKey dnsk,
         out timestamp crDate,
-        in long clientID,
-        in string clTRID,
-        in string XML
+        in EppParams params
     ) raises (EppError);
     Response KeySetTransfer (
         in string handle,
         in string authInfo,
-        in long clientID,
-        in string clTRID,
-        in string XML
+        in EppParams params
     ) raises (EppError);
     Response KeySetList (
         out Lists keysets,
@@ -883,9 +868,7 @@ module ccReg {
      \return General reply with operation result and error messages */   
     Response DomainDelete (
       in string fqdn,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Data change of registered domain
     /** First consider validy of domain as in operation DomainCheck.
@@ -919,9 +902,7 @@ module ccReg {
       in AdminContact admin_add,
       in AdminContact admin_rem,
       in AdminContact tmpcontact_rem,
-      in long clientID,
-      in string clTRID,
-      in string XML , 
+      in EppParams params,
       in ExtensionList ext
     ) raises (EppError);
     /// New domain registration
@@ -960,9 +941,7 @@ module ccReg {
       in AdminContact admin,
       out timestamp crDate,
       out date exDate,
-      in long clientID,
-      in string clTRID,
-      in string XML,
+      in EppParams params,
       in ExtensionList ext
     ) raises (EppError);
     /// Move expiration date by requested period
@@ -987,9 +966,7 @@ module ccReg {
       in date curExpDate,
       in Period_str period,
       out timestamp exDate,
-      in long clientID,
-      in string clTRID,
-      in string XML,
+      in EppParams params,
       in ExtensionList ext
     ) raises (EppError);
     /// Domain transfer to other registrar
@@ -1008,9 +985,7 @@ module ccReg {
     Response DomainTransfer (
       in string fqdn,
       in string authInfo,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// List of all domains of given registrar
     /** It returns list of domain names belongs to logged registrar
