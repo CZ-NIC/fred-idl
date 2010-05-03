@@ -441,8 +441,8 @@ module Zone
         struct CertificationData 
         {
             ccReg::TID id;
-            ccReg::DateType from;
-            ccReg::DateType to;
+            ccReg::DateType fromDate;
+            ccReg::DateType toDate;
             short score;
             ccReg::TID evaluation_file_id;
         };//struct Certification
@@ -485,16 +485,16 @@ module Zone
         {
             ccReg::TID id;
             ccReg::TID group_id;
-            ccReg::DateType from;
-            ccReg::DateType to;
+            ccReg::DateType fromDate;
+            ccReg::DateType toDate;
         };
         /// Registrar membership in group by group structure        
         struct MembershipByGroup
         {
             ccReg::TID id;
             ccReg::TID registrar_id;
-            ccReg::DateType from;
-            ccReg::DateType to;
+            ccReg::DateType fromDate;
+            ccReg::DateType toDate;
         };
 
         /// Registrar group sequence
