@@ -464,7 +464,8 @@ module Zone
             void updateCertification(in ccReg::TID cert_id, in short score
             , in ccReg::TID evaluation_file_id)
                 raises (InvalidValue, InternalServerError);
-            CertificationList getCertificationsByRegistrar(in ccReg::TID registrar_id);
+            CertificationList getCertificationsByRegistrar(in ccReg::TID registrar_id)
+            	raises (InvalidValue, InternalServerError);
         };//interface certification::Manager
     
     };//module Certification
