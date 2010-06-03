@@ -35,8 +35,6 @@ module ccReg {
   /// enum RequestServiceType {LC_UNIX_WHOIS, LC_WEB_WHOIS, LC_PUBLIC_REQUEST, LC_EPP, LC_WEBADMIN, LC_INTRANET, LC_MAX_SERVICE };
   /// this enum is now defined in the database
 
-  typedef long RequestServiceType;
-
   struct RequestProperty {
 	string name;
 	string value;
@@ -54,6 +52,16 @@ module ccReg {
   typedef sequence <RequestActionListItem> RequestActionList;  
   
   typedef sequence <RequestProperty> RequestProperties;
+
+  typedef long RequestServiceType;
+
+  struct RequestServiceListItem {
+    RequestServiceType id;
+    string name;
+  };
+
+  typedef sequence <RequestServiceListItem> RequestServiceList;
+
 
   /// ID type for objects
   typedef unsigned long long TID;
