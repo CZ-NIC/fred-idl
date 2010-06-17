@@ -1,3 +1,16 @@
+2010-06-17 Jiri Sadek (2.4.0)
+
+   * Unused interfaces removed
+
+   * Registrar groups interface
+
+   * Registrar certification interface
+
+   * Logger - method for getting services
+
+   * EPP - interface preparation for mandatory logger usage
+     (requestid passing)
+
 2010-03-09 Jiri Sadek, Juraj Vicenik (2.3.2)
 
    * Method for changing bank payment type method
