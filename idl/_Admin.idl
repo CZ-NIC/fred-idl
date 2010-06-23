@@ -651,6 +651,7 @@ module ccReg {
      ContactHandleSeq admins;
      DNSHost hosts;
      ObjectStatusSeq statusList;     
+     short reportLevel;
   };
 
   struct KeySetDetail {

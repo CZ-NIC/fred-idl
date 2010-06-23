@@ -702,6 +702,7 @@ module Zone
       HistoryRecordList hosts; // value type = DNSHost
       //ObjectStatusSeq statusList;
       StateList states;
+      HistoryRecordList reportLevel;
     };
   };
 
