@@ -562,6 +562,7 @@ module Zone
     string service_type;
     string action_type;
     ccReg::TID session_id;
+    string user_name;
     boolean is_monitoring;
     string raw_request;
     string raw_response;
