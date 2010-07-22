@@ -1,3 +1,7 @@
+2010-07-22 Juraj Vicenik (2.4.1)
+
+   * Request detail structure updated (user_name)
+
 2010-06-17 Jiri Sadek (2.4.0)
 
    * Unused interfaces removed
