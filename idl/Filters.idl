@@ -36,14 +36,14 @@ module ccReg {
     };
 
    // types encapsulating enums from Logging
-    interface RequestServiceType : Simple
+    interface ServiceType : Simple
     {
       attribute ccReg::RequestServiceType value;
     };   
 
-    interface RequestActionType : Simple
+    interface RequestType : Simple
     {
-      attribute ccReg::RequestActionType value;
+      attribute ccReg::RequestType value;
     };
 
     interface Id : Simple
@@ -176,8 +176,8 @@ module ccReg {
       Str addSourceIp();
       Str addUserName();
       Bool addIsMonitoring();
-      RequestServiceType addService();      
-      RequestActionType  addActionType();
+      ServiceType addServiceType();      
+      RequestType  addRequestType();
       RequestData addRequestData();
       RequestPropertyValue addRequestPropertyValue();
     };

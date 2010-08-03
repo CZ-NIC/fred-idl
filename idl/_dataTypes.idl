@@ -42,14 +42,14 @@ module ccReg {
 	boolean child;
   };
   
-  typedef long RequestActionType;
+  typedef long RequestType;
 
-  struct RequestActionListItem {
-  	RequestActionType id;
-  	string status;
+  struct RequestTypeListItem {
+  	RequestType id;
+  	string name;
   };
 
-  typedef sequence <RequestActionListItem> RequestActionList;  
+  typedef sequence <RequestTypeListItem> RequestTypeList;  
   
   typedef sequence <RequestProperty> RequestProperties;
 
