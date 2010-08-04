@@ -7,7 +7,7 @@ module ccReg {
                 boolean CloseRequestLogin(in TID id, in string content_out, in RequestProperties props, in TID session_id);
 		TID CreateSession (in Languages lang, in string name);	
 		boolean CloseSession (in TID id);
-		RequestTypeList GetServiceActions(in RequestServiceType serv);
+		RequestTypeList GetRequestTypesByService(in RequestServiceType serv);
         RequestServiceList GetServices();
 
 // methods which allow to run logd on separate database/host
