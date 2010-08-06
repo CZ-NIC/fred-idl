@@ -9,6 +9,8 @@ module ccReg {
 		boolean CloseSession (in TID id);
 		RequestTypeList GetRequestTypesByService(in RequestServiceType serv);
         RequestServiceList GetServices();
+        ResultCodeList GetResultCodeByService(in RequestServiceType serv);
+        
 
 // methods which allow to run logd on separate database/host
                 Registry::PageTable createPageTable(in string session_id);

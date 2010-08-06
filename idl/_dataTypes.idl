@@ -62,6 +62,14 @@ module ccReg {
 
   typedef sequence <RequestServiceListItem> RequestServiceList;
 
+  //ResultCodeList
+  typedef long ResultCode;
+  struct ResultCodeListItem 
+  {
+  	ResultCode result_code;
+  	string name;
+  };
+  typedef sequence <ResultCodeListItem> ResultCodeList;  
 
   /// ID type for objects
   typedef unsigned long long TID;
