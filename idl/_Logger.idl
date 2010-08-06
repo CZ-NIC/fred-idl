@@ -9,7 +9,7 @@ module ccReg {
 		boolean CloseSession (in TID id);
 		RequestTypeList GetRequestTypesByService(in RequestServiceType serv);
         RequestServiceList GetServices();
-        ResultCodeList GetResultCodeByService(in RequestServiceType serv);
+        ResultCodeList GetResultCodesByService(in RequestServiceType serv);
         
 
 // methods which allow to run logd on separate database/host
