@@ -100,6 +100,10 @@ module Registry {
     readonly attribute short page;
     /// Set current page
     void setPage(in short page) raises (INVALID_PAGE);
+    /// Set offset for db query
+    void setOffset(in long offset);
+    /// Set limit (max number of rows)
+    void setLimit(in long limit);
     /// Start row of current page
     readonly attribute short start;
     /// Number of pages
