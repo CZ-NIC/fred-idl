@@ -871,10 +871,11 @@ module ccReg {
 
     typedef sequence<TID> ObjectIdList;
     TID createPublicRequest(
-      in PublicRequest::Type type,
-	  in string reason,
-	  in string emailToAnswer,
-	  in ObjectIdList objectIds
+        in PublicRequest::Type type,
+        in string reason,
+        in string emailToAnswer,
+        in ObjectIdList objectIds,
+        in TID requestId 
 	) raises (
 	  BAD_EMAIL, OBJECT_NOT_FOUND, ACTION_NOT_FOUND, SQL_ERROR, 
 	  INVALID_INPUT, REQUEST_BLOCKED
