@@ -1,22 +1,54 @@
 module ccReg {
+    interface Logger {
+        exception SESSION_NOT_EXISTS {};
+        exception REQUEST_NOT_EXISTS {};
+        exception REQUEST_TYPE_NOT_EXITS {}; 
+        exception RESPONSE_CODE_NOT_EXISTS {}; 
+        exception OBJECT_TYPE_NOT_EXISTS {}; 
+        exception INTERNAL_SERVER_ERROR {};
+        exception LIMITS_EXCEEDED {};
 
-	interface Logger {
-		TID CreateRequest(in string sourceIP, in RequestServiceType serv, in string content_in, in RequestProperties props, in RequestType action_type, in TID session_id);
-                boolean UpdateRequest(in TID id, in RequestProperties props);
-                boolean CloseRequest(in TID id, in string content_out, in RequestProperties props, in long result_code);
-                boolean CloseRequestLogin(in TID id, in string content_out, in RequestProperties props, in TID session_id, in long result_code);
-		TID CreateSession (in Languages lang, in string name);	
-		boolean CloseSession (in TID id);
-		RequestTypeList GetRequestTypesByService(in RequestServiceType serv);
-        RequestServiceList GetServices();
-        ResultCodeList GetResultCodesByService(in RequestServiceType serv);
-        
+        struct ObjectReference {
+            string type;
+            TID id;
+        };
 
-// methods which allow to run logd on separate database/host
-                Registry::PageTable createPageTable(in string session_id);
-                void deletePageTable(in string session_id);
+        typedef sequence< ObjectReference > ObjectReferences;
 
-                Registry::Request::Detail getDetail(in TID id) raises (ccReg::Admin::ObjectNotFound);
-	};
+        typedef sequence< string > ObjectTypeList;
+
+/* session_id is optional parameter */
+        TID createRequest(in string source_ip, in RequestServiceType serv,
+                      in string content, in RequestProperties props,
+                      in ObjectReferences refs, in RequestType action_type,
+                      in TID session_id);
+
+/* session_id is optional parameter */
+        void closeRequest(in TID id, in string content, in RequestProperties props,
+                      in ObjectReferences refs, in long result_code, in TID session_id);
+
+        TID createSession (in TID user_id, in string user_name);
+
+        void closeSession (in TID id);
+
+        RequestTypeList getRequestTypesByService(in RequestServiceType serv);
+
+        RequestServiceList getServices();
+
+        ResultCodeList getResultCodesByService(in RequestServiceType serv);
+
+        ObjectTypeList getObjectTypes();
+
+    /* OBSOLETE do not use in new applications (please) */
+        void addRequestProperties(in TID id, in RequestProperties props);
+
+
+    // methods which allow to run logd on separate database/host
+        Registry::PageTable createPageTable(in string session_id);
+        void deletePageTable(in string session_id);
+
+        Registry::Request::Detail getDetail(in TID id) raises (ccReg::Admin::ObjectNotFound);
+
+    };
 };
 
