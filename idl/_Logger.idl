@@ -5,6 +5,7 @@ module ccReg {
         exception REQUEST_TYPE_NOT_EXITS {}; 
         exception RESPONSE_CODE_NOT_EXISTS {}; 
         exception OBJECT_TYPE_NOT_EXISTS {}; 
+        exception INCORRECT_USAGE {};
         exception INTERNAL_SERVER_ERROR {};
         exception LIMITS_EXCEEDED {};
 
@@ -25,11 +26,11 @@ module ccReg {
 
 /* session_id is optional parameter */
         void closeRequest(in TID id, in string content, in RequestProperties props,
-                      in ObjectReferences refs, in long result_code, in TID session_id);
+                      in ObjectReferences refs, in long result_code, in TID session_id) raises(REQUEST_NOT_EXISTS, INCORRECT_USAGE);
 
         TID createSession (in TID user_id, in string user_name);
 
-        void closeSession (in TID id);
+        void closeSession (in TID id) raises(SESSION_NOT_EXISTS, INCORRECT_USAGE);
 
         RequestTypeList getRequestTypesByService(in RequestServiceType serv);
 
@@ -40,7 +41,7 @@ module ccReg {
         ObjectTypeList getObjectTypes();
 
     /* OBSOLETE do not use in new applications (please) */
-        void addRequestProperties(in TID id, in RequestProperties props);
+        void addRequestProperties(in TID id, in RequestProperties props) raises(REQUEST_NOT_EXISTS, INCORRECT_USAGE);
 
 
     // methods which allow to run logd on separate database/host
