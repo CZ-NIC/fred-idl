@@ -2,9 +2,9 @@ module ccReg {
     interface Logger {
         exception SESSION_NOT_EXISTS {};
         exception REQUEST_NOT_EXISTS {};
-        exception REQUEST_TYPE_NOT_EXITS {}; 
-        exception RESPONSE_CODE_NOT_EXISTS {}; 
-        exception OBJECT_TYPE_NOT_EXISTS {}; 
+        exception REQUEST_TYPE_NOT_EXITS {};
+        exception RESPONSE_CODE_NOT_EXISTS {};
+        exception OBJECT_TYPE_NOT_EXISTS {};
         exception INCORRECT_USAGE {};
         exception INTERNAL_SERVER_ERROR {};
         exception LIMITS_EXCEEDED {};
@@ -18,37 +18,48 @@ module ccReg {
 
         typedef sequence< string > ObjectTypeList;
 
-/* session_id is optional parameter */
+        /* session_id is optional parameter */
         TID createRequest(in string source_ip, in RequestServiceType serv,
                       in string content, in RequestProperties props,
                       in ObjectReferences refs, in RequestType action_type,
-                      in TID session_id);
+                      in TID session_id)
+                      raises (INTERNAL_SERVER_ERROR);
 
-/* session_id is optional parameter */
+        /* session_id is optional parameter */
         void closeRequest(in TID id, in string content, in RequestProperties props,
-                      in ObjectReferences refs, in long result_code, in TID session_id) raises(REQUEST_NOT_EXISTS, INCORRECT_USAGE);
+                      in ObjectReferences refs, in long result_code, in TID session_id)
+                      raises (INTERNAL_SERVER_ERROR, REQUEST_NOT_EXISTS);
 
-        TID createSession (in TID user_id, in string user_name);
+        TID createSession (in TID user_id, in string user_name)
+                      raises (INTERNAL_SERVER_ERROR);
 
-        void closeSession (in TID id) raises(SESSION_NOT_EXISTS, INCORRECT_USAGE);
+        void closeSession (in TID id)
+                      raises (INTERNAL_SERVER_ERROR, SESSION_NOT_EXISTS);
 
-        RequestTypeList getRequestTypesByService(in RequestServiceType serv);
+        RequestTypeList getRequestTypesByService(in RequestServiceType serv)
+                      raises (INTERNAL_SERVER_ERROR);
 
-        RequestServiceList getServices();
+        RequestServiceList getServices()
+                      raises (INTERNAL_SERVER_ERROR);
 
-        ResultCodeList getResultCodesByService(in RequestServiceType serv);
+        ResultCodeList getResultCodesByService(in RequestServiceType serv)
+                      raises (INTERNAL_SERVER_ERROR);
 
-        ObjectTypeList getObjectTypes();
+        ObjectTypeList getObjectTypes()
+                      raises (INTERNAL_SERVER_ERROR);
 
-    /* OBSOLETE do not use in new applications (please) */
-        void addRequestProperties(in TID id, in RequestProperties props) raises(REQUEST_NOT_EXISTS, INCORRECT_USAGE);
+        /* OBSOLETE do not use in new applications (please) */
+        void addRequestProperties(in TID id, in RequestProperties props)
+                      raises (INTERNAL_SERVER_ERROR, REQUEST_NOT_EXISTS);
 
 
-    // methods which allow to run logd on separate database/host
+        /* methods which allow to run logd on separate database/host */
         Registry::PageTable createPageTable(in string session_id);
+
         void deletePageTable(in string session_id);
 
-        Registry::Request::Detail getDetail(in TID id) raises (ccReg::Admin::ObjectNotFound);
+        Registry::Request::Detail getDetail(in TID id)
+                      raises (ccReg::Admin::ObjectNotFound);
 
     };
 };
