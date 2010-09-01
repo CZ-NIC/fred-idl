@@ -34,6 +34,7 @@ module Registry
 	        in string contact_handle 
 	        ,in PostalAddress address
 	        ,in ByteBuffer file_content
+	        ,in string file_name
 	        ,in string file_type
 	    ) raises (ErrorReport);
     };
