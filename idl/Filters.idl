@@ -168,6 +168,19 @@ module ccReg {
       Bool addResponseFlag();
     };
 
+    interface ResultCode : Compound
+    {
+      Id addServiceId();
+      Int addResultCode();
+      Str addName();
+    };
+
+    interface RequestObjectRef : Compound
+    {
+      Str addObjectType();
+      Id addObjectId();
+    };
+
     interface Request : Compound
     {
       Id addId();
@@ -175,11 +188,14 @@ module ccReg {
       DateTime addTimeEnd();
       Str addSourceIp();
       Str addUserName();
+      Id addUserId(); 
       Bool addIsMonitoring();
       ServiceType addServiceType();      
       RequestType  addRequestType();
       RequestData addRequestData();
       RequestPropertyValue addRequestPropertyValue();
+      ResultCode addResultCode();
+      RequestObjectRef addRequestObjectRef();
     };
 
     interface Session: Compound

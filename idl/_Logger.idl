@@ -9,13 +9,6 @@ module ccReg {
         exception INTERNAL_SERVER_ERROR {};
         exception LIMITS_EXCEEDED {};
 
-        struct ObjectReference {
-            string type;
-            TID id;
-        };
-
-        typedef sequence< ObjectReference > ObjectReferences;
-
         typedef sequence< string > ObjectTypeList;
 
         /* session_id is optional parameter */

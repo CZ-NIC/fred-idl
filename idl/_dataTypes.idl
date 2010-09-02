@@ -31,6 +31,9 @@ module ccReg {
     CS ///< czech
   };
 
+  /// ID type for objects
+  typedef unsigned long long TID;
+
   /// types for logd
   /// enum RequestServiceType {LC_UNIX_WHOIS, LC_WEB_WHOIS, LC_PUBLIC_REQUEST, LC_EPP, LC_WEBADMIN, LC_INTRANET, LC_MAX_SERVICE };
   /// this enum is now defined in the database
@@ -71,8 +74,14 @@ module ccReg {
   };
   typedef sequence <ResultCodeListItem> ResultCodeList;  
 
-  /// ID type for objects
-  typedef unsigned long long TID;
+  struct ObjectReference {
+      string type;
+      TID id;
+  };
+  
+  typedef sequence< ObjectReference > ObjectReferences;
+  
+
 
   /// definition of stringu that prepare SQL update and insert NULL value
   const string SET_NULL_VALUE = "$$SET_NULL_VALUE$$" ; 
