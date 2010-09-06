@@ -13,6 +13,7 @@ module Registry
             in string contact_handle 
             ,in string phone
             ,in string content
+            ,in string message_type
         ) raises (ErrorReport);
     
 	    struct PostalAddress 
@@ -36,6 +37,7 @@ module Registry
 	        ,in ByteBuffer file_content
 	        ,in string file_name
 	        ,in string file_type
+	        ,in string message_type
 	    ) raises (ErrorReport);
     };
 };
