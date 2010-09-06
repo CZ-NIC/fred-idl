@@ -28,7 +28,7 @@ module Registry
 	        string city;
 	        string state;
 	        string code;
-	        string county;
+	        string country;
 	    };
 	    
 	    typedef sequence<octet> ByteBuffer;
