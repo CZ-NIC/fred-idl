@@ -9,14 +9,13 @@ module Registry
             string reason;
         };
         
-        void sendSms(
+        unsigned long long sendSms(
             in string contact_handle 
             ,in string phone
             ,in string content
             ,in string message_type
-            ,in unsigned long contact_object_registry_id
-            ,in unsigned long contact_history_historyid
-            ,out unsigned long message_archive_id
+            ,in unsigned long long contact_object_registry_id
+            ,in unsigned long long contact_history_historyid
         ) raises (ErrorReport);
     
 	    struct PostalAddress 
@@ -34,16 +33,15 @@ module Registry
 	    
 	    typedef sequence<octet> ByteBuffer;
 	    
-	    void sendLetter(
+	    unsigned long long sendLetter(
 	        in string contact_handle 
 	        ,in PostalAddress address
 	        ,in ByteBuffer file_content
 	        ,in string file_name
 	        ,in string file_type
 	        ,in string message_type
-            ,in unsigned long contact_object_registry_id
-            ,in unsigned long contact_history_historyid
-            ,out unsigned long message_archive_id
+            ,in unsigned long long contact_object_registry_id
+            ,in unsigned long long contact_history_historyid
 	    ) raises (ErrorReport);
     };
 };
