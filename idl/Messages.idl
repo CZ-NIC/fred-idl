@@ -16,6 +16,7 @@ module Registry
             ,in string message_type
             ,in unsigned long contact_object_registry_id
             ,in unsigned long contact_history_historyid
+            ,out unsigned long message_archive_id
         ) raises (ErrorReport);
     
 	    struct PostalAddress 
@@ -42,6 +43,7 @@ module Registry
 	        ,in string message_type
             ,in unsigned long contact_object_registry_id
             ,in unsigned long contact_history_historyid
+            ,out unsigned long message_archive_id
 	    ) raises (ErrorReport);
     };
 };
