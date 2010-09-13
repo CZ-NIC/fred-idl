@@ -104,6 +104,8 @@ module Registry {
     void setOffset(in long offset);
     /// Set limit (max number of rows)
     void setLimit(in long limit);
+    /// Set time limit for a query 
+    void setTimeout(in long timeout);
     /// Start row of current page
     readonly attribute short start;
     /// Number of pages
