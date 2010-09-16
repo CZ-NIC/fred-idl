@@ -21,6 +21,9 @@ module Registry {
 
 module ccReg {
 
+  /// This is thrown in case a query takes too much time 
+  exception SqlQueryTimeout {};
+
   /// Type for EPP commands
   struct EPPActionType
   {
@@ -152,7 +155,7 @@ module ccReg {
   /// Common interface for data
   interface Filter {
     /// Reload data
-    void reload();
+    void reload() raises(ccReg::SqlQueryTimeout);
     /// Clear filter and reload data
     void clear();
   };
@@ -947,7 +950,7 @@ module ccReg {
   };
   interface Session {
     Registry::PageTable getPageTable(in FilterType type) raises (ccReg::Admin::ServiceUnavailable);
-    any getDetail(in FilterType type, in TID id) raises (ccReg::Admin::ObjectNotFound, ccReg::Admin::ServiceUnavailable);
+    any getDetail(in FilterType type, in TID id) raises (ccReg::Admin::ObjectNotFound, ccReg::Admin::ServiceUnavailable, ccReg::SqlQueryTimeout);
     BankingInvoicing getBankingInvoicing();
     User getUser();
 
