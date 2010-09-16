@@ -1,0 +1,99 @@
+#ifndef MOJEID_IDL_
+#define MOJEID_IDL_
+
+module Registry {
+
+    struct Date {
+        short day;
+        short month;
+        short year;
+    };
+
+    valuetype NullableString string;
+    valuetype NullableBoolean boolean;
+    valuetype NullableDate Date;
+
+
+    struct Address {
+        string type;
+        string street1;
+        NullableString street2;
+        NullableString street3;
+        string city;
+        NullableString state;
+        string postal_code;
+        string country_code;
+    };
+
+    typedef sequence<Address> AddressList;
+
+    struct Email {
+        string type;
+        string email_address;
+    };
+
+    typedef sequence<Email> EmailList;
+
+    struct IMAccount {
+        string type;
+        string username;
+    };
+
+    typedef sequence<IMAccount> IMAccountList;
+
+    struct Phone {
+        string type;
+        string number;
+    };
+
+    typedef sequence<Phone> PhoneList;
+
+    struct URLAddress {
+        string type;
+        string url;
+    };
+
+    typedef sequence<URLAddress> URLAddressList;
+
+    struct Contact {
+        string username;
+        string first_name;
+        string last_name;
+        NullableString organization;
+        NullableString vat_reg_num;
+        NullableDate birth_date;
+        NullableString id_card_num;
+        NullableString passport_num;
+        NullableString ssn_id_num;
+        NullableString vat_id_num;
+        NullableString ssn_type;
+        NullableBoolean disclose_name;
+        NullableBoolean disclose_organization;
+        NullableBoolean disclose_vat;
+        NullableBoolean disclose_ident;
+        NullableBoolean disclose_email;
+        NullableBoolean disclose_notify_email;
+        NullableBoolean disclose_address;
+        NullableBoolean disclose_phone;
+        NullableBoolean disclose_fax;
+
+        AddressList addresses;
+        EmailList emails;
+        IMAccountList imaccounts;
+        PhoneList phones;
+        URLAddressList urladdresses;
+    };
+
+
+
+    interface MojeID {
+        unsigned long long contactCreate(in Contact c);
+        unsigned long long contactUpdatePrepare(in Contact c, in string trans_id);
+        Contact contactInfo(in string handle);
+
+        void commitPreparedTransaction(in string trans_id);
+        void rollbackPreparedTransaction(in string trans_id);
+    };
+};
+
+#endif
