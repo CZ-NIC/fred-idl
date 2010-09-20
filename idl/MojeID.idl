@@ -84,6 +84,11 @@ module Registry {
         URLAddressList urladdresses;
     };
 
+    enum IdentificationMethod {
+        LETTER,
+        SMS,
+        CERTIFICATE
+    };
 
 
     interface MojeID {
@@ -93,7 +98,12 @@ module Registry {
             string reason;
         };
 
-        unsigned long long contactCreate(in Contact c)
+        unsigned long long contactCreate(in Contact c, in IdentificationMethod m)
+            raises (ErrorReport);
+
+
+        void processIdentification(in string request_id,
+                                   in string password)
             raises (ErrorReport);
 
         void contactUpdatePrepare(in Contact c, in string trans_id)
