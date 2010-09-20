@@ -87,12 +87,26 @@ module Registry {
 
 
     interface MojeID {
-        unsigned long long contactCreate(in Contact c);
-        unsigned long long contactUpdatePrepare(in Contact c, in string trans_id);
-        Contact contactInfo(in string handle);
 
-        void commitPreparedTransaction(in string trans_id);
-        void rollbackPreparedTransaction(in string trans_id);
+        exception ErrorReport
+        {
+            string reason;
+        };
+
+        unsigned long long contactCreate(in Contact c)
+            raises (ErrorReport);
+
+        void contactUpdatePrepare(in Contact c, in string trans_id)
+            raises (ErrorReport);
+
+        Contact contactInfo(in string handle)
+            raises (ErrorReport);
+
+        void commitPreparedTransaction(in string trans_id)
+            raises (ErrorReport);
+
+        void rollbackPreparedTransaction(in string trans_id)
+            raises (ErrorReport);
     };
 };
 
