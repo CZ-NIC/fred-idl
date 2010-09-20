@@ -9,7 +9,7 @@ module Registry
             string reason;
         };
         
-        unsigned long long sendSms(
+        unsigned long long saveSmsToSend(
             in string contact_handle 
             ,in string phone
             ,in string content
@@ -33,7 +33,7 @@ module Registry
 	    
 	    typedef sequence<octet> ByteBuffer;
 	    
-	    unsigned long long sendLetter(
+	    unsigned long long saveLetterToSend(
 	        in string contact_handle 
 	        ,in PostalAddress address
 	        ,in ByteBuffer file_content
