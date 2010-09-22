@@ -12,6 +12,7 @@ module Registry {
     valuetype NullableString string;
     valuetype NullableBoolean boolean;
     valuetype NullableDate Date;
+    valuetype NullableULongLong unsigned long long;
 
 
     struct Address {
@@ -56,6 +57,7 @@ module Registry {
     typedef sequence<URLAddress> URLAddressList;
 
     struct Contact {
+        NullableULongLong id;
         string username;
         string first_name;
         string last_name;
