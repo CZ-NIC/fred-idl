@@ -100,7 +100,8 @@ module Registry {
             string reason;
         };
 
-        unsigned long long contactCreate(in Contact c, in IdentificationMethod m)
+        unsigned long long contactCreate(in Contact c, in IdentificationMethod m,
+                                         in unsigned long long request_id)
             raises (ErrorReport);
 
 
@@ -108,7 +109,8 @@ module Registry {
                                    in string password)
             raises (ErrorReport);
 
-        void contactUpdatePrepare(in Contact c, in string trans_id)
+        void contactUpdatePrepare(in Contact c, in string trans_id,
+                                  in unsigned long long request_id)
             raises (ErrorReport);
 
         Contact contactInfo(in string handle)
