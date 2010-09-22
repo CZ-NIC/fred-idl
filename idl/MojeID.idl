@@ -23,7 +23,7 @@ module Registry {
         string city;
         NullableString state;
         string postal_code;
-        string country_code;
+        string country;
     };
 
     typedef sequence<Address> AddressList;
