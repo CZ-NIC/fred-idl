@@ -106,14 +106,15 @@ module Registry {
 
 
         void processIdentification(in string request_id,
-                                   in string password)
+                                   in string password,
+                                   in unsigned long long request_id)
             raises (ErrorReport);
 
         void contactUpdatePrepare(in Contact c, in string trans_id,
                                   in unsigned long long request_id)
             raises (ErrorReport);
 
-        Contact contactInfo(in string handle)
+        Contact contactInfo(in unsigned long long id)
             raises (ErrorReport);
 
         void commitPreparedTransaction(in string trans_id)
