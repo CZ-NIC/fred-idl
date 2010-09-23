@@ -105,9 +105,9 @@ module Registry {
             raises (ErrorReport);
 
 
-        void processIdentification(in string ident_request_id,
-                                   in string password,
-                                   in unsigned long long request_id)
+        unsigned long long processIdentification(in string ident_request_id,
+                                                 in string password,
+                                                 in unsigned long long request_id)
             raises (ErrorReport);
 
         void contactUpdatePrepare(in Contact c, in string trans_id,
@@ -115,7 +115,7 @@ module Registry {
             raises (ErrorReport);
 
         string getIdentificationInfo(in unsigned long long id); //returns "password" which is part of url
-        
+
         Contact contactInfo(in unsigned long long id)
             raises (ErrorReport);
 
