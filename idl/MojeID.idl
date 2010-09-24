@@ -92,6 +92,20 @@ module Registry {
         CERTIFICATE
     };
 
+    enum ContactState {
+        NOT_IDENTIFIED,
+        CONDITIONALLY_IDENTIFIED,
+        IDENTIFIED,
+        VALIDATED
+    };
+
+    struct ContactStateChange {
+        unsigned long long id;
+        ContactState old;
+        ContactState new;
+    };
+
+    typedef sequence<ContactStateChange> ContactStateChangeList;
 
     interface MojeID {
 
@@ -129,6 +143,8 @@ module Registry {
 
         void rollbackPreparedTransaction(in string trans_id)
             raises (ErrorReport);
+
+        ContactStateChangeList getContactStateChanges(in Date since);
     };
 };
 
