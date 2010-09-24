@@ -357,6 +357,17 @@ module ccReg {
         Id addInvoiceId();
     };
 
+    interface Message: Compound
+    {
+        Id addId();
+        DateTime addCrDate();
+        DateTime addModDate();
+        Int addAttempt();
+	    Int addStatus();
+        Int addCommType();
+        Int addMessageType();
+    };
+
   };
 
 };
