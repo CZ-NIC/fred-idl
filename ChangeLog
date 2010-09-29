@@ -1,3 +1,13 @@
+2010-09-29 Jiri Sadek, Juraj Vicenik, Jan Zima (2.5.0)
+
+   * Logger interface refactoring
+
+   * Messages interface added
+
+   * MojeID interface added
+
+   * PageTable now support offset, limit and timeout
+
 2010-07-22 Juraj Vicenik (2.4.1)
 
    * Request detail structure updated (user_name)
