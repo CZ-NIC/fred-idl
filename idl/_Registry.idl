@@ -744,8 +744,38 @@ module Zone
     };
   };
 
-
-
-
-
+  module Message {
+    struct SMS {
+      string phone_number;
+      string content;
+    };
+    struct Letter {
+      OID file;
+      string batch_id;
+      string postal_address_name;
+      string postal_address_organization;
+      string postal_address_street1;
+      string postal_address_street2;
+      string postal_address_street3;
+      string postal_address_city;
+      string postal_address_stateorprovince;
+      string postal_address_postalcode;
+      string postal_address_country;
+    };
+    
+    valuetype NullableSMS SMS;
+    valuetype NullableLetter Letter;
+    
+    struct Detail {
+      ccReg::TID id;
+      string createDate;
+      string modifyDate;
+      short attempt;
+      ccReg::TID status_id;
+      ccReg::TID comm_type_id;
+      ccReg::TID message_type_id;
+      NullableSMS sms;
+      NullableLetter letter;
+    }; 
+  };
 };
