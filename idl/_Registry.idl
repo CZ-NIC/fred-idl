@@ -745,11 +745,11 @@ module Zone
   };
 
   module Message {
-    struct SMS {
+    struct SMSDetail {
       string phone_number;
       string content;
     };
-    struct Letter {
+    struct LetterDetail {
       OID file;
       string batch_id;
       string postal_address_name;
@@ -763,8 +763,10 @@ module Zone
       string postal_address_country;
     };
     
-    valuetype NullableSMS SMS;
-    valuetype NullableLetter Letter;
+    union MessageContent switch(short) {
+      case 1: SMSDetail sms;
+      case 2: LetterDetail letter;
+    };
     
     struct Detail {
       ccReg::TID id;
@@ -774,8 +776,7 @@ module Zone
       ccReg::TID status_id;
       ccReg::TID comm_type_id;
       ccReg::TID message_type_id;
-      NullableSMS sms;
-      NullableLetter letter;
+      MessageContent message_content;
     }; 
   };
 };
