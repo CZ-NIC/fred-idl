@@ -2,6 +2,7 @@
 #define MOJEID_IDL_
 
 module Registry {
+module MojeID {
 
     struct Date {
         short day;
@@ -107,7 +108,7 @@ module Registry {
 
     typedef sequence<ContactStateChange> ContactStateChangeList;
 
-    interface MojeID {
+    interface Server {
 
         exception ErrorReport
         {
@@ -133,7 +134,6 @@ module Registry {
             raises (ErrorReport);
 
         string getIdentificationInfo(in unsigned long long id); //returns "password" which is part of url
-        
 
         Contact contactInfo(in unsigned long long id)
             raises (ErrorReport);
@@ -146,6 +146,7 @@ module Registry {
 
         ContactStateChangeList getContactStateChanges(in Date since);
     };
+};
 };
 
 #endif
