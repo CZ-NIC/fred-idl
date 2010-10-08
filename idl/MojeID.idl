@@ -133,7 +133,8 @@ module MojeID {
                                   in unsigned long long request_id)
             raises (ErrorReport);
 
-        string getIdentificationInfo(in unsigned long long id); //returns "password" which is part of url
+        string getIdentificationInfo(in unsigned long long id)
+            raises (ErrorReport); //returns "password" which is part of url
 
         Contact contactInfo(in unsigned long long id)
             raises (ErrorReport);
