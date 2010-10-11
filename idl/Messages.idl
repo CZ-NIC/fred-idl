@@ -42,6 +42,7 @@ module Registry
 	        ,in string message_type
             ,in unsigned long long contact_object_registry_id
             ,in unsigned long long contact_history_historyid
+            ,in string comm_type
 	    ) raises (ErrorReport);
 	    
 	      //enum type for status, comm_type, message_type 
