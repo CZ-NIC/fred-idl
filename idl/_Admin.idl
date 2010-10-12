@@ -858,7 +858,7 @@ module ccReg {
     /// Return list with descriptions of available object status for keyset
     ObjectStatusDescSeq getKeySetStatusDescList(in string lang);
     /// Return list with descriptions of all available object states
-    ObjectStatusDescSeq getObjectStatusDescList(in string lang);
+    ObjectStatusDescSeq getObjectStatusDescList(in string lang) raises (InternalServerError);
 
     /// Exception for common invalid input data
     exception INVALID_INPUT {};
