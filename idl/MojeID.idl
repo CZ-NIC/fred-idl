@@ -144,51 +144,167 @@ module MojeID {
         exception IDENTIFICATION_FAILED { };
 
 
-        unsigned long long contactCreate(in Contact c, in IdentificationMethod m,
-                                         in unsigned long long request_id)
+        /*
+         * create contact and identification request based on ident. method
+         * chosen
+         *
+         * \param c             contact data structure
+         * \param m             identification method (SMS, LETTER, CERT)
+         * \param request_id    associated request id in logger
+         * \return              contact id
+         */
+        unsigned long long contactCreate(
+                in Contact c,
+                in IdentificationMethod m,
+                in unsigned long long request_id)
             raises (INTERNAL_SERVER_ERROR, DATA_VALIDATION_ERROR);
 
-        unsigned long long contactTransfer(in string handle,
-                                           in IdentificationMethod m,
-                                           in unsigned long long request_id)
+
+        /*
+         * create identification request based on ident. method. After
+         * successfully processing request contact is transfered to
+         * mojeid registrar
+         *
+         * \param handle        contact handle
+         * \param m             identification method
+         * \param request_id    associated request id in logger
+         * \return              contact id
+         */
+        unsigned long long contactTransfer(
+                in string handle,
+                in IdentificationMethod m,
+                in unsigned long long request_id)
             raises (INTERNAL_SERVER_ERROR, DATA_VALIDATION_ERROR);
 
-        void contactUpdatePrepare(in Contact c, in string trans_id,
-                                  in unsigned long long request_id)
+
+        /*
+         * prepares contact for update (2-phase commit)
+         *
+         * \param c             contact data structure
+         * \param trans_id      database transaction identifier
+         *                      for 2-phase commit
+         * \param request_id    associated request id in logger
+         */
+        void contactUpdatePrepare(
+                in Contact c,
+                in string trans_id,
+                in unsigned long long request_id)
             raises (INTERNAL_SERVER_ERROR, DATA_VALIDATION_ERROR);
 
-        Contact contactInfo(in unsigned long long contact_id)
+
+        /*
+         * contact data getter
+         *
+         * \param contact_id    contact id
+         * \return              contact data
+         */
+        Contact contactInfo(
+                in unsigned long long contact_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
-        unsigned long long processIdentification(in string ident_request_id,
-                                                 in string password,
-                                                 in unsigned long long request_id)
+
+        /*
+         * identification request processing
+         *
+         * \param ident_request   request identifier
+         *                        (see getIdentificationInfo() method)
+         * \param password        passwords sent to user joined together
+         * \param request_id      associated request id in logger
+         * \return                contact id
+         */
+        unsigned long long processIdentification(
+                in string ident_request_id,
+                in string password,
+                in unsigned long long request_id)
             raises (INTERNAL_SERVER_ERROR, IDENTIFICATION_FAILED);
 
-         //returns "password" which is part of url
-        string getIdentificationInfo(in unsigned long long contact_id)
+
+        /*
+         * get request identifier for given contact
+         *
+         * \param contact_id      contact id
+         * \return                request string identifier
+         */
+        string getIdentificationInfo(
+                in unsigned long long contact_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
-        void commitPreparedTransaction(in string trans_id)
+
+        /*
+         * commit prepared update contact transaction
+         *
+         * \param trans_id        transaction identifier
+         */
+        void commitPreparedTransaction(
+                in string trans_id)
             raises (INTERNAL_SERVER_ERROR);
 
-        void rollbackPreparedTransaction(in string trans_id)
+
+        /*
+         * rollback prepared update contact transaction
+         *
+         * \param trans_id        transaction identifier
+         */
+        void rollbackPreparedTransaction(
+                in string trans_id)
             raises (INTERNAL_SERVER_ERROR);
 
-        Buffer getValidationPdf(in unsigned long long contact_id)
+
+        /*
+         * return buffer with pdf content generated from contact
+         * validation request
+         *
+         * \param contact_id      contact id
+         * \return                validation pdf
+         */
+        Buffer getValidationPdf(
+                in unsigned long long contact_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
-        void createValidationRequest(in unsigned long long contact_id,
-                                     in unsigned long long request_id)
+
+        /*
+         * create validation request
+         *
+         * \param contact_id      contact id
+         * \param request_id      associated request id in logger
+         */
+        void createValidationRequest(
+                in unsigned long long contact_id,
+                in unsigned long long request_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_EXISTS);
 
-        ContactStateInfoList getContactsStates(in unsigned long last_hours)
+
+        /*
+         * get contacts states list
+         *
+         * \param last_hours      number of hours to search in past
+         * \return                list of contacts and its states which
+         *                        was gained/changed in last <last_hours> hours
+         */
+         ContactStateInfoList getContactsStates(
+                in unsigned long last_hours)
             raises (INTERNAL_SERVER_ERROR);
 
-        ContactState getContactState(in unsigned long long contact_id)
+
+        /*
+         * specific contact state getter
+         *
+         * \param contact_id      contact id
+         * \return                actual (mojeid) state
+         */
+        ContactState getContactState(
+                in unsigned long long contact_id)
             raises (INTERNAL_SERVER_ERROR);
 
-        unsigned long long getContactId(in string handle)
+
+        /*
+         * get contact id by its handle
+         *
+         * \param handle          contact handle
+         * \return                contact id
+         */
+        unsigned long long getContactId(
+                in string handle)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
     };
