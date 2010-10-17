@@ -294,7 +294,7 @@ module MojeID {
          */
         ContactState getContactState(
                 in unsigned long long contact_id)
-            raises (INTERNAL_SERVER_ERROR);
+            raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
 
         /*
