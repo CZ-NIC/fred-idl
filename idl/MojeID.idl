@@ -103,7 +103,7 @@ module MojeID {
     struct ContactStateInfo {
         unsigned long long contact_id;
         ContactState state;
-        Date from;
+        Date valid_from;
     };
 
     typedef sequence<ContactStateInfo> ContactStateInfoList;
