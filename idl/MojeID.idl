@@ -292,7 +292,7 @@ module MojeID {
          * \param contact_id      contact id
          * \return                actual (mojeid) state
          */
-        ContactState getContactState(
+        ContactStateInfo getContactState(
                 in unsigned long long contact_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
