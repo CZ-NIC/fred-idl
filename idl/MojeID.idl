@@ -93,11 +93,6 @@ module MojeID {
         CERTIFICATE
     };
     
-    enum UnidentifyMethod {
-        DELETE,
-        MAINTAIN
-    };
-
     enum ContactState {
         NOT_IDENTIFIED,
         CONDITIONALLY_IDENTIFIED,
@@ -197,7 +192,6 @@ module MojeID {
 
         void contactUnidentify(
                 in unsigned long long contact_id,
-                in UnidentifyMethod m,
                 in unsigned long long request_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
