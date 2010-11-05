@@ -217,6 +217,7 @@ module ccReg {
       Str addNotifyEmail();
       Str addVat();
       Str addSsn();
+      Str addPhoneNumber();
     };
     
     interface NSSet : Obj
