@@ -143,7 +143,10 @@ module MojeID {
 
         exception IDENTIFICATION_FAILED { };
 
-        exception IDENTIFICATION_ALREADY_PROCESSED { };
+        exception IDENTIFICATION_ALREADY_PROCESSED
+        {
+            boolean success;
+        };
 
         /*
          * create contact and identification request based on ident. method
