@@ -241,7 +241,7 @@ module MojeID {
                 in string ident_request_id,
                 in string password,
                 in unsigned long long request_id)
-            raises (INTERNAL_SERVER_ERROR, IDENTIFICATION_FAILED, IDENTIFICATION_ALREADY_PROCESSED);
+            raises (INTERNAL_SERVER_ERROR, IDENTIFICATION_FAILED, IDENTIFICATION_ALREADY_PROCESSED, DATA_VALIDATION_ERROR);
 
 
         /*
