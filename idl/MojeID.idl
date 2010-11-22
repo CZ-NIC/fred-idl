@@ -92,7 +92,7 @@ module MojeID {
         SMS,
         CERTIFICATE
     };
-    
+
     enum ContactState {
         NOT_IDENTIFIED,
         CONDITIONALLY_IDENTIFIED,
@@ -186,12 +186,12 @@ module MojeID {
 
 
         /* prepares contact which was deleted in MojeID - it has to be stripped of these states:
-          1 | serverDeleteProhibited           
-          3 | serverTransferProhibited        
-          4 | serverUpdateProhibited         
+          1 | serverDeleteProhibited
+          3 | serverTransferProhibited
+          4 | serverUpdateProhibited
          21 | conditionallyIdentifiedContact
-         22 | identifiedContact            
-         23 | validatedContact            
+         22 | identifiedContact
+         23 | validatedContact
 
          * \param contact_id    ID of the contact to be unidentified
          * \param trans_id      database transaction identifier
