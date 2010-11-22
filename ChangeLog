@@ -3,6 +3,8 @@
    * New exceptions in MojeID interface
        * processIdentification, createValidationRequest
 
+   * fred-adifd new filters (contact, messages)
+
 2010-10-18 Jiri Sadek, Juraj Vicenik, Jan Zima (2.5.1)
 
    * Changes in MojeID interface
