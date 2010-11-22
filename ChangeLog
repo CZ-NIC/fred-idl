@@ -1,7 +1,12 @@
+2010-11-22 Jiri Sadek (2.5.3)
+
+   * New exceptions in MojeID interface
+       * processIdentification, createValidationRequest
+
 2010-10-18 Jiri Sadek, Juraj Vicenik, Jan Zima (2.5.1)
 
    * Changes in MojeID interface
-	
+
 2010-09-29 Jiri Sadek, Juraj Vicenik, Jan Zima (2.5.0)
 
    * Logger interface refactoring
