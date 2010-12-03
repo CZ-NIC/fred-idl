@@ -371,6 +371,38 @@ module ccReg {
         Str addLetterAddrName();
         Contact addMessageContact();
     };
+    
+    interface BankStatement: Compound
+    {
+	    Id addId();
+	    Id addAccountId();
+	    Date addCreateDate();
+	    Date addBalanceOldDate();
+	    Str addAccountNumber();
+	    Str addBankCode();
+	    Str addConstSymbol();
+	    Str addVarSymbol();
+	    Str addSpecSymbol();
+	    Id addInvoiceId();
+    };
+    
+    interface BankPayment: Compound
+    {
+	    Id addId();
+	    Str addAccountNumber();
+	    Str addBankCode();
+	    Int addCode();
+	    Int addType();
+	    Str addConstSymb();
+	    Str addVarSymb();
+	    Str addSpecSymb();
+	    Str addAccountEvid();
+	    Date addAccountDate();
+	    Id addInvoiceId();
+	    Str addAccountName();
+	    DateTime addCrTime();
+	    BankStatement addBankStatement();
+    };
 
   };
 
