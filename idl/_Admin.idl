@@ -765,6 +765,20 @@ module ccReg {
   };
 
   typedef sequence<EnumDictRow> EnumDictList;
+  
+  //report a problem
+  exception ErrorReport 
+  {
+      string reason;
+  };
+  
+  ///enum type for id-string list 
+  struct EnumListItem 
+  {
+  	unsigned long long id;
+  	string name;
+  };
+  typedef sequence <EnumListItem> EnumList;
 
 
   /// interface for administration application
@@ -918,6 +932,9 @@ module ccReg {
 
     Registry::Registrar::Certification::Manager getCertificationManager();
     Registry::Registrar::Group::Manager getGroupManager();
+    
+    EnumList getBankAccounts()//list of bank accounts
+      raises (ErrorReport);
 
  };
 
