@@ -328,14 +328,6 @@ module ccReg {
       void saveFilter(in string name);
     };
 
-	interface BankAccount: Compound
-	{
-        Id addId();
-        Str addAccountNumber();
-        Str addAccountName();
-        Str addBankCode();
-	};
-
     interface StatementItem: Compound
     {
         Id addId();
@@ -351,7 +343,7 @@ module ccReg {
         Str addAccountName();
         DateTime addCrTime();
         Str addAccountMemo();
-        BankAccount addBankAccount();
+        Id addAccountId();
     };
 
     interface StatementHead : Compound
