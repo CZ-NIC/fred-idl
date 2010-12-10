@@ -12,6 +12,26 @@ module ccReg {
 
         typedef sequence< string > ObjectTypeList;
 
+        struct Detail {
+            ccReg::TID id;
+            string timeBegin;
+            string timeEnd;
+            string    sourceIp;
+            string service_type;
+            string action_type;
+            ccReg::TID session_id;
+            string user_name;
+            ccReg::TID user_id;
+            boolean is_monitoring;
+            string raw_request;
+            string raw_response;
+            long result_code;
+            string result_name; 
+            ccReg::RequestProperties props;
+            ccReg::ObjectReferences refs;
+        };
+
+
         /* session_id is optional parameter */
         TID createRequest(in string source_ip, in RequestServiceType serv,
                       in string content, in RequestProperties props,
@@ -52,7 +72,7 @@ module ccReg {
 
         void deletePageTable(in string session_id);
 
-        Registry::Request::Detail getDetail(in TID id)
+        Detail getDetail(in TID id)
                       raises (OBJECT_NOT_FOUND);
 
     };

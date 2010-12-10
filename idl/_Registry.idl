@@ -562,27 +562,6 @@ module Zone
     };
   };
 
-  module Request {
-    struct Detail {
-    ccReg::TID id;
-    string timeBegin;
-    string timeEnd;
-    string    sourceIp;
-    string service_type;
-    string action_type;
-    ccReg::TID session_id;
-    string user_name;
-    ccReg::TID user_id;
-    boolean is_monitoring;
-    string raw_request;
-    string raw_response;
-    long result_code;
-    string result_name; 
-    ccReg::RequestProperties props;
-    ccReg::ObjectReferences refs;
-    };
-  };
-
   module Domain {
     //typedef sequence<string> ContactHandleSeq;
     struct Detail {

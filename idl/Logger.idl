@@ -1,4 +1,3 @@
 #include "_dataTypes.idl"
-#include "_Registry.idl"
 #include "_Logger.idl"
 
