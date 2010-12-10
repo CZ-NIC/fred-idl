@@ -8,6 +8,7 @@ module ccReg {
         exception INCORRECT_USAGE {};
         exception INTERNAL_SERVER_ERROR {};
         exception LIMITS_EXCEEDED {};
+        exception OBJECT_NOT_FOUND {};
 
         typedef sequence< string > ObjectTypeList;
 
@@ -52,7 +53,7 @@ module ccReg {
         void deletePageTable(in string session_id);
 
         Registry::Request::Detail getDetail(in TID id)
-                      raises (ccReg::Admin::ObjectNotFound);
+                      raises (OBJECT_NOT_FOUND);
 
     };
 };
