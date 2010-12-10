@@ -1,3 +1,8 @@
+module Registry {
+  interface PageTable;
+};
+
+
 module ccReg {
     interface Logger {
         exception SESSION_NOT_EXISTS {};
