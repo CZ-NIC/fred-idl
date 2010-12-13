@@ -1,5 +1,5 @@
 #include "Filters.idl"
-
+#include "_Registry.idl"
 // TEMP: XXX forward declaration of PageTable
 //       for returning new type from Session::getPageTable()
 //       method (will be removed when using only Registry module)
@@ -21,8 +21,6 @@ module Registry {
 
 module ccReg {
 
-  /// This is thrown in case a query takes too much time 
-  exception SqlQueryTimeout {};
 
   /// Type for EPP commands
   struct EPPActionType
@@ -73,8 +71,6 @@ module ccReg {
 
   /// One row of Table
   typedef sequence<string> TableRow;
-
-  interface Filter;
 
   /// Table for data
   interface Table : Filters::Table {
@@ -152,16 +148,9 @@ module ccReg {
   ///          Filter management
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-  /// Common interface for data
-  interface Filter {
-    /// Reload data
-    void reload() raises(ccReg::SqlQueryTimeout);
-    /// Clear filter and reload data
-    void clear();
-  };
 
   /// Filter for common registry object
-  interface RegObjectFilter : Filter {
+  interface RegObjectFilter : Registry::FilterBase {
     /// Those made by specific registrar
     attribute TID registrar;    
     /// Those made by specific registrar byt handle
@@ -185,7 +174,7 @@ module ccReg {
   };
 
   /// Filter for Registrar
-  interface RegistrarsFilter : Filter {
+  interface RegistrarsFilter : Registry::FilterBase {
     /// Fulltext search in handle
     attribute string fulltext;
     /// Fulltext search in name
@@ -195,7 +184,7 @@ module ccReg {
   };
 
   /// Filter for EPPActions
-  interface EPPActionsFilter : Filter {
+  interface EPPActionsFilter : Registry::FilterBase {
     /// Result classification type
     enum ResultType {
       RT_FAIL, ///< result >= 2000 or no result code at all
@@ -317,7 +306,7 @@ module ccReg {
       OT_KEYSET ///< Request for authinfo in keyset object
     } ;
     /// Filter for selection of set of AuthInfo requests
-    interface Filter : ccReg::Filter {
+    interface Filter : Registry::FilterBase {
       attribute TID id; ///< filter for id
       attribute string handle; ///< filter for surveyed object handle
       attribute RequestStatus status; ///< filter for request status
@@ -405,7 +394,7 @@ module ccReg {
 
   module Mailing {
     /// Filter for selection of set of mails
-    interface Filter : ccReg::Filter {
+    interface Filter : Registry::FilterBase {
       attribute TID id; ///< filter for id 
       attribute long status; ///< filter for status (-1=ignore)
       attribute string handle; ///< filter for asociated handle
@@ -475,7 +464,7 @@ module ccReg {
       PaymentList payments;
       ActionList actions;
     };
-    interface Filter :  ccReg::Filter {
+    interface Filter :  Registry::FilterBase {
       attribute TID id;
       attribute string number;
       attribute DateInterval crDate;
@@ -507,10 +496,10 @@ module ccReg {
       string accountName;
       string ident;
     };
-    interface StatementsFilter : ccReg::Filter {
+    interface StatementsFilter : Registry::FilterBase {
       attribute TID id;
     };
-    interface OnlineFilter : ccReg::Filter {
+    interface OnlineFilter : Registry::FilterBase {
       attribute TID id;
     };
     interface Statements : StatementsFilter {
@@ -970,7 +959,7 @@ module ccReg {
   };
   interface Session {
     Registry::PageTable getPageTable(in FilterType type) raises (ccReg::Admin::ServiceUnavailable);
-    any getDetail(in FilterType type, in TID id) raises (ccReg::Admin::ObjectNotFound, ccReg::Admin::ServiceUnavailable, ccReg::SqlQueryTimeout);
+    any getDetail(in FilterType type, in TID id) raises (ccReg::Admin::ObjectNotFound, ccReg::Admin::ServiceUnavailable, Registry::SqlQueryTimeout);
     BankingInvoicing getBankingInvoicing();
     User getUser();
 

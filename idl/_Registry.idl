@@ -3,6 +3,18 @@
 
 module Registry {
 
+  /// This is thrown in case a query takes too much time 
+  exception SqlQueryTimeout {};
+
+  /// Common interface for data
+  interface FilterBase {
+    /// Reload data
+    void reload() raises(Registry::SqlQueryTimeout);
+    /// Clear filter and reload data
+    void clear();
+  };
+
+
   /// Type for EPP commands
   struct EPPActionType
   {
@@ -201,7 +213,7 @@ module Registry {
 
   module Mailing {
     /// Filter for selection of set of mails
-    interface Filter : ccReg::Filter {
+    interface Filter : FilterBase {
       attribute ccReg::TID id; ///< filter for id 
       attribute long status; ///< filter for status (-1=ignore)
       attribute string handle; ///< filter for asociated handle
@@ -340,10 +352,10 @@ module Registry {
       string accountName;
       string ident;
     };
-    interface StatementsFilter : ccReg::Filter {
+    interface StatementsFilter : FilterBase {
       attribute ccReg::TID id;
     };
-    interface OnlineFilter : ccReg::Filter {
+    interface OnlineFilter : FilterBase {
       attribute ccReg::TID id;
     };
     interface Statements : StatementsFilter {
