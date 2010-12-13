@@ -35,6 +35,7 @@ module Registry {
   /// Description structure for object status
   struct ObjectStatusDesc {
     short id;
+    string shortName;
     string name;
   };
   /// Sequence of status descriptions 

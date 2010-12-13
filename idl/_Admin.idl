@@ -21,14 +21,6 @@ module Registry {
 
 module ccReg {
   
-  /// Description structure for object status
-  struct ObjectStatusDesc {
-    ccReg::TID id;
-    string shortName;
-    string name;
-  };
-  /// Sequence of status descriptions 
-  typedef sequence<ObjectStatusDesc> ObjectStatusDescSeq;
   /// Sequence of status values
   typedef sequence<short> ObjectStatusSeq;
 
@@ -835,15 +827,15 @@ module ccReg {
     /// Return default country code
     Registry::CountryCode getDefaultCountry();
     /// Return list with descriptions of available object status for domain
-    ObjectStatusDescSeq getDomainStatusDescList(in string lang);
+    Registry::ObjectStatusDescSeq getDomainStatusDescList(in string lang);
     /// Return list with descriptions of available object status for contact
-    ObjectStatusDescSeq getContactStatusDescList(in string lang);
+    Registry::ObjectStatusDescSeq getContactStatusDescList(in string lang);
     /// Return list with descriptions of available object status for nsset
-    ObjectStatusDescSeq getNSSetStatusDescList(in string lang);
+    Registry::ObjectStatusDescSeq getNSSetStatusDescList(in string lang);
     /// Return list with descriptions of available object status for keyset
-    ObjectStatusDescSeq getKeySetStatusDescList(in string lang);
+    Registry::ObjectStatusDescSeq getKeySetStatusDescList(in string lang);
     /// Return list with descriptions of all available object states
-    ObjectStatusDescSeq getObjectStatusDescList(in string lang) raises (InternalServerError);
+    Registry::ObjectStatusDescSeq getObjectStatusDescList(in string lang) raises (InternalServerError);
 
     /// Exception for common invalid input data
     exception INVALID_INPUT {};
