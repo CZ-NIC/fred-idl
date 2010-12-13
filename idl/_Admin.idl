@@ -20,24 +20,6 @@ module Registry {
 };
 
 module ccReg {
-
-
-  /// Type for EPP commands
-  struct EPPActionType
-  {
-    long id;
-    string name;
-  };
-  
-  /// List of EPP command types
-  typedef sequence<EPPActionType> EPPActionTypeSeq;
-
-  typedef string CountryCode;
-  struct CountryDesc {
-    CountryCode cc;
-    string name;
-  };
-  typedef sequence<CountryDesc> CountryDescSeq;
   
   /// Description structure for object status
   struct ObjectStatusDesc {
@@ -195,7 +177,7 @@ module ccReg {
     /// Those made by specific registrar byt handle
     attribute string registrarHandle;
     /// Those of specific type
-    attribute EPPActionType type;
+    attribute Registry::EPPActionType type;
     /// Those refefing to object with this handle
     attribute string handle;
     /// Those having substring in xml
@@ -549,7 +531,7 @@ module ccReg {
     string city; ///< city of registrar headquaters
     string stateorprovince; ///< address part
     string postalcode; ///< address part
-    CountryCode country; ///< country code
+    Registry::CountryCode country; ///< country code
     string telephone; ///< phne number
     string fax; ///< fax number
     string email; ///< contact email
@@ -847,11 +829,11 @@ module ccReg {
       out CheckHandleTypeSeq ch ///< output structure with classification
     );
     /// Return list of epp action types
-    EPPActionTypeSeq getEPPActionTypeList();
+    Registry::EPPActionTypeSeq getEPPActionTypeList();
     /// Return country code list
-    CountryDescSeq getCountryDescList();
+    Registry::CountryDescSeq getCountryDescList();
     /// Return default country code
-    CountryCode getDefaultCountry();
+    Registry::CountryCode getDefaultCountry();
     /// Return list with descriptions of available object status for domain
     ObjectStatusDescSeq getDomainStatusDescList(in string lang);
     /// Return list with descriptions of available object status for contact
