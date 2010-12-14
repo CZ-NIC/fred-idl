@@ -21,9 +21,6 @@ module Registry {
 
 module ccReg {
   
-  /// Sequence of status values
-  typedef sequence<short> ObjectStatusSeq;
-
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   ///          User management
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -144,7 +141,7 @@ module ccReg {
     /// Interval of upDate
     attribute DateInterval upDate;
     /// Search in status - 'and' operator between values
-    attribute ObjectStatusSeq status;
+    attribute Registry::ObjectStatusSeq status;
   };
 
   /// Filter for Registrar
@@ -568,7 +565,7 @@ module ccReg {
      string keysetHandle;
      ContactHandleSeq admins;
      ContactHandleSeq temps;
-     ObjectStatusSeq statusList;
+     Registry::ObjectStatusSeq statusList;
   };
 
   struct ContactDetail {
@@ -607,7 +604,7 @@ module ccReg {
      boolean discloseIdent;
      boolean discloseVat;
      boolean discloseNotifyEmail;
-     ObjectStatusSeq statusList;
+     Registry::ObjectStatusSeq statusList;
   };
 
   struct NSSetDetail {
@@ -623,7 +620,7 @@ module ccReg {
      string authInfo;
      ContactHandleSeq admins;
      DNSHost hosts;
-     ObjectStatusSeq statusList;     
+     Registry::ObjectStatusSeq statusList;     
      short reportLevel;
   };
 
@@ -641,7 +638,7 @@ module ccReg {
       ContactHandleSeq admins;
       DSRecord dsrecords;
       DNSKey dnskeys;
-      ObjectStatusSeq  statusList;
+      Registry::ObjectStatusSeq  statusList;
   };
 
   // Type for list of registrars
