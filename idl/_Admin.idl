@@ -144,16 +144,6 @@ module ccReg {
     attribute Registry::ObjectStatusSeq status;
   };
 
-  /// Filter for Registrar
-  interface RegistrarsFilter : Registry::FilterBase {
-    /// Fulltext search in handle
-    attribute string fulltext;
-    /// Fulltext search in name
-    attribute string name;
-    /// Fulltext search in handle
-    attribute string handle;
-  };
-
   /// Filter for EPPActions
   interface EPPActionsFilter : Registry::FilterBase {
     /// Result classification type
