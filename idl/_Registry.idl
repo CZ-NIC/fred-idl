@@ -365,11 +365,6 @@ module Registry {
     };
   };
   
-
-  /// Money type in smallest unit (hallers)
-  //  typedef unsigned long MMoney;
-
-
 module Zone
 {
       ///Nameserver structure

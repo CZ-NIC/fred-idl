@@ -373,9 +373,6 @@ module ccReg {
     };
   };
   
-  /// Money type in smallest unit (hallers)
-  //  typedef unsigned long MMoney;
-
   /// Access structure
   struct EPPAccess {
     string password; ///< epp login password
