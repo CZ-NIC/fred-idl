@@ -227,64 +227,6 @@ module ccReg {
     }; 
   };
 
-  module PublicRequest {
-    /// Type of public requests
-    enum Type {
-      PRT_AUTHINFO_AUTO_RIF,         ///< Request for authinfo was created by registrar through RIF (EPP)
-      PRT_AUTHINFO_AUTO_PIF,         ///< Request for authinfo automatic answer created through PIF
-      PRT_AUTHINFO_EMAIL_PIF,        ///< Request for authinfo waiting for autorization by signed email
-      PRT_AUTHINFO_POST_PIF,         ///< Request for authinfo waiting for autorization by checked letter
-      PRT_BLOCK_CHANGES_EMAIL_PIF,    ///< Request for block update object waiting for autorization by signed email
-      PRT_BLOCK_CHANGES_POST_PIF,     ///< Request for block update object waiting for autorization by checked letter
-      PRT_BLOCK_TRANSFER_EMAIL_PIF,  ///< Request for block transfer object waiting for autorization by signed email
-      PRT_BLOCK_TRANSFER_POST_PIF,   ///< Request for block transfer object waiting for autorization by checked letter
-      PRT_UNBLOCK_CHANGES_EMAIL_PIF,  ///< Request for unblock update object waiting for autorization by signed email
-      PRT_UNBLOCK_CHANGES_POST_PIF,   ///< Request for unblock update object waiting for autorization by checked letter
-      PRT_UNBLOCK_TRANSFER_EMAIL_PIF,///< Request for unblock transfer object waiting for autorization by signed email
-      PRT_UNBLOCK_TRANSFER_POST_PIF,  ///< Request for unblock transfer object waiting for autorization by checked letter
-      PRT_CONDITIONAL_CONTACT_IDENTIFICATION,
-      PRT_CONTACT_IDENTIFICATION,
-      PRT_CONTACT_VALIDATION
-    };
-
-    /// Status of request 
-    enum Status {
-      PRS_NEW,       ///< Unresolved request
-      PRS_ANSWERED,  ///< Answered request
-      PRS_INVALID    ///< Request closed as invalid
-    };
-
-    /// Object type of request
-    enum ObjectType {
-      OT_CONTACT,
-      OT_NSSET,
-      OT_DOMAIN,
-      OT_KEYSET
-    };
-
-    struct OID {
-      TID id;
-      string handle;
-      ObjectType type;
-    };
- 
-    typedef sequence<OID> OIDSeq; 
-    struct Detail {
-      TID id;                       ///< request id
-      PublicRequest::Status status; ///< request status
-      PublicRequest::Type type;     ///< request type
-      string createTime;            ///< time of creation of request
-      string resolveTime;           ///< time of request resolution
-      string reason;                ///< reason provided through PIF
-      string email;                 ///< email provided through PIF
-      long answerEmailId;           ///< id of email with request answer
-      string svTRID;                ///< action svtrid when created by registrar through EPP
-      string registrar;             ///< registrar initiating request through EPP
-
-      OIDSeq objects;
-    };
-  };
-
   module Mailing {
     /// Filter for selection of set of mails
     interface Filter : Registry::FilterBase {
@@ -741,7 +683,7 @@ module ccReg {
 
     typedef sequence<TID> ObjectIdList;
     TID createPublicRequest(
-        in PublicRequest::Type type,
+        in Registry::PublicRequest::Type type,
         in string reason,
         in string emailToAnswer,
         in ObjectIdList objectIds,
