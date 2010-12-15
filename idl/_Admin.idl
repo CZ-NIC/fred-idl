@@ -373,35 +373,6 @@ module ccReg {
     };
   };
   
-  module Banking {
-    struct OnlinePayment {
-      TID id;
-      string accountNumber;
-      string accountBankCode;
-      string constSymbol;
-      string varSymbol;
-      string specSymbol;
-      Money price;
-      string memo;
-      TID invoiceId;
-      TID accountId;
-      string crDate;
-      string accountName;
-      string ident;
-    };
-    interface StatementsFilter : Registry::FilterBase {
-      attribute TID id;
-    };
-    interface OnlineFilter : Registry::FilterBase {
-      attribute TID id;
-    };
-    interface Statements : StatementsFilter {
-    };
-    interface OnlinePayments : OnlineFilter {
-    };
-  };
-  
-
   /// Money type in smallest unit (hallers)
   //  typedef unsigned long MMoney;
 
