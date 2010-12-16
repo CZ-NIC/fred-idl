@@ -173,31 +173,6 @@ module ccReg {
     attribute string svTRID;
   };
 
-  module Mailing {
-    /// Filter for selection of set of mails
-    interface Filter : Registry::FilterBase {
-      attribute TID id; ///< filter for id 
-      attribute long status; ///< filter for status (-1=ignore)
-      attribute string handle; ///< filter for asociated handle
-      attribute string attachment; ///< filter for attachement id
-      attribute string fulltext; ///< filter for fulltext in email
-      attribute unsigned short type; ///< filter for email type
-      attribute DateTimeInterval createTime; ///< filter for create time interval
-    };
-    typedef sequence<TID> AttachmentSeq;
-    /// Email detail
-    struct Detail {
-      TID id; ///< unique mail id (number before dot in message-id header)
-      string createTime; ///< time of inserting record into db
-      string modTime;///< date of last modification of status 
-      long status; ///< status (0 = OK, otherwise sendamail return status)
-      unsigned short type; ///< type
-      string content; ///< complete email content without binary attachements
-      Lists handles; ///< list of assocciated emails
-      AttachmentSeq attachments; ///< names of binary attachements
-    };
-  };
-
   typedef string Money;
   module Invoicing {
     struct Payment {
