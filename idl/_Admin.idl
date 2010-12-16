@@ -22,21 +22,6 @@ module Registry {
 module ccReg {
   
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  ///          User management
-  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-  /// Negative permission
-  typedef string NPermission;
-
-  interface User {
-    attribute TID id;
-    attribute string username;
-    attribute string firstname;
-    attribute string surname;
-    boolean hasNPermission(in NPermission np);
-  };
-
-  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   ///          Table management
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
@@ -591,7 +576,7 @@ module ccReg {
     Registry::PageTable getPageTable(in FilterType type) raises (ccReg::Admin::ServiceUnavailable);
     any getDetail(in FilterType type, in TID id) raises (ccReg::Admin::ObjectNotFound, ccReg::Admin::ServiceUnavailable, Registry::SqlQueryTimeout);
     BankingInvoicing getBankingInvoicing();
-    User getUser();
+    Registry::User getUser();
 
     TID updateRegistrar(in Registrar registrar_data) raises (ccReg::Admin::UpdateFailed, ccReg::Admin::ObjectNotFound);
     void setHistory(in boolean history);
