@@ -174,67 +174,6 @@ module ccReg {
   };
 
   typedef string Money;
-  module Invoicing {
-    struct Payment {
-      TID id;
-      string number;
-      Money price;
-      Money balance;
-    };
-    typedef sequence<Payment> PaymentList;
-    struct Action {
-      TID objectId;
-      string objectName;
-      string actionTime;
-      string exDate;
-      unsigned short actionType;
-      unsigned short unitsCount;
-      Money pricePerUnit;
-      Money price;
-    };
-    typedef sequence<Action> ActionList;
-    enum InvoiceType {
-      IT_ADVANCE,
-      IT_ACCOUNT,
-      IT_NONE //< for disabling filter
-    };
-    struct Invoice {
-      TID id;
-      TID zone;
-      string crTime;
-      string taxDate;
-      string fromDate;
-      string toDate;
-      InvoiceType type;
-      string number;
-      TID registrarId;
-      string registrarHandle;
-      Money credit;
-      Money price;
-      unsigned short vatRate;
-      Money total;
-      Money totalVAT;
-      string varSymbol;
-      TID filePDF;
-      TID fileXML;
-      PaymentList payments;
-      ActionList actions;
-    };
-    interface Filter :  Registry::FilterBase {
-      attribute TID id;
-      attribute string number;
-      attribute DateInterval crDate;
-      attribute TID registrarId;
-      attribute string registrarHandle;
-      attribute TID zone;
-      attribute InvoiceType type;
-      attribute string varSymbol;
-      attribute DateInterval taxDate;
-      attribute string objectName;
-      attribute TID objectId;
-      attribute string advanceNumber;
-    };
-  };
   
   /// Access structure
   struct EPPAccess {
