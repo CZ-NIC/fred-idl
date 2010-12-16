@@ -172,60 +172,6 @@ module ccReg {
     /// Those with specified svTRID
     attribute string svTRID;
   };
-  
-  module AuthInfoRequest {
-    /// Type of AuthInfo request
-    enum RequestType 
-    {
-      RT_IGNORE, ///< For filter ignoring
-      RT_EPP, ///< Request was created by registrar through EPP
-      RT_AUTO_PIF, ///< Request for automatic answer created through PIF
-      RT_EMAIL_PIF, ///< Request waiting for autorization by signed email
-      RT_POST_PIF ///< Request waiting for autorization by checked letter
-    };
-    /// Status of AuthInfo request 
-    enum RequestStatus {
-      RS_IGNORE, ///< For filter ignoring
-      RS_NEW, ///< Unresolved request
-      RS_ANSWERED, ///< Answered request
-      RS_INVALID ///< Request closed as invalid
-    } ;
-    /// Type of object queried in AuthInfo request
-    enum ObjectType {
-      OT_IGNORE, ///< For filter ignoring
-      OT_DOMAIN, ///< Request for authinfo in domain object
-      OT_CONTACT, ///< Request for authinfo in contact object
-      OT_NSSET, ///< Request for authinfo in nsset object
-      OT_KEYSET ///< Request for authinfo in keyset object
-    } ;
-    /// Filter for selection of set of AuthInfo requests
-    interface Filter : Registry::FilterBase {
-      attribute TID id; ///< filter for id
-      attribute string handle; ///< filter for surveyed object handle
-      attribute RequestStatus status; ///< filter for request status
-      attribute RequestType type; ///< filter for request type
-      attribute DateTimeInterval crTime; ///< filter for create time interval
-      attribute DateTimeInterval closeTime; ///< filter for close time interval
-      attribute string reason; ///< filter in reason specified in PIF
-      attribute string svTRID; ///< filter for EPP action svTRID
-      attribute string email; ///< filter for email specified in PIF
-    };
-    struct Detail {
-      TID id; ///< request id
-      string handle; ///< surveyed object handle
-      RequestStatus status; ///< request status
-      RequestType type; ///< request type
-      string crTime; ///< time of creation of request
-      string closeTime; ///< time of request resolution
-      string reason; ///< reason provided through PIF
-      string svTRID; ///< EPP action id when created by registrar
-      string email; ///< email provided through PIF
-      long answerEmailId; ///< id of email with request answer
-      ObjectType oType; ///< type of surveyed object
-      TID objectId; ///< id of surveyed object
-      string registrar; ///< registrar initiating request through EPP
-    }; 
-  };
 
   module Mailing {
     /// Filter for selection of set of mails
