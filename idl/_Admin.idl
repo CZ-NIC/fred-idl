@@ -27,30 +27,6 @@ module ccReg {
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 
-  /// Filter for common registry object
-  interface RegObjectFilter : Registry::FilterBase {
-    /// Those made by specific registrar
-    attribute TID registrar;    
-    /// Those made by specific registrar byt handle
-    attribute string registrarHandle;
-    /// Those created by specific registrar
-    attribute TID createRegistrar;    
-    /// Those created by specific registrar byt handle
-    attribute string createRegistrarHandle;
-    /// Those updated by specific registrar
-    attribute TID updateRegistrar;    
-    /// Those updated by specific registrar byt handle
-    attribute string updateRegistrarHandle;
-    /// Interval of crDate
-    attribute DateInterval crDate;
-    /// Interval of trDate
-    attribute DateInterval trDate;
-    /// Interval of upDate
-    attribute DateInterval upDate;
-    /// Search in status - 'and' operator between values
-    attribute Registry::ObjectStatusSeq status;
-  };
-
   /// Filter for EPPActions
   interface EPPActionsFilter : Registry::FilterBase {
     /// Result classification type
