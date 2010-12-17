@@ -28,20 +28,7 @@ module ccReg {
 
 
   typedef string Money;
-
   
-  ///Zone access
-  struct ZoneAccess
-  {
-      ccReg::TID id; ///record id
-      string name; ///zone name
-      DateType fromDate;  ///start of registrar's access to zone
-      DateType toDate; ///end of registrar's access to zone
-  };//struct ZoneAccess
-
-  /// List of zone structures
-  typedef sequence<ZoneAccess> ZoneAccessSeq;
-
   struct EPPAction {
     TID id; ///< id of action
     string time; /// < processing time
