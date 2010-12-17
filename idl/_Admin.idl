@@ -27,35 +27,6 @@ module ccReg {
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
 
-  /// Filter for EPPActions
-  interface EPPActionsFilter : Registry::FilterBase {
-    /// Result classification type
-    enum ResultType {
-      RT_FAIL, ///< result >= 2000 or no result code at all
-      RT_OK    ///< result < 2000
-    };
-    /// Those made by specific registrar
-    attribute TID registrar;
-    /// Those made by specific registrar byt handle
-    attribute string registrarHandle;
-    /// Those of specific type
-    attribute Registry::EPPActionType type;
-    /// Those refefing to object with this handle
-    attribute string handle;
-    /// Those having substring in xml
-    attribute string xml;
-    /// Those with this result code
-    attribute short result;
-    /// Those having proper result classification
-    attribute ResultType resultClass;
-    /// Those processed at this date interval
-    attribute DateTimeInterval time;
-    /// Those with specified clTRID
-    attribute string clTRID;
-    /// Those with specified svTRID
-    attribute string svTRID;
-  };
-
   typedef string Money;
   
   /// Access structure
