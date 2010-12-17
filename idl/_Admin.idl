@@ -21,13 +21,6 @@ module Registry {
 
 module ccReg {
   
-  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  ///          Table management
-  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-  /// One row of Table
-  typedef sequence<string> TableRow;
-
   
   /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
   ///          Filter management
