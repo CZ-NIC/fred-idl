@@ -256,13 +256,6 @@ module ccReg {
     string country;
   };
 
-  struct EnumDictRow {
-    string name;
-    TAddress address;
-    string domain;
-  };
-
-  typedef sequence<EnumDictRow> EnumDictList;
   
   //report a problem
   exception ErrorReport 
@@ -419,11 +412,6 @@ module ccReg {
     void generateLetters();
     /// manually insert domain into the zone
     boolean setInZoneStatus(in TID domainId);
-
-    unsigned long long countEnumDomainsByRegistrant(in string name, in boolean by_person, in boolean by_org) raises (InternalServerError);
-    EnumDictList getEnumDomainsByRegistrant(in string name, in boolean by_person, in boolean by_org, in long offset, in long limit) raises (InternalServerError);
-    EnumDictList getEnumDomainsRecentEntries(in long count) raises (InternalServerError);
-
 
     Registry::Registrar::Certification::Manager getCertificationManager();
     Registry::Registrar::Group::Manager getGroupManager();
