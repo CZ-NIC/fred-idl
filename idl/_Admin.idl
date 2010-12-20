@@ -1,10 +1,8 @@
 #include "Filters.idl"
 #include "_Registry.idl"
-// TEMP: XXX forward declaration of PageTable
-//       for returning new type from Session::getPageTable()
-//       method (will be removed when using only Registry module)
-module Registry {
-  interface PageTable;
+
+module Registry 
+{
 
   module Registrar
   {
@@ -20,12 +18,6 @@ module Registry {
 };
 
 module ccReg {
-  
-  
-  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-  ///          Filter management
-  /// -=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
 
   typedef string Money;
   
@@ -448,28 +440,13 @@ module ccReg {
           OT_CREATE,
           OT_RENEW
       };
-/*
-      boolean addBankAccount(in string zoneName, in string accountNumber,
-              in string accountName, in string bankCode);
-      void archiveInvoices(in boolean send);
-*/
+
       boolean pairPaymentRegistrarId(in unsigned long long paymentId,
               in unsigned long long registrarId);
       boolean pairPaymentRegistrarHandle(in  unsigned long long paymentId,
               in string registrarHandle);
       boolean setPaymentType(in unsigned long long payment_id, in short payment_type);
-/*
-      boolean addPrefix(in string zoneName, in long type, in long year,
-              in unsigned long long prefix);
-      boolean pairInvoices();
-      boolean createCreditInvoice(in TID zone, in TID registrar,
-              in Money price, in date taxdate, in timestamp crdate);
-      boolean factoring(in TID zone, in TID registrar,
-              in date todate, in date taxdate);
-      boolean addPrice(in TID zone, in OperationType operation,
-              in timestamp validFrom, in timestamp validTo,
-              in Money price, in long period);
-*/
+
   };
   interface Session {
     Registry::PageTable getPageTable(in FilterType type) raises (ccReg::Admin::ServiceUnavailable);
@@ -480,12 +457,5 @@ module ccReg {
     TID updateRegistrar(in Registrar registrar_data) raises (ccReg::Admin::UpdateFailed, ccReg::Admin::ObjectNotFound);
     void setHistory(in boolean history);
   };
-  
-/*
-  interface EnumDict {
-    EnumDictList getEnumDomainsByRegistrant(in string handle, in boolean by_name, in boolean by_org);
-    EnumDictList getEnumDomainsRecentEntries(in long count);
-  };
-*/
 
 };
