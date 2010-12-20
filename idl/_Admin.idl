@@ -29,6 +29,54 @@ module ccReg {
 
   typedef string Money;
   
+  /// Access structure
+  struct EPPAccess {
+    string password; ///< epp login password
+    string md5Cert; ///< md5 of certificate
+  };
+  
+  /// List of access structures
+  typedef sequence<EPPAccess> EPPAccessSeq;
+  
+  ///Zone access
+  struct ZoneAccess
+  {
+      ccReg::TID id; ///record id
+      string name; ///zone name
+      DateType fromDate;  ///start of registrar's access to zone
+      DateType toDate; ///end of registrar's access to zone
+  };//struct ZoneAccess
+
+  /// List of zone structures
+  typedef sequence<ZoneAccess> ZoneAccessSeq;
+
+  /// Registrar detail structure
+  struct Registrar {
+    TID id; ///< registrar ID
+    string ico;
+    string dic;
+    string varSymb;
+    boolean vat;
+    string handle; ///< registrar identification
+    string name; ///< registrar name
+    string organization; ///< organization name
+    string street1; ///< address part 1
+    string street2; ///< address part 2
+    string street3; ///< address part 3
+    string city; ///< city of registrar headquaters
+    string stateorprovince; ///< address part
+    string postalcode; ///< address part
+    Registry::CountryCode country; ///< country code
+    string telephone; ///< phne number
+    string fax; ///< fax number
+    string email; ///< contact email
+    string url; ///< URL
+    Money credit; ///< actual credit
+    EPPAccessSeq access; ///< list of epp access data
+    ZoneAccessSeq zones; ///< list of active registrar's zones
+    boolean hidden; ///< hidden in PIF
+  };
+
   struct EPPAction {
     TID id; ///< id of action
     string time; /// < processing time
@@ -140,7 +188,7 @@ module ccReg {
   };
 
   // Type for list of registrars
-  typedef sequence<Registry::Registrar::Detail> RegistrarList;
+  typedef sequence<Registrar> RegistrarList;
 
   // Type of handle in handle classification
   enum HandleType {
@@ -266,9 +314,9 @@ module ccReg {
     /// return complete list of registrars by access to zone
     RegistrarList getRegistrarsByZone(in string zone);
     /// return one registrar with specified handle
-    Registry::Registrar::Detail getRegistrarByHandle(in string handle) raises (ObjectNotFound);
+    Registrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
     /// return registrar detail for specified id
-    Registry::Registrar::Detail getRegistrarById(in TID id) raises (ObjectNotFound);
+    Registrar getRegistrarById(in TID id) raises (ObjectNotFound);
     /// return contact detail for specified handle
     ContactDetail getContactByHandle(in string handle) raises (ObjectNotFound);
     /// return contact detail for specified id
@@ -429,7 +477,7 @@ module ccReg {
     BankingInvoicing getBankingInvoicing();
     Registry::User getUser();
 
-    TID updateRegistrar(in Registry::Registrar::Detail registrar_data) raises (ccReg::Admin::UpdateFailed, ccReg::Admin::ObjectNotFound);
+    TID updateRegistrar(in Registrar registrar_data) raises (ccReg::Admin::UpdateFailed, ccReg::Admin::ObjectNotFound);
     void setHistory(in boolean history);
   };
   
