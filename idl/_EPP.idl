@@ -1009,9 +1009,7 @@ module ccReg {
      \return General reply with operation result and error messages */       
     Response domainSendAuthInfo (
       in string fqdn,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Requesting of authinfo for contact holder
     /**
@@ -1022,9 +1020,7 @@ module ccReg {
      \return General reply with operation result and error messages */       
     Response contactSendAuthInfo (
       in string handle,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Requesting of authinfo for nsset holder
     /**
@@ -1035,9 +1031,7 @@ module ccReg {
      \return General reply with operation result and error messages */       
     Response nssetSendAuthInfo (
       in string handle,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Requesting of authinfo for keyset holder
     /**
@@ -1048,9 +1042,7 @@ module ccReg {
      \return General reply with operation result and error messages */
     Response keysetSendAuthInfo (
         in string handle,
-        in long clientID,
-        in string clTRID,
-        in string XML
+        in EppParams params
     ) raises (EppError);
     /// This function incases all extension info function
     /**
