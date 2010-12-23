@@ -1,22 +1,6 @@
 #include "Filters.idl"
 #include "_Registry.idl"
 
-module Registry 
-{
-
-  module Registrar
-  {
-      module Certification
-      {
-          interface Manager;
-      };
-      module Group
-      {
-          interface Manager;
-      };
-  };
-};
-
 module ccReg {
 
   typedef string Money;
