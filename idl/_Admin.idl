@@ -5,14 +5,6 @@ module ccReg {
 
   typedef string Money;
   
-  /// Access structure
-  struct EPPAccess {
-    string password; ///< epp login password
-    string md5Cert; ///< md5 of certificate
-  };
-  
-  /// List of access structures
-  typedef sequence<EPPAccess> EPPAccessSeq;
   
   ///Zone access
   struct ZoneAccess
@@ -48,7 +40,7 @@ module ccReg {
     string email; ///< contact email
     string url; ///< URL
     Money credit; ///< actual credit
-    EPPAccessSeq access; ///< list of epp access data
+    Registry::Registrar::EPPAccessSeq access; ///< list of epp access data
     ZoneAccessSeq zones; ///< list of active registrar's zones
     boolean hidden; ///< hidden in PIF
   };
