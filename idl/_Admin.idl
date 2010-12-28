@@ -4,13 +4,13 @@
 module ccReg {
   
   /// Access structure
-  struct EPPAccess {
+  struct AdminEPPAccess {
     string password; ///< epp login password
     string md5Cert; ///< md5 of certificate
   };
   
   /// List of access structures
-  typedef sequence<EPPAccess> EPPAccessSeq;
+  typedef sequence<AdminEPPAccess> EPPAccessSeq;
   
   ///Zone access
   struct ZoneAccess
