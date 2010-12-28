@@ -2,6 +2,17 @@
 #include "_Registry.idl"
 
 module ccReg {
+
+  typedef string Money;
+  
+  /// Access structure
+  struct EPPAccess {
+    string password; ///< epp login password
+    string md5Cert; ///< md5 of certificate
+  };
+  
+  /// List of access structures
+  typedef sequence<EPPAccess> EPPAccessSeq;
   
   ///Zone access
   struct ZoneAccess
@@ -36,8 +47,8 @@ module ccReg {
     string fax; ///< fax number
     string email; ///< contact email
     string url; ///< URL
-    Registry::Money credit; ///< actual credit
-    Registry::Registrar::EPPAccessSeq access; ///< list of epp access data
+    Money credit; ///< actual credit
+    EPPAccessSeq access; ///< list of epp access data
     ZoneAccessSeq zones; ///< list of active registrar's zones
     boolean hidden; ///< hidden in PIF
   };
@@ -386,7 +397,7 @@ module ccReg {
     KeySetDetails getKeySetsByInverseKey(in string key, in KeySetInvKeyType type, in long limit);
     
     /// return credit for registrer and zone
-    Registry::Money getCreditByZone(in string registrar, in TID zone)
+    Money getCreditByZone(in string registrar, in TID zone)
       raises (SQL_ERROR);
     /// generate letter with warning about registration expiration
     void generateLetters();
