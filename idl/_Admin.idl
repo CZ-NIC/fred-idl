@@ -2,7 +2,18 @@
 #include "_Registry.idl"
 
 module ccReg {
- 
+  
+  ///Zone access
+  struct ZoneAccess
+  {
+      ccReg::TID id; ///record id
+      string name; ///zone name
+      DateType fromDate;  ///start of registrar's access to zone
+      DateType toDate; ///end of registrar's access to zone
+  };//struct ZoneAccess
+
+  /// List of zone structures
+  typedef sequence<ZoneAccess> ZoneAccessSeq;
 
   /// Registrar detail structure
   struct Registrar {
@@ -27,7 +38,7 @@ module ccReg {
     string url; ///< URL
     Registry::Money credit; ///< actual credit
     Registry::Registrar::EPPAccessSeq access; ///< list of epp access data
-    Registry::Registrar::ZoneAccessSeq zones; ///< list of active registrar's zones
+    ZoneAccessSeq zones; ///< list of active registrar's zones
     boolean hidden; ///< hidden in PIF
   };
 
