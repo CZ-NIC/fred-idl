@@ -13,7 +13,7 @@ module ccReg {
   typedef sequence<AdminEPPAccess> EPPAccessSeq;
   
   ///Zone access
-  struct ZoneAccess
+  struct AdminZoneAccess
   {
       ccReg::TID id; ///record id
       string name; ///zone name
@@ -22,7 +22,7 @@ module ccReg {
   };//struct ZoneAccess
 
   /// List of zone structures
-  typedef sequence<ZoneAccess> ZoneAccessSeq;
+  typedef sequence<AdminZoneAccess> ZoneAccessSeq;
 
   /// Registrar detail structure
   struct Registrar {
