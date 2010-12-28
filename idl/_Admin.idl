@@ -5,7 +5,7 @@ module ccReg {
  
 
   /// Registrar detail structure
-  struct AdminRegistrar {
+  struct Registrar {
     TID id; ///< registrar ID
     string ico;
     string dic;
@@ -142,7 +142,7 @@ module ccReg {
   };
 
   // Type for list of registrars
-  typedef sequence<AdminRegistrar> RegistrarList;
+  typedef sequence<Registrar> RegistrarList;
 
   // Type of handle in handle classification
   enum HandleType {
@@ -268,9 +268,9 @@ module ccReg {
     /// return complete list of registrars by access to zone
     RegistrarList getRegistrarsByZone(in string zone);
     /// return one registrar with specified handle
-    AdminRegistrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
+    Registrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
     /// return registrar detail for specified id
-    AdminRegistrar getRegistrarById(in TID id) raises (ObjectNotFound);
+    Registrar getRegistrarById(in TID id) raises (ObjectNotFound);
     /// return contact detail for specified handle
     ContactDetail getContactByHandle(in string handle) raises (ObjectNotFound);
     /// return contact detail for specified id
@@ -416,7 +416,7 @@ module ccReg {
     BankingInvoicing getBankingInvoicing();
     Registry::User getUser();
 
-    TID updateRegistrar(in AdminRegistrar registrar_data) raises (ccReg::Admin::UpdateFailed, ccReg::Admin::ObjectNotFound);
+    TID updateRegistrar(in Registrar registrar_data) raises (ccReg::Admin::UpdateFailed, ccReg::Admin::ObjectNotFound);
     void setHistory(in boolean history);
   };
 
