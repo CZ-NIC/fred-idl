@@ -10,7 +10,7 @@ module ccReg {
   };
   
   /// List of access structures
-  typedef sequence<AdminEPPAccess> EPPAccessSeq;
+  typedef sequence<AdminEPPAccess> AdminEPPAccessSeq;
   
   ///Zone access
   struct AdminZoneAccess
@@ -22,7 +22,7 @@ module ccReg {
   };//struct ZoneAccess
 
   /// List of zone structures
-  typedef sequence<AdminZoneAccess> ZoneAccessSeq;
+  typedef sequence<AdminZoneAccess> AdminZoneAccessSeq;
 
   /// Registrar detail structure
   struct Registrar {
@@ -46,8 +46,8 @@ module ccReg {
     string email; ///< contact email
     string url; ///< URL
     Registry::Money credit; ///< actual credit
-    EPPAccessSeq access; ///< list of epp access data
-    ZoneAccessSeq zones; ///< list of active registrar's zones
+    AdminEPPAccessSeq access; ///< list of epp access data
+    AdminZoneAccessSeq zones; ///< list of active registrar's zones
     boolean hidden; ///< hidden in PIF
   };
 
