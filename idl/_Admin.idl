@@ -51,7 +51,7 @@ module ccReg {
     boolean hidden; ///< hidden in PIF
   };
 
-  struct EPPAction {
+  struct AdminEPPAction {
     TID id; ///< id of action
     string time; /// < processing time
     string xml; ///< xml of request
@@ -320,9 +320,9 @@ module ccReg {
     DomainDetails getDomainsByKeySetHandle(in string handle, in long limit) raises (ObjectNotFound);
 
     /// return EPP action detail for specified svTRID
-    EPPAction getEPPActionBySvTRID(in string svTRID) raises (ObjectNotFound);
+    AdminEPPAction getEPPActionBySvTRID(in string svTRID) raises (ObjectNotFound);
     /// return EPP action detail for specified id
-    EPPAction getEPPActionById(in TID id) raises (ObjectNotFound);
+    AdminEPPAction getEPPActionById(in TID id) raises (ObjectNotFound);
     /// Return count of registred ENUM domains
     long getDomainCount(in string zone);
     /// Return count of signed domains
