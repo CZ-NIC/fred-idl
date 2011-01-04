@@ -102,8 +102,6 @@ module Registry {
     void getSortedBy(out short column, out boolean dir);
     /// Output data in CSV format
     string outputCSV();
-    /// Return filter
-    /// readonly attribute Filter aFilter;
     /// Return id of record at index
     ccReg::TID getRowId(in unsigned short pageRow) raises (INVALID_ROW);
   };
@@ -238,8 +236,6 @@ module Registry {
       unsigned short type; ///< type
       string content; ///< complete email content without binary attachements
       ccReg::Lists objects; ///< list of assocciated emails - to remove (until we don't know full OID of mail associated object)
-      //OIDSeq objects; /// objects asociated to emails - new approach (see above)
-      //AttachmentSeq attachments; ///< names of binary attachements
       OIDSeq attachments; /// attachments of mails
     };
   };
@@ -254,8 +250,6 @@ module Registry {
     };
     typedef sequence<Payment> PaymentList;
     struct PaymentAction {
-      //ccReg::TID objectId;
-      //string objectName;
       OID paidObject;
       string actionTime;
       string expirationDate;
@@ -279,8 +273,6 @@ module Registry {
       string toDate;
       InvoiceType type;
       string number;
-      // ccReg::TID registrarId;
-      // string registrarHandle;
       OID registrar;
       Money credit;
       Money price;
@@ -288,9 +280,7 @@ module Registry {
       Money total;
       Money totalVAT;
       string varSymbol;
-      //ccReg::TID filePDF;
       OID filePDF;
-      //ccReg::TID fileXML;
       OID fileXML;
       PaymentList payments;
       PaymentActionList paymentActions;
@@ -576,39 +566,27 @@ module Zone
   };
 
   module Domain {
-    //typedef sequence<string> ContactHandleSeq;
     struct Detail {
       ccReg::TID id;
       string handle;
       string roid;
-      //string registrarHandle;
       HistoryRecordList registrar; // value type = OID
       string createDate;
       string transferDate;
       string updateDate;
       string deleteDate;
       string outZoneDate;
-      //string createRegistrarHandle;
       OID createRegistrar;
-      //string updateRegistrarHandle;
       OID updateRegistrar;
       HistoryRecordList authInfo; // value type = string
-      //string registrantHandle;
       HistoryRecordList registrant; // value type = OID
-      //string expirationDate;
       HistoryRecordList expirationDate; // value type = string
-      //string valExDate;
       HistoryRecordList valExDate; // value type = string
-       
       HistoryRecordList publish; // value type = boolean
-      //string nssetHandle;
       HistoryRecordList nsset; // value type = OID
       HistoryRecordList keyset; // value type = OID
-      //ContactHandleSeq admins;
       HistoryRecordList admins; // value type = OIDSeq
-      //ContactHandleSeq temps;
       HistoryRecordList temps; // value type = OIDSeq
-      //ObjectStatusSeq statusList;
       StateList states;
     };
   };
@@ -618,69 +596,39 @@ module Zone
       ccReg::TID id;
       string handle;
       string roid;
-      //string registrarHandle;
       HistoryRecordList registrar; // value type = OID
       string createDate;
       string transferDate;
       string updateDate;
       string deleteDate;
-      //string createRegistrarHandle;
       OID createRegistrar;
-      //string updateRegistrarHandle;
       OID updateRegistrar;
-      //string authInfo;
       HistoryRecordList authInfo; // value type = string
-      //string name;
       HistoryRecordList name; // value type = string
-      //string organization;
       HistoryRecordList organization; // value type = string
-      //string street1;
       HistoryRecordList street1; // value type = string
-      //string street2;
       HistoryRecordList street2; // value type = string
-      //string street3;
       HistoryRecordList street3; // value type = string
-      //string province;
       HistoryRecordList province; // value type = string
-      //string postalcode;
       HistoryRecordList postalcode; // value type = string
-      //string city;
       HistoryRecordList city; // value type = string
-      //string country;
       HistoryRecordList country; // value type = string
-      //string telephone;
       HistoryRecordList telephone; // value type = string
-      //string fax;
       HistoryRecordList fax; // value type = string
-      //string email;
       HistoryRecordList email; // value type = string
-      //string notifyEmail;
       HistoryRecordList notifyEmail; // value type = string
-      //string ssn;
       HistoryRecordList ident; // value type = string
-      //string ssnType;
       HistoryRecordList identType; // value type = string
-      //string vat;
       HistoryRecordList vat; // value type = string
-      //boolean discloseName;
       HistoryRecordList discloseName; // value type = boolean
-      //boolean discloseOrganization;
       HistoryRecordList discloseOrganization; // value type = boolean
-      //boolean discloseEmail;
       HistoryRecordList discloseEmail; // value type = boolean
-      //boolean discloseAddress;
       HistoryRecordList discloseAddress; // value type = boolean
-      //boolean discloseTelephone;
       HistoryRecordList discloseTelephone; // value type = boolean
-      //boolean discloseFax;
       HistoryRecordList discloseFax; // value type = boolean
-      //boolean discloseIdent;
       HistoryRecordList discloseIdent; // value type = boolean
-      //boolean discloseVat;
       HistoryRecordList discloseVat; // value type = boolean
-      //boolean discloseNotifyEmail;
       HistoryRecordList discloseNotifyEmail; // value type = boolean
-      //ObjectStatusSeq statusList;
       StateList states;
     };
   };
@@ -690,23 +638,16 @@ module Zone
       ccReg::TID id;
       string handle;
       string roid;
-      //string registrarHandle;
       HistoryRecordList registrar; // value type = OID
       string createDate;
       string transferDate;
       string updateDate;
       string deleteDate;
-      //string createRegistrarHandle;
       OID createRegistrar;
-      //string updateRegistrarHandle;
       OID updateRegistrar;
-      //string authInfo;
       HistoryRecordList authInfo; // value type = string
-      //ContactHandleSeq admins;
       HistoryRecordList admins; // value type = OIDSeq
-      //DNSHost hosts;
       HistoryRecordList hosts; // value type = DNSHost
-      //ObjectStatusSeq statusList;
       StateList states;
       HistoryRecordList reportLevel;
     };
@@ -717,24 +658,17 @@ module Zone
       ccReg::TID id;
       string handle;
       string roid;
-      //string registrarHandle;
       HistoryRecordList registrar; // value type = OID
       string createDate;
       string transferDate;
       string updateDate;
       string deleteDate;
-      //string createRegistrarHandle;
       OID createRegistrar;
-      //string updateRegistrarHandle;
       OID updateRegistrar;
-      //string authInfo;
       HistoryRecordList authInfo; // value type = string
-      //ContactHandleSeq admins;
       HistoryRecordList admins; // value type = OIDSeq
-      //DSrecods
       HistoryRecordList dsrecords; // value type = DSrecords
       HistoryRecordList dnskeys;   // value type = DNSKey
-      //ObjectStatusSeq statusList;
       StateList states;
     };
   };
