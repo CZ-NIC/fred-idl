@@ -1,0 +1,12 @@
+// IDL interface for fred-server
+#include "_dataTypes.idl"
+#include "_Mailer.idl"
+#include "_Admin.idl"
+
+#include "_EPP.idl"
+#include "_TechCheck.idl"
+#include "_FileManager.idl"
+#include "_Logger.idl"
+#include "Messages.idl"
+#include "_zone.idl"
+

@@ -1,3 +1,5 @@
+#include "_dataTypes.idl"
+
 module ccReg {
 
   /// Structure for zone parameters
