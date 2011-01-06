@@ -1,4 +1,4 @@
-#include "_dataTypes.idl"
+//#include "_dataTypes.idl"
 
 module ccReg {
 
@@ -45,7 +45,7 @@ module ccReg {
               in string ns_fqdn);
 
 	  boolean updateZoneById(
-			  in TID id,
+			  in unsigned long long id,
 			  in string fqdn,
               in long ex_period_min,
               in long ex_period_max,
@@ -63,7 +63,7 @@ module ccReg {
 			  in string addr);
 
       boolean updateZoneNs(
-    		  in TID id,
+    		  in unsigned long long id,
 			  in string zone_fqdn,
 			  in string fqdn,
 			  in string addr);
