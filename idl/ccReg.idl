@@ -13,5 +13,5 @@
 #include "Messages.idl"
 
 // for zone handling
-#include "_zone.idl"
+#include "Zone.idl"
 
