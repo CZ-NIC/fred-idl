@@ -1,0 +1,214 @@
+//whois
+module ccReg 
+{
+
+  /// Access structure
+  struct AdminEPPAccess {
+    string password; ///< epp login password
+    string md5Cert; ///< md5 of certificate
+  };
+  
+  /// List of access structures
+  typedef sequence<AdminEPPAccess> AdminEPPAccessSeq;
+  
+  ///Zone access
+  struct AdminZoneAccess
+  {
+      ccReg::TID id; ///record id
+      string name; ///zone name
+      DateType fromDate;  ///start of registrar's access to zone
+      DateType toDate; ///end of registrar's access to zone
+  };//struct ZoneAccess
+
+  /// List of zone structures
+  typedef sequence<AdminZoneAccess> AdminZoneAccessSeq;
+
+  /// Registrar detail structure
+  struct AdminRegistrar {
+    TID id; ///< registrar ID
+    string ico;
+    string dic;
+    string varSymb;
+    boolean vat;
+    string handle; ///< registrar identification
+    string name; ///< registrar name
+    string organization; ///< organization name
+    string street1; ///< address part 1
+    string street2; ///< address part 2
+    string street3; ///< address part 3
+    string city; ///< city of registrar headquaters
+    string stateorprovince; ///< address part
+    string postalcode; ///< address part
+    Registry::CountryCode country; ///< country code
+    string telephone; ///< phne number
+    string fax; ///< fax number
+    string email; ///< contact email
+    string url; ///< URL
+    Registry::Money credit; ///< actual credit
+    AdminEPPAccessSeq access; ///< list of epp access data
+    AdminZoneAccessSeq zones; ///< list of active registrar's zones
+    boolean hidden; ///< hidden in PIF
+  };
+
+  // Type for list of registrars
+  typedef sequence<AdminRegistrar> RegistrarList;
+
+
+  typedef sequence<string> ContactHandleSeq;
+  struct DomainDetail {
+     TID id;
+     string fqdn;
+     string roid;
+     string registrarHandle;
+     string createDate;
+     string transferDate;
+     string updateDate;
+     string createRegistrarHandle;
+     string updateRegistrarHandle;
+     string authInfo;
+     string registrantHandle;
+     string expirationDate;
+     string valExDate;
+     boolean publish; 
+     string nssetHandle;
+     string keysetHandle;
+     ContactHandleSeq admins;
+     ContactHandleSeq temps;
+     Registry::ObjectStatusSeq statusList;
+  };
+
+  struct ContactDetail {
+     TID id;
+     string handle;
+     string roid;
+     string registrarHandle;
+     string createDate;
+     string transferDate;
+     string updateDate;
+     string createRegistrarHandle;
+     string updateRegistrarHandle;
+     string authInfo;
+     string name;
+     string organization;
+     string street1;
+     string street2;
+     string street3;
+     string province;
+     string postalcode;
+     string city;
+     string country;
+     string telephone;
+     string fax;
+     string email;
+     string notifyEmail;
+     string ssn;
+     string ssnType;
+     string vat;
+     boolean discloseName;
+     boolean discloseOrganization;
+     boolean discloseEmail;
+     boolean discloseAddress;
+     boolean discloseTelephone;
+     boolean discloseFax;
+     boolean discloseIdent;
+     boolean discloseVat;
+     boolean discloseNotifyEmail;
+     Registry::ObjectStatusSeq statusList;
+  };
+
+  struct NSSetDetail {
+     TID id;
+     string handle;
+     string roid;
+     string registrarHandle;
+     string createDate;
+     string transferDate;
+     string updateDate;
+     string createRegistrarHandle;
+     string updateRegistrarHandle;
+     string authInfo;
+     ContactHandleSeq admins;
+     DNSHost hosts;
+     Registry::ObjectStatusSeq statusList;     
+     short reportLevel;
+  };
+
+  struct KeySetDetail {
+      TID id;
+      string handle;
+      string roid;
+      string registrarHandle;
+      string createDate;
+      string transferDate;
+      string updateDate;
+      string createRegistrarHandle;
+      string updateRegistrarHandle;
+      string authInfo;
+      ContactHandleSeq admins;
+      DSRecord dsrecords;
+      DNSKey dnskeys;
+      Registry::ObjectStatusSeq  statusList;
+  };
+
+  // Type of handle in handle classification
+  enum HandleType {
+    HT_ENUM_NUMBER, ///< Handle is number (converting)
+    HT_ENUM_DOMAIN, ///< Handle is enum domain
+    HT_DOMAIN, ///< Handle is non enum domain
+    HT_CONTACT, ///< Handle is contact
+    HT_NSSET, ///< Handle is nsset
+    HT_KEYSET, ///< Handle is keyset
+    HT_REGISTRAR, ///< Handle is registrar
+    HT_OTHER ///< Invalid handle
+  };
+
+  /// Type of detail of handle status
+  enum CheckHandleClass {
+    CH_UNREGISTRABLE, ///< Handle is outside of register
+    CH_UNREGISTRABLE_LONG, ///< Handle is too long
+    CH_REGISTRED, ///< Handle is registred
+    CH_REGISTRED_PARENT, ///< Handle id registred under super domain
+    CH_REGISTRED_CHILD, /// < Handle has registred subdomain
+    CH_PROTECTED, //< Handle is in protected period or on blacklist
+    CH_FREE ///< Handle is free for registration or has unknown stattus
+  };
+
+  /// Type for one classification record
+  struct CheckHandleType {
+    string newHandle; ///< Translated handle
+    string conflictHandle; ///< Handle in conflict
+    CheckHandleClass handleClass; ///< Výsledek klasifikace handle
+    HandleType hType; ///< Type of handle
+  };
+
+  /// Return type for checkHandle function
+  typedef sequence<CheckHandleType> CheckHandleTypeSeq;
+
+  /// Sequence of domains is used in inverse whois queries
+  typedef sequence<DomainDetail> DomainDetails;
+  /// Sequence of nssets is used in inverse whois queries
+  typedef sequence<NSSetDetail> NSSetDetails;
+  /// Sequence of keysets is used in inverse whois queries
+  typedef sequence<KeySetDetail> KeySetDetails;
+  /// Type of inverse key used for domain search
+  enum DomainInvKeyType {
+    DIKT_REGISTRANT,
+    DIKT_ADMIN,
+    DIKT_TEMP,
+    DIKT_NSSET,
+    DIKT_KEYSET
+  };
+  
+  /// Type of inverse key used for nsset search
+  enum NSSetInvKeyType {
+    NIKT_NS,
+    NIKT_TECH
+  };
+  /// Type of inverse key used for keyset search
+  enum KeySetInvKeyType {
+      KIKT_TECH
+  };
+
+
+};
+
