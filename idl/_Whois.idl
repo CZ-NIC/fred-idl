@@ -220,18 +220,25 @@ module ccReg
   /// public interface
   interface Whois
   {
+    /// exception thrown in case of failed search
+    exception ObjectNotFound{};
+    /// exception thrown in case of db error
+    exception SQL_ERROR{};
+    
+    /// return one registrar with specified handle, implementation throws also SQL_ERROR
+    AdminRegistrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
+  
+  
   /* whois interface separated from Admin
   
-      /// exception thwown in case of failed search
+    /// exception thwown in case of failed search
     exception ObjectNotFound {};
   
-  
-      /// return complete list of registrars
+    /// return complete list of registrars
     RegistrarList getRegistrars();
     /// return complete list of registrars by access to zone
     RegistrarList getRegistrarsByZone(in string zone);
-    /// return one registrar with specified handle
-    AdminRegistrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
+    
     /// return registrar detail for specified id
     AdminRegistrar getRegistrarById(in TID id) raises (ObjectNotFound);
     /// return contact detail for specified handle
