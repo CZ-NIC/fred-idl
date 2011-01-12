@@ -1,4 +1,12 @@
+#ifndef _WHOIS_IDL_
+#define _WHOIS_IDL_
+
+
 //whois
+
+#include "_dataTypes.idl"
+#include "_Registry.idl"
+
 module ccReg 
 {
 
@@ -209,6 +217,117 @@ module ccReg
       KIKT_TECH
   };
 
+  /// public interface
+  interface Whois
+  {
+  /* whois interface separated from Admin
+  
+      /// exception thwown in case of failed search
+    exception ObjectNotFound {};
+  
+  
+      /// return complete list of registrars
+    RegistrarList getRegistrars();
+    /// return complete list of registrars by access to zone
+    RegistrarList getRegistrarsByZone(in string zone);
+    /// return one registrar with specified handle
+    AdminRegistrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
+    /// return registrar detail for specified id
+    AdminRegistrar getRegistrarById(in TID id) raises (ObjectNotFound);
+    /// return contact detail for specified handle
+    ContactDetail getContactByHandle(in string handle) raises (ObjectNotFound);
+    /// return contact detail for specified id
+    ContactDetail getContactById(in TID id) raises (ObjectNotFound);
 
-};
+    /// return nsset detail for specified handel
+    NSSetDetail getNSSetByHandle(in string handle) raises (ObjectNotFound);
+    /// return nsset detail for specified id
+    NSSetDetail getNSSetById(in TID id) raises (ObjectNotFound);
 
+    /// return keyset detail for specified handle
+    KeySetDetail getKeySetByHandle(in string handle) raises (ObjectNotFound);
+    /// return keyset detail for specified id
+    KeySetDetail getKeySetById(in TID id) raises (ObjectNotFound);
+    /// return list of keyset details with specified admin contact id
+    KeySetDetails getKeySetsByContactId(in TID id, in long limit) raises (ObjectNotFound);
+    /// return list of keyset details with specified admin contact handle
+    KeySetDetails getKeySetsByContactHandle(in string handle, in long limit) raises (ObjectNotFound);
+
+    /// return domain detail for specified handel
+    DomainDetail getDomainByFQDN(in string fqdn) raises (ObjectNotFound);
+    /// return domain detail for specified id
+    DomainDetail getDomainById(in TID id) raises (ObjectNotFound);
+    /// Return list of domain details with specified keyset id
+    DomainDetails getDomainsByKeySetId(in TID id, in long limit) raises (ObjectNotFound);
+    /// Return list of domain details with specified keyset handle
+    DomainDetails getDomainsByKeySetHandle(in string handle, in long limit) raises (ObjectNotFound);
+  
+    /// Classify input handle according to registry policy
+    void checkHandle(
+      in string handle, ///< input handle for classification
+      out CheckHandleTypeSeq ch ///< output structure with classification
+    );
+    
+    /// Return count of registred ENUM domains
+    long getDomainCount(in string zone);
+    /// Return count of signed domains
+    long getSignedDomainCount(in string _fqdn);
+    /// Return count of numbers described by all registred ENUM domains
+    long getEnumNumberCount();
+    
+    /// Return list with descriptions of available object status for domain
+    Registry::ObjectStatusDescSeq getDomainStatusDescList(in string lang);
+    /// Return list with descriptions of available object status for contact
+    Registry::ObjectStatusDescSeq getContactStatusDescList(in string lang);
+    /// Return list with descriptions of available object status for nsset
+    Registry::ObjectStatusDescSeq getNSSetStatusDescList(in string lang);
+    /// Return list with descriptions of available object status for keyset
+    Registry::ObjectStatusDescSeq getKeySetStatusDescList(in string lang);
+    
+    /// Exception for common invalid input data
+    exception INVALID_INPUT {};
+    /// Exception for unspecified email in ([AUTO|POST]_PIF) request
+    exception BAD_EMAIL {};
+    /// Exception for bad object id
+    exception OBJECT_NOT_FOUND {};
+    /// Exception for bad EPP action id in EPP request
+    exception ACTION_NOT_FOUND {};
+    /// Exception for bad EPP action id in EPP request
+    exception SQL_ERROR {};
+    /// Exception for unsent emails
+    exception MAILER_ERROR {};
+    /// Exception for request blocation
+    exception REQUEST_BLOCKED {};
+
+    typedef sequence<TID> ObjectIdList;
+    TID createPublicRequest(
+        in Registry::PublicRequest::Type type,
+        in string reason,
+        in string emailToAnswer,
+        in ObjectIdList objectIds,
+        in TID requestId 
+	) raises (
+	  BAD_EMAIL, OBJECT_NOT_FOUND, ACTION_NOT_FOUND, SQL_ERROR, 
+	  INVALID_INPUT, REQUEST_BLOCKED
+	);
+    /// Process request by sending email with auth_info
+    void processPublicRequest(in TID id, in boolean invalid) 
+      raises (OBJECT_NOT_FOUND, SQL_ERROR, MAILER_ERROR, REQUEST_BLOCKED);
+    typedef sequence<octet> Buffer;
+    Buffer getPublicRequestPDF(in TID id, in string lang)
+      raises (OBJECT_NOT_FOUND, SQL_ERROR);      
+    
+    /// get domains by registrant, admin or nsset handle
+    DomainDetails getDomainsByInverseKey(in string key, in DomainInvKeyType type, in long limit);
+    /// get nsset by nameserver or technical contact handle
+    NSSetDetails getNSSetsByInverseKey(in string key, in NSSetInvKeyType type, in long limit);
+    /// get keyset by technical contact handle
+    KeySetDetails getKeySetsByInverseKey(in string key, in KeySetInvKeyType type, in long limit);
+   
+    */
+
+  };//interface Whois
+
+};//module ccReg
+
+#endif

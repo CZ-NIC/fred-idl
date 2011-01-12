@@ -1,3 +1,6 @@
+#ifndef _REGISTRY_IDL_
+#define _REGISTRY_IDL_
+
 //#include "Filters.idl"
 #include "_dataTypes.idl"
 
@@ -709,3 +712,5 @@ module Zone
     }; 
   };
 };
+
+#endif
