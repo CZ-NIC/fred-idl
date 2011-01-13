@@ -225,8 +225,8 @@ module ccReg
     /// exception thrown in case of db error
     exception SQL_ERROR{};
     
-    /// return one registrar with specified handle, implementation throws also SQL_ERROR
-    AdminRegistrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
+    /// return one registrar with specified handle
+    AdminRegistrar getRegistrarByHandle(in string handle) raises (ObjectNotFound, SQL_ERROR);
   
   
   /* whois interface separated from Admin
