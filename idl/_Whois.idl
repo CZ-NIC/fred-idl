@@ -227,6 +227,9 @@ module ccReg
     
     /// return one registrar with specified handle
     AdminRegistrar getRegistrarByHandle(in string handle) raises (ObjectNotFound, SQL_ERROR);
+    /// return contact detail for specified handle
+    ContactDetail getContactByHandle(in string handle) raises (ObjectNotFound);
+
   
   
   /* whois interface separated from Admin
@@ -241,8 +244,6 @@ module ccReg
     
     /// return registrar detail for specified id
     AdminRegistrar getRegistrarById(in TID id) raises (ObjectNotFound);
-    /// return contact detail for specified handle
-    ContactDetail getContactByHandle(in string handle) raises (ObjectNotFound);
     /// return contact detail for specified id
     ContactDetail getContactById(in TID id) raises (ObjectNotFound);
 
