@@ -222,31 +222,38 @@ module ccReg
   {
     /// exception thrown in case of failed search
     exception ObjectNotFound{};
-    /// exception thrown in case of db error
-    exception SQL_ERROR{};
+    /// exception thrown in case of error
+    exception Error{};
     
     /// return one registrar with specified handle
-    AdminRegistrar getRegistrarByHandle(in string handle) raises (ObjectNotFound, SQL_ERROR);
+    AdminRegistrar getRegistrarByHandle(in string handle)
+    	raises (ObjectNotFound, Error);
     /// return contact detail for specified handle
-    ContactDetail getContactByHandle(in string handle) raises (ObjectNotFound);
+    ContactDetail getContactByHandle(in string handle)
+        raises (ObjectNotFound, Error);
 
     /// return nsset detail for specified handel
-    NSSetDetail getNSSetByHandle(in string handle) raises (ObjectNotFound);
+    NSSetDetail getNSSetByHandle(in string handle)
+        raises (ObjectNotFound, Error);
     /// return keyset detail for specified handle
-    KeySetDetail getKeySetByHandle(in string handle) raises (ObjectNotFound);
+    KeySetDetail getKeySetByHandle(in string handle)
+        raises (ObjectNotFound, Error);
     /// return domain detail for specified handel
-    DomainDetail getDomainByFQDN(in string fqdn) raises (ObjectNotFound);
+    DomainDetail getDomainByFQDN(in string fqdn)
+        raises (ObjectNotFound, Error);
     /// Return list with descriptions of available object status for domain
-    Registry::ObjectStatusDescSeq getDomainStatusDescList(in string lang);
+    Registry::ObjectStatusDescSeq getDomainStatusDescList(in string lang)
+        raises (Error);
     /// get domains by registrant, admin or nsset handle
-    DomainDetails getDomainsByInverseKey(in string key, in DomainInvKeyType type, in long limit);
+    DomainDetails getDomainsByInverseKey(in string key, in DomainInvKeyType type, in long limit)
+        raises (Error);
     /// get nsset by nameserver or technical contact handle
-    NSSetDetails getNSSetsByInverseKey(in string key, in NSSetInvKeyType type, in long limit);
+    NSSetDetails getNSSetsByInverseKey(in string key, in NSSetInvKeyType type, in long limit)
+        raises (Error);
     /// get keyset by technical contact handle
-    KeySetDetails getKeySetsByInverseKey(in string key, in KeySetInvKeyType type, in long limit);
-
+    KeySetDetails getKeySetsByInverseKey(in string key, in KeySetInvKeyType type, in long limit)
+        raises (Error);
   };//interface Whois
-
 };//module ccReg
 
 #endif
