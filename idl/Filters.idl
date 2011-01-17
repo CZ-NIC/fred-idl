@@ -6,6 +6,9 @@
 module ccReg {
 
   module Filters {
+
+    exception SqlQueryTimeout {};
+
     interface Base
     {
       readonly attribute string name;
@@ -324,7 +327,7 @@ module ccReg {
     interface Table
     {
       Compound add();
-      void reload();
+      void reload() raises(ccReg::Filters::SqlQueryTimeout);
       void clear();
       Iterator getIterator();
       void loadFilter(in TID filterId);  //maybe move these two to Filters pagetable
