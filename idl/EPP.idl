@@ -1,3 +1,6 @@
+#ifndef EPP_IDL_
+#define EPP_IDL_
+
 #include "_dataTypes.idl"
 
 module ccReg {
@@ -1077,3 +1080,5 @@ module ccReg {
   }; // interface EPP
   
 }; // module ccReg
+
+#endif
