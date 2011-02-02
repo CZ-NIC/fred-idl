@@ -1,5 +1,5 @@
-#ifndef _WHOIS_IDL_
-#define _WHOIS_IDL_
+#ifndef WHOIS_IDL_
+#define WHOIS_IDL_
 
 
 //whois

@@ -1,2 +1,2 @@
-#include "_Whois.idl"
-#include "_Logger.idl"
+#include "Whois.idl"
+#include "Logger.idl"

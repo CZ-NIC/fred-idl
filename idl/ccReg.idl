@@ -2,13 +2,13 @@
 // interfaces: EPP , Whois , Admin
 #include "_dataTypes.idl"
 #include "_Mailer.idl"
-#include "_Admin.idl"
+#include "Admin.idl"
 
 #include "_EPP.idl"
 #include "_ZoneGenerator.idl"
 #include "_TechCheck.idl"
 #include "_FileManager.idl"
-#include "_Logger.idl"
+#include "Logger.idl"
 #include "Messages.idl"
 
 // for zone handling
