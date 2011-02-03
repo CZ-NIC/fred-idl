@@ -4,7 +4,7 @@
 
 #include "_dataTypes.idl"
 #include "Filters.idl"
-#include "_Registry.idl"
+#include "Registry.idl"
 #include "Whois.idl"
 
 module ccReg {

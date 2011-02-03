@@ -5,7 +5,7 @@
 //whois
 
 #include "_dataTypes.idl"
-#include "_Registry.idl"
+#include "Registry.idl"
 
 module ccReg 
 {
