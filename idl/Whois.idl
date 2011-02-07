@@ -244,6 +244,16 @@ module ccReg
     /// Return list with descriptions of available object status for domain
     Registry::ObjectStatusDescSeq getDomainStatusDescList(in string lang)
         raises (Error);
+        /// Return list with descriptions of available object status for contact
+    Registry::ObjectStatusDescSeq getContactStatusDescList(in string lang)
+        raises (Error);
+    /// Return list with descriptions of available object status for nsset
+    Registry::ObjectStatusDescSeq getNSSetStatusDescList(in string lang)
+        raises (Error);
+    /// Return list with descriptions of available object status for keyset
+    Registry::ObjectStatusDescSeq getKeySetStatusDescList(in string lang)
+        raises (Error);
+    
     /// get domains by registrant, admin or nsset handle
     DomainDetails getDomainsByInverseKey(in string key, in DomainInvKeyType type, in long limit)
         raises (Error);

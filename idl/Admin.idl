@@ -131,12 +131,6 @@ module ccReg {
     Registry::CountryDescSeq getCountryDescList();
     /// Return default country code
     Registry::CountryCode getDefaultCountry();
-    /// Return list with descriptions of available object status for contact
-    Registry::ObjectStatusDescSeq getContactStatusDescList(in string lang);
-    /// Return list with descriptions of available object status for nsset
-    Registry::ObjectStatusDescSeq getNSSetStatusDescList(in string lang);
-    /// Return list with descriptions of available object status for keyset
-    Registry::ObjectStatusDescSeq getKeySetStatusDescList(in string lang);
     /// Return list with descriptions of all available object states
     Registry::ObjectStatusDescSeq getObjectStatusDescList(in string lang) raises (InternalServerError);
 
