@@ -86,8 +86,6 @@ module ccReg {
 
     /// return complete list of registrars
     RegistrarList getRegistrars();
-    /// return complete list of registrars by access to zone
-    RegistrarList getRegistrarsByZone(in string zone);
     /// return registrar detail for specified id
     AdminRegistrar getRegistrarById(in TID id) raises (ObjectNotFound);
     /// return contact detail for specified id

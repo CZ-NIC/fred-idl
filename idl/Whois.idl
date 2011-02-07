@@ -228,6 +228,9 @@ module ccReg
     /// return one registrar with specified handle
     AdminRegistrar getRegistrarByHandle(in string handle)
     	raises (ObjectNotFound, Error);
+    /// return complete list of registrars by access to zone
+    RegistrarList getRegistrarsByZone(in string zone)
+    	raises (Error);
     /// return contact detail for specified handle
     ContactDetail getContactByHandle(in string handle)
         raises (ObjectNotFound, Error);
