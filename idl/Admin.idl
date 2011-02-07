@@ -88,22 +88,14 @@ module ccReg {
     RegistrarList getRegistrars();
     /// return complete list of registrars by access to zone
     RegistrarList getRegistrarsByZone(in string zone);
-    /// return one registrar with specified handle
-    AdminRegistrar getRegistrarByHandle(in string handle) raises (ObjectNotFound);
     /// return registrar detail for specified id
     AdminRegistrar getRegistrarById(in TID id) raises (ObjectNotFound);
-    /// return contact detail for specified handle
-    ContactDetail getContactByHandle(in string handle) raises (ObjectNotFound);
     /// return contact detail for specified id
     ContactDetail getContactById(in TID id) raises (ObjectNotFound);
 
-    /// return nsset detail for specified handel
-    NSSetDetail getNSSetByHandle(in string handle) raises (ObjectNotFound);
     /// return nsset detail for specified id
     NSSetDetail getNSSetById(in TID id) raises (ObjectNotFound);
 
-    /// return keyset detail for specified handle
-    KeySetDetail getKeySetByHandle(in string handle) raises (ObjectNotFound);
     /// return keyset detail for specified id
     KeySetDetail getKeySetById(in TID id) raises (ObjectNotFound);
     /// return list of keyset details with specified admin contact id
@@ -111,8 +103,6 @@ module ccReg {
     /// return list of keyset details with specified admin contact handle
     KeySetDetails getKeySetsByContactHandle(in string handle, in long limit) raises (ObjectNotFound);
 
-    /// return domain detail for specified handel
-    DomainDetail getDomainByFQDN(in string fqdn) raises (ObjectNotFound);
     /// return domain detail for specified id
     DomainDetail getDomainById(in TID id) raises (ObjectNotFound);
     /// Return list of domain details with specified keyset id
@@ -141,8 +131,6 @@ module ccReg {
     Registry::CountryDescSeq getCountryDescList();
     /// Return default country code
     Registry::CountryCode getDefaultCountry();
-    /// Return list with descriptions of available object status for domain
-    Registry::ObjectStatusDescSeq getDomainStatusDescList(in string lang);
     /// Return list with descriptions of available object status for contact
     Registry::ObjectStatusDescSeq getContactStatusDescList(in string lang);
     /// Return list with descriptions of available object status for nsset
