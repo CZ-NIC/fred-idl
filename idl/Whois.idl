@@ -244,7 +244,7 @@ module ccReg
     /// Return list with descriptions of available object status for domain
     Registry::ObjectStatusDescSeq getDomainStatusDescList(in string lang)
         raises (Error);
-        /// Return list with descriptions of available object status for contact
+    /// Return list with descriptions of available object status for contact
     Registry::ObjectStatusDescSeq getContactStatusDescList(in string lang)
         raises (Error);
     /// Return list with descriptions of available object status for nsset
