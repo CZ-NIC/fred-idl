@@ -165,16 +165,6 @@ module ccReg {
     Buffer getPublicRequestPDF(in TID id, in string lang)
       raises (OBJECT_NOT_FOUND, SQL_ERROR);      
 
-    // disabled in 2.3
-    // Invoicing::Invoice getInvoiceById(in TID id);
-
-    /// get domains by registrant, admin or nsset handle
-    DomainDetails getDomainsByInverseKey(in string key, in DomainInvKeyType type, in long limit);
-    /// get nsset by nameserver or technical contact handle
-    NSSetDetails getNSSetsByInverseKey(in string key, in NSSetInvKeyType type, in long limit);
-    /// get keyset by technical contact handle
-    KeySetDetails getKeySetsByInverseKey(in string key, in KeySetInvKeyType type, in long limit);
-    
     /// return credit for registrer and zone
     Registry::Money getCreditByZone(in string registrar, in TID zone)
       raises (SQL_ERROR);
