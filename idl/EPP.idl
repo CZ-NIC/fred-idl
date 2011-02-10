@@ -7,9 +7,9 @@ module ccReg {
 
     /// common EPP params for create,update,delete and transfer operations
   struct EppParams {
-      long requestID;  ///<ID of fred-logd request which represents this call
+      TID requestID;  ///<ID of fred-logd request which represents this call
                         /// setting it to 0 means no request ID will be saved in history 
-      long sessionID;  ///<ID of fred-logd session  (was login table before)
+      TID sessionID;  ///<ID of fred-logd session  (was login table before)
       string clTRID;    ///< client transaction ID
       string XML;       ///< raw content of EPP command
   };
