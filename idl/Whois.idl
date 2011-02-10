@@ -223,49 +223,49 @@ module ccReg
     /// exception thrown in case of failed search
     exception ObjectNotFound{};
     /// exception thrown in case of error
-    exception Error{};
+    exception InternalServerError{};
     
     /// return one registrar with specified handle
     AdminRegistrar getRegistrarByHandle(in string handle)
-    	raises (ObjectNotFound, Error);
+    	raises (ObjectNotFound, InternalServerError);
     /// return complete list of registrars by access to zone
     RegistrarList getRegistrarsByZone(in string zone)
-    	raises (Error);
+    	raises (InternalServerError);
     /// return contact detail for specified handle
     ContactDetail getContactByHandle(in string handle)
-        raises (ObjectNotFound, Error);
+        raises (ObjectNotFound, InternalServerError);
 
     /// return nsset detail for specified handel
     NSSetDetail getNSSetByHandle(in string handle)
-        raises (ObjectNotFound, Error);
+        raises (ObjectNotFound, InternalServerError);
     /// return keyset detail for specified handle
     KeySetDetail getKeySetByHandle(in string handle)
-        raises (ObjectNotFound, Error);
+        raises (ObjectNotFound, InternalServerError);
     /// return domain detail for specified handel
     DomainDetail getDomainByFQDN(in string fqdn)
-        raises (ObjectNotFound, Error);
+        raises (ObjectNotFound, InternalServerError);
     /// Return list with descriptions of available object status for domain
     Registry::ObjectStatusDescSeq getDomainStatusDescList(in string lang)
-        raises (Error);
+        raises (InternalServerError);
     /// Return list with descriptions of available object status for contact
     Registry::ObjectStatusDescSeq getContactStatusDescList(in string lang)
-        raises (Error);
+        raises (InternalServerError);
     /// Return list with descriptions of available object status for nsset
     Registry::ObjectStatusDescSeq getNSSetStatusDescList(in string lang)
-        raises (Error);
+        raises (InternalServerError);
     /// Return list with descriptions of available object status for keyset
     Registry::ObjectStatusDescSeq getKeySetStatusDescList(in string lang)
-        raises (Error);
+        raises (InternalServerError);
     
     /// get domains by registrant, admin or nsset handle
     DomainDetails getDomainsByInverseKey(in string key, in DomainInvKeyType type, in long limit)
-        raises (Error);
+        raises (InternalServerError);
     /// get nsset by nameserver or technical contact handle
     NSSetDetails getNSSetsByInverseKey(in string key, in NSSetInvKeyType type, in long limit)
-        raises (Error);
+        raises (InternalServerError);
     /// get keyset by technical contact handle
     KeySetDetails getKeySetsByInverseKey(in string key, in KeySetInvKeyType type, in long limit)
-        raises (Error);
+        raises (InternalServerError);
   };//interface Whois
 };//module ccReg
 
