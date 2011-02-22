@@ -43,8 +43,6 @@ module ccReg {
   /// Return type for checkHandle function
   typedef sequence<CheckHandleType> CheckHandleTypeSeq;
 
-  
-
   struct AdminEPPAction {
     TID id; ///< id of action
     string time; /// < processing time
@@ -123,8 +121,6 @@ module ccReg {
     RegistrarList getRegistrars();
     /// return registrar detail for specified id
     AdminRegistrar getRegistrarById(in TID id) raises (ObjectNotFound);
-    /// return contact detail for specified id
-    ContactDetail getContactById(in TID id) raises (ObjectNotFound);
 
     /// return nsset detail for specified id
     NSSetDetail getNSSetById(in TID id) raises (ObjectNotFound);
