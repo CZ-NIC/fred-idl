@@ -122,13 +122,6 @@ module ccReg {
     /// return registrar detail for specified id
     AdminRegistrar getRegistrarById(in TID id) raises (ObjectNotFound);
 
-    /// return domain detail for specified id
-    DomainDetail getDomainById(in TID id) raises (ObjectNotFound);
-    /// Return list of domain details with specified keyset id
-    DomainDetails getDomainsByKeySetId(in TID id, in long limit) raises (ObjectNotFound);
-    /// Return list of domain details with specified keyset handle
-    DomainDetails getDomainsByKeySetHandle(in string handle, in long limit) raises (ObjectNotFound);
-
     /// return EPP action detail for specified svTRID
     AdminEPPAction getEPPActionBySvTRID(in string svTRID) raises (ObjectNotFound);
     /// return EPP action detail for specified id
