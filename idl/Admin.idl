@@ -5,7 +5,6 @@
 #include "_dataTypes.idl"
 #include "Filters.idl"
 #include "Registry.idl"
-#include "Whois.idl"
 
 module ccReg {
 
@@ -42,6 +41,58 @@ module ccReg {
 
   /// Return type for checkHandle function
   typedef sequence<CheckHandleType> CheckHandleTypeSeq;
+  
+    /// Access structure
+  struct AdminEPPAccess {
+    string password; ///< epp login password
+    string md5Cert; ///< md5 of certificate
+  };
+  
+  /// List of access structures
+  typedef sequence<AdminEPPAccess> AdminEPPAccessSeq;
+  
+  ///Zone access
+  struct AdminZoneAccess
+  {
+      ccReg::TID id; ///record id
+      string name; ///zone name
+      DateType fromDate;  ///start of registrar's access to zone
+      DateType toDate; ///end of registrar's access to zone
+  };//struct ZoneAccess
+
+  /// List of zone structures
+  typedef sequence<AdminZoneAccess> AdminZoneAccessSeq;
+
+  /// Registrar detail structure
+  struct AdminRegistrar {
+    TID id; ///< registrar ID
+    string ico;
+    string dic;
+    string varSymb;
+    boolean vat;
+    string handle; ///< registrar identification
+    string name; ///< registrar name
+    string organization; ///< organization name
+    string street1; ///< address part 1
+    string street2; ///< address part 2
+    string street3; ///< address part 3
+    string city; ///< city of registrar headquaters
+    string stateorprovince; ///< address part
+    string postalcode; ///< address part
+    Registry::CountryCode country; ///< country code
+    string telephone; ///< phne number
+    string fax; ///< fax number
+    string email; ///< contact email
+    string url; ///< URL
+    Registry::Money credit; ///< actual credit
+    AdminEPPAccessSeq access; ///< list of epp access data
+    AdminZoneAccessSeq zones; ///< list of active registrar's zones
+    boolean hidden; ///< hidden in PIF
+  };
+
+  // Type for list of registrars
+  typedef sequence<AdminRegistrar> RegistrarList;
+  
 
   struct AdminEPPAction {
     TID id; ///< id of action

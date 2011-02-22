@@ -11,16 +11,16 @@ module ccReg
 {
 
   /// Access structure
-  struct AdminEPPAccess {
+  struct WhoisEPPAccess {
     string password; ///< epp login password
     string md5Cert; ///< md5 of certificate
   };
   
   /// List of access structures
-  typedef sequence<AdminEPPAccess> AdminEPPAccessSeq;
+  typedef sequence<WhoisEPPAccess> WhoisEPPAccessSeq;
   
   ///Zone access
-  struct AdminZoneAccess
+  struct WhoisZoneAccess
   {
       ccReg::TID id; ///record id
       string name; ///zone name
@@ -29,10 +29,10 @@ module ccReg
   };//struct ZoneAccess
 
   /// List of zone structures
-  typedef sequence<AdminZoneAccess> AdminZoneAccessSeq;
+  typedef sequence<WhoisZoneAccess> WhoisZoneAccessSeq;
 
   /// Registrar detail structure
-  struct AdminRegistrar {
+  struct WhoisRegistrar {
     TID id; ///< registrar ID
     string ico;
     string dic;
@@ -53,13 +53,13 @@ module ccReg
     string email; ///< contact email
     string url; ///< URL
     Registry::Money credit; ///< actual credit
-    AdminEPPAccessSeq access; ///< list of epp access data
-    AdminZoneAccessSeq zones; ///< list of active registrar's zones
+    WhoisEPPAccessSeq access; ///< list of epp access data
+    WhoisZoneAccessSeq zones; ///< list of active registrar's zones
     boolean hidden; ///< hidden in PIF
   };
 
   // Type for list of registrars
-  typedef sequence<AdminRegistrar> RegistrarList;
+  typedef sequence<WhoisRegistrar> WhoisRegistrarList;
 
 
   typedef sequence<string> ContactHandleSeq;
@@ -192,10 +192,10 @@ module ccReg
     exception InternalServerError{};
     
     /// return one registrar with specified handle
-    AdminRegistrar getRegistrarByHandle(in string handle)
+    WhoisRegistrar getRegistrarByHandle(in string handle)
     	raises (ObjectNotFound, InternalServerError);
     /// return complete list of registrars by access to zone
-    RegistrarList getRegistrarsByZone(in string zone)
+    WhoisRegistrarList getRegistrarsByZone(in string zone)
     	raises (InternalServerError);
     /// return contact detail for specified handle
     ContactDetail getContactByHandle(in string handle)
