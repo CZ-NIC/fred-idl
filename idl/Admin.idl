@@ -122,13 +122,6 @@ module ccReg {
     /// return registrar detail for specified id
     AdminRegistrar getRegistrarById(in TID id) raises (ObjectNotFound);
 
-    /// return keyset detail for specified id
-    KeySetDetail getKeySetById(in TID id) raises (ObjectNotFound);
-    /// return list of keyset details with specified admin contact id
-    KeySetDetails getKeySetsByContactId(in TID id, in long limit) raises (ObjectNotFound);
-    /// return list of keyset details with specified admin contact handle
-    KeySetDetails getKeySetsByContactHandle(in string handle, in long limit) raises (ObjectNotFound);
-
     /// return domain detail for specified id
     DomainDetail getDomainById(in TID id) raises (ObjectNotFound);
     /// Return list of domain details with specified keyset id
