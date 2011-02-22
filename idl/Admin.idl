@@ -122,10 +122,6 @@ module ccReg {
     /// return registrar detail for specified id
     AdminRegistrar getRegistrarById(in TID id) raises (ObjectNotFound);
 
-    /// return EPP action detail for specified svTRID
-    AdminEPPAction getEPPActionBySvTRID(in string svTRID) raises (ObjectNotFound);
-    /// return EPP action detail for specified id
-    AdminEPPAction getEPPActionById(in TID id) raises (ObjectNotFound);
     /// Return count of registred ENUM domains
     long getDomainCount(in string zone);
     /// Return count of signed domains
