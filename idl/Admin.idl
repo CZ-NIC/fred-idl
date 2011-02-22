@@ -8,6 +8,41 @@
 #include "Whois.idl"
 
 module ccReg {
+
+  // Type of handle in handle classification
+  enum HandleType {
+    HT_ENUM_NUMBER, ///< Handle is number (converting)
+    HT_ENUM_DOMAIN, ///< Handle is enum domain
+    HT_DOMAIN, ///< Handle is non enum domain
+    HT_CONTACT, ///< Handle is contact
+    HT_NSSET, ///< Handle is nsset
+    HT_KEYSET, ///< Handle is keyset
+    HT_REGISTRAR, ///< Handle is registrar
+    HT_OTHER ///< Invalid handle
+  };
+
+  /// Type of detail of handle status
+  enum CheckHandleClass {
+    CH_UNREGISTRABLE, ///< Handle is outside of register
+    CH_UNREGISTRABLE_LONG, ///< Handle is too long
+    CH_REGISTRED, ///< Handle is registred
+    CH_REGISTRED_PARENT, ///< Handle id registred under super domain
+    CH_REGISTRED_CHILD, /// < Handle has registred subdomain
+    CH_PROTECTED, //< Handle is in protected period or on blacklist
+    CH_FREE ///< Handle is free for registration or has unknown stattus
+  };
+
+  /// Type for one classification record
+  struct CheckHandleType {
+    string newHandle; ///< Translated handle
+    string conflictHandle; ///< Handle in conflict
+    CheckHandleClass handleClass; ///< Výsledek klasifikace handle
+    HandleType hType; ///< Type of handle
+  };
+
+  /// Return type for checkHandle function
+  typedef sequence<CheckHandleType> CheckHandleTypeSeq;
+
   
 
   struct AdminEPPAction {
