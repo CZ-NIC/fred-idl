@@ -1,3 +1,17 @@
+2010-02-24 Jan Zima, Tomas Divis, Juraj Vicenik (2.6.0)
+
+   * authinfo to MojeID contact struct
+
+   * datatype for request id changed to unsigned long long
+
+   * separate interface for Admin and Whois
+
+   * idl dependencies simplified
+
+   * removed "underscored" (grouping) idls for specific usage
+
+   * removed unused code
+
 2010-11-22 Jiri Sadek (2.5.3)
 
    * New exceptions in MojeID interface
