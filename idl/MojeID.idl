@@ -162,9 +162,10 @@ module MojeID {
          * \param request_id    associated request id in logger
          * \return              contact id
          */
-        unsigned long long contactCreate(
+        unsigned long long contactCreatePrepare(
                 in Contact c,
                 in IdentificationMethod m,
+                in string trans_id,
                 in unsigned long long request_id)
             raises (INTERNAL_SERVER_ERROR, DATA_VALIDATION_ERROR);
 
