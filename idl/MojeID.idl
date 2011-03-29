@@ -154,11 +154,30 @@ module MojeID {
         exception OBJECT_CHANGED { };
 
         /*
+         * TEMP - for nicms, otherwise prepare version should be used
          * create contact and identification request based on ident. method
          * chosen
          *
          * \param c             contact data structure
          * \param m             identification method (SMS, LETTER, CERT)
+         * \param request_id    associated request id in logger
+         * \return              contact id
+         */
+        unsigned long long contactCreate(
+                in Contact c,
+                in IdentificationMethod m,
+                in unsigned long long request_id)
+            raises (INTERNAL_SERVER_ERROR, DATA_VALIDATION_ERROR);
+
+
+        /*
+         * create contact and identification request based on ident. method
+         * chosen
+         *
+         * \param c             contact data structure
+         * \param m             identification method (SMS, LETTER, CERT)
+         * \param trans_id      database transaction identifier
+         *                      for 2-phase commit
          * \param request_id    associated request id in logger
          * \return              contact id
          */
