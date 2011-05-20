@@ -1,4 +1,11 @@
-2010-02-24 Jan Zima, Tomas Divis, Juraj Vicenik (2.6.0)
+2011-05-20 Jiri Sadek, Juraj Vicenik, Jan Zima (2.7.0)
+
+   * mojeid - 2-PC for contactCreate
+            - 2-PC for contactTransfer
+
+   * comment fixes
+
+2011-02-24 Jan Zima, Tomas Divis, Juraj Vicenik (2.6.0)
 
    * authinfo to MojeID contact struct
 
