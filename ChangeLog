@@ -1,3 +1,7 @@
+2011-05-26 Jiri Sadek (2.7.1)
+
+   * mojeid - identification string output param for contactCreate/Transfer (2-PC)
+
 2011-05-20 Juraj Vicenik (2.7.0)
 
    * mojeid - 2-PC for contactCreate
