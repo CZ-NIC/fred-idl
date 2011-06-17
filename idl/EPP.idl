@@ -312,7 +312,8 @@ module ccReg {
     polltype_validation,       ///< Domain validation expired.
     polltype_outzone,          ///< Domain was outaged from zone.
     polltype_delete_domain,    ///< Domain was deleted.
-    polltype_lowcredit         ///< Warning about low credit of registrator.
+    polltype_lowcredit,        ///< Warning about low credit of registrator.
+    polltype_request_fee_info  ///< Information about requests done and price
   };
 
   /// Poll message structure used for transfers.
@@ -353,6 +354,16 @@ module ccReg {
     string zone;
     unsigned long limit;
     unsigned long credit;
+  };
+
+  // Poll message for requests fee information
+  struct PollMsg_RequestFeeInfo
+  {
+    string periodFrom;
+    string periodTo;
+    unsigned long long totalFreeCount;
+    unsigned long long usedCount;
+    string price;
   };
 
   /// Server interface for EPP protocol implementation 
