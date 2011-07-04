@@ -1,3 +1,9 @@
+2011-07-04 Jiri Sadek, Juraj Vicenik (2.8.0)
+
+   * new poll message - request fee info
+
+   * logger - simple request count method
+
 2011-05-26 Jiri Sadek (2.7.1)
 
    * mojeid - identification string output param for contactCreate/Transfer (2-PC)

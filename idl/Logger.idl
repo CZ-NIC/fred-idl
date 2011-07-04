@@ -87,6 +87,10 @@ module ccReg {
         Detail getDetail(in TID id)
                       raises (OBJECT_NOT_FOUND);
 
+        unsigned long long getRequestCount(in string datetime_from, in string datetime_to, in string service, in string user)
+                      raises (INCORRECT_USAGE, INTERNAL_SERVER_ERROR);
+
+
     };
 };
 
