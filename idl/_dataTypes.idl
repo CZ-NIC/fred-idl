@@ -82,6 +82,13 @@ module ccReg {
   
   typedef sequence< ObjectReference > ObjectReferences;
 
+  struct RequestCountInfoItem {
+      string user_handle;
+      unsigned long long count;
+  };
+
+  typedef sequence< RequestCountInfoItem > RequestCountInfo;
+
   /// definition of stringu that prepare SQL update and insert NULL value
   const string SET_NULL_VALUE = "$$SET_NULL_VALUE$$" ; 
 
