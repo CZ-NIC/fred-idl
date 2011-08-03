@@ -279,7 +279,7 @@ module Registry {
       OID registrar;
       Money credit;
       Money price;
-      unsigned short vatRate;
+      string vatRate;
       Money total;
       Money totalVAT;
       string varSymbol;
