@@ -1,3 +1,7 @@
+2011-08-11 Juraj Vicenik (2.8.1)
+
+   * logger - request count method by username
+
 2011-07-04 Jiri Sadek, Juraj Vicenik (2.8.0)
 
    * new poll message - request fee info
