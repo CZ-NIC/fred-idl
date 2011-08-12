@@ -357,14 +357,7 @@ module ccReg {
   };
 
   // Poll message for requests fee information
-  struct PollMsg_RequestFeeInfo
-  {
-    string periodFrom;
-    string periodTo;
-    unsigned long long totalFreeCount;
-    unsigned long long usedCount;
-    string price;
-  };
+  typedef RequestFeeInfoData PollMsg_RequestFeeInfo;
 
   /// Server interface for EPP protocol implementation 
   interface EPP

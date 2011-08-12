@@ -146,6 +146,8 @@ module ccReg {
   typedef sequence <EnumListItem> EnumList;
 
 
+  typedef RequestFeeInfoData RegistrarRequestCountInfo;
+
   /// interface for administration application
   interface Admin
   {
@@ -245,6 +247,8 @@ module ccReg {
     EnumList getBankAccounts()//list of bank accounts
       raises (ErrorReport);
 
+    RegistrarRequestCountInfo getRegistrarRequestCount(in string registrar)
+        raises (ObjectNotFound, InternalServerError);
  };
 
   /// Main interface for registrar session

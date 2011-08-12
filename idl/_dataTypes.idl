@@ -194,6 +194,16 @@ module ccReg {
     short to;
   };
 
+  // requests fee information
+  struct RequestFeeInfoData
+  {
+    string periodFrom;
+    string periodTo;
+    unsigned long long totalFreeCount;
+    unsigned long long usedCount;
+    string price;
+  };
+
 };
 
 #endif
