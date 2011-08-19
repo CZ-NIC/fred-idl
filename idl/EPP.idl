@@ -386,6 +386,11 @@ module ccReg {
       out timestamp datetime
     );
 
+    /// disconnect registrar with specified ID from central registry
+    void destroyAllRegistrarSessions(
+      in long regid
+    );
+
     /// session cleanup on closing tcp session
     void sessionClosed(in long clientID);
 
