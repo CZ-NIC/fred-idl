@@ -161,6 +161,8 @@ module ccReg {
     exception UpdateFailed {};
     /// exception thrown when authentification failed
     exception AuthFailed {};
+    /// exception thrown by unblockRegistrar
+    exception ObjectNotBlocked {};
     /// authenticate user against database
     void authenticateUser(in string username, in string password) raises (AuthFailed);
     /// create new session for administrator interface 
@@ -249,7 +251,11 @@ module ccReg {
 
     RegistrarRequestCountInfo getRegistrarRequestCount(in string registrar)
         raises (ObjectNotFound, InternalServerError);
- };
+
+    boolean isRegistrarBlocked(in TID reg_id) raises(InternalServerError, ObjectNotFound);
+    boolean blockRegistrar(in TID reg_id) raises(InternalServerError, ObjectNotFound);
+    void unblockRegistrar(in TID reg_id, in TID request_id) raises(InternalServerError, ObjectNotFound, ObjectNotBlocked);
+  };
 
   /// Main interface for registrar session
 
