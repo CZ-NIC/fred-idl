@@ -345,7 +345,6 @@ module ccReg {
         Str addVarSymb();
         Str addAccountEvid();
         Date addAccountDate();
-        Id addInvoiceId();
         Str addAccountName();
         DateTime addCrTime();
         Str addAccountMemo();
@@ -363,7 +362,6 @@ module ccReg {
         Str addConstSymbol();
         Str addVarSymbol();
         Str addSpecSymbol();
-        Id addInvoiceId();
     };
 
     interface Message: Compound
