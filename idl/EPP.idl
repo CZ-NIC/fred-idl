@@ -69,7 +69,7 @@ module ccReg {
   struct ZoneCredit_str
   {
     string zone_fqdn; ///< Zone name 
-    unsigned long price; ///< price in pennies  
+    string price; ///< price
   };
 
   /// Type for registrar credit statement  
