@@ -1,3 +1,11 @@
+2011-10-17 Jiri Sadek, Juraj Vicenik, Jan Zima (2.9.0)
+
+   * admin - registrar blocking interface
+           - removed invoice_id from payment/statement filters
+		   - invoice detail struct changed data type for vatrate attribute to string
+
+   * epp - credit_info structure changed credit amount data type to string
+
 2011-09-26 Jiri Sadek, Juraj Vicenik (2.8.2)
 
    * epp - interface for deleting all active sessions for given registrar
