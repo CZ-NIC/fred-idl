@@ -2,7 +2,7 @@
 
    * admin - registrar blocking interface
            - removed invoice_id from payment/statement filters
-		   - invoice detail struct changed data type for vatrate attribute to string
+           - invoice detail struct changed data type for vatrate attribute to string
 
    * epp - credit_info structure changed credit amount data type to string
 
