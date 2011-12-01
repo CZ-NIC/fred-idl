@@ -152,7 +152,7 @@ module Registry {
 
   struct HistoryRecord {
     any value;
-    ccReg::TID actionId;
+    ccReg::TID requestId;
     ccReg::DateTimeType from;
     ccReg::DateTimeType to;
   };
