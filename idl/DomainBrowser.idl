@@ -21,7 +21,7 @@ exception ACCESS_DENIED
 /////// data types  
 // database ID
 typedef unsigned long long TID;
-// contact, nsset, domain or keyset - ID from object_registry 
+// contact, nsset, domain or keyset - handle of an object
 typedef string RegistryObject;
 typedef sequence<RegistryObject> RegistryObjectSeq;
 
