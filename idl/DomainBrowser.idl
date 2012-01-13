@@ -1,3 +1,7 @@
+#ifndef DOMAIN_BROWSER_IDL_
+#define DOMAIN_BROWSER_IDL_
+
+module Registry {
 interface DomainBrowser {
 
 /////// exceptions 
@@ -218,3 +222,6 @@ void setObjectBlockStatus(in RegistryObject contact, in RegistryObjectSeq object
 
 
 };
+};
+
+#endif
