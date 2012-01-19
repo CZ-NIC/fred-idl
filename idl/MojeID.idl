@@ -350,6 +350,20 @@ module MojeID {
         unsigned long long getContactId(
                 in string handle)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
+            
+        /* cancel state mojeidContact at given mojeid contact
+         *
+         * \param contact_id    ID of the contact
+         * \param trans_id      database transaction identifier
+         *                      for 2-phase commit
+         * \param request_id    associated request id in logger
+         */
+
+        void contactCancelAccountPrepare(
+                in unsigned long long contact_id,
+                in string trans_id,
+                in unsigned long long request_id)
+            raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
         /*
          * get contact handles
