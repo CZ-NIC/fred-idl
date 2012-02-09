@@ -213,6 +213,50 @@ module DomainBrowser {
             raises (INTERNAL_SERVER_ERROR);
 
 
+        /* Get domain handles associated to given keyset and user(contact),
+         *   - if user is admin of given keyset, show all domains for the keyset
+         *   - otherwise show only domains which are also owned/administrated by the user
+         * \param contact - handle of user who invoked this method
+         * \param keyset  - handle of keyset in question
+         * \param sort_by - specify sorting, limit and offset
+         * \throw INTERNAL_SERVER_ERROR - indicates problem on server's side (i.e.database error)
+         * \throw INCORRECT_USAGE - nonexistent column specified in search specification
+         * \throw OBJECT_NOT_EXISTS - nonexistent contact or keyset 
+        */
+        RecordSet getDomainsForKeyset(
+                in RegistryObject contact,
+                in RegistryObject keyset,
+                in SortSpec sort_by
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS);
+
+        /** Get columns description for getDomainsForKeyset
+        */
+        RecordSetMeta getDomainsForKeysetMeta()
+            raises (INTERNAL_SERVER_ERROR);
+
+
+        /* Get domain handles which are associated to given nsset. 
+         * Returned data depends also on user (contact)
+         *   - if user is admin of given nsset, show all domains for the nsset
+         *   - otherwise show only domains which are also owned/administrated by the user
+         * \param contact - handle of user who invoked this method
+         * \param nsset  - handle of nsset in question
+         * \param sort_by - specify sorting, limit and offset
+         * \throw INTERNAL_SERVER_ERROR - indicates problem on server's side (i.e.database error)
+         * \throw INCORRECT_USAGE - nonexistent column specified in search specification
+         * \throw OBJECT_NOT_EXISTS - nonexistent contact or nsset 
+        */
+        RecordSet getDomainsForNsset(
+                in RegistryObject contact,
+                in RegistryObject nsset,
+                in SortSpec sort_by
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS);
+
+        /** Returns columns description for getDomainsForNsset
+        */
+        RecordSetMeta getDomainsForNssetMeta()
+            raises (INTERNAL_SERVER_ERROR);
+
         /////////////////// object details
         ContactDetail getContactDetail(
                 in RegistryObject contact
