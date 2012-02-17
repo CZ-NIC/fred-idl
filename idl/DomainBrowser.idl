@@ -186,7 +186,7 @@ module DomainBrowser {
         BLOCK_UPDATE
     };
 
-    interface DBrowser {
+    interface Server {
         /////////////////// object lists
         RecordSet getDomainList(
                 in RegistryObject contact, 
