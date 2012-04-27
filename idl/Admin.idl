@@ -188,8 +188,6 @@ module ccReg {
       in string handle, ///< input handle for classification
       out CheckHandleTypeSeq ch ///< output structure with classification
     );
-    /// Return list of epp action types
-    Registry::EPPActionTypeSeq getEPPActionTypeList();
     /// Return country code list
     Registry::CountryDescSeq getCountryDescList();
     /// Return default country code

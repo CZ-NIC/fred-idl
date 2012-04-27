@@ -212,7 +212,6 @@ module Registry {
       string reason;                ///< reason provided through PIF
       string email;                 ///< email provided through PIF
       OID answerEmail;              ///< id of email with request answer
-      OID action;                   ///< action svtrid when created by registrar through EPP
       OID registrar;                ///< registrar initiating request through EPP
       OIDSeq objects;               ///< objects of this public request
     };
