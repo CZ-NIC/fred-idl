@@ -111,6 +111,8 @@ module MojeID {
 
     typedef sequence<octet> Buffer;
 
+    typedef sequence<string> ContactHandleList;
+
     interface Server {
 
         exception INTERNAL_SERVER_ERROR
@@ -384,7 +386,15 @@ module MojeID {
                 in string handle)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
+        /*
+         * get contact handles 
+         * \return list of mojeid enabled contact handles in string sequence
+         */
+        ContactHandleList getMojeidEnabledContactHandles()
+            raises (INTERNAL_SERVER_ERROR);
     };
+    
+    
 
 };
 };
