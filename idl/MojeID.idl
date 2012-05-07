@@ -387,14 +387,12 @@ module MojeID {
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
         /*
-         * get contact handles 
+         * get contact handles
          * \return list of mojeid enabled contact handles in string sequence
          */
-        ContactHandleList getMojeidEnabledContactHandles()
+        ContactHandleList getUnregistrableHandles()
             raises (INTERNAL_SERVER_ERROR);
     };
-    
-    
 
 };
 };
