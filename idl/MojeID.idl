@@ -392,6 +392,15 @@ module MojeID {
          */
         ContactHandleList getUnregistrableHandles()
             raises (INTERNAL_SERVER_ERROR);
+
+        /*
+         * get auth info for given contact
+         *
+         * \param contact_id          contact_id
+         * \return auth_info
+         */
+        string contactAuthInfo(in unsigned long long contact_id)
+            raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
     };
 
 };
