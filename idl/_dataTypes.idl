@@ -41,7 +41,6 @@ module ccReg {
   struct RequestProperty {
 	string name;
 	string value;
-	boolean output; 
 	boolean child;
   };
   
