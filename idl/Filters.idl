@@ -165,7 +165,6 @@ module ccReg {
     {
       Str addName();
       Str addValue();
-      Bool addOutputFlag();
     };
 
     interface RequestData : Compound
