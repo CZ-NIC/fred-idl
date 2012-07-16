@@ -253,6 +253,23 @@ module ccReg {
     boolean isRegistrarBlocked(in TID reg_id) raises(InternalServerError, ObjectNotFound);
     boolean blockRegistrar(in TID reg_id) raises(InternalServerError, ObjectNotFound);
     void unblockRegistrar(in TID reg_id, in TID request_id) raises(InternalServerError, ObjectNotFound, ObjectNotBlocked);
+
+    /// Interval for getSummaryOfExpiredDomains method - if from and to equal, it's period of one day
+    struct DatePeriod {
+      DateType from; ///from date (boundary included)
+      DateType to; /// to date (boundary included)
+    };
+
+    typedef sequence <unsigned long long> ValueList;
+    typedef sequence <DatePeriod> DatePeriodList;
+
+    /* For given registrar and sequence of date intervals, return number of expired domains for each date interval
+     * \param registrar_handle  handle of registrar in question
+     * \param intervals         sequence of date periods for which statistics is requested
+     * \return                  sequence of integers - numbers of expired domains in respective periods
+    */
+
+    ValueList getSummaryOfExpiredDomains(in string registrar_handle, in DatePeriodList intervals) raises (InternalServerError, ObjectNotFound);
   };
 
   /// Main interface for registrar session
