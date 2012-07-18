@@ -1,9 +1,9 @@
 #ifndef CONTACT_VERIFICATION_IDL_
 #define CONTACT_VERIFICATION_IDL_
 
-module Registry 
+module Registry
 {
-    interface ContactVerification 
+    interface ContactVerification
     {
             exception INTERNAL_SERVER_ERROR
             {
