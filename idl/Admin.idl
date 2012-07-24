@@ -163,6 +163,10 @@ module ccReg {
     exception AuthFailed {};
     /// exception thrown by unblockRegistrar
     exception ObjectNotBlocked {};
+    /// exception thrown when invalid value is specified in a call
+    exception InvalidValue {
+      string what;
+    };
     /// authenticate user against database
     void authenticateUser(in string username, in string password) raises (AuthFailed);
     /// create new session for administrator interface 
@@ -269,7 +273,7 @@ module ccReg {
      * \return                  sequence of integers - numbers of expired domains in respective periods
     */
 
-    ValueList getSummaryOfExpiredDomains(in string registrar_handle, in DatePeriodList intervals) raises (InternalServerError, ObjectNotFound);
+    ValueList getSummaryOfExpiredDomains(in string registrar_handle, in DatePeriodList intervals) raises (InternalServerError, ObjectNotFound, InvalidValue);
   };
 
   /// Main interface for registrar session
