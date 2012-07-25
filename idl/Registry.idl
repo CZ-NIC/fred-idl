@@ -183,9 +183,9 @@ module Registry {
       PRT_UNBLOCK_CHANGES_POST_PIF,   ///< Request for unblock update object waiting for autorization by checked letter
       PRT_UNBLOCK_TRANSFER_EMAIL_PIF,///< Request for unblock transfer object waiting for autorization by signed email
       PRT_UNBLOCK_TRANSFER_POST_PIF,  ///< Request for unblock transfer object waiting for autorization by checked letter
-      PRT_CONDITIONAL_CONTACT_IDENTIFICATION,
-      PRT_CONTACT_IDENTIFICATION,
-      PRT_CONTACT_VALIDATION
+      PRT_CONDITIONAL_MOJEID_CONTACT_IDENTIFICATION,
+      PRT_MOJEID_CONTACT_IDENTIFICATION,
+      PRT_MOJEID_CONTACT_VALIDATION
     };
 
     /// Status of request 
