@@ -39,7 +39,7 @@ module ccReg {
             string raw_response;
             long result_code;
             string result_name; 
-            ccReg::RequestProperties props;
+            ccReg::RequestPropertiesDetail props;
             ccReg::ObjectReferences refs;
         };
 
