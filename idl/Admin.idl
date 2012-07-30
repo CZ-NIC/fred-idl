@@ -153,7 +153,7 @@ module ccReg {
     DateType to; /// to date (boundary included)
   };
 
-  typedef sequence <unsigned long long> ValueList;
+  typedef sequence <unsigned long long> ULLSeq;
   typedef sequence <DatePeriod> DatePeriodList;
 
 
@@ -273,7 +273,7 @@ module ccReg {
      * \return                  sequence of integers - numbers of expired domains in respective periods
     */
 
-    ValueList getSummaryOfExpiredDomains(in string registrar_handle, in DatePeriodList intervals) raises (InternalServerError, ObjectNotFound, InvalidValue);
+    ULLSeq getSummaryOfExpiredDomains(in string registrar_handle, in DatePeriodList intervals) raises (InternalServerError, ObjectNotFound, InvalidValue);
   };
 
   /// Main interface for registrar session
