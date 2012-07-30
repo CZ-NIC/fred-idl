@@ -39,7 +39,7 @@ module ccReg {
             string raw_response;
             long result_code;
             string result_name; 
-            ccReg::RequestProperties props;
+            ccReg::RequestPropertiesDetail props;
             ccReg::ObjectReferences refs;
         };
 
@@ -73,11 +73,6 @@ module ccReg {
 
         ObjectTypeList getObjectTypes()
                       raises (INTERNAL_SERVER_ERROR);
-
-        /* OBSOLETE do not use in new applications (please) */
-        void addRequestProperties(in TID id, in RequestProperties props)
-                      raises (INTERNAL_SERVER_ERROR, REQUEST_NOT_EXISTS);
-
 
         /* methods which allow to run logd on separate database/host */
         Registry::PageTable createPageTable(in string session_id);
