@@ -302,7 +302,6 @@ module ccReg {
     {
       Id addId();
       Int addType();
-      Str addHandle();
       DateTime addCreateTime();
       DateTime addModifyTime();
       Int addStatus();
