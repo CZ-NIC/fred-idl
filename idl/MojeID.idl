@@ -88,12 +88,6 @@ module MojeID {
         URLAddressList urladdresses;
     };
 
-    enum IdentificationMethod {
-        LETTER,
-        SMS,
-        CERTIFICATE
-    };
-
     enum ContactState {
         NOT_IDENTIFIED,
         CONDITIONALLY_IDENTIFIED,
@@ -169,7 +163,6 @@ module MojeID {
          */
         unsigned long long contactCreatePrepare(
                 in Contact c,
-                in IdentificationMethod m,
                 in string trans_id,
                 in unsigned long long request_id,
                 out string ident)
@@ -189,7 +182,6 @@ module MojeID {
          */
         unsigned long long contactTransferPrepare(
                 in string handle,
-                in IdentificationMethod m,
                 in string trans_id, 
                 in unsigned long long request_id,
                 out string ident)
