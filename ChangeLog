@@ -1,3 +1,14 @@
+2012-09-05 Jiri Sadek, Juraj Vicenik, Jan Zima (2.12.0)
+
+   * added contact verification interface
+
+   * mojeid - new method for account cancellation
+
+   * logger - removed output flag from properties interface
+              (it is now set implicitly by create/close request methods)
+
+   * adifd - method for getting summary of expiring domains
+
 2012-05-11 Jiri Sadek, Juraj Vicenik, Jan Zima (2.11.0)
 
    * mojeid - method returning list of unregistrable contact handles
