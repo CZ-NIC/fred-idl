@@ -470,6 +470,18 @@ module ccReg {
       out any mesg,
       in EppParams params
     ) raises (EppError, NoMessages);
+    /** Get poll update domain data (see PollMsg_Update struct comment for more info)
+     \param pollID update domain poll message id
+     \param oldData domain info structure with old data
+     \param newData domain info structure with new data
+     \param params common parameters
+     */
+    void PollRequestGetUpdateDomainDetails(
+      in unsigned long long pollID,
+      out Domain oldData,
+      out Domain newData,
+      in EppParams params
+    ) raises (EppError);
     /// Realise client authentication and login in system
     /** Find out entered registrar in evidence and check up his password and client 
 	certificate fingerprint of SSL communication. If it is all right, save a new 
