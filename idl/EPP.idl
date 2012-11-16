@@ -9,7 +9,7 @@ module ccReg {
   struct EppParams {
       TID requestID;  ///<ID of fred-logd request which represents this call
                         /// setting it to 0 means no request ID will be saved in history 
-      TID sessionID;  ///<ID of fred-logd session  (was login table before)
+      TID loginID;  ///<ID of fred-logd session  (was login table before)
       string clTRID;    ///< client transaction ID
       string XML;       ///< raw content of EPP command
   };
@@ -352,8 +352,8 @@ module ccReg {
   struct PollMsg_LowCredit
   {
     string zone;
-    unsigned long limit;
-    unsigned long credit;
+    string limit;
+    string credit;
   };
 
   // Poll message for requests fee information
@@ -392,10 +392,7 @@ module ccReg {
     );
 
     /// session cleanup on closing tcp session
-    void sessionClosed(in long clientID);
-
-    /// save output XML from mod_eppd into action_xml tabel 
-    boolean SaveOutXML( in string svTRID , in string XML );
+    void sessionClosed(in unsigned long long clientID);
 
     /// Recording of unsuccessful operation recieved from EPP protocol.
     /** If error was yet discovered at EPP server side, this calling 
@@ -404,13 +401,15 @@ module ccReg {
      \param clientID Session identification obtained by ClientLogin call.
      If client isn't logged (and error was happend before login)
      is written 0 value here
+     \param requestID fred-logd request ID associated with login command
      \param clTRID Transaction number given by client for his recording 
      \param errorCodes Input errors codes sended for translation in CR 
      \param errorStrings Output translated strings corresponding to error codes
      \return General reply with operation result and error messages */
     Response GetTransaction (
       in short errCode,
-      in long clientID,
+      in unsigned long long clientID,
+      in TID requestID,
       in string clTRID,
       in XmlErrors errorCodes,
       out ErrorStrings errStrings
@@ -422,17 +421,13 @@ module ccReg {
      \param msgID Id of accepted message
      \param count Messages Number which are after removing of this message in front
      \param newmsgID Id of next first message
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames thourgh EPP protocol 
+     \param params common parametres
      \return Genreal reply with operation result and error messages */
     Response PollAcknowledgement (
       in string msgID,
       out short count,
       out string newmsgID,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError, NoMessages);
     /// Obtaining of next unreaded message.
     /** It returns content of next first message of logged registrar, which isn't still marked as readed
@@ -441,9 +436,7 @@ module ccReg {
      \param count Messages number in front
      \param qDate Date of inserting message in front
      \param mesg Message text
-     \param clientID Session identification received from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General answer with operation results and error messages */   
     Response PollRequest (
       out string msgID,
@@ -451,9 +444,7 @@ module ccReg {
       out timestamp qDate,
       out PollType type,
       out any mesg,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError, NoMessages);
     /// Realise client authentication and login in system
     /** Find out entered registrar in evidence and check up his password and client 
@@ -465,6 +456,7 @@ module ccReg {
      \param clTRID Transaction number given by client for its evidence 
      \param XML Complete XML message which came through EPP protocol
      \param clientID Return new session identification 
+     \param requestID fred-logd request ID associated with login command
      \param certID MD5 Client certificate fingerprint used at login
      \param lang Requested communication language
      \return General reply with operation results and error messages */   
@@ -474,34 +466,27 @@ module ccReg {
       in string newpass,
       in string clTRID,
       in string XML,
-      out long clientID,
+      out unsigned long long clientID,
+      in TID requestID,
       in string certID,
       in Languages lang
     ) raises (EppError);
     /// Realise communication closing
     /** It closes existing session record in database. 
-     \param clientID Session identification received from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which came through EPP protocol
+     \param params common parametres
      \return General reply with result operation and errot messages */   
     Response ClientLogout (
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
 
     ///  return credit high of registrar for single zones
     /** 
-     \param clientID Session identification received from ClientLogin
      \param credit credit high ( from all received payment) according to single zones 
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which came through EPP protocol 
+     \param params common parametres
      \return General reply wih operation result and error messages */   
     Response ClientCredit (
       out ZoneCredit credit,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
 
     /// Checking of possibility to register a contact with given identifier
@@ -512,32 +497,24 @@ module ccReg {
      in list form.	
      \param handle List of identifiers 
      \param a Reply list for single identifiers
-     \param clientID Session identification received from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which came through EPP protocol
+     \param params common parametres
      \return General reply with operation results and error message */   
     Response ContactCheck (
       in Check handle,
       out CheckResp a,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Obtain information of registered contact
     /** Find out with given identifier. If logged registrar isn't 
         registrar of contact, AuthInfoPw item shows him empty.
      \param handle Identifier of requested object
      \param c Data structure with reply
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation results and error message */   
     Response ContactInfo (
       in string handle,
       out Contact c,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Deleting of registered contact 
     /** If it isn't contact in some linkage with other object and 
@@ -545,9 +522,7 @@ module ccReg {
 	then is realised its deletion. Contact can be deleted only by specified registrar.
 	Contact is saved in history before deletion.
      \param handle Identifier of requested object
-     \param clientID Session identification received from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which came through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */   
     Response ContactDelete (
       in string handle,
@@ -562,9 +537,7 @@ module ccReg {
 	is set up at actual time.
      \param handle Requested object identifier
      \param c Structure with requested changes in contact
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which came through EPP protocol
+     \param params common parametres
      \return General reply with operation results abd error messages */   
     Response ContactUpdate (
       in string handle,
@@ -579,9 +552,7 @@ module ccReg {
      \param handle Identifier of requested object
      \param c Structure with requested values in cotact
      \param crDate Returned date of creation 
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which came through EPP protocol
+     \param params common parametres
      \return General reply with operation results and error messagess */   
     Response ContactCreate (
       in string handle,
@@ -597,9 +568,7 @@ module ccReg {
 	automatically generated after a change.
      \param handle Identifier of requsted object
      \param authInfo Password for control with date at object
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which came through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */   
     Response ContactTransfer (
       in string handle,
@@ -609,15 +578,11 @@ module ccReg {
     /// Statement of all contacts at given registrar 
     /** Return list of contact identifiers belongs to logged registrar. 
      \param contacts List of contacts identifiers 
-     \param clientID Session identification obtained from z ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which came through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */       
     Response ContactList (
       out Lists contacts,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Checking a possibility to register nsset with given identifier
     /** It enables mass searching of several identifiers. It discovers validity
@@ -627,32 +592,24 @@ module ccReg {
       in list form.	
      \param handle List of identifiers
      \param a Reply list for single identifiers 
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which came through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */   
     Response NSSetCheck (
       in Check handle,
       out CheckResp a,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Obtaining informations about registered nsset
     /** Find out nsset with given identifier. If logged registrar isn't 
         registrar of nsset, AuthInfoPw item shows him empty.
      \param handle Identifier of requested object
      \param n Data structure with reply 
-     \param clientID Session identification obtained from ClientLogin 
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which came through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */   
     Response NSSetInfo (
       in string handle,
       out NSSet n,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Deletion of registered nsset
     /** If it isn't nsset in some linkage with other object and 
@@ -660,9 +617,7 @@ module ccReg {
 	then is realised its deletion. Nsset can be deleted only by specified registrar.
 	Nsset is saved in history before deletion.
      \param handle Identifier of requested object
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */   
     Response NSSetDelete (
       in string handle,
@@ -686,9 +641,7 @@ module ccReg {
      \param tech_add Identifier of added technical contact
      \param tech_rem Identifier of removed technical contact
      \param level Level oftechnical test (-1 is equal not entered)
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */   
     Response NSSetUpdate (
       in string handle,
@@ -713,9 +666,7 @@ module ccReg {
      \param dns List of hosts (nameservers)
      \param level Level of technical test (-1 is equal not entered)
      \param crDate Returned date of creation
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */   
     Response NSSetCreate (
       in string handle,
@@ -734,9 +685,7 @@ module ccReg {
 	automatically generated after a change.
      \param handle Identifier of requested object
      \param authInfo Password for control with data at object
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */   
     Response NSSetTransfer (
       in string handle,
@@ -746,46 +695,34 @@ module ccReg {
     /// List of all nssets of given registrar
     /** Returns list of nssets identifier belongs to logged registrar
      \param nssets List of nsset identifier
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */       
     Response NSSetList (
       out Lists nssets,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params 
     ) raises (EppError);
     /// Asynchronous calling of nsset technical control 
     /**
      \param handle Nsset identifier
      \param fqdns Domain names, which have to be tested with nsset
      \param level Level of technical test (-1 is equal not entered)
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */       
     Response nssetTest (
       in string handle,
       in short level,
       in Lists fqdns,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     Response KeySetCheck (
         in Check handle,
         out CheckResp a,
-        in long clientID,
-        in string clTRID,
-        in string XML
+        in EppParams params
     ) raises (EppError);
     Response KeySetInfo(
         in string handle,
         out KeySet k,
-        in long clientID,
-        in string clTRID,
-        in string XML
+        in EppParams params
     ) raises (EppError);
     Response KeySetDelete (
         in string handle,
@@ -818,9 +755,7 @@ module ccReg {
     ) raises (EppError);
     Response KeySetList (
         out Lists keysets,
-        in long clientID,
-        in string clTRID,
-        in string XML
+        in EppParams params
     ) raises (EppError);
 
     /// Checking possibility to register domain with given name
@@ -836,16 +771,12 @@ module ccReg {
      or parentdomain already exists.
      \param fqdn List of identifiers
      \param a List of replies for singles identifiers
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */   
     Response DomainCheck (
       in Check fqdn,
       out CheckResp a,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Obtaing information about registered domain
     /** At first check up validity of identifier with same way as in DomainCheck.
@@ -856,16 +787,12 @@ module ccReg {
 	validation date is returning at enum domain in general extension list.
      \param fqdn Domain name
      \param d Data structure with reply
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */   
     Response DomainInfo (
       in string fqdn,
       out Domain d,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Deletion of registered domain
     /** If object state doesn't contain clientDeleteProhibited or 
@@ -874,9 +801,7 @@ module ccReg {
      before deletion. Registrar has the rights for this operation 
      in zone of given domain.
      \param fqdn Domain name
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */   
     Response DomainDelete (
       in string fqdn,
@@ -900,9 +825,7 @@ module ccReg {
      \param keyset_chg KeySet chage
      \param admin_add Identifier of added administrative contact
      \param admin_rem Identifier of removed administrative contact
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \param ext Extension contains next data (e.g. validation at ENUM domains)
      \return General reply with operation result and error messages */   
     Response DomainUpdate (
@@ -938,9 +861,7 @@ module ccReg {
      \param admin List of administrative contacts
      \param crDate Returned date of creation
      \param exDate Returns counted date of expiration at period base 
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \param ext Extension contains next date (e.g. validation at ENUM domain)
      \return General reply with operation result and error messages */   
     Response DomainCreate (
@@ -968,9 +889,7 @@ module ccReg {
      \param curExpDate Actual date of expiration (detected from Info function)
      \param period Number of moth added to expiration date
      \param exDate New expiration date
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \param ext Extenstion with addional informations (validation date)
      \return General reply with operation result and error messages */   
     Response DomainRenew (
@@ -990,9 +909,7 @@ module ccReg {
      domain for this operation.
      \param fqdn Domain name which is going to be transfered
      \param authInfo Pasword for transfer authorization
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */   
     Response DomainTransfer (
       in string fqdn,
@@ -1002,22 +919,16 @@ module ccReg {
     /// List of all domains of given registrar
     /** It returns list of domain names belongs to logged registrar
      \param domains List of domain names
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */       
     Response DomainList (
       out Lists domains,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Requesting of authinfo for domain registrant
     /**
      \param fqdn Name of domain for which is required authInfo
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */       
     Response domainSendAuthInfo (
       in string fqdn,
@@ -1026,9 +937,7 @@ module ccReg {
     /// Requesting of authinfo for contact holder
     /**
      \param handle Handle of contact for which is required authInfo
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */       
     Response contactSendAuthInfo (
       in string handle,
@@ -1037,9 +946,7 @@ module ccReg {
     /// Requesting of authinfo for nsset holder
     /**
      \param handle Handle of nsset for which is required authInfo
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */       
     Response nssetSendAuthInfo (
       in string handle,
@@ -1048,9 +955,7 @@ module ccReg {
     /// Requesting of authinfo for keyset holder
     /**
      \param handle Handle of keyset for which is required authInfo
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */
     Response keysetSendAuthInfo (
         in string handle,
@@ -1061,30 +966,22 @@ module ccReg {
      \param type Type of searching function, see enum InfoType.
      \param handle Handle which is pattern for searching
      \param count Number of founded results
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */       
     Response info (
       in InfoType type,
       in string handle,
       out long count,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
     /// Get list of info function results
     /**
      \param handles List of returned handles
-     \param clientID Session identification obtained from ClientLogin
-     \param clTRID Transaction number given by client for its evidence
-     \param XML Complete XML message which cames through EPP protocol
+     \param params common parametres
      \return General reply with operation result and error messages */       
     Response getInfoResults (
       out Lists handles,
-      in long clientID,
-      in string clTRID,
-      in string XML
+      in EppParams params
     ) raises (EppError);
   }; // interface EPP
   

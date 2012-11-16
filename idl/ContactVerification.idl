@@ -1,0 +1,116 @@
+#ifndef CONTACT_VERIFICATION_IDL_
+#define CONTACT_VERIFICATION_IDL_
+
+module Registry
+{
+    interface ContactVerification
+    {
+            exception INTERNAL_SERVER_ERROR
+            {
+                string message;
+            };
+
+            enum ValidationError
+            {
+                NOT_AVAILABLE,
+                INVALID,
+                REQUIRED
+            };
+
+            struct DataFieldError
+            {
+                string name;
+                ValidationError error;
+            };
+
+            typedef sequence<DataFieldError> ValidationErrorList;
+
+            exception DATA_VALIDATION_ERROR
+            {
+                ValidationErrorList errors;
+            };
+
+            exception OBJECT_EXISTS { };
+
+            exception OBJECT_NOT_EXISTS { };
+
+            exception REGISTRAR_NOT_EXISTS { };
+
+            exception IDENTIFICATION_FAILED { };
+
+            exception IDENTIFICATION_PROCESSED { };
+
+            exception IDENTIFICATION_INVALIDATED { };
+
+            exception OBJECT_CHANGED { };
+
+        /*
+         * create conditional identification request for contact
+         *
+         * \param contact_handle      contact handle
+         * \param registrar_handle    registrar handle
+         * \param log_id              associated request id in logger
+         * \param request_id          request identifier viz getPublicRequestAuthIdentification
+         * \return                    contact id
+         */
+        unsigned long long createConditionalIdentification(
+                in string contact_handle,
+                in string registrar_handle,
+                in unsigned long long log_id,
+                out string request_id)
+            raises (INTERNAL_SERVER_ERROR, DATA_VALIDATION_ERROR
+                    , OBJECT_NOT_EXISTS, REGISTRAR_NOT_EXISTS);
+
+        /*
+         * process conditional identification request and create identification request for contact
+         *
+         * \param request_id          request identifier viz getPublicRequestAuthIdentification
+         * \param password            verification password
+         * \param log_id              associated request id in logger
+         * \return                    contact id
+         */
+        unsigned long long processConditionalIdentification(
+            in string request_id,
+            in string password,
+            in unsigned long long log_id)
+          raises (INTERNAL_SERVER_ERROR,
+                      IDENTIFICATION_FAILED,
+                      IDENTIFICATION_PROCESSED,
+                      IDENTIFICATION_INVALIDATED,
+                      DATA_VALIDATION_ERROR,
+                      OBJECT_CHANGED);
+
+        /*
+         * process identification request for contact
+         *
+         * \param contact_handle      contact handle
+         * \param password            verification password
+         * \param log_id              associated request id in logger
+         * \return                    contact id
+         */
+        unsigned long long processIdentification(
+            in string contact_handle,
+            in string password,
+            in unsigned long long log_id)
+          raises (INTERNAL_SERVER_ERROR,
+                      IDENTIFICATION_FAILED,
+                      IDENTIFICATION_PROCESSED,
+                      IDENTIFICATION_INVALIDATED,
+                      DATA_VALIDATION_ERROR,
+                      OBJECT_CHANGED,
+                      OBJECT_NOT_EXISTS);
+
+        /*
+         * get registrar name by handle
+         *
+         * \param registrar_handle    registrar handle
+         * \return                    registrar name
+         */
+        string getRegistrarName(in string registrar_handle)
+          raises (OBJECT_NOT_EXISTS, INTERNAL_SERVER_ERROR);
+
+    };
+};
+
+
+#endif

@@ -255,19 +255,6 @@ module ccReg {
       Bool addPublish();
     };
 
-    interface Action : Compound
-    {
-      Registrar addRegistrar();
-      Int addType();
-      Obj addObject();
-      DateTime addTime();
-      Str addClTRID();
-      Str addSvTRID();
-      Str addRequestHandle();
-      Int addResponse();
-      Int addEppCodeResponse();
-    };
-
     interface Filter : Compound
     {
       Id addUserId(); // virtual filter (userid column will not be in result set)
@@ -315,7 +302,6 @@ module ccReg {
     {
       Id addId();
       Int addType();
-      Str addHandle();
       DateTime addCreateTime();
       DateTime addModifyTime();
       Int addStatus();
