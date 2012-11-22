@@ -273,8 +273,8 @@ module DomainBrowser {
          * \throw OBJECT_NOT_EXISTS - nonexistent nsset 
         */
         NSSetDetail getNssetDetail(
-                in RegistryObject nsset, 
                 in RegistryObject handle,
+                in RegistryObject nsset,
                 out DataAccessLevel auth_result
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS, USER_NOT_EXISTS);
 
@@ -290,8 +290,8 @@ module DomainBrowser {
          * \throw OBJECT_NOT_EXISTS - nonexistent nsset 
         */
         DomainDetail getDomainDetail(
-                in RegistryObject domain, 
                 in RegistryObject handle,
+                in RegistryObject domain,
                 out DataAccessLevel auth_result
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS, USER_NOT_EXISTS);
 
@@ -307,8 +307,8 @@ module DomainBrowser {
          * \throw OBJECT_NOT_EXISTS - nonexistent nsset 
         */
         KeysetDetail getKeysetDetail(
-                in RegistryObject keyset, 
                 in RegistryObject handle,
+                in RegistryObject keyset,
                 out DataAccessLevel auth_result
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS, USER_NOT_EXISTS);
 
@@ -320,7 +320,7 @@ module DomainBrowser {
 
         void setObjectBlockStatus(
                 in RegistryObject handle,
-                in RegistryObjectSeq objects, 
+                in RegistryObjectSeq objects,
                 in ObjectBlockType block
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
 
