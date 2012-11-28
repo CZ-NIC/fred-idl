@@ -314,8 +314,9 @@ module DomainBrowser {
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS, USER_NOT_EXISTS);
 
         ////////////////// object modifying methods
-        void setContactDiscloseFlags(
+        void setContactAuthInfoAndDiscloseFlags(
                 in RegistryObject handle,
+                in RegistryObject auth_info,
                 in ContactDiscloseFlags flags
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, ACCESS_DENIED);
 
