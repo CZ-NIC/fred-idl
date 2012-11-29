@@ -177,7 +177,11 @@ module DomainBrowser {
     // set object blocking
     enum ObjectBlockType {
         BLOCK_TRANSFER,
-        BLOCK_UPDATE
+        UNBLOCK_TRANSFER,
+        BLOCK_UPDATE,
+        UNBLOCK_UPDATE,
+        BLOCK_TRANSFER_AND_UPDATE,
+        UNBLOCK_TRANSFER_AND_UPDATE
     };
 
     interface Server {
@@ -322,6 +326,7 @@ module DomainBrowser {
 
         void setObjectBlockStatus(
                 in RegistryObject handle,
+                in RegistryObject objtype,
                 in RegistryObjectSeq objects,
                 in ObjectBlockType block
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
