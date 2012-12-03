@@ -63,7 +63,8 @@ module DomainBrowser {
         string registrant;
         string expiration_date;
         string val_ex_date;
-        boolean publish; 
+        boolean publish;
+        boolean is_enum;
         string nsset;
         string keyset;
         ContactHandleSeq admins;
