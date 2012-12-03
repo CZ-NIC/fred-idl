@@ -275,6 +275,7 @@ module DomainBrowser {
         */
         ContactDetail getContactDetail(
                 in RegistryObject handle,
+                in RegistryObject contact,
                 out DataAccessLevel auth_result
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
 
