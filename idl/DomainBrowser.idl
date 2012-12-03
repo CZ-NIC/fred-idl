@@ -84,6 +84,18 @@ module DomainBrowser {
         boolean notify_email;
     };
 
+    struct UpdateContactDiscloseFlags {
+        // boolean name; - hide name is not allowed
+        boolean organization;
+        boolean email;
+        boolean address;
+        boolean telephone;
+        boolean fax;
+        boolean ident;
+        boolean vat;
+        boolean notify_email;
+    };
+
     struct ContactDetail {
         TID id;
         string handle;
@@ -321,7 +333,7 @@ module DomainBrowser {
         void setContactAuthInfoAndDiscloseFlags(
                 in RegistryObject handle,
                 in RegistryObject auth_info,
-                in ContactDiscloseFlags flags
+                in UpdateContactDiscloseFlags flags
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, ACCESS_DENIED);
 
         void setObjectBlockStatus(
