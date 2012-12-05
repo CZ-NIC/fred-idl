@@ -200,21 +200,21 @@ module DomainBrowser {
     interface Server {
         /////////////////// object lists
         RecordSet getDomainList(
-                in RegistryObject handle
+                in RegistryObject contact_handle
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
 
         RecordSetMeta getDomainListMeta() 
             raises (INTERNAL_SERVER_ERROR);
 
         RecordSet getNssetList(
-                in RegistryObject handle
+                in RegistryObject contact_handle
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
 
         RecordSetMeta getNssetListMeta() 
             raises (INTERNAL_SERVER_ERROR);
 
         RecordSet getKeysetList(
-                in RegistryObject handle
+                in RegistryObject contact_handle
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
 
         RecordSetMeta getKeysetListMeta() 
@@ -232,7 +232,7 @@ module DomainBrowser {
          * \throw OBJECT_NOT_EXISTS - nonexistent contact or keyset 
         */
         RecordSet getDomainsForKeyset(
-                in RegistryObject handle,
+                in RegistryObject contact_handle,
                 in RegistryObject keyset
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS, USER_NOT_EXISTS);
 
@@ -255,7 +255,7 @@ module DomainBrowser {
          * \throw OBJECT_NOT_EXISTS - nonexistent nsset 
         */
         RecordSet getDomainsForNsset(
-                in RegistryObject handle,
+                in RegistryObject contact_handle,
                 in RegistryObject nsset
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS, USER_NOT_EXISTS);
 
@@ -275,8 +275,8 @@ module DomainBrowser {
          * \throw USER_NOT_EXISTS - nonexistent nsset 
         */
         ContactDetail getContactDetail(
-                in RegistryObject handle,
-                in RegistryObject contact,
+                in RegistryObject contact_handle,
+                in RegistryObject contact_handle_detail,
                 out DataAccessLevel auth_result
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
 
@@ -292,7 +292,7 @@ module DomainBrowser {
          * \throw OBJECT_NOT_EXISTS - nonexistent nsset 
         */
         NSSetDetail getNssetDetail(
-                in RegistryObject handle,
+                in RegistryObject contact_handle,
                 in RegistryObject nsset,
                 out DataAccessLevel auth_result
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS, USER_NOT_EXISTS);
@@ -309,7 +309,7 @@ module DomainBrowser {
          * \throw OBJECT_NOT_EXISTS - nonexistent nsset 
         */
         DomainDetail getDomainDetail(
-                in RegistryObject handle,
+                in RegistryObject contact_handle,
                 in RegistryObject domain,
                 out DataAccessLevel auth_result
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS, USER_NOT_EXISTS);
@@ -326,20 +326,26 @@ module DomainBrowser {
          * \throw OBJECT_NOT_EXISTS - nonexistent nsset 
         */
         KeysetDetail getKeysetDetail(
-                in RegistryObject handle,
+                in RegistryObject contact_handle,
                 in RegistryObject keyset,
                 out DataAccessLevel auth_result
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS, USER_NOT_EXISTS);
 
         ////////////////// object modifying methods
-        void setContactAuthInfoAndDiscloseFlags(
-                in RegistryObject handle,
-                in RegistryObject auth_info,
+        void setContactDiscloseFlags(
+                in RegistryObject contact_handle,
                 in UpdateContactDiscloseFlags flags
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, ACCESS_DENIED);
 
+        void setAuthInfo(
+                in RegistryObject contact_handle,
+                in RegistryObject object_handle,
+                in RegistryObject objtype,
+                in RegistryObject auth_info
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS, ACCESS_DENIED);
+
         void setObjectBlockStatus(
-                in RegistryObject handle,
+                in RegistryObject contact_handle,
                 in RegistryObject objtype,
                 in RegistryObjectSeq objects,
                 in ObjectBlockType block
