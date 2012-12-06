@@ -332,19 +332,19 @@ module DomainBrowser {
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         ////////////////// object modifying methods
-        void setContactDiscloseFlags(
+        boolean setContactDiscloseFlags(
                 in RegistryObject contact_handle,
                 in UpdateContactDiscloseFlags flags
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, ACCESS_DENIED);
 
-        void setAuthInfo(
+        boolean setAuthInfo(
                 in RegistryObject contact_handle,
                 in RegistryObject object_handle,
                 in RegistryObject objtype,
                 in RegistryObject auth_info
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
 
-        void setObjectBlockStatus(
+        boolean setObjectBlockStatus(
                 in RegistryObject contact_handle,
                 in RegistryObject objtype,
                 in RegistryObjectSeq objects,
