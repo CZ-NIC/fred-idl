@@ -14,6 +14,8 @@ module DomainBrowser {
     exception INCORRECT_USAGE { };
     // given contact (user) does not have access to requested object
     exception ACCESS_DENIED { };
+    // Object has a status that does not allow to update.
+    exception OBJECT_BLOCKED { };
 
     /////// data types  
     // database ID
@@ -335,21 +337,21 @@ module DomainBrowser {
         boolean setContactDiscloseFlags(
                 in RegistryObject contact_handle,
                 in UpdateContactDiscloseFlags flags
-            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, ACCESS_DENIED);
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
 
         boolean setAuthInfo(
                 in RegistryObject contact_handle,
                 in RegistryObject object_handle,
                 in RegistryObject objtype,
                 in RegistryObject auth_info
-            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
 
         boolean setObjectBlockStatus(
                 in RegistryObject contact_handle,
                 in RegistryObject objtype,
                 in RegistryObjectSeq objects,
                 in ObjectBlockType block
-            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
 
     };
 };
