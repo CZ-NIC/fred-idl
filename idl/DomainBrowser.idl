@@ -38,12 +38,19 @@ module DomainBrowser {
         sequence<RecordType> data_types; // for sorting in frontend
     };
 
+    struct HandleName
+    {
+        RegistryObject handle;
+        RegistryObject name;
+    };
+
     // data returned by get*List methods
     typedef sequence<sequence<string> > RecordSet;
 
     /////////////////// objects details
     typedef sequence<string> ContactHandleSeq;
     typedef sequence<string> ObjectStatusSeq;
+    typedef sequence<HandleName> HandleNameSeq;
 
     enum DataAccessLevel
     {
@@ -55,12 +62,9 @@ module DomainBrowser {
         TID id;
         string fqdn;
         string roid;
-        string registrar;
+        HandleName registrar;
         string create_date;
-        string transfer_date;
         string update_date;
-        string create_registrar;
-        string update_registrar;
         string auth_info;
         string registrant;
         string expiration_date;
@@ -69,8 +73,7 @@ module DomainBrowser {
         boolean is_enum;
         string nsset;
         string keyset;
-        ContactHandleSeq admins;
-        ContactHandleSeq temps;
+        HandleNameSeq admins;
         ObjectStatusSeq status_list;
     };
 
