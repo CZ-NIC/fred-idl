@@ -38,7 +38,7 @@ module DomainBrowser {
         sequence<RecordType> data_types; // for sorting in frontend
     };
 
-    struct HandleName
+    struct Couple
     {
         RegistryObject handle;
         RegistryObject name;
@@ -50,7 +50,7 @@ module DomainBrowser {
     /////////////////// objects details
     typedef sequence<string> ContactHandleSeq;
     typedef sequence<string> ObjectStatusSeq;
-    typedef sequence<HandleName> HandleNameSeq;
+    typedef sequence<Couple> CoupleSeq;
 
     enum DataAccessLevel
     {
@@ -58,22 +58,31 @@ module DomainBrowser {
         PRIVATE_DATA
     };
 
+    struct RegistrarDetail {
+        string handle;
+        string name;
+        string phone;
+        string fax;
+        string url;
+        string address;
+    };
+
     struct DomainDetail {
         TID id;
         string fqdn;
         string roid;
-        HandleName registrar;
+        Couple registrar;
         string create_date;
         string update_date;
         string auth_info;
-        string registrant;
+        Couple registrant;
         string expiration_date;
         string val_ex_date;
         boolean publish;
         boolean is_enum;
         string nsset;
         string keyset;
-        HandleNameSeq admins;
+        CoupleSeq admins;
         ObjectStatusSeq status_list;
     };
 
@@ -335,6 +344,13 @@ module DomainBrowser {
                 in RegistryObject keyset,
                 out DataAccessLevel auth_result
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+
+
+        RegistrarDetail getRegistrarDetail(
+                in RegistryObject contact_handle,
+                in RegistryObject handle
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+
 
         ////////////////// object modifying methods
         boolean setContactDiscloseFlags(
