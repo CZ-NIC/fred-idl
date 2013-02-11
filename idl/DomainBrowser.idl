@@ -99,9 +99,10 @@ module DomainBrowser {
         boolean notify_email;
     };
 
+    // "name" and "organization" cannot change
     struct UpdateContactDiscloseFlags {
-        // boolean name; - hide name is not allowed
-        boolean organization;
+        // boolean name;
+        // boolean organization;
         boolean email;
         boolean address;
         boolean telephone;
