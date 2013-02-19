@@ -213,21 +213,24 @@ module DomainBrowser {
     interface Server {
         /////////////////// object lists
         RecordSet getDomainList(
-                in RegistryObject contact_handle
+                in RegistryObject contact_handle,
+                out unsigned long limit_exceeded
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
 
         RecordSetMeta getDomainListMeta() 
             raises (INTERNAL_SERVER_ERROR);
 
         RecordSet getNssetList(
-                in RegistryObject contact_handle
+                in RegistryObject contact_handle,
+                out unsigned long limit_exceeded
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
 
         RecordSetMeta getNssetListMeta() 
             raises (INTERNAL_SERVER_ERROR);
 
         RecordSet getKeysetList(
-                in RegistryObject contact_handle
+                in RegistryObject contact_handle,
+                out unsigned long limit_exceeded
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
 
         RecordSetMeta getKeysetListMeta() 
@@ -246,7 +249,8 @@ module DomainBrowser {
         */
         RecordSet getDomainsForKeyset(
                 in RegistryObject contact_handle,
-                in RegistryObject keyset
+                in RegistryObject keyset,
+                out unsigned long limit_exceeded
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /** Get columns description for getDomainsForKeyset
@@ -269,7 +273,8 @@ module DomainBrowser {
         */
         RecordSet getDomainsForNsset(
                 in RegistryObject contact_handle,
-                in RegistryObject nsset
+                in RegistryObject nsset,
+                out unsigned long limit_exceeded
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /** Returns columns description for getDomainsForNsset
