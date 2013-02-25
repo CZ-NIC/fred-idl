@@ -45,6 +45,7 @@ module DomainBrowser {
     };
 
     // data returned by get*List methods
+    typedef sequence<string> RecordSequence;
     typedef sequence<sequence<string> > RecordSet;
 
     /////////////////// objects details
@@ -387,6 +388,11 @@ module DomainBrowser {
                 in ObjectBlockType block,
                 out RegistryObjectSeq blocked_objects
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
+
+        ////////////////// data from registry
+        RecordSequence getPublicStatusDesc(
+                in string lang
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE);
 
     };
 };
