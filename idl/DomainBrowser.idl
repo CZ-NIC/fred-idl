@@ -48,8 +48,6 @@ module DomainBrowser {
     typedef sequence<sequence<string> > RecordSet;
 
     /////////////////// objects details
-    typedef sequence<string> ContactHandleSeq;
-    typedef sequence<string> ObjectStatusSeq;
     typedef sequence<Couple> CoupleSeq;
 
     enum DataAccessLevel
@@ -83,7 +81,8 @@ module DomainBrowser {
         string nsset;
         string keyset;
         CoupleSeq admins;
-        ObjectStatusSeq status_list;
+        string states;
+        string state_codes;
     };
 
 
@@ -138,7 +137,8 @@ module DomainBrowser {
         string ssn_type;
         string vat;
         ContactDiscloseFlags disclose_flags;
-        ObjectStatusSeq status_list;
+        string states;
+        string state_codes;
     };
 
     struct DNSHost
@@ -160,7 +160,8 @@ module DomainBrowser {
         string auth_info;
         CoupleSeq admins;
         sequence<DNSHost> hosts;
-        ObjectStatusSeq status_list;     
+        string states;
+        string state_codes;
         short report_level;
     };
 
@@ -197,7 +198,8 @@ module DomainBrowser {
         CoupleSeq admins;
         sequence<DSRecord> dsrecords;
         sequence<DNSKey> dnskeys;
-        ObjectStatusSeq  status_list;
+        string states;
+        string state_codes;
     };
 
     // set object blocking
