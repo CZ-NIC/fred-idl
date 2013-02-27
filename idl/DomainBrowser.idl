@@ -211,18 +211,21 @@ module DomainBrowser {
         RecordSet getDomainList(
                 in RegistryObject contact_handle,
                 in string lang,
+                in unsigned long offset,
                 out boolean limit_exceeded
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
 
         RecordSet getNssetList(
                 in RegistryObject contact_handle,
                 in string lang,
+                in unsigned long offset,
                 out boolean limit_exceeded
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
 
         RecordSet getKeysetList(
                 in RegistryObject contact_handle,
                 in string lang,
+                in unsigned long offset,
                 out boolean limit_exceeded
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
 
@@ -241,6 +244,7 @@ module DomainBrowser {
                 in RegistryObject contact_handle,
                 in RegistryObject keyset,
                 in string lang,
+                in unsigned long offset,
                 out boolean limit_exceeded
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
@@ -261,6 +265,7 @@ module DomainBrowser {
                 in RegistryObject contact_handle,
                 in RegistryObject nsset,
                 in string lang,
+                in unsigned long offset,
                 out boolean limit_exceeded
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
