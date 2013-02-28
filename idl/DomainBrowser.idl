@@ -238,7 +238,8 @@ module DomainBrowser {
          * \param sort_by - specify sorting, limit and offset
          * \throw INTERNAL_SERVER_ERROR - indicates problem on server's side (i.e.database error)
          * \throw INCORRECT_USAGE - nonexistent column specified in search specification
-         * \throw OBJECT_NOT_EXISTS - nonexistent contact or keyset 
+         * \throw OBJECT_NOT_EXISTS - nonexistent contact or keyset
+         * \throw ACCESS_DENIED - contact is not owner of keyset
         */
         RecordSet getDomainsForKeyset(
                 in RegistryObject contact_handle,
@@ -246,7 +247,7 @@ module DomainBrowser {
                 in string lang,
                 in unsigned long offset,
                 out boolean limit_exceeded
-            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
 
 
         /* Get domain handles which are associated to given nsset. 
@@ -259,7 +260,8 @@ module DomainBrowser {
          * \throw INTERNAL_SERVER_ERROR - indicates problem on server's side (i.e.database error)
          * \throw INCORRECT_USAGE - nonexistent column specified in search specification
          * \throw USER_NOT_EXISTS   - nonexistent user 
-         * \throw OBJECT_NOT_EXISTS - nonexistent nsset 
+         * \throw OBJECT_NOT_EXISTS - nonexistent nsset
+         * \throw ACCESS_DENIED - contact is not owner of nsset
         */
         RecordSet getDomainsForNsset(
                 in RegistryObject contact_handle,
@@ -267,7 +269,7 @@ module DomainBrowser {
                 in string lang,
                 in unsigned long offset,
                 out boolean limit_exceeded
-            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
 
         /////////////////// object details
         /* 
