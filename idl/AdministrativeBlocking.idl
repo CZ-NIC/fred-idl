@@ -1,0 +1,96 @@
+#ifndef ADMINISTRATIVE_BLOCKING_IDL_
+#define ADMINISTRATIVE_BLOCKING_IDL_
+
+module Administrative {
+
+struct StatusDesc
+{
+    short id;
+    string shortName;
+    string name;
+};
+
+typedef sequence<StatusDesc> StatusDescList;
+/*
+   serverRenewProhibited
+   serverOutzoneManual
+   serverInzoneManual
+   serverRegistrantChangeProhibited
+   serverDeleteProhibited
+   serverTransferProhibited
+   serverUpdateProhibited
+*/
+
+typedef sequence<string> DomainList;
+typedef sequence<string> StatusList; /* shortName */
+
+struct Date {
+    short day;
+    short month;
+    short year;
+};
+
+valuetype NullableString string;
+valuetype NullableBoolean boolean;
+valuetype NullableDate Date;
+
+exception ALREADY_BLOCKED
+{
+    DomainList what;
+};
+
+exception INTERNAL_SERVER_ERROR
+{
+    string what;
+};
+
+  ///Blocking interface
+  interface Blocking
+  {
+    StatusDescList getBlockingStatusDescList(in string lang)
+        raises (INTERNAL_SERVER_ERROR);
+
+    // zablokovani seznamu domen - moznost i blokace vlastnika (moznost vytvorit kopii pokud nutno)
+    void blockDomains(
+        in DomainList domain_list,
+        in StatusList status_list,
+        in boolean block_owner,
+        in boolean create_owner_copy)
+        raises (INTERNAL_SERVER_ERROR, ALREADY_BLOCKED);
+
+    //zmena blokace - interne udela odblokovani a nastavni pozadovanych stavu)
+    void updateBlockDomains(
+        in DomainList domain_list,
+        in StatusList status_list);
+
+    void restorePreAdministrativeBlockStates(in DomainList domain_list)
+        raises (INTERNAL_SERVER_ERROR);
+
+    //zruseni vsech stavu blokace - moznost zmeny vlastnika, moznost odebrani vsech admin-c
+    void unblockDomains(
+        in DomainList domain_list,
+        in NullableString new_owner,
+        in boolean remove_admin_c)
+        raises (INTERNAL_SERVER_ERROR);
+
+    //zruseni domeny a zablokovani jeji registrace
+    void blacklistAndDeleteDomains(
+        in DomainList domain_list,
+        in NullableDate blacklist_to_date)
+        raises (INTERNAL_SERVER_ERROR);
+
+    void blacklistDomains(
+        in DomainList domain_list,
+        in NullableDate blacklist_to_date,
+        in boolean with_delete)
+        raises (INTERNAL_SERVER_ERROR);
+
+    //znovu zaregistrovani domeny a zruseni z blacklistu (zadani handlu vlastnika, nastaveni exdate na crdate)
+    void unblacklistAndCreateDomains(
+        in DomainList domain_list,
+        in string owner)
+        raises (INTERNAL_SERVER_ERROR);
+  };
+};
+
+#endif
