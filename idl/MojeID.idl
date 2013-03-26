@@ -70,16 +70,6 @@ module MojeID {
         NullableString ssn_id_num;
         NullableString vat_id_num;
         NullableString ssn_type;
-        NullableBoolean disclose_name;
-        NullableBoolean disclose_organization;
-        NullableBoolean disclose_vat;
-        NullableBoolean disclose_ident;
-        NullableBoolean disclose_email;
-        NullableBoolean disclose_notify_email;
-        NullableBoolean disclose_address;
-        NullableBoolean disclose_phone;
-        NullableBoolean disclose_fax;
-
         AddressList addresses;
         EmailList emails;
         IMAccountList imaccounts;
