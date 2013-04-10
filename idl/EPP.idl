@@ -313,7 +313,10 @@ module ccReg {
     polltype_outzone,          ///< Domain was outaged from zone.
     polltype_delete_domain,    ///< Domain was deleted.
     polltype_lowcredit,        ///< Warning about low credit of registrator.
-    polltype_request_fee_info  ///< Information about requests done and price
+    polltype_request_fee_info, ///< Information about requests done and price
+    polltype_update_domain,    ///< Domain was changed
+    polltype_update_nsset,     ///< NSSet was changed
+    polltype_update_keyset     ///< KeySet was changed
   };
 
   /// Poll message structure used for transfers.
@@ -358,6 +361,27 @@ module ccReg {
 
   // Poll message for requests fee information
   typedef RequestFeeInfoData PollMsg_RequestFeeInfo;
+
+
+  /* Poll message for inform about administrative update of object
+   * It was unable to make separated structures for each object type 
+   * with old and new data like:
+   * struct PollMsg_UpdateDoamin
+   * {
+   *   string opTRID;
+   *   Domain oldData;
+   *   Domain newData;
+   * };
+   * because this message packed to corba any type was not able to be unpacked
+   * by orbit2 library in mod_eppd module.
+   * So far there need to be separate methods (PollRequestGetUpdateDomainDetails(...))
+   * to gather this data.
+   */
+  struct PollMsg_Update
+  {
+    string opTRID;
+    unsigned long long pollID;
+  };
 
   /// Server interface for EPP protocol implementation 
   interface EPP
@@ -446,6 +470,42 @@ module ccReg {
       out any mesg,
       in EppParams params
     ) raises (EppError, NoMessages);
+    /** Get poll update domain data (see PollMsg_Update struct comment for more info)
+     \param pollID update domain poll message id
+     \param oldData domain info structure with old data
+     \param newData domain info structure with new data
+     \param params common parameters
+     */
+    void PollRequestGetUpdateDomainDetails(
+      in unsigned long long pollID,
+      out Domain oldData,
+      out Domain newData,
+      in EppParams params
+    ) raises (EppError);
+    /** Get poll update nsset data (see PollMsg_Update struct comment for more info)
+     \param pollID update domain poll message id
+     \param oldData nsset info structure with old data
+     \param newData nsset info structure with new data
+     \param params common parameters
+     */
+    void PollRequestGetUpdateNSSetDetails(
+      in unsigned long long pollID,
+      out NSSet oldData,
+      out NSSet newData,
+      in EppParams params
+    ) raises (EppError);
+    /** Get poll update keyset data (see PollMsg_Update struct comment for more info)
+     \param pollID update domain poll message id
+     \param oldData nsset info structure with old data
+     \param newData nsset info structure with new data
+     \param params common parameters
+     */
+    void PollRequestGetUpdateKeySetDetails(
+      in unsigned long long pollID,
+      out KeySet oldData,
+      out KeySet newData,
+      in EppParams params
+    ) raises (EppError);
     /// Realise client authentication and login in system
     /** Find out entered registrar in evidence and check up his password and client 
 	certificate fingerprint of SSL communication. If it is all right, save a new 
