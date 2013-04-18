@@ -37,9 +37,16 @@ module DomainBrowser {
         RegistryObject name;
     };
 
+    struct RegistryReference
+    {
+        TID id;
+        RegistryObject handle;
+    };
+
     // data returned by get*List methods
     typedef sequence<string> RecordSequence;
     typedef sequence<sequence<string> > RecordSet;
+    typedef sequence<RegistryReference> RegistryReferenceSeq;
 
     /////////////////// objects details
     typedef sequence<Couple> CoupleSeq;
@@ -51,6 +58,7 @@ module DomainBrowser {
     };
 
     struct RegistrarDetail {
+        TID id;
         string handle;
         string name;
         string phone;
@@ -368,7 +376,8 @@ module DomainBrowser {
                 in RegistryObject objtype,
                 in RegistryObjectSeq objects,
                 in ObjectBlockType block,
-                out RegistryObjectSeq blocked_objects
+                out RegistryObjectSeq blocked_objects,
+                out RegistryReferenceSeq references
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
 
         ////////////////// data from registry
