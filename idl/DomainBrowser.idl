@@ -20,9 +20,11 @@ module DomainBrowser {
     /////// data types  
     // database ID
     typedef unsigned long long TID;
+
     // contact, nsset, domain or keyset - handle of an object
     typedef string RegistryObject;
-    typedef sequence<RegistryObject> RegistryObjectSeq;
+    typedef sequence<RegistryObject> RecordSequence;
+    typedef sequence<RecordSequence> RecordSet;
 
     enum RecordType {
         TEXT,
@@ -31,25 +33,13 @@ module DomainBrowser {
         INT
     };
 
-    struct Couple
-    {
-        RegistryObject handle;
-        RegistryObject name;
-    };
-
     struct RegistryReference
     {
         TID id;
         RegistryObject handle;
+        RegistryObject name;
     };
-
-    // data returned by get*List methods
-    typedef sequence<string> RecordSequence;
-    typedef sequence<sequence<string> > RecordSet;
     typedef sequence<RegistryReference> RegistryReferenceSeq;
-
-    /////////////////// objects details
-    typedef sequence<Couple> CoupleSeq;
 
     enum DataAccessLevel
     {
@@ -71,18 +61,18 @@ module DomainBrowser {
         TID id;
         string fqdn;
         string roid;
-        Couple registrar;
+        RegistryReference registrar;
         string create_date;
         string update_date;
         string auth_info;
-        Couple registrant;
+        RegistryReference registrant;
         string expiration_date;
         string val_ex_date;
         boolean publish;
         boolean is_enum;
         string nsset;
         string keyset;
-        CoupleSeq admins;
+        RegistryReferenceSeq admins;
         string states;
         string state_codes;
     };
@@ -117,7 +107,7 @@ module DomainBrowser {
         TID id;
         string handle;
         string roid;
-        Couple registrar;
+        RegistryReference registrar;
         string create_date;
         string transfer_date;
         string update_date;
@@ -153,14 +143,14 @@ module DomainBrowser {
         TID id;
         string handle;
         string roid;
-        Couple registrar;
+        RegistryReference registrar;
         string create_date;
         string transfer_date;
         string update_date;
-        Couple create_registrar;
-        Couple update_registrar;
+        RegistryReference create_registrar;
+        RegistryReference update_registrar;
         string auth_info;
-        CoupleSeq admins;
+        RegistryReferenceSeq admins;
         sequence<DNSHost> hosts;
         string states;
         string state_codes;
@@ -190,14 +180,14 @@ module DomainBrowser {
         TID id;
         string handle;
         string roid;
-        Couple registrar;
+        RegistryReference registrar;
         string create_date;
         string transfer_date;
         string update_date;
-        Couple create_registrar;
-        Couple update_registrar;
+        RegistryReference create_registrar;
+        RegistryReference update_registrar;
         string auth_info;
-        CoupleSeq admins;
+        RegistryReferenceSeq admins;
         sequence<DSRecord> dsrecords;
         sequence<DNSKey> dnskeys;
         string states;
@@ -215,23 +205,29 @@ module DomainBrowser {
     };
 
     interface Server {
+
+        TID getObjectRegistryId(
+            in string objtype,
+            in string handle
+        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS);
+
         /////////////////// object lists
         RecordSet getDomainList(
-                in RegistryObject contact_handle,
+                in RegistryReference contact,
                 in string lang,
                 in unsigned long offset,
                 out boolean limit_exceeded
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
 
         RecordSet getNssetList(
-                in RegistryObject contact_handle,
+                in RegistryReference contact,
                 in string lang,
                 in unsigned long offset,
                 out boolean limit_exceeded
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
 
         RecordSet getKeysetList(
-                in RegistryObject contact_handle,
+                in RegistryReference contact,
                 in string lang,
                 in unsigned long offset,
                 out boolean limit_exceeded
@@ -250,8 +246,8 @@ module DomainBrowser {
          * \throw ACCESS_DENIED - contact is not owner of keyset
         */
         RecordSet getDomainsForKeyset(
-                in RegistryObject contact_handle,
-                in RegistryObject keyset,
+                in RegistryReference contact,
+                in RegistryReference keyset,
                 in string lang,
                 in unsigned long offset,
                 out boolean limit_exceeded
@@ -272,8 +268,8 @@ module DomainBrowser {
          * \throw ACCESS_DENIED - contact is not owner of nsset
         */
         RecordSet getDomainsForNsset(
-                in RegistryObject contact_handle,
-                in RegistryObject nsset,
+                in RegistryReference contact,
+                in RegistryReference nsset,
                 in string lang,
                 in unsigned long offset,
                 out boolean limit_exceeded
@@ -289,8 +285,8 @@ module DomainBrowser {
          * \throw USER_NOT_EXISTS - nonexistent nsset 
         */
         ContactDetail getContactDetail(
-                in RegistryObject contact_handle,
-                in RegistryObject contact_handle_detail,
+                in RegistryReference contact,
+                in RegistryReference detail,
                 in string lang,
                 out DataAccessLevel auth_result
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
@@ -307,8 +303,8 @@ module DomainBrowser {
          * \throw OBJECT_NOT_EXISTS - nonexistent nsset 
         */
         NSSetDetail getNssetDetail(
-                in RegistryObject contact_handle,
-                in RegistryObject nsset,
+                in RegistryReference contact,
+                in RegistryReference nsset,
                 in string lang,
                 out DataAccessLevel auth_result
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
@@ -325,8 +321,8 @@ module DomainBrowser {
          * \throw OBJECT_NOT_EXISTS - nonexistent nsset 
         */
         DomainDetail getDomainDetail(
-                in RegistryObject contact_handle,
-                in RegistryObject domain,
+                in RegistryReference contact,
+                in RegistryReference domain,
                 in string lang,
                 out DataAccessLevel auth_result
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
@@ -343,41 +339,40 @@ module DomainBrowser {
          * \throw OBJECT_NOT_EXISTS - nonexistent nsset 
         */
         KeysetDetail getKeysetDetail(
-                in RegistryObject contact_handle,
-                in RegistryObject keyset,
+                in RegistryReference contact,
+                in RegistryReference keyset,
                 in string lang,
                 out DataAccessLevel auth_result
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
 
         RegistrarDetail getRegistrarDetail(
-                in RegistryObject contact_handle,
+                in RegistryReference contact,
                 in RegistryObject handle
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
 
         ////////////////// object modifying methods
         boolean setContactDiscloseFlags(
-                in RegistryObject contact_handle,
+                in RegistryReference contact,
                 in UpdateContactDiscloseFlags flags,
                 in TID request_id
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
 
         boolean setAuthInfo(
-                in RegistryObject contact_handle,
-                in RegistryObject object_handle,
+                in RegistryReference contact,
                 in RegistryObject objtype,
+                in RegistryReference objref,
                 in RegistryObject auth_info,
                 in TID request_id
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
 
         boolean setObjectBlockStatus(
-                in RegistryObject contact_handle,
+                in RegistryReference contact,
                 in RegistryObject objtype,
-                in RegistryObjectSeq objects,
+                in RegistryReferenceSeq objects,
                 in ObjectBlockType block,
-                out RegistryObjectSeq blocked_objects,
-                out RegistryReferenceSeq references
+                out RecordSequence blocked
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
 
         ////////////////// data from registry
