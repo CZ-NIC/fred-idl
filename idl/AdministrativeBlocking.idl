@@ -1,6 +1,7 @@
 #ifndef ADMINISTRATIVE_BLOCKING_IDL_
 #define ADMINISTRATIVE_BLOCKING_IDL_
 
+module Registry {
 module Administrative {
 
 struct StatusDesc
@@ -47,6 +48,11 @@ exception INTERNAL_SERVER_ERROR
   ///Blocking interface
   interface Blocking
   {
+    string getName(in string lang)
+        raises (INTERNAL_SERVER_ERROR);
+    unsigned long long getLangID(in string lang)
+        raises (INTERNAL_SERVER_ERROR);
+
     StatusDescList getBlockingStatusDescList(in string lang)
         raises (INTERNAL_SERVER_ERROR);
 
@@ -86,6 +92,7 @@ exception INTERNAL_SERVER_ERROR
         in string owner)
         raises (INTERNAL_SERVER_ERROR);
   };
+};
 };
 
 #endif
