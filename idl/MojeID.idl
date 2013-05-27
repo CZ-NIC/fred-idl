@@ -105,7 +105,24 @@ module MojeID {
 
     typedef sequence<octet> Buffer;
 
-    typedef sequence<string> ContactHandleList;
+    typedef sequence<string> ContactHandleSeq;
+
+    interface ContactHandleList
+    {
+        exception INTERNAL_SERVER_ERROR
+        {
+        };
+
+        exception NOT_ACTIVE
+        {
+        };
+
+        ContactHandleSeq getNext(in unsigned long count)
+            raises (INTERNAL_SERVER_ERROR, NOT_ACTIVE);
+
+        void destroy()
+            raises (INTERNAL_SERVER_ERROR);
+    };
 
     interface Server {
 
