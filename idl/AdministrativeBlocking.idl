@@ -32,27 +32,27 @@ struct Date {
     short year;
 };
 
-struct DomainOwner {
+struct DomainOwnerChange {
     string domain;
     string oldOwner;
     string newOwner;
 };
 
-typedef sequence<DomainOwner> DomainOwnerList;
+typedef sequence<DomainOwnerChange> DomainOwnerChangeList;
 
-struct DomainIdOwner {
+struct DomainIdOwnerChange {
     unsigned long long domainId;
     unsigned long long oldOwner;
     unsigned long long newOwner;
 };
 
-typedef sequence<DomainIdOwner> DomainIdOwnerList;
+typedef sequence<DomainIdOwnerChange> DomainIdOwnerChangeList;
 
 valuetype NullableString string;
 valuetype NullableBoolean boolean;
 valuetype NullableDate Date;
 
-enum BlockMode
+enum OwnerBlockMode
 {
     KEEP_OWNER,
     BLOCK_OWNER,
@@ -133,14 +133,14 @@ exception INTERNAL_SERVER_ERROR
      * 
      * \param domain_list          list of blocked domains
      * \param status_list          list of states
-     * \param block_mode           keep owner / block owner / create owner copy and block it
+     * \param owner_block_mode     keep owner / block owner / create owner copy and block it
      * \param reason               reason for blocking
      * \return                     list of new owner
      */
-    DomainOwnerList blockDomains(
+    DomainOwnerChangeList blockDomains(
         in DomainList domain_list,
         in StatusList status_list,
-        in BlockMode block_mode,
+        in OwnerBlockMode owner_block_mode,
         in string reason)
         raises (INTERNAL_SERVER_ERROR, DOMAIN_NOT_FOUND, UNKNOWN_STATUS, DOMAIN_ALREADY_BLOCKED);
 
@@ -223,14 +223,14 @@ exception INTERNAL_SERVER_ERROR
      * 
      * \param domain_list          list of blocked domains
      * \param status_list          list of states
-     * \param block_mode           keep owner / block owner / create owner copy and block it
+     * \param owner_block_mode     keep owner / block owner / create owner copy and block it
      * \param reason               reason for blocking
      * \return                     list of new owner
      */
-    DomainIdOwnerList blockDomainsId(
+    DomainIdOwnerChangeList blockDomainsId(
         in DomainIdList domain_list,
         in StatusList status_list,
-        in BlockMode block_mode,
+        in OwnerBlockMode owner_block_mode,
         in string reason)
         raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_FOUND, UNKNOWN_STATUS, DOMAIN_ID_ALREADY_BLOCKED);
 
