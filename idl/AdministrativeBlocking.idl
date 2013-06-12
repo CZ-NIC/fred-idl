@@ -40,13 +40,23 @@ struct DomainOwnerChange {
 
 typedef sequence<DomainOwnerChange> DomainOwnerChangeList;
 
-struct DomainIdOwnerChange {
+struct DomainIdHandleOwnerChange {
     unsigned long long domainId;
-    unsigned long long oldOwner;
-    unsigned long long newOwner;
+    string domainHandle;
+    unsigned long long oldOwnerId;
+    string oldOwnerHandle;
+    unsigned long long newOwnerId;
+    string newOwnerHandle;
 };
 
-typedef sequence<DomainIdOwnerChange> DomainIdOwnerChangeList;
+typedef sequence<DomainIdHandleOwnerChange> DomainIdHandleOwnerChangeList;
+
+struct DomainIdHandle {
+    unsigned long long domainId;
+    string domainHandle;
+};
+
+typedef sequence<DomainIdHandle> DomainIdHandleList;
 
 valuetype NullableString string;
 valuetype NullableBoolean boolean;
@@ -96,12 +106,12 @@ exception DOMAIN_ID_NOT_FOUND
 
 exception DOMAIN_ID_ALREADY_BLOCKED
 {
-    DomainIdList what;
+    DomainIdHandleList what;
 };
 
 exception DOMAIN_ID_NOT_BLOCKED
 {
-    DomainIdList what;
+    DomainIdHandleList what;
 };
 
 exception NEW_OWNER_ID_DOES_NOT_EXISTS
@@ -227,7 +237,7 @@ exception INTERNAL_SERVER_ERROR
      * \param reason               reason for blocking
      * \return                     list of new owner
      */
-    DomainIdOwnerChangeList blockDomainsId(
+    DomainIdHandleOwnerChangeList blockDomainsId(
         in DomainIdList domain_list,
         in StatusList status_list,
         in OwnerBlockMode owner_block_mode,
