@@ -270,7 +270,7 @@ exception INTERNAL_SERVER_ERROR
         in DomainIdList domain_list,
         in NullableString new_owner,
         in string reason)
-        raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_BLOCKED);
+        raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_BLOCKED, NEW_OWNER_DOES_NOT_EXISTS);
 
     /*
      * unblock previously administrative blocked domains
