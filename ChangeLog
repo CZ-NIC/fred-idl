@@ -1,3 +1,13 @@
+2013-06-05 Jiri Sadek (2.14.1)
+
+   * mojeid - getUnregistrableHandlesIter() method - returns iterable object
+              to transfer contact handles to client by small chunks
+              (should be a replacement for slow getUnregistrableHandles())
+
+2013-04-02 Jiri Sadek (2.14.0)
+
+   * epp - interface changes for update object poll messages
+
 2012-11-21 Jan Zima (2.13.0)
 
    * mojeid - contactUnidentifyPrepare(..) method removed

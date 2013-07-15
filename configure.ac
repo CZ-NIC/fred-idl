@@ -1,4 +1,4 @@
-AC_INIT([fred-idl], 2.13.0)
+AC_INIT([fred-idl], 2.14.1)
 AC_CONFIG_FILES([Makefile
 		 fred-idl.spec])
 AM_INIT_AUTOMAKE([-Wall -Werror])

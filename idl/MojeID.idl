@@ -107,6 +107,23 @@ module MojeID {
 
     typedef sequence<string> ContactHandleList;
 
+    interface ContactHandleListIter
+    {
+        exception INTERNAL_SERVER_ERROR
+        {
+        };
+
+        exception NOT_ACTIVE
+        {
+        };
+
+        ContactHandleList getNext(in unsigned long count)
+            raises (INTERNAL_SERVER_ERROR, NOT_ACTIVE);
+
+        void destroy()
+            raises (INTERNAL_SERVER_ERROR);
+    };
+
     interface Server {
 
         exception INTERNAL_SERVER_ERROR
@@ -339,6 +356,9 @@ module MojeID {
          * \return list of mojeid enabled contact handles in string sequence
          */
         ContactHandleList getUnregistrableHandles()
+            raises (INTERNAL_SERVER_ERROR);
+
+        ContactHandleListIter getUnregistrableHandlesIter()
             raises (INTERNAL_SERVER_ERROR);
 
         /*
