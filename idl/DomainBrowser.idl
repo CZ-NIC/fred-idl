@@ -70,8 +70,8 @@ module DomainBrowser {
         string val_ex_date;
         boolean publish;
         boolean is_enum;
-        string nsset;
-        string keyset;
+        RegistryReference nsset;
+        RegistryReference keyset;
         RegistryReferenceSeq admins;
         string states;
         string state_codes;
