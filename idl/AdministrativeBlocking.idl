@@ -243,7 +243,8 @@ exception INTERNAL_SERVER_ERROR
         in DomainIdList domain_list,
         in StatusList status_list,
         in OwnerBlockMode owner_block_mode,
-        in string reason)
+        in string reason,
+        in unsigned long long log_req_id)
         raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_FOUND, UNKNOWN_STATUS, DOMAIN_ID_ALREADY_BLOCKED);
 
     /*
@@ -256,7 +257,8 @@ exception INTERNAL_SERVER_ERROR
     void updateBlockDomainsId(
         in DomainIdList domain_list,
         in StatusList status_list,
-        in string reason)
+        in string reason,
+        in unsigned long long log_req_id)
         raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_FOUND, UNKNOWN_STATUS);
 
     /*
@@ -269,7 +271,8 @@ exception INTERNAL_SERVER_ERROR
     void restorePreAdministrativeBlockStatesId(
         in DomainIdList domain_list,
         in NullableString new_owner,
-        in string reason)
+        in string reason,
+        in unsigned long long log_req_id)
         raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_BLOCKED, NEW_OWNER_DOES_NOT_EXISTS);
 
     /*
@@ -284,7 +287,8 @@ exception INTERNAL_SERVER_ERROR
         in DomainIdList domain_list,
         in NullableString new_owner,
         in boolean remove_admin_c,
-        in string reason)
+        in string reason,
+        in unsigned long long log_req_id)
         raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_BLOCKED, NEW_OWNER_DOES_NOT_EXISTS);
 
     /*
@@ -295,7 +299,8 @@ exception INTERNAL_SERVER_ERROR
      */
     void blacklistAndDeleteDomainsId(
         in DomainIdList domain_list,
-        in NullableDate blacklist_to_date)
+        in NullableDate blacklist_to_date,
+        in unsigned long long log_req_id)
         raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_FOUND);
 
     /*
@@ -308,7 +313,8 @@ exception INTERNAL_SERVER_ERROR
     void blacklistDomainsId(
         in DomainIdList domain_list,
         in NullableDate blacklist_to_date,
-        in boolean with_delete)
+        in boolean with_delete,
+        in unsigned long long log_req_id)
         raises (INTERNAL_SERVER_ERROR);
     };
 
