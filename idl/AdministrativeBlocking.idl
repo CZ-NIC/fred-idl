@@ -243,6 +243,7 @@ exception INTERNAL_SERVER_ERROR
         in DomainIdList domain_list,
         in StatusList status_list,
         in OwnerBlockMode owner_block_mode,
+        in NullableDate block_to_date,
         in string reason,
         in unsigned long long log_req_id)
         raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_FOUND, UNKNOWN_STATUS, DOMAIN_ID_ALREADY_BLOCKED);
@@ -257,6 +258,7 @@ exception INTERNAL_SERVER_ERROR
     void updateBlockDomainsId(
         in DomainIdList domain_list,
         in StatusList status_list,
+        in NullableDate block_to_date,
         in string reason,
         in unsigned long long log_req_id)
         raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_FOUND, UNKNOWN_STATUS);
