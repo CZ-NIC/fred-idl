@@ -1,0 +1,387 @@
+#ifndef DOMAIN_BROWSER_IDL_
+#define DOMAIN_BROWSER_IDL_
+
+module Registry {
+module DomainBrowser {
+
+    /////// exceptions 
+    exception INTERNAL_SERVER_ERROR { };
+    // given contact (representing user who is calling the method) does not exist
+    exception USER_NOT_EXISTS { };
+    // registry object with specified ID does not exist
+    exception OBJECT_NOT_EXISTS { };
+    // given parameter value (like SortSpec.field or handle) is not valid
+    exception INCORRECT_USAGE { };
+    // given contact (user) does not have access to requested object
+    exception ACCESS_DENIED { };
+    // Object has a status that does not allow to update.
+    exception OBJECT_BLOCKED { };
+
+    /////// data types  
+    // database ID
+    typedef unsigned long long TID;
+
+    // contact, nsset, domain or keyset - handle of an object
+    typedef string RegistryObject;
+    typedef sequence<RegistryObject> RecordSequence;
+    typedef sequence<RecordSequence> RecordSet;
+
+    enum RecordType {
+        TEXT,
+        DATE,
+        BOOL,
+        INT
+    };
+
+    struct RegistryReference
+    {
+        TID id;
+        RegistryObject handle;
+        RegistryObject name;
+    };
+    typedef sequence<RegistryReference> RegistryReferenceSeq;
+
+    enum DataAccessLevel
+    {
+        PUBLIC_DATA,
+        PRIVATE_DATA
+    };
+
+    struct RegistrarDetail {
+        TID id;
+        string handle;
+        string name;
+        string phone;
+        string fax;
+        string url;
+        string address;
+    };
+
+    struct DomainDetail {
+        TID id;
+        string fqdn;
+        string roid;
+        RegistryReference registrar;
+        string create_date;
+        string update_date;
+        string auth_info;
+        RegistryReference registrant;
+        string expiration_date;
+        string val_ex_date;
+        boolean publish;
+        boolean is_enum;
+        RegistryReference nsset;
+        RegistryReference keyset;
+        RegistryReferenceSeq admins;
+        string states;
+        string state_codes;
+    };
+
+
+    struct ContactDiscloseFlags {
+        boolean name;
+        boolean organization;
+        boolean email;
+        boolean address;
+        boolean telephone;
+        boolean fax;
+        boolean ident;
+        boolean vat;
+        boolean notify_email;
+    };
+
+    // "name" and "organization" cannot change
+    struct UpdateContactDiscloseFlags {
+        // boolean name;
+        // boolean organization;
+        boolean email;
+        boolean address;
+        boolean telephone;
+        boolean fax;
+        boolean ident;
+        boolean vat;
+        boolean notify_email;
+    };
+
+    struct ContactDetail {
+        TID id;
+        string handle;
+        string roid;
+        RegistryReference registrar;
+        string create_date;
+        string transfer_date;
+        string update_date;
+        string auth_info;
+        string name;
+        string organization;
+        string street1;
+        string street2;
+        string street3;
+        string province;
+        string postalcode;
+        string city;
+        string country;
+        string telephone;
+        string fax;
+        string email;
+        string notify_email;
+        string ssn;
+        string ssn_type;
+        string vat;
+        ContactDiscloseFlags disclose_flags;
+        string states;
+        string state_codes;
+    };
+
+    struct DNSHost
+    {
+        string fqdn; ///< Fqdn of DNS server
+        string inet; ///< List of IP addresses
+    };
+
+    struct NSSetDetail {
+        TID id;
+        string handle;
+        string roid;
+        RegistryReference registrar;
+        string create_date;
+        string transfer_date;
+        string update_date;
+        RegistryReference create_registrar;
+        RegistryReference update_registrar;
+        string auth_info;
+        RegistryReferenceSeq admins;
+        sequence<DNSHost> hosts;
+        string states;
+        string state_codes;
+        short report_level;
+    };
+
+    /// Type for an element of list of DS records
+    struct DSRecord
+    {
+        long key_tag;
+        long alg;
+        long digest_type;
+        string digest;
+        long max_sig_life;
+    };
+
+    struct DNSKey
+    {
+        unsigned short flags;
+        unsigned short protocol;
+        unsigned short alg;
+        string         key;
+    };
+
+
+    struct KeysetDetail {
+        TID id;
+        string handle;
+        string roid;
+        RegistryReference registrar;
+        string create_date;
+        string transfer_date;
+        string update_date;
+        RegistryReference create_registrar;
+        RegistryReference update_registrar;
+        string auth_info;
+        RegistryReferenceSeq admins;
+        sequence<DSRecord> dsrecords;
+        sequence<DNSKey> dnskeys;
+        string states;
+        string state_codes;
+    };
+
+    // set object blocking
+    enum ObjectBlockType {
+        BLOCK_TRANSFER,
+        UNBLOCK_TRANSFER,
+        BLOCK_UPDATE,
+        UNBLOCK_UPDATE,
+        BLOCK_TRANSFER_AND_UPDATE,
+        UNBLOCK_TRANSFER_AND_UPDATE
+    };
+
+    interface Server {
+
+        TID getObjectRegistryId(
+            in string objtype,
+            in string handle
+        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS);
+
+        /////////////////// object lists
+        RecordSet getDomainList(
+                in RegistryReference contact,
+                in string lang,
+                in unsigned long offset,
+                out boolean limit_exceeded
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
+
+        RecordSet getNssetList(
+                in RegistryReference contact,
+                in string lang,
+                in unsigned long offset,
+                out boolean limit_exceeded
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
+
+        RecordSet getKeysetList(
+                in RegistryReference contact,
+                in string lang,
+                in unsigned long offset,
+                out boolean limit_exceeded
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
+
+
+        /* Get domain handles associated to given keyset and user(contact),
+         *   - if user is admin of given keyset, show all domains for the keyset
+         *   - otherwise show only domains which are also owned/administrated by the user
+         * \param user - handle of user (contact) who invoked this method
+         * \param keyset  - handle of keyset in question
+         * \param sort_by - specify sorting, limit and offset
+         * \throw INTERNAL_SERVER_ERROR - indicates problem on server's side (i.e.database error)
+         * \throw INCORRECT_USAGE - nonexistent column specified in search specification
+         * \throw OBJECT_NOT_EXISTS - nonexistent contact or keyset
+         * \throw ACCESS_DENIED - contact is not owner of keyset
+        */
+        RecordSet getDomainsForKeyset(
+                in RegistryReference contact,
+                in RegistryReference keyset,
+                in string lang,
+                in unsigned long offset,
+                out boolean limit_exceeded
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
+
+
+        /* Get domain handles which are associated to given nsset. 
+         * Returned data depends also on user (user)
+         *   - if user is admin of given nsset, show all domains for the nsset
+         *   - otherwise show only domains which are also owned/administrated by the user
+         * \param user - handle of user who invoked this method
+         * \param nsset  - handle of nsset in question
+         * \param sort_by - specify sorting, limit and offset
+         * \throw INTERNAL_SERVER_ERROR - indicates problem on server's side (i.e.database error)
+         * \throw INCORRECT_USAGE - nonexistent column specified in search specification
+         * \throw USER_NOT_EXISTS   - nonexistent user 
+         * \throw OBJECT_NOT_EXISTS - nonexistent nsset
+         * \throw ACCESS_DENIED - contact is not owner of nsset
+        */
+        RecordSet getDomainsForNsset(
+                in RegistryReference contact,
+                in RegistryReference nsset,
+                in string lang,
+                in unsigned long offset,
+                out boolean limit_exceeded
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
+
+        /////////////////// object details
+        /* 
+         * Detail for contact (contact is the user logged in)
+         * Returns all contact data including fields hidden from public
+         * \param contact - handle of contact for which data will be returned 
+         * \throw INTERNAL_SERVER_ERROR - indicates problem on server's side (i.e.database error)
+         * \throw INCORRECT_USAGE - invalid contact handle
+         * \throw USER_NOT_EXISTS - nonexistent nsset 
+        */
+        ContactDetail getContactDetail(
+                in RegistryReference contact,
+                in RegistryReference detail,
+                in string lang,
+                out DataAccessLevel auth_result
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+
+        /* 
+         * Returns detailed nsset data depending on user privileges
+         * \param nsset - nsset handle 
+         * \param user - handle of user who invoked this method
+         * \param auth_result - returns whether the user is owner of the object 
+         *  (and complete data is returned) or not (only public data is returned)
+         * \throw INTERNAL_SERVER_ERROR - indicates problem on server's side (i.e.database error)
+         * \throw INCORRECT_USAGE - invalid handle was specified
+         * \throw USER_NOT_EXISTS   - nonexistent user 
+         * \throw OBJECT_NOT_EXISTS - nonexistent nsset 
+        */
+        NSSetDetail getNssetDetail(
+                in RegistryReference contact,
+                in RegistryReference nsset,
+                in string lang,
+                out DataAccessLevel auth_result
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+
+        /* 
+         * Returns detailed domain data depending on user privileges
+         * \param domain - domain fqdn
+         * \param user - handle of user who invoked this method
+         * \param auth_result - returns whether the user is owner of the object 
+         *  (and complete data is returned) or not (only public data is returned)
+         * \throw INTERNAL_SERVER_ERROR - indicates problem on server's side (i.e.database error)
+         * \throw INCORRECT_USAGE - invalid handle was specified
+         * \throw USER_NOT_EXISTS   - nonexistent user 
+         * \throw OBJECT_NOT_EXISTS - nonexistent nsset 
+        */
+        DomainDetail getDomainDetail(
+                in RegistryReference contact,
+                in RegistryReference domain,
+                in string lang,
+                out DataAccessLevel auth_result
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+
+        /* 
+         * Returns detailed keyset data depending on user privileges
+         * \param keyset - keyset handle
+         * \param user - handle of user who invoked this method
+         * \param auth_result - returns whether the user is owner of the object 
+         *  (and complete data is returned) or not (only public data is returned)
+         * \throw INTERNAL_SERVER_ERROR - indicates problem on server's side (i.e.database error)
+         * \throw INCORRECT_USAGE - invalid handle was specified
+         * \throw USER_NOT_EXISTS   - nonexistent user 
+         * \throw OBJECT_NOT_EXISTS - nonexistent nsset 
+        */
+        KeysetDetail getKeysetDetail(
+                in RegistryReference contact,
+                in RegistryReference keyset,
+                in string lang,
+                out DataAccessLevel auth_result
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+
+
+        RegistrarDetail getRegistrarDetail(
+                in RegistryReference contact,
+                in RegistryObject handle
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+
+
+        ////////////////// object modifying methods
+        boolean setContactDiscloseFlags(
+                in RegistryReference contact,
+                in UpdateContactDiscloseFlags flags,
+                in TID request_id
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
+
+        boolean setAuthInfo(
+                in RegistryReference contact,
+                in RegistryObject objtype,
+                in RegistryReference objref,
+                in RegistryObject auth_info,
+                in TID request_id
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
+
+        boolean setObjectBlockStatus(
+                in RegistryReference contact,
+                in RegistryObject objtype,
+                in RegistryReferenceSeq objects,
+                in ObjectBlockType block,
+                out RecordSequence blocked
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
+
+        ////////////////// data from registry
+        RecordSequence getPublicStatusDesc(
+                in string lang
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE);
+
+    };
+};
+};
+
+#endif
