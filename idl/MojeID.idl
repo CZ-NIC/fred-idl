@@ -70,17 +70,6 @@ module MojeID {
         NullableString ssn_id_num;
         NullableString vat_id_num;
         NullableString ssn_type;
-        NullableString auth_info;
-        NullableBoolean disclose_name;
-        NullableBoolean disclose_organization;
-        NullableBoolean disclose_vat;
-        NullableBoolean disclose_ident;
-        NullableBoolean disclose_email;
-        NullableBoolean disclose_notify_email;
-        NullableBoolean disclose_address;
-        NullableBoolean disclose_phone;
-        NullableBoolean disclose_fax;
-
         AddressList addresses;
         EmailList emails;
         IMAccountList imaccounts;
@@ -369,6 +358,7 @@ module MojeID {
          */
         string contactAuthInfo(in unsigned long long contact_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
+
     };
 
 };
