@@ -61,7 +61,7 @@ typedef sequence<DomainIdHandle> DomainIdHandleList;
 struct OwnerDomain {
     unsigned long long ownerId;
     string ownerHandle;
-    DomainIdHandleList domain;
+    DomainIdHandleList otherDomainList;
 };
 
 typedef sequence<OwnerDomain> OwnerDomainList;
