@@ -12,6 +12,7 @@
 #include "FileManager.idl"
 #include "Logger.idl"
 #include "Messages.idl"
+#include "AdministrativeBlocking.idl"
 
 // for zone handling
 #include "Zone.idl"

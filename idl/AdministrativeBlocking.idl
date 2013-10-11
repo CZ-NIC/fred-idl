@@ -1,0 +1,340 @@
+#ifndef ADMINISTRATIVE_BLOCKING_IDL_
+#define ADMINISTRATIVE_BLOCKING_IDL_
+
+module Registry {
+module Administrative {
+
+struct StatusDesc
+{
+    short id;         // 1
+    string shortName; // serverDeleteProhibited
+    string name;      // Není povoleno smazání
+};
+
+typedef sequence<StatusDesc> StatusDescList;
+/*
+   serverRenewProhibited
+   serverOutzoneManual
+   serverInzoneManual
+   serverRegistrantChangeProhibited
+   serverDeleteProhibited
+   serverTransferProhibited
+   serverUpdateProhibited
+*/
+
+typedef sequence<unsigned long long> DomainIdList;
+typedef sequence<string> DomainList;
+typedef sequence<string> StatusList; /* shortName */
+
+struct Date {
+    short day;
+    short month;
+    short year;
+};
+
+struct DomainOwnerChange {
+    string domain;
+    string oldOwner;
+    string newOwner;
+};
+
+typedef sequence<DomainOwnerChange> DomainOwnerChangeList;
+
+struct DomainIdHandleOwnerChange {
+    unsigned long long domainId;
+    string domainHandle;
+    unsigned long long oldOwnerId;
+    string oldOwnerHandle;
+    unsigned long long newOwnerId;
+    string newOwnerHandle;
+};
+
+typedef sequence<DomainIdHandleOwnerChange> DomainIdHandleOwnerChangeList;
+
+struct DomainIdHandle {
+    unsigned long long domainId;
+    string domainHandle;
+};
+
+typedef sequence<DomainIdHandle> DomainIdHandleList;
+
+struct OwnerDomain {
+    unsigned long long ownerId;
+    string ownerHandle;
+    DomainIdHandleList otherDomainList;
+};
+
+typedef sequence<OwnerDomain> OwnerDomainList;
+
+valuetype NullableString string;
+valuetype NullableBoolean boolean;
+valuetype NullableDate Date;
+
+enum OwnerBlockMode
+{
+    KEEP_OWNER,
+    BLOCK_OWNER,
+    BLOCK_OWNER_COPY
+};
+
+exception DOMAIN_NOT_FOUND
+{
+    DomainList what;
+};
+
+exception UNKNOWN_STATUS
+{
+    StatusList what;
+};
+
+exception DOMAIN_ALREADY_BLOCKED
+{
+    DomainList what;
+};
+
+exception OWNER_HAS_OTHER_DOMAIN
+{
+    OwnerDomainList what;
+};
+
+exception DOMAIN_NOT_BLOCKED
+{
+    DomainList what;
+};
+
+exception NEW_OWNER_DOES_NOT_EXISTS
+{
+    string what;
+};
+
+exception DOMAIN_EXISTS
+{
+    DomainList what;
+};
+
+exception DOMAIN_ID_NOT_FOUND
+{
+    DomainIdList what;
+};
+
+exception DOMAIN_ID_ALREADY_BLOCKED
+{
+    DomainIdHandleList what;
+};
+
+exception DOMAIN_ID_NOT_BLOCKED
+{
+    DomainIdHandleList what;
+};
+
+exception NEW_OWNER_ID_DOES_NOT_EXISTS
+{
+    unsigned long long what;
+};
+
+
+exception INTERNAL_SERVER_ERROR
+{
+    string what;
+};
+
+    ///Blocking interface
+    interface Blocking
+    {
+
+    /*
+     * get list of object states used for administrative blocking
+     *
+     * \param lang                 language EN/CS
+     * \return                     list of object states
+     */
+    StatusDescList getBlockingStatusDescList(in string lang)
+        raises (INTERNAL_SERVER_ERROR);
+
+    /*
+     * block domains
+     * 
+     * \param domain_list          list of blocked domains
+     * \param status_list          list of states
+     * \param owner_block_mode     keep owner / block owner / create owner copy and block it
+     * \param reason               reason for blocking
+     * \return                     list of new owner
+     */
+    DomainOwnerChangeList blockDomains(
+        in DomainList domain_list,
+        in StatusList status_list,
+        in OwnerBlockMode owner_block_mode,
+        in string reason)
+        raises (INTERNAL_SERVER_ERROR, DOMAIN_NOT_FOUND, UNKNOWN_STATUS, DOMAIN_ALREADY_BLOCKED);
+
+    /*
+     * update domains blocking
+     * 
+     * \param domain_list          list of blocked domains
+     * \param status_list          list of states
+     * \param reason               reason for update
+     */
+    void updateBlockDomains(
+        in DomainList domain_list,
+        in StatusList status_list,
+        in string reason)
+        raises (INTERNAL_SERVER_ERROR, DOMAIN_NOT_FOUND, UNKNOWN_STATUS);
+
+    /*
+     * restore states prior to administrative blocking
+     * 
+     * \param domain_list          list of unblocked domains
+     * \param new_owner            assign new owner
+     * \param reason               reason for unblocking
+     */
+    void restorePreAdministrativeBlockStates(
+        in DomainList domain_list,
+        in NullableString new_owner,
+        in string reason)
+        raises (INTERNAL_SERVER_ERROR, DOMAIN_NOT_BLOCKED, NEW_OWNER_DOES_NOT_EXISTS);
+
+    /*
+     * unblock previously administrative blocked domains
+     * 
+     * \param domain_list          list of unblocked domains
+     * \param new_owner            assign new owner
+     * \param remove_admin_c       remove admin contact
+     * \param reason               reason for unblocking
+     */
+    void unblockDomains(
+        in DomainList domain_list,
+        in NullableString new_owner,
+        in boolean remove_admin_c,
+        in string reason)
+        raises (INTERNAL_SERVER_ERROR, DOMAIN_NOT_BLOCKED, NEW_OWNER_DOES_NOT_EXISTS);
+
+    /*
+     * add domains to blacklist and delete them
+     * 
+     * \param domain_list          list of blacklisted domains
+     * \param blacklist_to_date    blacklist from now to date
+     */
+    void blacklistAndDeleteDomains(
+        in DomainList domain_list,
+        in NullableDate blacklist_to_date)
+        raises (INTERNAL_SERVER_ERROR, DOMAIN_NOT_FOUND);
+
+    /*
+     * add domains to blacklist and optionally delete them
+     * 
+     * \param domain_list          list of blacklisted domains
+     * \param blacklist_to_date    blacklist from now to date
+     * \param with_delete          delete domains
+     */
+    void blacklistDomains(
+        in DomainList domain_list,
+        in NullableDate blacklist_to_date,
+        in boolean with_delete)
+        raises (INTERNAL_SERVER_ERROR);
+
+    /*
+     * remove domains from blacklist and create them with owner
+     * 
+     * \param domain_list          list of unblacklisted domains
+     * \param owner                domain owner
+     */
+    void unblacklistAndCreateDomains(
+        in DomainList domain_list,
+        in string owner)
+        raises (INTERNAL_SERVER_ERROR, DOMAIN_EXISTS, NEW_OWNER_DOES_NOT_EXISTS);
+
+    /*
+     * block domains
+     * 
+     * \param domain_list          list of blocked domains
+     * \param status_list          list of states
+     * \param owner_block_mode     keep owner / block owner / create owner copy and block it
+     * \param reason               reason for blocking
+     * \return                     list of new owner
+     */
+    DomainIdHandleOwnerChangeList blockDomainsId(
+        in DomainIdList domain_list,
+        in StatusList status_list,
+        in OwnerBlockMode owner_block_mode,
+        in NullableDate block_to_date,
+        in string reason,
+        in unsigned long long log_req_id)
+        raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_FOUND, UNKNOWN_STATUS, DOMAIN_ID_ALREADY_BLOCKED, OWNER_HAS_OTHER_DOMAIN);
+
+    /*
+     * update domains blocking
+     * 
+     * \param domain_list          list of blocked domains
+     * \param status_list          list of states
+     * \param reason               reason for update
+     */
+    void updateBlockDomainsId(
+        in DomainIdList domain_list,
+        in StatusList status_list,
+        in NullableDate block_to_date,
+        in string reason,
+        in unsigned long long log_req_id)
+        raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_FOUND, UNKNOWN_STATUS);
+
+    /*
+     * restore states prior to administrative blocking
+     * 
+     * \param domain_list          list of unblocked domains
+     * \param new_owner            assign new owner
+     * \param reason               reason for unblocking
+     */
+    void restorePreAdministrativeBlockStatesId(
+        in DomainIdList domain_list,
+        in NullableString new_owner,
+        in string reason,
+        in unsigned long long log_req_id)
+        raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_FOUND, DOMAIN_ID_NOT_BLOCKED, NEW_OWNER_DOES_NOT_EXISTS);
+
+    /*
+     * unblock previously administrative blocked domains
+     * 
+     * \param domain_list          list of unblocked domains
+     * \param new_owner            assign new owner
+     * \param remove_admin_c       remove admin contact
+     * \param reason               reason for unblocking
+     */
+    void unblockDomainsId(
+        in DomainIdList domain_list,
+        in NullableString new_owner,
+        in boolean remove_admin_c,
+        in string reason,
+        in unsigned long long log_req_id)
+        raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_FOUND, DOMAIN_ID_NOT_BLOCKED, NEW_OWNER_DOES_NOT_EXISTS);
+
+    /*
+     * add domains to blacklist and delete them
+     * 
+     * \param domain_list          list of blacklisted domains
+     * \param blacklist_to_date    blacklist from now to date
+     */
+    void blacklistAndDeleteDomainsId(
+        in DomainIdList domain_list,
+        in NullableDate blacklist_to_date,
+        in string reason,
+        in unsigned long long log_req_id)
+        raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_FOUND);
+
+    /*
+     * add domains to blacklist and optionally delete them
+     * 
+     * \param domain_list          list of blacklisted domains
+     * \param blacklist_to_date    blacklist from now to date
+     * \param with_delete          delete domains
+     */
+    void blacklistDomainsId(
+        in DomainIdList domain_list,
+        in NullableDate blacklist_to_date,
+        in boolean with_delete,
+        in unsigned long long log_req_id)
+        raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_FOUND);
+    };
+
+};
+};
+
+#endif
