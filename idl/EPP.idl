@@ -449,7 +449,7 @@ module ccReg {
      \return Genreal reply with operation result and error messages */
     Response PollAcknowledgement (
       in string msgID,
-      out short count,
+      out unsigned long long count,
       out string newmsgID,
       in EppParams params
     ) raises (EppError, NoMessages);
