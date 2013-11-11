@@ -9,3 +9,5 @@ Makefile
 config.log
 config.status
 fred-idl.spec
+.project
+.cproject
