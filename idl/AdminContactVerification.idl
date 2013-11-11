@@ -151,7 +151,7 @@ module Registry
              * \param lang language of return data
              * \return all check statuses data
              */
-            ContactCheckStatusDefSeq listTestSuiteStatusDefs(in string lang)
+            ContactCheckStatusDefSeq listCheckStatusDefs(in string lang)
 				raises(UNKNOWN_LANGUAGE);
             
             /*
