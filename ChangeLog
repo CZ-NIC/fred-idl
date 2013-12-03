@@ -1,3 +1,7 @@
+2013-11-06 Michal Strnad (2.16.0)
+
+   * new interface for administrative blocking/unblocking domains (and holders)
+
 2013-08-07 Zdeněk Böhm, Jiri Sadek (2.15.0)
 
    * mojeid - managing of disclose flags removed from interface
