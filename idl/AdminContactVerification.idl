@@ -1,0 +1,169 @@
+#ifndef ADMIN_CONTACT_VERIFICATION_IDL_
+#define ADMIN_CONTACT_VERIFICATION_IDL_
+
+/* command for processing:
+ * omniidl -bcxx -Wba -Wbexample -C./src/corba/ ../idl/idl/AdminContactVerification.idl
+ */
+
+#include "DateTime.idl"
+
+module Registry
+{
+    module AdminContactVerification {
+		exception UNKNOWN_CHECK_HANDLE { };
+		exception UNKNOWN_CHECK_TEST_PAIR { };
+		exception UNKNOWN_CHECK_STATUS_NAME { };
+		exception UNKNOWN_TEST_STATUS_NAME { };
+		exception UNKNOWN_CONTACT_ID { };
+		exception UNKNOWN_TESTSUITE_NAME { };
+		exception UNKNOWN_LANGUAGE { };
+    
+        typedef ccReg::DateTimeType DateTime;
+    
+        struct ContactCheckStatus {
+            string status;
+            DateTime update;
+            unsigned long long logd_request_id;
+        };
+
+        typedef sequence<ContactCheckStatus> ContactCheckStatusSeq;
+
+
+        struct ContactTestResultStatus {
+            string status;
+            string err_msg;
+            DateTime update;
+            unsigned long long logd_request_id;
+        };
+
+        typedef sequence<ContactTestResultStatus> ContactTestResultStatusSeq;
+
+
+        struct ContactTestResult {
+            string test_handle;
+            DateTime crdate;
+            ContactTestResultStatusSeq status_history;
+        };
+
+        typedef sequence<ContactTestResult> ContactTestResultSeq;
+
+
+        struct InfoContactCheck    {
+            string check_handle;
+            string test_suite_handle;
+            unsigned long long contact_hid;
+            DateTime crdate;
+            ContactCheckStatusSeq status_history;
+            ContactTestResultSeq test_result_list;    
+        };
+
+
+        struct ContactTestResultUpdate {
+            string test_handle;
+            string status;
+        };
+
+        typedef sequence<ContactTestResultUpdate> TestResultUpdateSeq;
+
+
+        struct ContactTestDef {
+            string handle;
+            string name;
+            string description;
+        };
+
+        typedef sequence<ContactTestDef> ContactTestDefSeq;
+
+
+        struct ContactTestSuiteDef {
+            string handle;
+            string name;
+            string description;
+            ContactTestDefSeq tests;    
+        };
+
+    
+        struct ContactCheckStatusDef {
+            string name;
+            string description;
+        };
+
+        typedef sequence<ContactCheckStatusDef> ContactCheckStatusDefSeq;
+        
+
+        struct ContactTestResultStatusDef {
+            string name;
+            string description;
+        };
+
+        typedef sequence<ContactTestResultStatusDef> ContactTestResultStatusDefSeq;
+        
+
+        interface Server {
+            /*
+             * get all information about contact check and it's tests
+             *
+             * \param check_handle    handle of check to get info about
+             * \return                information about contact check including all it's history and all it's tests including their histories
+             */
+            InfoContactCheck getInfoContactCheck(in string check_handle) 
+				raises(UNKNOWN_CHECK_HANDLE);
+            
+            /*
+             * update specified tests of given check according to given changes
+             *
+             * \param check_handle    handle of check which tests to update
+             * \param changes          changes of tests to process
+             */
+            void updateContactCheckTests(in string check_handle, in TestResultUpdateSeq changes) 
+				raises(UNKNOWN_CHECK_HANDLE, UNKNOWN_CHECK_TEST_PAIR, UNKNOWN_TEST_STATUS_NAME);
+            
+            /*
+             * set final check status
+             *
+             * \param check_handle    handle of check which status to set
+             * \param status          status to set
+             */            
+            void resolveContactCheckStatus(in string check_handle, in string status) 
+				raises(UNKNOWN_CHECK_HANDLE, UNKNOWN_CHECK_STATUS_NAME);
+            
+            /*
+             * enqueue check defined by given test_suite for given contact history data
+             *
+             * \param contact_id       id of contact history data to check
+             * \param testsuite_handle testsuite to use for check
+             */            
+            void enqueueContactCheck(in unsigned long long contact_id, in string testsuite_handle)
+				raises(UNKNOWN_CONTACT_ID, UNKNOWN_TESTSUITE_NAME);
+        
+            /*
+             * get all tests definition data in specified language
+             *
+             * \param lang language of return data
+             * \return all tests definition data
+             */
+            ContactTestDefSeq listTestSuiteDefs(in string lang)
+				raises(UNKNOWN_LANGUAGE);
+            
+            /*
+             * get all check statuses data in specified language
+             *
+             * \param lang language of return data
+             * \return all check statuses data
+             */
+            ContactCheckStatusDefSeq listCheckStatusDefs(in string lang)
+				raises(UNKNOWN_LANGUAGE);
+            
+            /*
+             * get all test result statuses data in specified language
+             *
+             * \param lang language of return data
+             * \return all test result statuses data
+             */
+            ContactTestResultStatusDefSeq listTestResultStatusDefs(in string lang)
+				raises(UNKNOWN_LANGUAGE);
+        };
+    };
+};
+
+#endif
