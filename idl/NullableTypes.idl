@@ -1,0 +1,12 @@
+#ifndef NULLABLETYPES_IDL_
+#define NULLABLETYPES_IDL_
+
+module Registry {
+	valuetype NullableString string;
+	valuetype NullableBoolean boolean;
+	valuetype NullableULongLong unsigned long long;
+};
+
+#endif
+
+
