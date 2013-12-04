@@ -20,7 +20,6 @@ module Registry
 		exception UNKNOWN_LANGUAGE { };
     
         typedef ccReg::DateTimeType DateTime;
-        typedef Registry::NullableULongLong NullableULongLong;
     
         struct ContactCheckStatus {
             string status;
