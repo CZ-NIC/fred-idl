@@ -21,14 +21,14 @@ module Registry
     
         typedef ccReg::DateTimeType DateTime;
     
-        struct ContactTestResultStatus {
+        struct ContactTestStatus {
             string              status;
             string              err_msg;
             DateTime            update;
             NullableULongLong   logd_request_id;
         };
 
-        typedef sequence<ContactTestResultStatus> ContactTestResultStatusSeq;
+        typedef sequence<ContactTestStatus> ContactTestStatusSeq;
 
        
         struct ChangedContactProperty {
@@ -42,11 +42,11 @@ module Registry
         struct ContactTest {
             string                      test_handle;
             DateTime                    crdate;
-            ContactTestResultStatusSeq  status_history;
+            ContactTestStatusSeq        status_history;
             ChangedContactPropertySeq   tested_values_changes;
         };
 
-        typedef sequence<ContactTestResult> ContactTestResultSeq;
+        typedef sequence<ContactTest> ContactTestSeq;
 
 
         struct ContactCheckStatus {
@@ -84,12 +84,12 @@ module Registry
         typedef sequence<ContactCheckListItem> ContactCheckList;
         
         
-        struct ContactTestResultUpdate {
+        struct ContactTestUpdate {
             string test_handle;
             string status;
         };
 
-        typedef sequence<ContactTestResultUpdate> TestResultUpdateSeq;
+        typedef sequence<ContactTestUpdate> TestUpdateSeq;
 
 
         struct ContactTestDef {
