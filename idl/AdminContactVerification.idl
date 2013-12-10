@@ -6,64 +6,92 @@
  */
 
 #include "DateTime.idl"
+#include "NullableTypes.idl"
 
 module Registry
 {
     module AdminContactVerification {
-		exception UNKNOWN_CHECK_HANDLE { };
-		exception UNKNOWN_CHECK_TEST_PAIR { };
-		exception UNKNOWN_CHECK_STATUS_NAME { };
-		exception UNKNOWN_TEST_STATUS_NAME { };
-		exception UNKNOWN_CONTACT_ID { };
-		exception UNKNOWN_TESTSUITE_NAME { };
-		exception UNKNOWN_LANGUAGE { };
+        exception UNKNOWN_CHECK_HANDLE { };
+        exception UNKNOWN_CHECK_TEST_PAIR { };
+        exception UNKNOWN_CHECK_STATUS_NAME { };
+        exception UNKNOWN_TEST_STATUS_NAME { };
+        exception UNKNOWN_CONTACT_ID { };
+        exception UNKNOWN_TESTSUITE_NAME { };
+        exception UNKNOWN_LANGUAGE { };
     
         typedef ccReg::DateTimeType DateTime;
     
+        struct ContactTestStatus {
+            string              status;
+            string              err_msg;
+            DateTime            update;
+            NullableULongLong   logd_request_id;
+        };
+
+        typedef sequence<ContactTestStatus> ContactTestStatusSeq;
+
+       
+        struct ChangedContactProperty {
+            string              old_value;
+            string              new_value;
+            DateTime            updated;
+        };
+        
+        typedef sequence<ChangedContactProperty> ChangedContactPropertySeq;
+        
+        
+        struct ContactTest {
+            string                      test_handle;
+            DateTime                    created;
+            ContactTestStatusSeq        status_history;
+            ChangedContactPropertySeq   tested_values_changes;
+        };
+
+        typedef sequence<ContactTest> ContactTestSeq;
+
+
         struct ContactCheckStatus {
-            string status;
-            DateTime update;
-            unsigned long long logd_request_id;
+            string              status;
+            DateTime            update;
+            NullableULongLong   logd_request_id;
         };
 
         typedef sequence<ContactCheckStatus> ContactCheckStatusSeq;
-
-
-        struct ContactTestResultStatus {
-            string status;
-            string err_msg;
-            DateTime update;
-            unsigned long long logd_request_id;
-        };
-
-        typedef sequence<ContactTestResultStatus> ContactTestResultStatusSeq;
-
-
-        struct ContactTestResult {
-            string test_handle;
-            DateTime crdate;
-            ContactTestResultStatusSeq status_history;
-        };
-
-        typedef sequence<ContactTestResult> ContactTestResultSeq;
-
-
-        struct InfoContactCheck    {
-            string check_handle;
-            string test_suite_handle;
-            unsigned long long contact_hid;
-            DateTime crdate;
-            ContactCheckStatusSeq status_history;
-            ContactTestResultSeq test_result_list;    
+        
+        
+        struct ContactCheckDetail {
+            string                  check_handle;
+            string                  test_suite_handle;
+            unsigned long long      contact_id;
+            string                  contact_handle;
+            unsigned long long      checked_contact_hid;
+            DateTime                created;
+            ContactCheckStatusSeq   status_history;
+            ContactTestSeq          test_list;    
         };
 
 
-        struct ContactTestResultUpdate {
+        struct ContactCheckListItem {
+            string                  check_handle;
+            string                  test_suite_handle;
+            unsigned long long      contact_id;
+            string                  contact_handle;
+            unsigned long long      checked_contact_hid;
+            DateTime                created;
+            DateTime                tests_finished;
+            DateTime                last_relevant_contact_update;
+            string                  current_status;    
+        };
+        
+        typedef sequence<ContactCheckListItem> ContactCheckList;
+        
+        
+        struct ContactTestUpdate {
             string test_handle;
             string status;
         };
 
-        typedef sequence<ContactTestResultUpdate> TestResultUpdateSeq;
+        typedef sequence<ContactTestUpdate> TestUpdateSeq;
 
 
         struct ContactTestDef {
@@ -81,23 +109,26 @@ module Registry
             string description;
             ContactTestDefSeq tests;    
         };
+        
+        typedef sequence<ContactTestSuiteDef> ContactTestSuiteDefSeq;
 
-    
+        struct ContactTestStatusDef {
+            string handle;
+            string name;
+            string description;
+        };
+
+        typedef sequence<ContactTestStatusDef> ContactTestStatusDefSeq;
+        
+        
         struct ContactCheckStatusDef {
+            string handle;
             string name;
             string description;
         };
 
         typedef sequence<ContactCheckStatusDef> ContactCheckStatusDefSeq;
-        
-
-        struct ContactTestResultStatusDef {
-            string name;
-            string description;
-        };
-
-        typedef sequence<ContactTestResultStatusDef> ContactTestResultStatusDefSeq;
-        
+              
 
         interface Server {
             /*
@@ -106,8 +137,22 @@ module Registry
              * \param check_handle    handle of check to get info about
              * \return                information about contact check including all it's history and all it's tests including their histories
              */
-            InfoContactCheck getInfoContactCheck(in string check_handle) 
-				raises(UNKNOWN_CHECK_HANDLE);
+            ContactCheckDetail getContactCheckDetail(in string check_handle) 
+                raises(UNKNOWN_CHECK_HANDLE);
+            
+            /*
+             * get all information about contact check and it's tests
+             *
+             * \param check_handle    handle of check to get info about
+             * \return                information about contact check including all it's history and all it's tests including their histories
+             */
+            ContactCheckList getContactCheckList(
+                in Registry::NullableString     testsuite, 
+                in Registry::NullableULongLong  contact_id, 
+                in unsigned long                max_item_count
+            ) raises (
+                UNKNOWN_TESTSUITE_NAME, 
+                UNKNOWN_CONTACT_ID);
             
             /*
              * update specified tests of given check according to given changes
@@ -115,8 +160,14 @@ module Registry
              * \param check_handle    handle of check which tests to update
              * \param changes          changes of tests to process
              */
-            void updateContactCheckTests(in string check_handle, in TestResultUpdateSeq changes) 
-				raises(UNKNOWN_CHECK_HANDLE, UNKNOWN_CHECK_TEST_PAIR, UNKNOWN_TEST_STATUS_NAME);
+            void updateContactCheckTests(
+                in string               check_handle, 
+                in TestUpdateSeq        changes, 
+                in unsigned long long   logd_request_id
+            ) raises (
+                UNKNOWN_CHECK_HANDLE, 
+                UNKNOWN_CHECK_TEST_PAIR, 
+                UNKNOWN_TEST_STATUS_NAME);
             
             /*
              * set final check status
@@ -124,8 +175,13 @@ module Registry
              * \param check_handle    handle of check which status to set
              * \param status          status to set
              */            
-            void resolveContactCheckStatus(in string check_handle, in string status) 
-				raises(UNKNOWN_CHECK_HANDLE, UNKNOWN_CHECK_STATUS_NAME);
+            void resolveContactCheckStatus(
+                in string               check_handle, 
+                in string               status, 
+                in unsigned long long   logd_request_id
+            ) raises (
+                UNKNOWN_CHECK_HANDLE, 
+                UNKNOWN_CHECK_STATUS_NAME);
             
             /*
              * enqueue check defined by given test_suite for given contact history data
@@ -133,17 +189,22 @@ module Registry
              * \param contact_id       id of contact history data to check
              * \param testsuite_handle testsuite to use for check
              */            
-            void enqueueContactCheck(in unsigned long long contact_id, in string testsuite_handle)
-				raises(UNKNOWN_CONTACT_ID, UNKNOWN_TESTSUITE_NAME);
-        
+            void enqueueContactCheck(
+                in unsigned long long   contact_id, 
+                in string               testsuite_handle, 
+                in unsigned long long   logd_request_id
+            ) raises (
+                UNKNOWN_CONTACT_ID, 
+                UNKNOWN_TESTSUITE_NAME);
+                    
             /*
-             * get all tests definition data in specified language
+             * get all test statuses data in specified language
              *
              * \param lang language of return data
-             * \return all tests definition data
+             * \return all test statuses data
              */
-            ContactTestDefSeq listTestSuiteDefs(in string lang)
-				raises(UNKNOWN_LANGUAGE);
+            ContactTestStatusDefSeq listTestStatusDefs(in string lang)
+                raises(UNKNOWN_LANGUAGE);
             
             /*
              * get all check statuses data in specified language
@@ -152,16 +213,28 @@ module Registry
              * \return all check statuses data
              */
             ContactCheckStatusDefSeq listCheckStatusDefs(in string lang)
-				raises(UNKNOWN_LANGUAGE);
+                raises(UNKNOWN_LANGUAGE);           
             
             /*
-             * get all test result statuses data in specified language
+             * get all tests definition data in specified language
+             * if given only tests in testsuite_handle are returned
              *
              * \param lang language of return data
-             * \return all test result statuses data
+             * \param testsuite_handle optional handle of testsuite to which tests have to belong 
+             * \return tests definition data
              */
-            ContactTestResultStatusDefSeq listTestResultStatusDefs(in string lang)
-				raises(UNKNOWN_LANGUAGE);
+            ContactTestDefSeq listTestDefs(in string lang, in NullableString testsuite_handle)
+                raises(UNKNOWN_LANGUAGE);
+            
+            /*
+             * get all testsuites definition data in specified language
+             *
+             * \param lang language of return data 
+             * \return testsuites definition data
+             */
+            ContactTestSuiteDefSeq listTestSuiteDefs(in string lang)
+                raises(UNKNOWN_LANGUAGE);
+
         };
     };
 };
