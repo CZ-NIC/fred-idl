@@ -34,6 +34,7 @@ module Registry
         struct ChangedContactProperty {
             string              old_value;
             string              new_value;
+            DateTime            updated;
         };
         
         typedef sequence<ChangedContactProperty> ChangedContactPropertySeq;
@@ -41,7 +42,7 @@ module Registry
         
         struct ContactTest {
             string                      test_handle;
-            DateTime                    crdate;
+            DateTime                    created;
             ContactTestStatusSeq        status_history;
             ChangedContactPropertySeq   tested_values_changes;
         };
@@ -64,7 +65,7 @@ module Registry
             unsigned long long      contact_id;
             string                  contact_handle;
             unsigned long long      checked_contact_hid;
-            DateTime                crdate;
+            DateTime                created;
             ContactCheckStatusSeq   status_history;
             ContactTestSeq          test_list;    
         };
@@ -76,8 +77,9 @@ module Registry
             unsigned long long      contact_id;
             string                  contact_handle;
             unsigned long long      checked_contact_hid;
-            DateTime                crdate;
-            DateTime                last_update_of_contact_or_check;
+            DateTime                created;
+            DateTime                tests_finished;
+            DateTime                last_relevant_contact_update;
             string                  current_status;    
         };
         
