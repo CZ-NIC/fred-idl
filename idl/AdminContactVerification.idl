@@ -11,13 +11,13 @@
 module Registry
 {
     module AdminContactVerification {
-		exception UNKNOWN_CHECK_HANDLE { };
-		exception UNKNOWN_CHECK_TEST_PAIR { };
-		exception UNKNOWN_CHECK_STATUS_NAME { };
-		exception UNKNOWN_TEST_STATUS_NAME { };
-		exception UNKNOWN_CONTACT_ID { };
-		exception UNKNOWN_TESTSUITE_NAME { };
-		exception UNKNOWN_LANGUAGE { };
+        exception UNKNOWN_CHECK_HANDLE { };
+        exception UNKNOWN_CHECK_TEST_PAIR { };
+        exception UNKNOWN_CHECK_STATUS_NAME { };
+        exception UNKNOWN_TEST_STATUS_NAME { };
+        exception UNKNOWN_CONTACT_ID { };
+        exception UNKNOWN_TESTSUITE_NAME { };
+        exception UNKNOWN_LANGUAGE { };
     
         typedef ccReg::DateTimeType DateTime;
     
@@ -39,7 +39,7 @@ module Registry
         typedef sequence<ChangedContactProperty> ChangedContactPropertySeq;
         
         
-        struct ContactTestResult {
+        struct ContactTest {
             string                      test_handle;
             DateTime                    crdate;
             ContactTestResultStatusSeq  status_history;
@@ -58,19 +58,19 @@ module Registry
         typedef sequence<ContactCheckStatus> ContactCheckStatusSeq;
         
         
-        struct ContactCheckDetail    {
-            string 					check_handle;
-            string 					test_suite_handle;
-            unsigned long long		contact_id;
-            string					contact_handle;
-            unsigned long long		checked_contact_hid;
-            DateTime 				crdate;
-            ContactCheckStatusSeq	status_history;
-            ContactTestResultSeq	test_result_list;    
+        struct ContactCheckDetail {
+            string                  check_handle;
+            string                  test_suite_handle;
+            unsigned long long      contact_id;
+            string                  contact_handle;
+            unsigned long long      checked_contact_hid;
+            DateTime                crdate;
+            ContactCheckStatusSeq   status_history;
+            ContactTestSeq          test_list;    
         };
 
 
-        struct ContactCheckListItem    {
+        struct ContactCheckListItem {
             string                  check_handle;
             string                  test_suite_handle;
             unsigned long long      contact_id;
@@ -133,7 +133,7 @@ module Registry
              * \return                information about contact check including all it's history and all it's tests including their histories
              */
             ContactCheckDetail getContactCheckDetail(in string check_handle) 
-				raises(UNKNOWN_CHECK_HANDLE);
+                raises(UNKNOWN_CHECK_HANDLE);
             
             /*
              * get all information about contact check and it's tests
@@ -142,10 +142,10 @@ module Registry
              * \return                information about contact check including all it's history and all it's tests including their histories
              */
             ContactCheckList getContactCheckList(
-                in Registry::NullableString testsuite, 
-                in Registry::NullableULongLong contact_id, 
-                in unsigned long max_item_count
-            ) raises(
+                in Registry::NullableString     testsuite, 
+                in Registry::NullableULongLong  contact_id, 
+                in unsigned long                max_item_count
+            ) raises (
                 UNKNOWN_TESTSUITE_NAME, 
                 UNKNOWN_CONTACT_ID);
             
@@ -156,10 +156,10 @@ module Registry
              * \param changes          changes of tests to process
              */
             void updateContactCheckTests(
-                in string check_handle, 
-                in TestResultUpdateSeq changes, 
-                in unsigned long long logd_request_id
-            ) raises(
+                in string               check_handle, 
+                in TestUpdateSeq        changes, 
+                in unsigned long long   logd_request_id
+            ) raises (
                 UNKNOWN_CHECK_HANDLE, 
                 UNKNOWN_CHECK_TEST_PAIR, 
                 UNKNOWN_TEST_STATUS_NAME);
@@ -171,10 +171,10 @@ module Registry
              * \param status          status to set
              */            
             void resolveContactCheckStatus(
-                in string check_handle, 
-                in string status, in 
-                unsigned long long logd_request_id
-            ) raises(
+                in string               check_handle, 
+                in string               status, 
+                in unsigned long long   logd_request_id
+            ) raises (
                 UNKNOWN_CHECK_HANDLE, 
                 UNKNOWN_CHECK_STATUS_NAME);
             
@@ -185,10 +185,10 @@ module Registry
              * \param testsuite_handle testsuite to use for check
              */            
             void enqueueContactCheck(
-                in unsigned long long contact_id, 
-                in string testsuite_handle, 
-                in unsigned long long logd_request_id
-            ) raises(
+                in unsigned long long   contact_id, 
+                in string               testsuite_handle, 
+                in unsigned long long   logd_request_id
+            ) raises (
                 UNKNOWN_CONTACT_ID, 
                 UNKNOWN_TESTSUITE_NAME);
         
