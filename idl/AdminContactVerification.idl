@@ -107,23 +107,26 @@ module Registry
             string description;
             ContactTestDefSeq tests;    
         };
+        
+        typedef sequence<ContactTestSuiteDef> ContactTestSuiteDefSeq;
 
-    
+        struct ContactTestStatusDef {
+            string handle;
+            string name;
+            string description;
+        };
+
+        typedef sequence<ContactTestStatusDef> ContactTestStatusDefSeq;
+        
+        
         struct ContactCheckStatusDef {
+            string handle;
             string name;
             string description;
         };
 
         typedef sequence<ContactCheckStatusDef> ContactCheckStatusDefSeq;
-        
-
-        struct ContactTestResultStatusDef {
-            string name;
-            string description;
-        };
-
-        typedef sequence<ContactTestResultStatusDef> ContactTestResultStatusDefSeq;
-        
+              
 
         interface Server {
             /*
@@ -191,15 +194,15 @@ module Registry
             ) raises (
                 UNKNOWN_CONTACT_ID, 
                 UNKNOWN_TESTSUITE_NAME);
-        
+                    
             /*
-             * get all tests definition data in specified language
+             * get all test statuses data in specified language
              *
              * \param lang language of return data
-             * \return all tests definition data
+             * \return all test statuses data
              */
-            ContactTestDefSeq listTestSuiteDefs(in string lang)
-				raises(UNKNOWN_LANGUAGE);
+            ContactTestStatusDefSeq listTestStatusDefs(in string lang)
+                raises(UNKNOWN_LANGUAGE);
             
             /*
              * get all check statuses data in specified language
@@ -208,16 +211,28 @@ module Registry
              * \return all check statuses data
              */
             ContactCheckStatusDefSeq listCheckStatusDefs(in string lang)
-				raises(UNKNOWN_LANGUAGE);
+                raises(UNKNOWN_LANGUAGE);           
             
             /*
-             * get all test result statuses data in specified language
+             * get all tests definition data in specified language
+             * if given only tests in testsuite_handle are returned
              *
              * \param lang language of return data
-             * \return all test result statuses data
+             * \param testsuite_handle optional handle of testsuite to which tests have to belong 
+             * \return tests definition data
              */
-            ContactTestResultStatusDefSeq listTestResultStatusDefs(in string lang)
-				raises(UNKNOWN_LANGUAGE);
+            ContactTestDefSeq listTestDefs(in string lang, in NullableString testsuite_handle)
+                raises(UNKNOWN_LANGUAGE);
+            
+            /*
+             * get all testsuites definition data in specified language
+             *
+             * \param lang language of return data 
+             * \return testsuites definition data
+             */
+            ContactTestSuiteDefSeq listTestSuiteDefs(in string lang)
+                raises(UNKNOWN_LANGUAGE);
+
         };
     };
 };
