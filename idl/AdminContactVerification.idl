@@ -78,8 +78,8 @@ module Registry
             string                  contact_handle;
             unsigned long long      checked_contact_hid;
             DateTime                created;
-            DateTime                tests_finished;
-            DateTime                last_relevant_contact_update;
+            NullableDateTime        tests_finished;
+            NullableDateTime        last_relevant_contact_update;
             string                  current_status;    
         };
         
