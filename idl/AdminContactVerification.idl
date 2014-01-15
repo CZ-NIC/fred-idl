@@ -188,8 +188,9 @@ module Registry
              *
              * \param contact_id       id of contact history data to check
              * \param testsuite_handle testsuite to use for check
+             * \return check handle
              */            
-            void enqueueContactCheck(
+            string enqueueContactCheck(
                 in unsigned long long   contact_id, 
                 in string               testsuite_handle, 
                 in unsigned long long   logd_request_id
