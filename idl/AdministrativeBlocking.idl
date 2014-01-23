@@ -66,6 +66,13 @@ struct OwnerDomain {
 
 typedef sequence<OwnerDomain> OwnerDomainList;
 
+struct ContactIdHandle {
+    unsigned long long contactId;
+    string contactHandle;
+};
+
+typedef sequence<ContactIdHandle> ContactIdHandleList;
+
 valuetype NullableString string;
 valuetype NullableBoolean boolean;
 valuetype NullableDate Date;
@@ -100,6 +107,11 @@ exception OWNER_HAS_OTHER_DOMAIN
 exception DOMAIN_NOT_BLOCKED
 {
     DomainList what;
+};
+
+exception CONTACT_BLOCK_PROHIBITED
+{
+    ContactIdHandleList what;
 };
 
 exception NEW_OWNER_DOES_NOT_EXISTS
@@ -259,7 +271,7 @@ exception INTERNAL_SERVER_ERROR
         in NullableDate block_to_date,
         in string reason,
         in unsigned long long log_req_id)
-        raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_FOUND, UNKNOWN_STATUS, DOMAIN_ID_ALREADY_BLOCKED, OWNER_HAS_OTHER_DOMAIN);
+        raises (INTERNAL_SERVER_ERROR, DOMAIN_ID_NOT_FOUND, UNKNOWN_STATUS, DOMAIN_ID_ALREADY_BLOCKED, OWNER_HAS_OTHER_DOMAIN, CONTACT_BLOCK_PROHIBITED);
 
     /*
      * update domains blocking
