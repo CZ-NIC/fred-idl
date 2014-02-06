@@ -243,6 +243,8 @@ module ccReg {
 
     TID resendPin3Letter(in TID publicRequestId)
       raises (InternalServerError, ObjectNotFound);
+    TID resendPin2SMS(in TID publicRequestId)
+      raises (InternalServerError, ObjectNotFound);
 
     /// return credit for registrer and zone
     Registry::Money getCreditByZone(in string registrar, in TID zone)
