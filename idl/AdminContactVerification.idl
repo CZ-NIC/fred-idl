@@ -183,6 +183,16 @@ module Registry
                 UNKNOWN_CHECK_HANDLE, 
                 UNKNOWN_CHECK_STATUS_NAME);
             
+			/*
+             * deletion of domains owned by contact which didn't pass manual check
+             *
+             * \param check_handle    handle of check which status to set
+             */            
+            void deleteDomainsAfterFailedManualCheck(
+                in string               check_handle
+            ) raises (
+                UNKNOWN_CHECK_HANDLE);
+                
             /*
              * enqueue check defined by given test_suite for given contact history data
              *
