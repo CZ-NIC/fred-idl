@@ -18,6 +18,8 @@ module Registry
         exception UNKNOWN_TEST_STATUS_HANDLE { };
         exception UNKNOWN_CONTACT_ID { };
         exception UNKNOWN_TESTSUITE_HANDLE { };
+        
+        exception INTERNAL_SERVER_ERROR { };
     
         typedef ccReg::DateTimeType DateTime;
     
@@ -137,8 +139,12 @@ module Registry
              * \param check_handle    handle of check to get info about
              * \return                information about contact check including all it's history and all it's tests including their histories
              */
-            ContactCheckDetail getContactCheckDetail(in string check_handle) 
-                raises(UNKNOWN_CHECK_HANDLE);
+            ContactCheckDetail getContactCheckDetail(
+				in string check_handle
+            ) raises (
+                INTERNAL_SERVER_ERROR, 
+                UNKNOWN_CHECK_HANDLE
+			);
             
             /*
              * get all information about contact check and it's tests
@@ -150,6 +156,8 @@ module Registry
                 in Registry::NullableString     testsuite, 
                 in Registry::NullableULongLong  contact_id, 
                 in unsigned long                max_item_count
+            ) raises (
+				INTERNAL_SERVER_ERROR
             );
             
             /*
@@ -163,6 +171,7 @@ module Registry
                 in TestUpdateSeq        changes, 
                 in unsigned long long   logd_request_id
             ) raises (
+				INTERNAL_SERVER_ERROR,
                 UNKNOWN_CHECK_HANDLE,
                 UNKNOWN_TEST_HANDLE, 
                 UNKNOWN_CHECK_TEST_PAIR, 
@@ -179,6 +188,7 @@ module Registry
                 in string               status, 
                 in unsigned long long   logd_request_id
             ) raises (
+				INTERNAL_SERVER_ERROR,
                 UNKNOWN_CHECK_HANDLE, 
                 UNKNOWN_CHECK_STATUS_HANDLE);
             
@@ -190,6 +200,7 @@ module Registry
             void deleteDomainsAfterFailedManualCheck(
                 in string               check_handle
             ) raises (
+				INTERNAL_SERVER_ERROR,
                 UNKNOWN_CHECK_HANDLE);
                 
             /*
@@ -204,6 +215,7 @@ module Registry
                 in string               testsuite_handle, 
                 in unsigned long long   logd_request_id
             ) raises (
+				INTERNAL_SERVER_ERROR,
                 UNKNOWN_CONTACT_ID, 
                 UNKNOWN_TESTSUITE_HANDLE);
                     
@@ -213,7 +225,11 @@ module Registry
              * \param lang language of return data
              * \return all test statuses data
              */
-            ContactTestStatusDefSeq listTestStatusDefs(in string lang);
+            ContactTestStatusDefSeq listTestStatusDefs(
+				in string lang
+            ) raises(
+				INTERNAL_SERVER_ERROR
+            );
             
             /*
              * get all check statuses data in specified language
@@ -221,7 +237,11 @@ module Registry
              * \param lang language of return data
              * \return all check statuses data
              */
-            ContactCheckStatusDefSeq listCheckStatusDefs(in string lang);           
+            ContactCheckStatusDefSeq listCheckStatusDefs(
+				in string lang
+			) raises (
+				INTERNAL_SERVER_ERROR
+			);           
             
             /*
              * get all tests definition data in specified language
@@ -231,7 +251,12 @@ module Registry
              * \param testsuite_handle optional handle of testsuite to which tests have to belong 
              * \return tests definition data
              */
-            ContactTestDefSeq listTestDefs(in string lang, in NullableString testsuite_handle);
+            ContactTestDefSeq listTestDefs(
+				in string lang, in
+				 NullableString testsuite_handle
+			 ) raises (
+				INTERNAL_SERVER_ERROR
+			 );
             
             /*
              * get all testsuites definition data in specified language
@@ -239,7 +264,11 @@ module Registry
              * \param lang language of return data 
              * \return testsuites definition data
              */
-            ContactTestSuiteDefSeq listTestSuiteDefs(in string lang);
+            ContactTestSuiteDefSeq listTestSuiteDefs(
+				in string lang
+			) raises (
+				INTERNAL_SERVER_ERROR
+			);
 
         };
     };
