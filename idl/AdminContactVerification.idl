@@ -13,11 +13,11 @@ module Registry
     module AdminContactVerification {
         exception UNKNOWN_CHECK_HANDLE { };
         exception UNKNOWN_CHECK_TEST_PAIR { };
-        exception UNKNOWN_CHECK_STATUS_NAME { };
-        exception UNKNOWN_TEST_STATUS_NAME { };
+        exception UNKNOWN_CHECK_STATUS_HANDLE { };
+        exception UNKNOWN_TEST_HANDLE { };
+        exception UNKNOWN_TEST_STATUS_HANDLE { };
         exception UNKNOWN_CONTACT_ID { };
-        exception UNKNOWN_TESTSUITE_NAME { };
-        exception UNKNOWN_LANGUAGE { };
+        exception UNKNOWN_TESTSUITE_HANDLE { };
     
         typedef ccReg::DateTimeType DateTime;
     
@@ -150,9 +150,7 @@ module Registry
                 in Registry::NullableString     testsuite, 
                 in Registry::NullableULongLong  contact_id, 
                 in unsigned long                max_item_count
-            ) raises (
-                UNKNOWN_TESTSUITE_NAME, 
-                UNKNOWN_CONTACT_ID);
+            );
             
             /*
              * update specified tests of given check according to given changes
@@ -165,9 +163,10 @@ module Registry
                 in TestUpdateSeq        changes, 
                 in unsigned long long   logd_request_id
             ) raises (
-                UNKNOWN_CHECK_HANDLE, 
+                UNKNOWN_CHECK_HANDLE,
+                UNKNOWN_TEST_HANDLE, 
                 UNKNOWN_CHECK_TEST_PAIR, 
-                UNKNOWN_TEST_STATUS_NAME);
+                UNKNOWN_TEST_STATUS_HANDLE);
             
             /*
              * set final check status
@@ -181,7 +180,7 @@ module Registry
                 in unsigned long long   logd_request_id
             ) raises (
                 UNKNOWN_CHECK_HANDLE, 
-                UNKNOWN_CHECK_STATUS_NAME);
+                UNKNOWN_CHECK_STATUS_HANDLE);
             
 			/*
              * deletion of domains owned by contact which didn't pass manual check
@@ -206,7 +205,7 @@ module Registry
                 in unsigned long long   logd_request_id
             ) raises (
                 UNKNOWN_CONTACT_ID, 
-                UNKNOWN_TESTSUITE_NAME);
+                UNKNOWN_TESTSUITE_HANDLE);
                     
             /*
              * get all test statuses data in specified language
@@ -214,8 +213,7 @@ module Registry
              * \param lang language of return data
              * \return all test statuses data
              */
-            ContactTestStatusDefSeq listTestStatusDefs(in string lang)
-                raises(UNKNOWN_LANGUAGE);
+            ContactTestStatusDefSeq listTestStatusDefs(in string lang);
             
             /*
              * get all check statuses data in specified language
@@ -223,8 +221,7 @@ module Registry
              * \param lang language of return data
              * \return all check statuses data
              */
-            ContactCheckStatusDefSeq listCheckStatusDefs(in string lang)
-                raises(UNKNOWN_LANGUAGE);           
+            ContactCheckStatusDefSeq listCheckStatusDefs(in string lang);           
             
             /*
              * get all tests definition data in specified language
@@ -234,8 +231,7 @@ module Registry
              * \param testsuite_handle optional handle of testsuite to which tests have to belong 
              * \return tests definition data
              */
-            ContactTestDefSeq listTestDefs(in string lang, in NullableString testsuite_handle)
-                raises(UNKNOWN_LANGUAGE);
+            ContactTestDefSeq listTestDefs(in string lang, in NullableString testsuite_handle);
             
             /*
              * get all testsuites definition data in specified language
@@ -243,8 +239,7 @@ module Registry
              * \param lang language of return data 
              * \return testsuites definition data
              */
-            ContactTestSuiteDefSeq listTestSuiteDefs(in string lang)
-                raises(UNKNOWN_LANGUAGE);
+            ContactTestSuiteDefSeq listTestSuiteDefs(in string lang);
 
         };
     };
