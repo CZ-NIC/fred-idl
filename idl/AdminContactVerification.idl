@@ -32,21 +32,14 @@ module Registry
 
         typedef sequence<ContactTestStatus> ContactTestStatusSeq;
 
-       
-        struct ChangedContactProperty {
-            string              old_value;
-            string              new_value;
-            DateTime            updated;
-        };
-        
-        typedef sequence<ChangedContactProperty> ChangedContactPropertySeq;
-        
-        
+        typedef sequence<string> RelatedContactValuesSeq;
+                
         struct ContactTest {
             string                      test_handle;
             DateTime                    created;
             ContactTestStatusSeq        status_history;
-            ChangedContactPropertySeq   tested_values_changes;
+            RelatedContactValuesSeq		tested_contact_data;
+            RelatedContactValuesSeq		current_contact_data;
         };
 
         typedef sequence<ContactTest> ContactTestSeq;
