@@ -140,15 +140,29 @@ module Registry
 			);
             
             /*
-             * get all information about contact check and it's tests
+             * get all checks of specified contact with optional filter on testsuite
              *
-             * \param check_handle    handle of check to get info about
-             * \return                information about contact check including all it's history and all it's tests including their histories
+             * \param contact_id      id of contact
+             * \param testsuite       returns only checks with this testsuite
+             * \param max_item_count  limit on number of returned checks
+             * \return                contact checks of given contact (and optionaly with given testsuite)
              */
-            ContactCheckList getContactCheckList(
+            ContactCheckList getChecksOfContact(
+                in unsigned long long           contact_id, 
                 in Registry::NullableString     testsuite, 
-                in Registry::NullableULongLong  contact_id, 
                 in unsigned long                max_item_count
+            ) raises (
+				INTERNAL_SERVER_ERROR
+            );
+            
+            /*
+             * get all checks ready to process with optional filter on testsuite
+             *
+             * \param testsuite       returns only checks with this testsuite
+             * \return                contact checks ready to be processed
+             */
+            ContactCheckList getChecksAwatingResolution(
+                in Registry::NullableString     testsuite
             ) raises (
 				INTERNAL_SERVER_ERROR
             );
