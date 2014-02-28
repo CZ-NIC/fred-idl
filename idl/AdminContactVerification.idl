@@ -74,6 +74,7 @@ module Registry
             unsigned long long      checked_contact_hid;
             DateTime                created;
             NullableDateTime        updated;
+            NullableDateTime        last_test_finished;
             NullableDateTime        last_contact_update;
             string                  current_status;    
         };
@@ -156,12 +157,12 @@ module Registry
             );
             
             /*
-             * get all checks ready to process with optional filter on testsuite
+             * get all not yet resolved checks
              *
              * \param testsuite       returns only checks with this testsuite
              * \return                contact checks ready to be processed
              */
-            ContactCheckList getChecksAwatingResolution(
+            ContactCheckList getActiveChecks(
                 in Registry::NullableString     testsuite
             ) raises (
                 INTERNAL_SERVER_ERROR
