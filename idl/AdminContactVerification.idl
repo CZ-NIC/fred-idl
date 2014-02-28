@@ -74,7 +74,7 @@ module Registry
             unsigned long long      checked_contact_hid;
             DateTime                created;
             DateTime                updated;
-            DateTime                last_test_finished;
+            NullableDateTime        last_test_finished;
             DateTime                last_contact_update;
             string                  current_status;    
         };
