@@ -596,6 +596,19 @@ module Zone
   };
 
   module Contact {
+    struct Address {
+       string type;
+       string companyName;
+       string street1;
+       string street2;
+       string street3;
+       string province;
+       string postalcode;
+       string city;
+       string country;
+    };
+    typedef sequence<Address> AddressSeq;
+
     struct Detail {
       ccReg::TID id;
       string handle;
@@ -633,6 +646,7 @@ module Zone
       HistoryRecordList discloseIdent; // value type = boolean
       HistoryRecordList discloseVat; // value type = boolean
       HistoryRecordList discloseNotifyEmail; // value type = boolean
+      HistoryRecordList addresses; // value type = Address
       StateList states;
     };
   };
