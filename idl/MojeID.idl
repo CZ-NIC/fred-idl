@@ -18,6 +18,7 @@ module MojeID {
 
     struct Address {
         string type;
+        NullableString company_name;
         string street1;
         NullableString street2;
         NullableString street3;
