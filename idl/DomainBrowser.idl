@@ -198,8 +198,6 @@ module DomainBrowser {
     enum ObjectBlockType {
         BLOCK_TRANSFER,
         UNBLOCK_TRANSFER,
-        BLOCK_UPDATE,
-        UNBLOCK_UPDATE,
         BLOCK_TRANSFER_AND_UPDATE,
         UNBLOCK_TRANSFER_AND_UPDATE
     };
