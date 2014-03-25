@@ -11,6 +11,8 @@
 module Registry
 {
     module AdminContactVerification {
+        exception INVALID_CHECK_HANDLE { };
+
         exception UNKNOWN_CHECK_HANDLE { };
         exception UNKNOWN_CHECK_TEST_PAIR { };
         exception UNKNOWN_CHECK_STATUS_HANDLE { };
@@ -137,6 +139,7 @@ module Registry
                 in string check_handle
             ) raises (
                 INTERNAL_SERVER_ERROR, 
+                INVALID_CHECK_HANDLE,
                 UNKNOWN_CHECK_HANDLE
             );
             
@@ -180,6 +183,7 @@ module Registry
                 in unsigned long long   logd_request_id
             ) raises (
                 INTERNAL_SERVER_ERROR,
+                INVALID_CHECK_HANDLE,
                 UNKNOWN_CHECK_HANDLE,
                 UNKNOWN_TEST_HANDLE, 
                 UNKNOWN_CHECK_TEST_PAIR, 
@@ -197,6 +201,7 @@ module Registry
                 in unsigned long long   logd_request_id
             ) raises (
                 INTERNAL_SERVER_ERROR,
+                INVALID_CHECK_HANDLE,
                 UNKNOWN_CHECK_HANDLE, 
                 UNKNOWN_CHECK_STATUS_HANDLE);
             
@@ -209,6 +214,7 @@ module Registry
                 in string               check_handle
             ) raises (
                 INTERNAL_SERVER_ERROR,
+                INVALID_CHECK_HANDLE,
                 UNKNOWN_CHECK_HANDLE);
                 
             /*
