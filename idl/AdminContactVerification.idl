@@ -21,6 +21,8 @@ module Registry
         exception UNKNOWN_CONTACT_ID { };
         exception UNKNOWN_TESTSUITE_HANDLE { };
         
+        exception CHECK_NOT_UPDATEABLE { };
+
         exception INTERNAL_SERVER_ERROR { };
     
         typedef ccReg::DateTimeType DateTime;
@@ -187,7 +189,8 @@ module Registry
                 UNKNOWN_CHECK_HANDLE,
                 UNKNOWN_TEST_HANDLE, 
                 UNKNOWN_CHECK_TEST_PAIR, 
-                UNKNOWN_TEST_STATUS_HANDLE);
+                UNKNOWN_TEST_STATUS_HANDLE,
+                CHECK_NOT_UPDATEABLE);
             
             /*
              * set final check status
@@ -203,7 +206,8 @@ module Registry
                 INTERNAL_SERVER_ERROR,
                 INVALID_CHECK_HANDLE,
                 UNKNOWN_CHECK_HANDLE, 
-                UNKNOWN_CHECK_STATUS_HANDLE);
+                UNKNOWN_CHECK_STATUS_HANDLE,
+                CHECK_NOT_UPDATEABLE);
             
             /*
              * deletion of domains owned by contact which didn't pass manual check
