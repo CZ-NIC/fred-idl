@@ -1,0 +1,130 @@
+#ifndef WHOIS_IDL_15354554
+#define WHOIS_IDL_15354554
+
+#include "NullableTypes.idl"
+
+module Registry
+{
+module Whois
+{
+    // utils
+    typedef sequence<string> StringSeq;
+
+    struct PostalAddress {
+        string street1;
+        string street2;
+        string street3;
+        string city;
+        string stateorprovince;
+        string postalcode;
+        string country_code;
+        string telephone;
+    };
+    valuetype NullablePostalAddress PostalAddress;
+
+    struct ObjectStatusDesc {
+      string handle;
+      string name;
+    };
+    typedef sequence<ObjectStatusDesc> ObjectStatusDescSeq;
+
+    // output structures
+
+    struct Registrar {
+        string                  handle;
+        string                  organization;
+        string                  url;
+        NullableString          phone;
+        NullablePostalAddress   address;
+    };
+
+    struct Domain {
+        string              handle;
+        NullableString      registrant_handle;
+        StringSeq           admin_contact_handles;
+        NullableString      nsset_handle;
+        NullableString      keyset_handle;
+        string              registrar_handle;
+        StringSeq           statuses;
+        DateTime            registered;
+        NullableDateTime    changed;
+        Date                expire;
+        NullableDateTime    validated_to;
+    };
+    typedef sequence<Domain> DomainSeq;
+
+    struct Contact {
+        string                  handle;
+        NullableString          organization;
+        string                  name;
+        NullablePostalAddress   address;
+        NullableString          phone;
+        NullableString          fax;
+        NullableString          email;
+        string                  registrar_handle;
+        DateTime                created;
+        NullableDateTime        changed;
+    };
+    typedef sequence<Contact> ContactSeq;
+
+    struct NSSet {
+        string              handle;
+        StringSeq           nservers;
+        StringSeq           tech_contact_handles;
+        string              registrar_handle;
+        DateTime            created;
+        NullableDateTime    changed;
+    };
+    typedef sequence<NSSet> NSSetSeq;
+
+    struct DNSKey {
+        short   flags;
+        short   protocol;
+        short   alg;
+        string  public_key;
+    };
+    typedef sequence<DNSKey> DNSKeySeq;
+
+    struct KeySet {
+        string              handle;
+        DNSKeySeq           dns_keys;
+        DSRecordSeq         ds_records;
+        StringSeq           tech_contact_handles;
+        string              registrar_handle;
+        DateTime            created;
+        NullableDateTime    changed;
+    };
+    typedef sequence<KeySet> KeySetSeq;
+
+    interface WhoisIntf
+    {
+        exception OBJECT_NOT_FOUND {};
+        exception INTERNAL_SERVER_ERROR {};
+
+
+        Registrar   get_registrar_by_handle( in string handle ) raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR);
+
+        Contact     get_contact_by_handle( in string handle ) raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR);
+
+        NSSet       get_nsset_by_handle(    in string handle) raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR);
+        NSSetSeq    get_nssets_by_ns(       in string handle) raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR);
+        NSSetSeq    get_nssets_by_tech_c(   in string handle) raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR);
+
+        KeySet      get_keyset_by_handle(   in string handle) raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR);
+        KeySetSeq   get_keysets_by_tech_c(  in string handle) raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR);
+
+        Domain      get_domain_by_handle(           in string handle) raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR);
+        DomainSeq   get_domains_by_registrant(      in string handle) raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR);
+        DomainSeq   get_domains_by_admin_contact(   in string handle) raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR);
+        DomainSeq   get_domains_by_nsset(           in string handle) raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR);
+        DomainSeq   get_domains_by_keyset(          in string handle) raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR);
+
+
+        ObjectStatusDescSeq get_domain_status_descriptions(  in string lang) raises (INTERNAL_SERVER_ERROR);
+        ObjectStatusDescSeq get_contact_status_descriptions( in string lang) raises (INTERNAL_SERVER_ERROR);
+        ObjectStatusDescSeq get_nsset_status_descriptions(   in string lang) raises (INTERNAL_SERVER_ERROR);
+    };
+};
+};
+
+#endif
