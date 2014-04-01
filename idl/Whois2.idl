@@ -9,6 +9,7 @@ module Whois
 {
     // utils
     typedef sequence<string> StringSeq;
+    valuetype DisclosableString string ;
 
     struct PostalAddress {
         string street1;
@@ -20,7 +21,7 @@ module Whois
         string country_code;
         string telephone;
     };
-    valuetype NullablePostalAddress PostalAddress;
+    valuetype DisclosablePostalAddress PostalAddress;
 
     struct ObjectStatusDesc {
       string handle;
@@ -31,19 +32,19 @@ module Whois
     // output structures
 
     struct Registrar {
-        string                  handle;
-        string                  organization;
-        string                  url;
-        NullableString          phone;
-        NullablePostalAddress   address;
+        string          handle;
+        string          organization;
+        string          url;
+        string          phone;
+        PostalAddress   address;
     };
 
     struct Domain {
         string              handle;
-        NullableString      registrant_handle;
+        string              registrant_handle;
         StringSeq           admin_contact_handles;
-        NullableString      nsset_handle;
-        NullableString      keyset_handle;
+        string              nsset_handle;
+        string              keyset_handle;
         string              registrar_handle;
         StringSeq           statuses;
         DateTime            registered;
@@ -53,23 +54,29 @@ module Whois
     };
     typedef sequence<Domain> DomainSeq;
 
+    struct ContactIdentification {
+        // should be together because it's visibility is controlled by single disclose flag
+        string identification_type;
+        string identification_data;
+    };
+    valuetype DisclosableContactIdentification ContactIdentification;
+
     struct Contact {
-        string                  handle;
-        NullableString          organization;
-        string                  name;
-        NullablePostalAddress   address;
-        NullableString          phone;
-        NullableString          fax;
-        NullableString          email;
-        NullableString          notify_email;
-        NullableString          vat_number;
-        NullableString          identification_type;
-        NullableString          identification_data;
-        string                  creating_registrar_handle;
-        string                  sponsoring_registrar_handle;
-        DateTime                created;
-        NullableDateTime        changed;
-        StringSeq               statuses;
+        string                              handle;
+        DisclosableString                   organization;
+        DisclosableString                   name;
+        DisclosablePostalAddress            address;
+        DisclosableString                   phone;
+        DisclosableString                   fax;
+        DisclosableString                   email;
+        DisclosableString                   notify_email;
+        DisclosableString                   vat_number;
+        DisclosableContactIdentification    identification;
+        string                              creating_registrar_handle;
+        string                              sponsoring_registrar_handle;
+        DateTime                            created;
+        NullableDateTime                    changed;
+        StringSeq                           statuses;
     };
     typedef sequence<Contact> ContactSeq;
 
