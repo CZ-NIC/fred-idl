@@ -61,9 +61,15 @@ module Whois
         NullableString          phone;
         NullableString          fax;
         NullableString          email;
-        string                  registrar_handle;
+        NullableString          notify_email;
+        NullableString          vat_number;
+        NullableString          identification_type;
+        NullableString          identification_data;
+        string                  creating_registrar_handle;
+        string                  sponsoring_registrar_handle;
         DateTime                created;
         NullableDateTime        changed;
+        StringSeq               statuses;
     };
     typedef sequence<Contact> ContactSeq;
 
@@ -74,6 +80,7 @@ module Whois
         string              registrar_handle;
         DateTime            created;
         NullableDateTime    changed;
+        StringSeq           statuses;
     };
     typedef sequence<NSSet> NSSetSeq;
 
@@ -88,11 +95,11 @@ module Whois
     struct KeySet {
         string              handle;
         DNSKeySeq           dns_keys;
-        DSRecordSeq         ds_records;
         StringSeq           tech_contact_handles;
         string              registrar_handle;
         DateTime            created;
         NullableDateTime    changed;
+        StringSeq           statuses;
     };
     typedef sequence<KeySet> KeySetSeq;
 
