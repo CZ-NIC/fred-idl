@@ -19,7 +19,6 @@ module Whois
         string stateorprovince;
         string postalcode;
         string country_code;
-        string telephone;
     };
     valuetype DisclosablePostalAddress PostalAddress;
 
