@@ -222,7 +222,7 @@ module Registry
                 UNKNOWN_CHECK_HANDLE);
 
             /*
-             * enqueue check defined by given test_suite for given contact history data
+             * enqueue check defined by given test_suite for given contact id
              *
              * \param contact_id       id of contact history data to check
              * \param testsuite_handle testsuite to use for check
