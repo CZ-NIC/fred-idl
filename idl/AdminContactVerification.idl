@@ -222,7 +222,37 @@ module Registry
                 UNKNOWN_CHECK_HANDLE);
 
             /*
-             * enqueue check defined by given test_suite for given contact history data
+             * request enqueueing check defined by given test_suite for given contact id
+             *
+             * \param contact_id       id of contact history data to check
+             * \param testsuite_handle testsuite to use for check
+             * \return check handle
+             */
+            string requestEnqueueingContactCheck(
+                in unsigned long long   contact_id,
+                in string               testsuite_handle,
+                in unsigned long long   logd_request_id
+            ) raises (
+                INTERNAL_SERVER_ERROR,
+                UNKNOWN_CONTACT_ID,
+                UNKNOWN_TESTSUITE_HANDLE);
+
+            /*
+             * confirm enqueueing check defined by given test_suite for given contact id
+             *
+             * \param check_handle    handle of check to be confirmed
+             */
+            void confirmEnqueueingContactCheck(
+                in string               check_handle,
+                in unsigned long long   logd_request_id
+            ) raises (
+                INTERNAL_SERVER_ERROR,
+                INVALID_CHECK_HANDLE,
+                UNKNOWN_CHECK_HANDLE,
+                CHECK_NOT_UPDATEABLE);
+
+            /*
+             * enqueue check defined by given test_suite for given contact id
              *
              * \param contact_id       id of contact history data to check
              * \param testsuite_handle testsuite to use for check
