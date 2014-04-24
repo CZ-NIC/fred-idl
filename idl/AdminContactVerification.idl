@@ -23,6 +23,11 @@ module Registry
 
         exception CHECK_NOT_UPDATEABLE { };
 
+        exception INCORRECT_TESTSUITE { };
+        exception INCORRECT_CHECK_STATUS { };
+        exception INCORRECT_CONTACT_STATUS { };
+        exception DOMAINS_ALREADY_DELETED { };
+
         exception INTERNAL_SERVER_ERROR { };
 
         typedef ccReg::DateTimeType DateTime;
@@ -219,7 +224,11 @@ module Registry
             ) raises (
                 INTERNAL_SERVER_ERROR,
                 INVALID_CHECK_HANDLE,
-                UNKNOWN_CHECK_HANDLE);
+                UNKNOWN_CHECK_HANDLE,
+                INCORRECT_TESTSUITE,
+                INCORRECT_CHECK_STATUS,
+                INCORRECT_CONTACT_STATUS,
+                DOMAINS_ALREADY_DELETED);
 
             /*
              * request enqueueing check defined by given test_suite for given contact id
