@@ -134,6 +134,13 @@ module Registry
 
         typedef sequence<ContactCheckStatusDef> ContactCheckStatusDefSeq;
 
+        struct Message {
+            unsigned long long  id;
+            string              type_handle;
+            string              content_handle;
+        };
+
+        typedef sequence<Message> MessageSeq;
 
         interface Server {
             /*
@@ -275,6 +282,17 @@ module Registry
                 INTERNAL_SERVER_ERROR,
                 UNKNOWN_CONTACT_ID,
                 UNKNOWN_TESTSUITE_HANDLE);
+
+            /*
+             * get messages related to specified check
+             *
+             * \param check_handle    handle of check which messages shall be returned
+             */
+            MessageSeq getContactCheckMessages(
+                in string check_handle
+            ) raises (
+                INTERNAL_SERVER_ERROR,
+                INVALID_CHECK_HANDLE);
 
             /*
              * get all test statuses data in specified language
