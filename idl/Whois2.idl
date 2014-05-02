@@ -11,7 +11,7 @@ module Whois
     typedef sequence<string> StringSeq;
     valuetype DisclosableString string ;
 
-    struct PostalAddress {
+    struct PlaceAddress {
         string street1;
         string street2;
         string street3;
@@ -20,7 +20,7 @@ module Whois
         string postalcode;
         string country_code;
     };
-    valuetype DisclosablePostalAddress PostalAddress;
+    valuetype DisclosablePlaceAddress PlaceAddress;
 
     struct ObjectStatusDesc {
       string handle;
@@ -35,7 +35,7 @@ module Whois
         string          organization;
         string          url;
         string          phone;
-        PostalAddress   address;
+        PlaceAddress    address;
     };
 
     struct Domain {
@@ -64,7 +64,7 @@ module Whois
         string                              handle;
         DisclosableString                   organization;
         DisclosableString                   name;
-        DisclosablePostalAddress            address;
+        DisclosablePlaceAddress             address;
         DisclosableString                   phone;
         DisclosableString                   fax;
         DisclosableString                   email;
@@ -136,6 +136,7 @@ module Whois
         ObjectStatusDescSeq get_domain_status_descriptions(  in string lang) raises (INTERNAL_SERVER_ERROR);
         ObjectStatusDescSeq get_contact_status_descriptions( in string lang) raises (INTERNAL_SERVER_ERROR);
         ObjectStatusDescSeq get_nsset_status_descriptions(   in string lang) raises (INTERNAL_SERVER_ERROR);
+        ObjectStatusDescSeq get_keyset_status_descriptions(  in string lang) raises (INTERNAL_SERVER_ERROR);
     };
 };
 };
