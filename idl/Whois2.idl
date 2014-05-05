@@ -114,11 +114,10 @@ module Whois
     typedef sequence<KeySet> KeySetSeq;
     valuetype NullableKeySet KeySet;
 
+    exception INTERNAL_SERVER_ERROR {};
+
     interface WhoisIntf
     {
-        exception INTERNAL_SERVER_ERROR {};
-
-
         NullableRegistrar   get_registrar_by_handle( in string handle ) raises (INTERNAL_SERVER_ERROR);
 
         NullableContact     get_contact_by_handle( in string handle ) raises (INTERNAL_SERVER_ERROR);
