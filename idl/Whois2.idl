@@ -49,6 +49,7 @@ module Whois
         StringSeq           statuses;
         DateTime            registered;
         NullableDateTime    changed;
+        NullableDateTime    last_transfer;
         Date                expire;
         NullableDateTime    validated_to;
     };
@@ -77,6 +78,7 @@ module Whois
         string                              sponsoring_registrar_handle;
         DateTime                            created;
         NullableDateTime                    changed;
+        NullableDateTime                    last_transfer;
         StringSeq                           statuses;
     };
     typedef sequence<Contact> ContactSeq;
@@ -89,6 +91,7 @@ module Whois
         string              registrar_handle;
         DateTime            created;
         NullableDateTime    changed;
+        NullableDateTime    last_transfer;
         StringSeq           statuses;
     };
     typedef sequence<NSSet> NSSetSeq;
@@ -109,6 +112,7 @@ module Whois
         string              registrar_handle;
         DateTime            created;
         NullableDateTime    changed;
+        NullableDateTime    last_transfer;
         StringSeq           statuses;
     };
     typedef sequence<KeySet> KeySetSeq;
