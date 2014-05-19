@@ -17,6 +17,9 @@ module DomainBrowser {
     // Object has a status that does not allow to update.
     exception OBJECT_BLOCKED { };
 
+    //invalid contacts to merge
+    exception INVALID_CONTACTS { };
+    
     /////// data types  
     // database ID
     typedef unsigned long long TID;
@@ -377,6 +380,23 @@ module DomainBrowser {
         RecordSequence getPublicStatusDesc(
                 in string lang
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE);
+
+        /*
+         * list of merge contact candidates for given contact
+         */
+        RecordSet getMergeContactCandidateList(
+                in RegistryReference contact,
+                in unsigned long offset,
+                out boolean limit_exceeded
+            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
+
+        /*
+         * merge contacts in list to dst_contact
+         */
+        void mergeContacts(
+                in RegistryReference dst_contact,
+                in RegistryReferenceSeq  src_contact_list
+            ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, INVALID_CONTACTS);
 
     };
 };
