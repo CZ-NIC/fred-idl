@@ -138,6 +138,9 @@ module Registry
             unsigned long long  id;
             string              type_handle;
             string              content_handle;
+            DateTime            created;
+            NullableDateTime    updated;
+            string              status;
         };
 
         typedef sequence<Message> MessageSeq;
