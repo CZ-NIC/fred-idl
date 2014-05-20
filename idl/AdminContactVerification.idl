@@ -273,10 +273,10 @@ module Registry
             /*
              * get messages related to specified check
              *
-             * \param check_handle    handle of check which messages shall be returned
+             * \param contact_id    id of contact which messages shall be returned
              */
             MessageSeq getContactCheckMessages(
-                in string check_handle
+                in unsigned long long contact_id
             ) raises (
                 INTERNAL_SERVER_ERROR,
                 INVALID_CHECK_HANDLE);
