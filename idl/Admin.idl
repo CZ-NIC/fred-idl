@@ -239,7 +239,12 @@ module ccReg {
       raises (OBJECT_NOT_FOUND, SQL_ERROR, MAILER_ERROR, REQUEST_BLOCKED);
     typedef sequence<octet> Buffer;
     Buffer getPublicRequestPDF(in TID id, in string lang)
-      raises (OBJECT_NOT_FOUND, SQL_ERROR);      
+      raises (OBJECT_NOT_FOUND, SQL_ERROR);
+
+    TID resendPin3Letter(in TID publicRequestId)
+      raises (InternalServerError, ObjectNotFound);
+    TID resendPin2SMS(in TID publicRequestId)
+      raises (InternalServerError, ObjectNotFound);
 
     /// return credit for registrer and zone
     Registry::Money getCreditByZone(in string registrar, in TID zone)
