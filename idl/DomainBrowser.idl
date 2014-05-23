@@ -24,7 +24,7 @@ module DomainBrowser {
     // database ID
     typedef unsigned long long TID;
 
-    // contact, nsset, domain or keyset - handle of an object
+    //arbitrary textual data
     typedef string RegistryObject;
     typedef sequence<RegistryObject> RecordSequence;
     typedef sequence<RecordSequence> RecordSet;
