@@ -51,7 +51,7 @@ module Whois
         NullableDateTime    changed;
         NullableDateTime    last_transfer;
         Date                expire;
-        NullableDateTime    validated_to;
+        NullableDate        validated_to;
     };
     typedef sequence<Domain> DomainSeq;
     valuetype NullableDomain Domain;
