@@ -43,8 +43,8 @@ module Whois
         string              handle;
         string              registrant_handle;
         StringSeq           admin_contact_handles;
-        string              nsset_handle;
-        string              keyset_handle;
+        NullableString      nsset_handle;
+        NullableString      keyset_handle;
         string              registrar_handle;
         StringSeq           statuses;
         DateTime            registered;
