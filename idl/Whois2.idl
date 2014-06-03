@@ -97,6 +97,11 @@ module Whois
     typedef sequence<NSSet> NSSetSeq;
     valuetype NullableNSSet NSSet;
 
+    struct NameServer {
+        string fqdn;
+    };
+    valuetype NullableNameServer NameServer;
+
     struct DNSKey {
         short   flags;
         short   protocol;
@@ -129,6 +134,8 @@ module Whois
         NullableNSSet   get_nsset_by_handle(    in string handle) raises (INTERNAL_SERVER_ERROR);
         NSSetSeq        get_nssets_by_ns(       in string handle) raises (INTERNAL_SERVER_ERROR);
         NSSetSeq        get_nssets_by_tech_c(   in string handle) raises (INTERNAL_SERVER_ERROR);
+
+        NullableNameServer  get_nameserver_by_fqdn(in string fqdn) raises (INTERNAL_SERVER_ERROR);
 
         NullableKeySet  get_keyset_by_handle(   in string handle) raises (INTERNAL_SERVER_ERROR);
         KeySetSeq       get_keysets_by_tech_c(  in string handle) raises (INTERNAL_SERVER_ERROR);
