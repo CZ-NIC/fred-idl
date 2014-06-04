@@ -84,9 +84,16 @@ module Whois
     typedef sequence<Contact> ContactSeq;
     valuetype NullableContact Contact;
 
+    struct NameServer {
+        string      fqdn;
+        StringSeq   ip_addresses;
+    };
+    valuetype NullableNameServer NameServer;
+    typedef sequence<NameServer> NameServerSeq;
+
     struct NSSet {
         string              handle;
-        StringSeq           nservers;
+        NameServerSeq       nservers;
         StringSeq           tech_contact_handles;
         string              registrar_handle;
         DateTime            created;
@@ -96,11 +103,6 @@ module Whois
     };
     typedef sequence<NSSet> NSSetSeq;
     valuetype NullableNSSet NSSet;
-
-    struct NameServer {
-        string fqdn;
-    };
-    valuetype NullableNameServer NameServer;
 
     struct DNSKey {
         short   flags;
