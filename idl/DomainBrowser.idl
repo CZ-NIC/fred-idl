@@ -532,12 +532,14 @@ module DomainBrowser {
          * Merge contact list to destination contact
          * @param dst_contact_id id of destination contact
          * @param contact_list id list of source contacts
+         * @param request_id is id of the new entry in log_entry database table
          * @throw @ref USER_NOT_EXISTS if destination contact not in mojeid or not found, @ref INVALID_CONTACTS if merge fails or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         void mergeContacts(
-            in RegistryReference dst_contact,
-            in RegistryReferenceSeq  src_contact_list
-        ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, INVALID_CONTACTS);
+                in RegistryReference dst_contact,
+                in RegistryReferenceSeq  src_contact_list,
+                in TID request_id
+            ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, INVALID_CONTACTS);
 
     };
 };
