@@ -6,64 +6,97 @@
  */
 
 #include "DateTime.idl"
+#include "NullableTypes.idl"
 
 module Registry
 {
     module AdminContactVerification {
-		exception UNKNOWN_CHECK_HANDLE { };
-		exception UNKNOWN_CHECK_TEST_PAIR { };
-		exception UNKNOWN_CHECK_STATUS_NAME { };
-		exception UNKNOWN_TEST_STATUS_NAME { };
-		exception UNKNOWN_CONTACT_ID { };
-		exception UNKNOWN_TESTSUITE_NAME { };
-		exception UNKNOWN_LANGUAGE { };
-    
+        exception INVALID_CHECK_HANDLE { };
+
+        exception UNKNOWN_CHECK_HANDLE { };
+        exception UNKNOWN_CHECK_TEST_PAIR { };
+        exception UNKNOWN_CHECK_STATUS_HANDLE { };
+        exception UNKNOWN_TEST_HANDLE { };
+        exception UNKNOWN_TEST_STATUS_HANDLE { };
+        exception UNKNOWN_CONTACT_ID { };
+        exception UNKNOWN_TESTSUITE_HANDLE { };
+
+        exception CHECK_NOT_UPDATEABLE { };
+
+        exception INCORRECT_TESTSUITE { };
+        exception INCORRECT_CHECK_STATUS { };
+        exception INCORRECT_CONTACT_STATUS { };
+        exception DOMAINS_ALREADY_DELETED { };
+
+        exception INTERNAL_SERVER_ERROR { };
+
         typedef ccReg::DateTimeType DateTime;
-    
+
+        struct ContactTestStatus {
+            string              status;
+            string              err_msg;
+            DateTime            update;
+            NullableULongLong   logd_request_id;
+        };
+
+        typedef sequence<ContactTestStatus> ContactTestStatusSeq;
+
+        typedef sequence<string> RelatedContactValuesSeq;
+
+        struct ContactTest {
+            string                      test_handle;
+            DateTime                    created;
+            ContactTestStatusSeq        status_history;
+            RelatedContactValuesSeq     tested_contact_data;
+            RelatedContactValuesSeq     current_contact_data;
+        };
+
+        typedef sequence<ContactTest> ContactTestSeq;
+
+
         struct ContactCheckStatus {
-            string status;
-            DateTime update;
-            unsigned long long logd_request_id;
+            string              status;
+            DateTime            update;
+            NullableULongLong   logd_request_id;
         };
 
         typedef sequence<ContactCheckStatus> ContactCheckStatusSeq;
 
 
-        struct ContactTestResultStatus {
-            string status;
-            string err_msg;
-            DateTime update;
-            unsigned long long logd_request_id;
+        struct ContactCheckDetail {
+            string                  check_handle;
+            string                  test_suite_handle;
+            unsigned long long      contact_id;
+            string                  contact_handle;
+            unsigned long long      checked_contact_hid;
+            DateTime                created;
+            ContactCheckStatusSeq   status_history;
+            ContactTestSeq          test_list;
         };
 
-        typedef sequence<ContactTestResultStatus> ContactTestResultStatusSeq;
+
+        struct ContactCheckListItem {
+            string                  check_handle;
+            string                  test_suite_handle;
+            unsigned long long      contact_id;
+            string                  contact_handle;
+            unsigned long long      checked_contact_hid;
+            DateTime                created;
+            DateTime                updated;
+            NullableDateTime        last_test_finished;
+            DateTime                last_contact_update;
+            string                  current_status;
+        };
+
+        typedef sequence<ContactCheckListItem> ContactCheckList;
 
 
-        struct ContactTestResult {
+        struct ContactTestUpdate {
             string test_handle;
-            DateTime crdate;
-            ContactTestResultStatusSeq status_history;
-        };
-
-        typedef sequence<ContactTestResult> ContactTestResultSeq;
-
-
-        struct InfoContactCheck    {
-            string check_handle;
-            string test_suite_handle;
-            unsigned long long contact_hid;
-            DateTime crdate;
-            ContactCheckStatusSeq status_history;
-            ContactTestResultSeq test_result_list;    
-        };
-
-
-        struct ContactTestResultUpdate {
-            string test_handle;
             string status;
         };
 
-        typedef sequence<ContactTestResultUpdate> TestResultUpdateSeq;
+        typedef sequence<ContactTestUpdate> TestUpdateSeq;
 
 
         struct ContactTestDef {
@@ -76,28 +109,41 @@ module Registry
 
 
         struct ContactTestSuiteDef {
+            string             handle;
+            string             name;
+            string             description;
+            ContactTestDefSeq  tests;
+        };
+
+        typedef sequence<ContactTestSuiteDef> ContactTestSuiteDefSeq;
+
+        struct ContactTestStatusDef {
             string handle;
             string name;
             string description;
-            ContactTestDefSeq tests;    
         };
 
-    
+        typedef sequence<ContactTestStatusDef> ContactTestStatusDefSeq;
+
+
         struct ContactCheckStatusDef {
+            string handle;
             string name;
             string description;
         };
 
         typedef sequence<ContactCheckStatusDef> ContactCheckStatusDefSeq;
-        
 
-        struct ContactTestResultStatusDef {
-            string name;
-            string description;
+        struct Message {
+            unsigned long long  id;
+            string              type_handle;
+            string              content_handle;
+            DateTime            created;
+            NullableDateTime    updated;
+            string              status;
         };
 
-        typedef sequence<ContactTestResultStatusDef> ContactTestResultStatusDefSeq;
-        
+        typedef sequence<Message> MessageSeq;
 
         interface Server {
             /*
@@ -106,62 +152,186 @@ module Registry
              * \param check_handle    handle of check to get info about
              * \return                information about contact check including all it's history and all it's tests including their histories
              */
-            InfoContactCheck getInfoContactCheck(in string check_handle) 
-				raises(UNKNOWN_CHECK_HANDLE);
-            
+            ContactCheckDetail getContactCheckDetail(
+                in string check_handle
+            ) raises (
+                INTERNAL_SERVER_ERROR,
+                INVALID_CHECK_HANDLE,
+                UNKNOWN_CHECK_HANDLE
+            );
+
+            /*
+             * get all checks of specified contact with optional filter on testsuite
+             *
+             * \param contact_id      id of contact
+             * \param testsuite       returns only checks with this testsuite
+             * \param max_item_count  limit on number of returned checks
+             * \return                contact checks of given contact (and optionaly with given testsuite)
+             */
+            ContactCheckList getChecksOfContact(
+                in unsigned long long           contact_id,
+                in Registry::NullableString     testsuite,
+                in unsigned long                max_item_count
+            ) raises (
+                INTERNAL_SERVER_ERROR
+            );
+
+            /*
+             * get all not yet resolved checks
+             *
+             * \param testsuite       returns only checks with this testsuite
+             * \return                contact checks ready to be processed
+             */
+            ContactCheckList getActiveChecks(
+                in Registry::NullableString     testsuite
+            ) raises (
+                INTERNAL_SERVER_ERROR
+            );
+
             /*
              * update specified tests of given check according to given changes
              *
              * \param check_handle    handle of check which tests to update
              * \param changes          changes of tests to process
              */
-            void updateContactCheckTests(in string check_handle, in TestResultUpdateSeq changes) 
-				raises(UNKNOWN_CHECK_HANDLE, UNKNOWN_CHECK_TEST_PAIR, UNKNOWN_TEST_STATUS_NAME);
-            
+            void updateContactCheckTests(
+                in string               check_handle,
+                in TestUpdateSeq        changes,
+                in unsigned long long   logd_request_id
+            ) raises (
+                INTERNAL_SERVER_ERROR,
+                INVALID_CHECK_HANDLE,
+                UNKNOWN_CHECK_HANDLE,
+                UNKNOWN_TEST_HANDLE,
+                UNKNOWN_CHECK_TEST_PAIR,
+                UNKNOWN_TEST_STATUS_HANDLE,
+                CHECK_NOT_UPDATEABLE);
+
             /*
              * set final check status
              *
              * \param check_handle    handle of check which status to set
              * \param status          status to set
-             */            
-            void resolveContactCheckStatus(in string check_handle, in string status) 
-				raises(UNKNOWN_CHECK_HANDLE, UNKNOWN_CHECK_STATUS_NAME);
-            
+             */
+            void resolveContactCheckStatus(
+                in string               check_handle,
+                in string               status,
+                in unsigned long long   logd_request_id
+            ) raises (
+                INTERNAL_SERVER_ERROR,
+                INVALID_CHECK_HANDLE,
+                UNKNOWN_CHECK_HANDLE,
+                UNKNOWN_CHECK_STATUS_HANDLE,
+                CHECK_NOT_UPDATEABLE);
+
             /*
-             * enqueue check defined by given test_suite for given contact history data
+             * deletion of domains owned by contact which didn't pass manual check
+             *
+             * \param check_handle    handle of check which status to set
+             */
+            void deleteDomainsAfterFailedManualCheck(
+                in string               check_handle
+            ) raises (
+                INTERNAL_SERVER_ERROR,
+                INVALID_CHECK_HANDLE,
+                UNKNOWN_CHECK_HANDLE,
+                INCORRECT_TESTSUITE,
+                INCORRECT_CHECK_STATUS,
+                INCORRECT_CONTACT_STATUS,
+                DOMAINS_ALREADY_DELETED);
+
+            /*
+             * confirm enqueueing check defined by given test_suite for given contact id
+             *
+             * \param check_handle    handle of check to be confirmed
+             */
+            void confirmEnqueueingContactCheck(
+                in string               check_handle,
+                in unsigned long long   logd_request_id
+            ) raises (
+                INTERNAL_SERVER_ERROR,
+                INVALID_CHECK_HANDLE,
+                UNKNOWN_CHECK_HANDLE,
+                CHECK_NOT_UPDATEABLE);
+
+            /*
+             * enqueue check defined by given test_suite for given contact id
              *
              * \param contact_id       id of contact history data to check
              * \param testsuite_handle testsuite to use for check
-             */            
-            void enqueueContactCheck(in unsigned long long contact_id, in string testsuite_handle)
-				raises(UNKNOWN_CONTACT_ID, UNKNOWN_TESTSUITE_NAME);
-        
+             * \return check handle
+             */
+            string enqueueContactCheck(
+                in unsigned long long   contact_id,
+                in string               testsuite_handle,
+                in unsigned long long   logd_request_id
+            ) raises (
+                INTERNAL_SERVER_ERROR,
+                UNKNOWN_CONTACT_ID,
+                UNKNOWN_TESTSUITE_HANDLE);
+
             /*
-             * get all tests definition data in specified language
+             * get messages related to specified check
+             *
+             * \param contact_id    id of contact which messages shall be returned
+             */
+            MessageSeq getContactCheckMessages(
+                in unsigned long long contact_id
+            ) raises (
+                INTERNAL_SERVER_ERROR,
+                INVALID_CHECK_HANDLE);
+
+            /*
+             * get all test statuses data in specified language
              *
              * \param lang language of return data
-             * \return all tests definition data
+             * \return all test statuses data
              */
-            ContactTestDefSeq listTestSuiteDefs(in string lang)
-				raises(UNKNOWN_LANGUAGE);
-            
+            ContactTestStatusDefSeq listTestStatusDefs(
+                in string lang
+            ) raises(
+                INTERNAL_SERVER_ERROR
+            );
+
             /*
              * get all check statuses data in specified language
              *
              * \param lang language of return data
              * \return all check statuses data
              */
-            ContactCheckStatusDefSeq listCheckStatusDefs(in string lang)
-				raises(UNKNOWN_LANGUAGE);
-            
+            ContactCheckStatusDefSeq listCheckStatusDefs(
+                in string lang
+            ) raises (
+                INTERNAL_SERVER_ERROR
+            );
+
             /*
-             * get all test result statuses data in specified language
+             * get all tests definition data in specified language
+             * if given only tests in testsuite_handle are returned
              *
              * \param lang language of return data
-             * \return all test result statuses data
+             * \param testsuite_handle optional handle of testsuite to which tests have to belong
+             * \return tests definition data
              */
-            ContactTestResultStatusDefSeq listTestResultStatusDefs(in string lang)
-				raises(UNKNOWN_LANGUAGE);
+            ContactTestDefSeq listTestDefs(
+                in string lang,
+                in NullableString testsuite_handle
+            ) raises (
+                INTERNAL_SERVER_ERROR
+            );
+
+            /*
+             * get all testsuites definition data in specified language
+             *
+             * \param lang language of return data
+             * \return testsuites definition data
+             */
+            ContactTestSuiteDefSeq listTestSuiteDefs(
+                in string lang
+            ) raises (
+                INTERNAL_SERVER_ERROR
+            );
+
         };
     };
 };
