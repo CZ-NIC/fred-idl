@@ -1,0 +1,17 @@
+#ifndef NULLABLETYPES_IDL_
+#define NULLABLETYPES_IDL_
+
+#include "DateTime.idl"
+
+module Registry {
+    typedef ccReg::DateTimeType DateTime;
+    typedef ccReg::DateType Date;
+
+	valuetype NullableString string;
+	valuetype NullableBoolean boolean;
+	valuetype NullableULongLong unsigned long long;
+    valuetype NullableDate ccReg::DateType;
+    valuetype NullableDateTime ccReg::DateTimeType;
+};
+
+#endif

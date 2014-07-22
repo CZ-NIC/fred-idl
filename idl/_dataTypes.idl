@@ -1,6 +1,8 @@
 #ifndef _DATATYPES_IDL_
 #define _DATATYPES_IDL_
 
+#include "DateTime.idl"
+
 module ccReg {
  
   /// Types of filters
@@ -150,22 +152,7 @@ module ccReg {
   };
   /// Type for a list of DNSKey records
   typedef sequence <DNSKey_str> DNSKey;
-
-  /// Structure for handling day
-  struct DateType {
-    short day; ///< day of month (1..31)
-    short month; ///< month in year (1..12)
-    short year; ///< year (i.e. 2006)
-  };
-  
-  /// Structure for handling date and time
-  struct DateTimeType {
-    DateType date;
-    short hour; ///< hour (0..23)
-    short minute; ///< minute (0..59)
-    short second; ///< second (0..59)
-  };
-  
+ 
   enum DateTimeIntervalType {
     NONE, ///< filter is empty
     DAY, ///< take just from part as interval

@@ -1,5 +1,17 @@
-AC_INIT([fred-idl], 2.17.0)
+AC_INIT([fred-idl], 2.18.0)
 AC_CONFIG_FILES([Makefile
 		 fred-idl.spec])
+
+# doxygen
+DX_HTML_FEATURE(OFF)
+DX_CHM_FEATURE(OFF)
+DX_CHI_FEATURE(OFF)
+DX_MAN_FEATURE(OFF)
+DX_RTF_FEATURE(OFF)
+DX_XML_FEATURE(OFF)
+DX_PDF_FEATURE(OFF)
+DX_PS_FEATURE(OFF)
+DX_INIT_DOXYGEN(fred-idl, doxy.conf, [doc])
+
 AM_INIT_AUTOMAKE([-Wall -Werror])
 AC_OUTPUT
