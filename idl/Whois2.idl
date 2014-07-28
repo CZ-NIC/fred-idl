@@ -84,7 +84,7 @@ module Whois
     typedef sequence<Contact> ContactSeq;
     valuetype NullableContact Contact;
 
-    enum IPVersion {v4, v6};
+    enum IPVersion {IPv4, IPv6};
 
     struct IPAddress {
         string      address;
