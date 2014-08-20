@@ -78,17 +78,12 @@ module MojeID {
         URLAddressList urladdresses;
     };
 
-    enum ContactState {
-        NOT_IDENTIFIED,
-        CONDITIONALLY_IDENTIFIED,
-        IDENTIFIED,
-        VALIDATED
-    };
-
     struct ContactStateInfo {
         unsigned long long contact_id;
-        ContactState state;
-        Date valid_from;
+        NullableDate mojeid_activation_date;
+        NullableDate conditionally_identification_date;
+        NullableDate identification_date;
+        NullableDate validation_date;
     };
 
     typedef sequence<ContactStateInfo> ContactStateInfoList;
@@ -295,13 +290,13 @@ module MojeID {
 
 
         /*
-         * get contacts states list
+         * get list of contacts states changed in the past
          *
          * \param last_hours      number of hours to search in past
          * \return                list of contacts and its states which
          *                        was gained/changed in last <last_hours> hours
          */
-         ContactStateInfoList getContactsStates(
+         ContactStateInfoList getContactsStateChanges(
                 in unsigned long last_hours)
             raises (INTERNAL_SERVER_ERROR);
 
