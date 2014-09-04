@@ -84,16 +84,6 @@ module DomainBrowser {
     typedef sequence<RecordSequence> RecordSet;
 
     /**
-     * Unused enum
-     */
-    enum RecordType {
-        TEXT,
-        DATE,
-        BOOL,
-        INT
-    };
-
-    /**
      * Registry object id, handle and name data.
      */
     struct RegistryReference
