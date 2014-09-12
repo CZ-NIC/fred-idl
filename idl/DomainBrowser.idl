@@ -89,6 +89,10 @@ module DomainBrowser {
     typedef sequence<RegistryReference> RegistryReferenceSeq;
 
     /**
+     * Object id sequence.
+     */
+    typedef sequence<unsigned long long> ObjectIdSeq;
+    /**
      * Indicates whether user contact can get public or private data of given object
      */
     enum DataAccessLevel
@@ -474,7 +478,7 @@ module DomainBrowser {
          * Sets blocking state of the object.
          * @param contact.id contains database id of the user contact
          * @param objtype type of the objects to be set: domain , nsset or keyset
-         * @param objects[i].id list of database ids of the objects to be set
+         * @param objects list of database ids of the objects to be set
          * @param block is type of blocking to be applied
          * @param blocked is output list of object handles of objects with SERVER_BLOCKED state or objects attempted to be partially unblocked (which is now forbidden)
          * @return false if no object blocked, true if not or exception in case of failure
@@ -483,7 +487,7 @@ module DomainBrowser {
         boolean setObjectBlockStatus(
             in RegistryReference contact,
             in RegistryObject objtype,
-            in RegistryReferenceSeq objects,
+            in ObjectIdSeq objects,
             in ObjectBlockType block,
             out RecordSequence blocked
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
@@ -515,13 +519,13 @@ module DomainBrowser {
         /**
          * Merge contact list to destination contact
          * @param dst_contact_id id of destination contact
-         * @param contact_list id list of source contacts
+         * @param src_contact_id_list id list of source contacts
          * @param request_id is id of the new entry in log_entry database table
          * @throw @ref USER_NOT_EXISTS if destination contact not in mojeid or not found, @ref INVALID_CONTACTS if merge fails or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         void mergeContacts(
                 in RegistryReference dst_contact,
-                in RegistryReferenceSeq  src_contact_list,
+                in ObjectIdSeq  src_contact_id_list,
                 in unsigned long long request_id
             ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, INVALID_CONTACTS);
 
