@@ -63,12 +63,6 @@ module DomainBrowser {
      * Unable to merge contacts.
      */
     exception INVALID_CONTACTS { };
-    
-    /**
-     * database ID.
-     * Useless typedef.
-     */
-    typedef unsigned long long TID;
 
     /**
      * arbitrary textual data
@@ -88,7 +82,7 @@ module DomainBrowser {
      */
     struct RegistryReference
     {
-        TID id;
+        unsigned long long id;
         RegistryObject handle;
         RegistryObject name;
     };
@@ -104,7 +98,7 @@ module DomainBrowser {
     };
 
     struct RegistrarDetail {
-        TID id;
+        unsigned long long id;
         string handle;
         string name;
         string phone;
@@ -114,7 +108,7 @@ module DomainBrowser {
     };
 
     struct DomainDetail {
-        TID id;
+        unsigned long long id;
         string fqdn;
         string roid;
         RegistryReference registrar;
@@ -162,7 +156,7 @@ module DomainBrowser {
     };
 
     struct ContactDetail {
-        TID id;
+        unsigned long long id;
         string handle;
         string roid;/**< registry object identifier of the contact */
         RegistryReference registrar;
@@ -198,7 +192,7 @@ module DomainBrowser {
     };
 
     struct NSSetDetail {
-        TID id;
+        unsigned long long id;
         string handle;
         string roid;/**< registry object identifier of nsset */
         RegistryReference registrar;
@@ -237,7 +231,7 @@ module DomainBrowser {
 
 
     struct KeysetDetail {
-        TID id;
+        unsigned long long id;
         string handle;
         string roid;/**< registry object identifier of keyset */
         RegistryReference registrar;
@@ -273,7 +267,7 @@ module DomainBrowser {
          * @return object database id
          * @throw @ref INCORRECT_USAGE if objype not found, @ref OBJECT_NOT_EXISTS if object with given type not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        TID getObjectRegistryId(
+        unsigned long long getObjectRegistryId(
             in string objtype,
             in string handle
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS);
@@ -455,7 +449,7 @@ module DomainBrowser {
         boolean setContactDiscloseFlags(
             in RegistryReference contact,
             in UpdateContactDiscloseFlags flags,
-            in TID request_id
+            in unsigned long long request_id
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
 
         /**
@@ -473,7 +467,7 @@ module DomainBrowser {
             in RegistryObject objtype,
             in RegistryReference objref,
             in RegistryObject auth_info,
-            in TID request_id
+            in unsigned long long request_id
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
 
         /**
@@ -528,7 +522,7 @@ module DomainBrowser {
         void mergeContacts(
                 in RegistryReference dst_contact,
                 in RegistryReferenceSeq  src_contact_list,
-                in TID request_id
+                in unsigned long long request_id
             ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, INVALID_CONTACTS);
 
     };
