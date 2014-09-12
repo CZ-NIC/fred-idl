@@ -278,8 +278,8 @@ module DomainBrowser {
 
         /**
          * Get list of domains registered or administered by user contact or contact.
-         * @param user_contact.id contains database id of the user contact, handle is ignored
-         * @param contact.id if set (i.e., contact.id is not 0) list domains linked to contact with given id regardless of user contact relation to listed domains, handle is ignored
+         * @param user_contact_id contains database id of the user contact
+         * @param contact_id if set (i.e., contact_id is not 0) list domains linked to contact with given id regardless of user contact relation to listed domains
          * @param lang contains language for state description "EN" or "CS"
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
@@ -287,8 +287,8 @@ module DomainBrowser {
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact.id != 0 and not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         RecordSet getDomainList(
-            in RegistryReference user_contact,
-            in RegistryReference contact,
+            in unsigned long long user_contact_id,
+            in unsigned long long contact_id,
             in string lang,
             in unsigned long offset,
             out boolean limit_exceeded
@@ -296,8 +296,8 @@ module DomainBrowser {
 
         /**
          * Get list of nssets administered by user contact.
-         * @param user_contact.id contains database id of the user contact, handle is ignored
-         * @param contact.id if set (i.e., contact.id is not 0) list nssets linked to contact with given id regardless of user contact relation to listed nssets, handle is ignored
+         * @param user_contact_id contains database id of the user contact
+         * @param contact_id if set (i.e., contact_id is not 0) list nssets linked to contact with given id regardless of user contact relation to listed nssets
          * @param lang contains language for state description "EN" or "CS"
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
@@ -305,8 +305,8 @@ module DomainBrowser {
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact.id != 0 and not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         RecordSet getNssetList(
-            in RegistryReference user_contact,
-            in RegistryReference contact,
+            in unsigned long long user_contact_id,
+            in unsigned long long contact_id,
             in string lang,
             in unsigned long offset,
             out boolean limit_exceeded
@@ -314,8 +314,8 @@ module DomainBrowser {
 
         /**
          * Get list of keysets administered by user contact.
-         * @param user_contact.id contains database id of the user contact, handle is ignored
-         * @param contact.id if set (i.e., contact.id is not 0) list keysets linked to contact with given id regardless of user contact relation to listed keysets, handle is ignored
+         * @param user_contact_id contains database id of the user contact
+         * @param contact_id if set (i.e., contact_id is not 0) list keysets linked to contact with given id regardless of user contact relation to listed keysets
          * @param lang contains language for state description "EN" or "CS"
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
@@ -323,8 +323,8 @@ module DomainBrowser {
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact.id != 0 and not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         RecordSet getKeysetList(
-            in RegistryReference user_contact,
-            in RegistryReference contact,
+            in unsigned long long user_contact_id,
+            in unsigned long long contact_id,
             in string lang,
             in unsigned long offset,
             out boolean limit_exceeded
@@ -332,8 +332,8 @@ module DomainBrowser {
 
         /**
          * Get list of domains linked to given keyset.
-         * @param contact.id contains database id of the user contact, handle is ignored
-         * @param keyset.id list domains linked to keyset with given id regardless of user contact relation to listed domains, handle is ignored
+         * @param contact_id contains database id of the user contact
+         * @param keyset_id list domains linked to keyset with given id regardless of user contact relation to listed domains
          * @param lang contains language for state description "EN" or "CS"
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
@@ -341,8 +341,8 @@ module DomainBrowser {
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         RecordSet getDomainsForKeyset(
-            in RegistryReference contact,
-            in RegistryReference keyset,
+            in unsigned long long contact_id,
+            in unsigned long long keyset_id,
             in string lang,
             in unsigned long offset,
             out boolean limit_exceeded
@@ -350,8 +350,8 @@ module DomainBrowser {
 
         /**
          * Get list of domains linked to given nsset.
-         * @param contact.id contains database id of the user contact, handle is ignored
-         * @param nsset.id list domains linked to nsset with given id regardless of user contact relation to listed domains, handle is ignored
+         * @param contact_id contains database id of the user contact
+         * @param nsset_id list domains linked to nsset with given id regardless of user contact relation to listed domains
          * @param lang contains language for state description "EN" or "CS"
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
@@ -359,8 +359,8 @@ module DomainBrowser {
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         RecordSet getDomainsForNsset(
-            in RegistryReference contact,
-            in RegistryReference nsset,
+            in unsigned long long contact_id,
+            in unsigned long long nsset_id,
             in string lang,
             in unsigned long offset,
             out boolean limit_exceeded
@@ -368,115 +368,115 @@ module DomainBrowser {
 
         /**
          * Returns contact detail.
-         * @param contact.id contains database id of the user contact, handle is ignored
-         * @param detail.id contains database id of the contact whose detail is requested
+         * @param contact_id contains database id of the user contact
+         * @param detail_id contains database id of the contact whose detail is requested
          * @param lang contains language for state description "EN" or "CS"
          * @param auth_result output is PUBLIC_DATA if user contact is different from requested contact then transfer password is hidden, PRIVATE_DATA if user contact is the same as requested contact then transfer password is disclosed
          * @return contact detail data @ref ContactDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         ContactDetail getContactDetail(
-            in RegistryReference contact,
-            in RegistryReference detail,
+            in unsigned long long contact_id,
+            in unsigned long long detail_id,
             in string lang,
             out DataAccessLevel auth_result
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Returns nsset detail.
-         * @param contact.id contains database id of the user contact, handle is ignored
-         * @param nsset.id contains database id of the nsset whose detail is requested
+         * @param contact_id contains database id of the user contact
+         * @param nsset_id contains database id of the nsset whose detail is requested
          * @param lang contains language for state description "EN" or "CS"
          * @param auth_result output is PUBLIC_DATA if user contact is not admin of requested nsset then transfer password is hidden, PRIVATE_DATA if user contact is admin of the requested nsset then transfer password is disclosed
          * @return nsset detail data @ref NSSetDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if nsset not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         NSSetDetail getNssetDetail(
-            in RegistryReference contact,
-            in RegistryReference nsset,
+            in unsigned long long contact_id,
+            in unsigned long long nsset_id,
             in string lang,
             out DataAccessLevel auth_result
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Returns domain detail.
-         * @param contact.id contains database id of the user contact, handle is ignored
-         * @param domain.id contains database id of the domain whose detail is requested
+         * @param contact_id contains database id of the user contact
+         * @param domain_id contains database id of the domain whose detail is requested
          * @param lang contains language for state description "EN" or "CS"
          * @param auth_result output is PUBLIC_DATA if user contact is not admin or owner of requested domain then transfer password is hidden, PRIVATE_DATA if user contact is admin or owner of the requested domain then transfer password is disclosed
          * @return domain detail data @ref DomainDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if domain not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         DomainDetail getDomainDetail(
-            in RegistryReference contact,
-            in RegistryReference domain,
+            in unsigned long long contact_id,
+            in unsigned long long domain_id,
             in string lang,
             out DataAccessLevel auth_result
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Returns keyset detail.
-         * @param contact.id contains database id of the user contact, handle is ignored
-         * @param keyset.id contains database id of the keyset whose detail is requested
+         * @param contact_id contains database id of the user contact
+         * @param keyset_id contains database id of the keyset whose detail is requested
          * @param lang contains language for state description "EN" or "CS"
          * @param auth_result output is PUBLIC_DATA if user contact is not admin of requested keyset then transfer password is hidden, PRIVATE_DATA if user contact is admin of the requested keyset then transfer password is disclosed
          * @return keyset detail data @ref KeysetDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if keyset not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         KeysetDetail getKeysetDetail(
-            in RegistryReference contact,
-            in RegistryReference keyset,
+            in unsigned long long contact_id,
+            in unsigned long long keyset_id,
             in string lang,
             out DataAccessLevel auth_result
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Returns registrar detail.
-         * @param contact.id contains database id of the user contact, handle is ignored
+         * @param contact_id contains database id of the user contact
          * @param handle contains object registry handle of the registrar whose detail is requested
          * @return registrar detail data @ref RegistrarDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if registrar not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         RegistrarDetail getRegistrarDetail(
-            in RegistryReference contact,
+            in unsigned long long contact_id,
             in RegistryObject handle
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Sets contact disclose flags.
-         * @param contact.id contains database id of the contact
+         * @param contact_id contains database id of the contact
          * @param flags contains contact disclose flags
          * @param request_id is id of the new entry in log_entry database table
          * @return true if disclose flags were set, false if not or exception in case of failure
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if contact not identified or validated, @ref OBJECT_BLOCKED if contact is blocked or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         boolean setContactDiscloseFlags(
-            in RegistryReference contact,
+            in unsigned long long contact_id,
             in UpdateContactDiscloseFlags flags,
             in unsigned long long request_id
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
 
         /**
          * Sets contact transfer password.
-         * @param contact.id contains database id of the user contact
+         * @param contact_id contains database id of the user contact
          * @param objtype is "contact"
-         * @param objref.id contains database id of the contact to be modified
+         * @param objref_id contains database id of the contact to be modified
          * @param auth_info is new transfer password
          * @param request_id is id of the new entry in log_entry database table
          * @return true if authinfo were set, false if not or exception in case of failure
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if user contact is different from contact or not identified or validated, @ref INCORRECT_USAGE if new transfer password is longer than 300 characters or objtype is not "contact", @ref OBJECT_BLOCKED if contact is blocked or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         boolean setAuthInfo(
-            in RegistryReference contact,
+            in unsigned long long contact_id,
             in RegistryObject objtype,
-            in RegistryReference objref,
+            in unsigned long long objref_id,
             in RegistryObject auth_info,
             in unsigned long long request_id
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
 
         /**
          * Sets blocking state of the object.
-         * @param contact.id contains database id of the user contact
+         * @param contact_id contains database id of the user contact
          * @param objtype type of the objects to be set: domain , nsset or keyset
          * @param objects list of database ids of the objects to be set
          * @param block is type of blocking to be applied
@@ -485,7 +485,7 @@ module DomainBrowser {
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if user contact is not validated, @ref INCORRECT_USAGE if objtype not found or objtype is "contact" or objects list is longer then 500 elements or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         boolean setObjectBlockStatus(
-            in RegistryReference contact,
+            in unsigned long long contact_id,
             in RegistryObject objtype,
             in ObjectIdSeq objects,
             in ObjectBlockType block,
@@ -504,14 +504,14 @@ module DomainBrowser {
 
         /**
          * Get list of contacts mergeable to user contact.
-         * @param contact.id contains database id of the user contact
+         * @param contact_id contains database id of the user contact
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
          * @return contact list of rows: id, handle, domain count, nsset count, keyset count, registrar handle, registrar name
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         RecordSet getMergeContactCandidateList(
-                in RegistryReference contact,
+                in unsigned long long contact_id,
                 in unsigned long offset,
                 out boolean limit_exceeded
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
@@ -524,7 +524,7 @@ module DomainBrowser {
          * @throw @ref USER_NOT_EXISTS if destination contact not in mojeid or not found, @ref INVALID_CONTACTS if merge fails or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         void mergeContacts(
-                in RegistryReference dst_contact,
+                in unsigned long long dst_contact_id,
                 in ObjectIdSeq  src_contact_id_list,
                 in unsigned long long request_id
             ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, INVALID_CONTACTS);
