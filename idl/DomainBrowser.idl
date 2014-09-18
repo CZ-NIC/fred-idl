@@ -65,13 +65,9 @@ module DomainBrowser {
     exception INVALID_CONTACTS { };
 
     /**
-     * arbitrary textual data
-     */
-    typedef string RegistryObject;
-    /**
      * arbitrary textual data sequence
      */
-    typedef sequence<RegistryObject> RecordSequence;
+    typedef sequence<string> RecordSequence;
     /**
      * arbitrary textual data 2D
      */
@@ -83,8 +79,8 @@ module DomainBrowser {
     struct RegistryReference
     {
         unsigned long long id;
-        RegistryObject handle;
-        RegistryObject name;
+        string handle;
+        string name;
     };
     typedef sequence<RegistryReference> RegistryReferenceSeq;
 
@@ -439,7 +435,7 @@ module DomainBrowser {
          */
         RegistrarDetail getRegistrarDetail(
             in unsigned long long contact_id,
-            in RegistryObject handle
+            in string handle
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
@@ -468,9 +464,9 @@ module DomainBrowser {
          */
         boolean setAuthInfo(
             in unsigned long long contact_id,
-            in RegistryObject objtype,
+            in string objtype,
             in unsigned long long objref_id,
-            in RegistryObject auth_info,
+            in string auth_info,
             in unsigned long long request_id
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
 
@@ -486,7 +482,7 @@ module DomainBrowser {
          */
         boolean setObjectBlockStatus(
             in unsigned long long contact_id,
-            in RegistryObject objtype,
+            in string objtype,
             in ObjectIdSeq objects,
             in ObjectBlockType block,
             out RecordSequence blocked
