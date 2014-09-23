@@ -65,6 +65,16 @@ module DomainBrowser {
     exception INVALID_CONTACTS { };
 
     /**
+     * arbitrary date
+     */
+    typedef string Date;
+
+    /**
+     * arbitrary timestamp
+     */
+    typedef string DateTime;
+    
+    /**
      * arbitrary textual data sequence
      */
     typedef sequence<string> RecordSequence;
