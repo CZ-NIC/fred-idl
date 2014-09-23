@@ -268,6 +268,83 @@ module DomainBrowser {
         UNBLOCK_TRANSFER_AND_UPDATE
     };
 
+    /**
+     * Next domain state data.
+     */
+    struct NextDomainState
+    {
+        string state_code; /**< next state code */
+        Date state_date; /**< next state date */
+    };
+
+    /**
+     * object state code sequence
+     */
+    typedef sequence<string> StateCodeSequence;
+    
+    /**
+     * element of DomainList
+     */
+    struct DomainListData
+    {
+        unsigned long long id;/**< id of the domain */
+        string fqdn;/**< fully qualified domain name */
+        unsigned long long external_importance;/**<  bitwise OR of importance values of states with external flag or next higher power of 2 value if bitwise OR is zero */
+        NextDomainState next_state;/**< next state of the domain according to current date and expiration date, outzone date and delete date of the domain */
+        boolean have_keyset; /**< domain have keyset flag */
+        string user_role; /**< domainbrowser user relation to the domain (holder/admin/'') */
+        string registrar_handle; /**< domain registrar handle*/
+        string registrar_name; /**< domain registrar name*/
+        StateCodeSequence state_code;/**< domain states*/
+        boolean is_server_blocked; /**< whether domain have serverBlocked state */
+    };
+    
+    /**
+     * domain list output
+     */
+    typedef sequence<DomainListData> DomainList;
+    
+    /**
+     * element of NssetList
+     */
+    struct NssetListData
+    {
+        unsigned long long id;/**< id of the nsset */
+        string handle;/**< nsset handle */
+        unsigned long long domain_count;/**<  number of domains using this nsset */
+        string registrar_handle; /**< nsset registrar handle*/
+        string registrar_name; /**< nsset registrar name*/
+        unsigned long long external_importance;/**<  bitwise OR of importance values of states with external flag or next higher power of 2 value if bitwise OR is zero */
+        StateCodeSequence state_code;/**< nsset states*/
+        boolean is_server_blocked; /**< whether nsset have serverBlocked state */
+    };
+    
+    /**
+     * nsset list output
+     */
+    typedef sequence<NssetListData> NssetList;
+
+    /**
+     * element of KeysetList
+     */
+    struct KeysetListData
+    {
+        unsigned long long id;/**< id of the keyset */
+        string handle;/**< keyset handle */
+        unsigned long long domain_count;/**<  number of domains using this keyset */
+        string registrar_handle; /**< keyset registrar handle*/
+        string registrar_name; /**< keyset registrar name*/
+        unsigned long long external_importance;/**<  bitwise OR of importance values of states with external flag or next higher power of 2 value if bitwise OR is zero */
+        StateCodeSequence state_code;/**< keyset states*/
+        boolean is_server_blocked; /**< whether keyset have serverBlocked state*/
+    };
+    
+    /**
+     * keyset list output
+     */
+    typedef sequence<KeysetListData> KeysetList;
+
+    
     interface Server {
 
         /**
@@ -286,16 +363,14 @@ module DomainBrowser {
          * Get list of domains registered or administered by user contact or contact.
          * @param user_contact_id contains database id of the user contact
          * @param contact_id if set (i.e., contact_id is not 0) list domains linked to contact with given id regardless of user contact relation to listed domains
-         * @param lang contains language for state description "EN" or "CS"
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
-         * @return domain list of rows: id, fqdn, external_status_importance, next state of the domain, date of the next state, have keyset, contact role holder or admin, registrar handle, registrar name, comma separated list of external state descriptions ordered by importance, have serverBlocked state flag
+         * @return list of domain data
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact.id != 0 and not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        RecordSet getDomainList(
+        DomainList getDomainList(
             in unsigned long long user_contact_id,
             in unsigned long long contact_id,
-            in string lang,
             in unsigned long offset,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
@@ -304,16 +379,14 @@ module DomainBrowser {
          * Get list of nssets administered by user contact.
          * @param user_contact_id contains database id of the user contact
          * @param contact_id if set (i.e., contact_id is not 0) list nssets linked to contact with given id regardless of user contact relation to listed nssets
-         * @param lang contains language for state description "EN" or "CS"
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
-         * @return nsset list of rows: id, handle, domain count, registrar handle, registrar name, external_status_importance, comma separated list of external state descriptions ordered by importance, have serverBlocked state flag
+         * @return list of nsset data
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact.id != 0 and not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        RecordSet getNssetList(
+        NssetList getNssetList(
             in unsigned long long user_contact_id,
             in unsigned long long contact_id,
-            in string lang,
             in unsigned long offset,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
@@ -322,16 +395,14 @@ module DomainBrowser {
          * Get list of keysets administered by user contact.
          * @param user_contact_id contains database id of the user contact
          * @param contact_id if set (i.e., contact_id is not 0) list keysets linked to contact with given id regardless of user contact relation to listed keysets
-         * @param lang contains language for state description "EN" or "CS"
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
-         * @return keyset list of rows: id, handle, domain count, registrar handle, registrar name, external_status_importance, comma separated list of external state descriptions ordered by importance, have serverBlocked state flag
+         * @return list of keyset data
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact.id != 0 and not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        RecordSet getKeysetList(
+        KeysetList getKeysetList(
             in unsigned long long user_contact_id,
             in unsigned long long contact_id,
-            in string lang,
             in unsigned long offset,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
@@ -340,16 +411,14 @@ module DomainBrowser {
          * Get list of domains linked to given keyset.
          * @param contact_id contains database id of the user contact
          * @param keyset_id list domains linked to keyset with given id regardless of user contact relation to listed domains
-         * @param lang contains language for state description "EN" or "CS"
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
-         * @return domain list of rows: id, fqdn, external_status_importance, next state of the domain, date of the next state, have keyset, contact role holder or admin, registrar handle, registrar name, comma separated list of external state descriptions ordered by importance, have serverBlocked state flag
+         * @return list of domain data
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        RecordSet getDomainsForKeyset(
+        DomainList getDomainsForKeyset(
             in unsigned long long contact_id,
             in unsigned long long keyset_id,
-            in string lang,
             in unsigned long offset,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
@@ -358,16 +427,14 @@ module DomainBrowser {
          * Get list of domains linked to given nsset.
          * @param contact_id contains database id of the user contact
          * @param nsset_id list domains linked to nsset with given id regardless of user contact relation to listed domains
-         * @param lang contains language for state description "EN" or "CS"
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
-         * @return domain list of rows: id, fqdn, external_status_importance, next state of the domain, date of the next state, have keyset, contact role holder or admin, registrar handle, registrar name, comma separated list of external state descriptions ordered by importance, have serverBlocked state flag
+         * @return list of domain data
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        RecordSet getDomainsForNsset(
+        DomainList getDomainsForNsset(
             in unsigned long long contact_id,
             in unsigned long long nsset_id,
-            in string lang,
             in unsigned long offset,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
