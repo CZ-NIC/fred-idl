@@ -344,6 +344,25 @@ module DomainBrowser {
      */
     typedef sequence<KeysetListData> KeysetList;
 
+    /**
+     * element of MergeContactCandidateList
+     */
+    struct MergeContactCandidateData
+    {
+        unsigned long long id;/**< id of the contact */
+        string handle;/**< contact handle */
+        unsigned long long domain_count;/**<  number of domains linked with this contact */
+        unsigned long long nsset_count;/**<  number of nssets linked with this contact */
+        unsigned long long keyset_count;/**<  number of keysets linked with this contact */
+        string registrar_handle; /**< contact registrar handle*/
+        string registrar_name; /**< contact registrar name*/
+    };
+    
+    /**
+     * merge contact candidate list
+     */
+    typedef sequence<MergeContactCandidateData> MergeContactCandidateList;
+    
     
     interface Server {
 
@@ -580,10 +599,10 @@ module DomainBrowser {
          * @param contact_id contains database id of the user contact
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
-         * @return contact list of rows: id, handle, domain count, nsset count, keyset count, registrar handle, registrar name
+         * @return list of merge contact candidates
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        RecordSet getMergeContactCandidateList(
+        MergeContactCandidateList getMergeContactCandidateList(
                 in unsigned long long contact_id,
                 in unsigned long offset,
                 out boolean limit_exceeded
