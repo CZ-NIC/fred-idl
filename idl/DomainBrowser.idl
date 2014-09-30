@@ -359,6 +359,12 @@ module DomainBrowser {
      */
     typedef sequence<MergeContactCandidateData> MergeContactCandidateList;
     
+    /**
+     * sequence of object handles refused by setObjectBlockStatus call
+     */
+    typedef sequence<string> RefusedObjectHandleSequence;
+    
+    
     
     interface Server {
 
@@ -568,7 +574,7 @@ module DomainBrowser {
          * @param objtype type of the objects to be set: domain , nsset or keyset
          * @param objects list of database ids of the objects to be set
          * @param block is type of blocking to be applied
-         * @param blocked is output list of object handles of objects with SERVER_BLOCKED state or objects attempted to be partially unblocked (which is now forbidden)
+         * @param change_prohibited is output list of object handles of objects with SERVER_BLOCKED state or objects attempted to be partially unblocked (which is now forbidden)
          * @return false if no object blocked, true if not or exception in case of failure
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if user contact is not validated, @ref INCORRECT_USAGE if objtype not found or objtype is "contact" or objects list is longer then 500 elements or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
@@ -577,7 +583,7 @@ module DomainBrowser {
             in string objtype,
             in ObjectIdSeq objects,
             in ObjectBlockType block,
-            out RecordSequence blocked
+            out RefusedObjectHandleSequence change_prohibited
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
 
         /**
