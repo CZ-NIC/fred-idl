@@ -78,10 +78,6 @@ module DomainBrowser {
      * arbitrary textual data sequence
      */
     typedef sequence<string> RecordSequence;
-    /**
-     * arbitrary textual data 2D
-     */
-    typedef sequence<RecordSequence> RecordSet;
 
     /**
      * Registry object id, handle and name data.
