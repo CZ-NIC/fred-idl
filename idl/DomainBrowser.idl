@@ -75,11 +75,6 @@ module DomainBrowser {
     typedef string DateTime;
     
     /**
-     * arbitrary textual data sequence
-     */
-    typedef sequence<string> RecordSequence;
-
-    /**
      * Registry object id, handle and name data.
      */
     struct RegistryReference
@@ -364,7 +359,19 @@ module DomainBrowser {
      */
     typedef sequence<string> RefusedObjectHandleSequence;
     
-    
+    /**
+     * object state description
+     */
+     struct StatusDesc
+     {
+         string state_code;/**< state name */
+         string state_desc;/**< state description in some language */
+     };
+     
+    /**
+     * sequence of object state description
+     */
+    typedef sequence<StatusDesc> StatusDescList;
     
     interface Server {
 
@@ -592,7 +599,7 @@ module DomainBrowser {
          * @return list of state descriptions
          * @throw @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        RecordSequence getPublicStatusDesc(
+        StatusDescList getPublicStatusDesc(
                 in string lang
             ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE);
 
