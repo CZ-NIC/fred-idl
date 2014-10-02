@@ -189,10 +189,15 @@ module DomainBrowser {
         StateCodeSequence state_codes;/**< contact states names*/
     };
 
+    /**
+     * ip address sequence
+     */
+    typedef sequence<string> IPAddrSequence;
+    
     struct DNSHost
     {
         string fqdn; /**< fully qualified name of the nameserver host*/
-        string inet; /**< ', ' delimited list of IPv4 or IPv6 addresses of the nameserver host*/
+        IPAddrSequence inet; /**< list of IPv4 or IPv6 addresses of the nameserver host*/
     };
 
     struct NSSetDetail {
