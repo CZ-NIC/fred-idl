@@ -75,6 +75,11 @@ module DomainBrowser {
     typedef string DateTime;
 
     /**
+     * nullable timestamp
+     */
+    valuetype NullableDateTime DateTime;
+
+    /**
      * Registry object id, handle and name data.
      */
     struct RegistryReference
@@ -119,7 +124,7 @@ module DomainBrowser {
         string roid;
         RegistryReference registrar;
         DateTime create_time; /**< timestamp of creation*/
-        DateTime update_time; /**< timestamp of update*/
+        NullableDateTime update_time; /**< timestamp of update*/
         string auth_info;/**< password for transfer */
         RegistryReference registrant;
         Date expiration_date; /**< date of domain expiration*/
@@ -166,8 +171,8 @@ module DomainBrowser {
         string roid;/**< registry object identifier of the contact */
         RegistryReference registrar;
         DateTime create_time;
-        DateTime transfer_time;
-        DateTime update_time;
+        NullableDateTime transfer_time;
+        NullableDateTime update_time;
         string auth_info;/**< password for transfer */
         string name;
         string organization;
@@ -206,8 +211,8 @@ module DomainBrowser {
         string roid;/**< registry object identifier of nsset */
         RegistryReference registrar;
         DateTime create_time;
-        DateTime transfer_time;
-        DateTime update_time;
+        NullableDateTime transfer_time;
+        NullableDateTime update_time;
         RegistryReference create_registrar;
         RegistryReference update_registrar;
         string auth_info;/**< password for transfer */
@@ -244,8 +249,8 @@ module DomainBrowser {
         string roid;/**< registry object identifier of keyset */
         RegistryReference registrar;
         DateTime create_time;
-        DateTime transfer_time;
-        DateTime update_time;
+        NullableDateTime transfer_time;
+        NullableDateTime update_time;
         RegistryReference create_registrar;
         RegistryReference update_registrar;
         string auth_info;/**< password for transfer */
