@@ -73,7 +73,7 @@ module DomainBrowser {
      * arbitrary timestamp
      */
     typedef string DateTime;
-    
+
     /**
      * Registry object id, handle and name data.
      */
@@ -275,6 +275,11 @@ module DomainBrowser {
     };
 
     /**
+     * optional next domain state
+     */
+    valuetype NullableNextDomainState NextDomainState;
+
+    /**
      * element of DomainList
      */
     struct DomainListData
@@ -282,7 +287,7 @@ module DomainBrowser {
         unsigned long long id;/**< id of the domain */
         string fqdn;/**< fully qualified domain name */
         unsigned long long external_importance;/**<  bitwise OR of importance values of states with external flag or next higher power of 2 value if bitwise OR is zero */
-        NextDomainState next_state;/**< next state of the domain according to current date and expiration date, outzone date and delete date of the domain */
+        NullableNextDomainState next_state;/**< next state of the domain (if any) according to current date and expiration date, outzone date and delete date of the domain */
         boolean have_keyset; /**< domain have keyset flag */
         string user_role; /**< domainbrowser user relation to the domain (holder/admin/'') */
         string registrar_handle; /**< domain registrar handle*/
