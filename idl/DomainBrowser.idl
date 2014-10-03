@@ -70,6 +70,11 @@ module DomainBrowser {
     typedef string Date;
 
     /**
+     * nullable date
+     */
+    valuetype NullableDate Date;
+    
+    /**
      * arbitrary timestamp
      */
     typedef string DateTime;
@@ -128,7 +133,7 @@ module DomainBrowser {
         string auth_info;/**< password for transfer */
         RegistryReference registrant;
         Date expiration_date; /**< date of domain expiration*/
-        Date val_ex_date;/**< the expiration date of the ENUM domain validation */
+        NullableDate val_ex_date;/**< the expiration date of the ENUM domain validation */
         boolean publish;/**< flag for publishing ENUM number and associated contact in public directory */
         boolean is_enum;/**<  is ENUM domain */
         RegistryReference nsset;
