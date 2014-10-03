@@ -377,16 +377,14 @@ module DomainBrowser {
     interface Server {
 
         /**
-         * Gets database id of the object.
-         * @param objtype is type of the object from table enum_object_type
-         * @param handle is object registry handle of the object
-         * @return object database id
-         * @throw @ref INCORRECT_USAGE if objype not found, @ref OBJECT_NOT_EXISTS if object with given type not found or @ref INTERNAL_SERVER_ERROR in case of failure.
+         * Gets database id of the contact.
+         * @param handle is object registry handle of the contact
+         * @return contact database id
+         * @throw @ref OBJECT_NOT_EXISTS if contact not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        unsigned long long getObjectRegistryId(
-            in string objtype,
+        unsigned long long getContactId(
             in string handle
-        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS);
+        ) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
         /**
          * Get list of domains registered or administered by user contact or contact.
