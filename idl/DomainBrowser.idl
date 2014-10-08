@@ -456,7 +456,7 @@ module DomainBrowser {
 
         /**
          * Get list of domains linked to given keyset.
-         * @param contact_id contains database id of the user contact
+         * @param user_contact_id contains database id of the user contact
          * @param keyset_id list domains linked to keyset with given id regardless of user contact relation to listed domains
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
@@ -464,7 +464,7 @@ module DomainBrowser {
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if keyset not administered by user contact or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         DomainList getDomainsForKeyset(
-            in unsigned long long contact_id,
+            in unsigned long long user_contact_id,
             in unsigned long long keyset_id,
             in unsigned long offset,
             out boolean limit_exceeded
@@ -472,7 +472,7 @@ module DomainBrowser {
 
         /**
          * Get list of domains linked to given nsset.
-         * @param contact_id contains database id of the user contact
+         * @param user_contact_id contains database id of the user contact
          * @param nsset_id list domains linked to nsset with given id regardless of user contact relation to listed domains
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
@@ -480,7 +480,7 @@ module DomainBrowser {
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if nsset not administered by user contact or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         DomainList getDomainsForNsset(
-            in unsigned long long contact_id,
+            in unsigned long long user_contact_id,
             in unsigned long long nsset_id,
             in unsigned long offset,
             out boolean limit_exceeded
@@ -488,82 +488,82 @@ module DomainBrowser {
 
         /**
          * Returns contact detail.
-         * @param contact_id contains database id of the user contact
+         * @param user_contact_id contains database id of the user contact
          * @param detail_id contains database id of the contact whose detail is requested
          * @param auth_result output is PUBLIC_DATA if user contact is different from requested contact then transfer password is hidden, PRIVATE_DATA if user contact is the same as requested contact then transfer password is disclosed
          * @return contact detail data @ref ContactDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         ContactDetail getContactDetail(
-            in unsigned long long contact_id,
+            in unsigned long long user_contact_id,
             in unsigned long long detail_id,
             out DataAccessLevel auth_result
         ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Returns nsset detail.
-         * @param contact_id contains database id of the user contact
+         * @param user_contact_id contains database id of the user contact
          * @param nsset_id contains database id of the nsset whose detail is requested
          * @param auth_result output is PUBLIC_DATA if user contact is not admin of requested nsset then transfer password is hidden, PRIVATE_DATA if user contact is admin of the requested nsset then transfer password is disclosed
          * @return nsset detail data @ref NSSetDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if nsset not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         NSSetDetail getNssetDetail(
-            in unsigned long long contact_id,
+            in unsigned long long user_contact_id,
             in unsigned long long nsset_id,
             out DataAccessLevel auth_result
         ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Returns domain detail.
-         * @param contact_id contains database id of the user contact
+         * @param user_contact_id contains database id of the user contact
          * @param domain_id contains database id of the domain whose detail is requested
          * @param auth_result output is PUBLIC_DATA if user contact is not admin or owner of requested domain then transfer password is hidden, PRIVATE_DATA if user contact is admin or owner of the requested domain then transfer password is disclosed
          * @return domain detail data @ref DomainDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if domain not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         DomainDetail getDomainDetail(
-            in unsigned long long contact_id,
+            in unsigned long long user_contact_id,
             in unsigned long long domain_id,
             out DataAccessLevel auth_result
         ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Returns keyset detail.
-         * @param contact_id contains database id of the user contact
+         * @param user_contact_id contains database id of the user contact
          * @param keyset_id contains database id of the keyset whose detail is requested
          * @param auth_result output is PUBLIC_DATA if user contact is not admin of requested keyset then transfer password is hidden, PRIVATE_DATA if user contact is admin of the requested keyset then transfer password is disclosed
          * @return keyset detail data @ref KeysetDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if keyset not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         KeysetDetail getKeysetDetail(
-            in unsigned long long contact_id,
+            in unsigned long long user_contact_id,
             in unsigned long long keyset_id,
             out DataAccessLevel auth_result
         ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Returns registrar detail.
-         * @param contact_id contains database id of the user contact
+         * @param user_contact_id contains database id of the user contact
          * @param handle contains object registry handle of the registrar whose detail is requested
          * @return registrar detail data @ref RegistrarDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if registrar not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         RegistrarDetail getRegistrarDetail(
-            in unsigned long long contact_id,
+            in unsigned long long user_contact_id,
             in string handle
         ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Sets contact disclose flags.
-         * @param contact_id contains database id of the contact
+         * @param user_contact_id contains database id of the user contact which is the contact to be modified
          * @param flags contains contact disclose flags
          * @param request_id is id of the new entry in log_entry database table
          * @return true if disclose flags were set, false if not or exception in case of failure
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref INCORRECT_USAGE when organization is set it's not allowed to hide address, @ref ACCESS_DENIED if contact not identified or validated, @ref OBJECT_BLOCKED if contact is blocked or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         boolean setContactDiscloseFlags(
-            in unsigned long long contact_id,
+            in unsigned long long user_contact_id,
             in UpdateContactDiscloseFlags flags,
             in unsigned long long request_id
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
@@ -584,7 +584,7 @@ module DomainBrowser {
 
         /**
          * Sets blocking state of the object.
-         * @param contact_id contains database id of the user contact
+         * @param user_contact_id contains database id of the user contact
          * @param objtype type of the objects to be set: domain , nsset or keyset
          * @param objects list of database ids of the objects to be set
          * @param block is type of blocking to be applied
@@ -593,7 +593,7 @@ module DomainBrowser {
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if object not found, @ref ACCESS_DENIED if user contact is not validated, @ref INCORRECT_USAGE if objtype not found or objtype is "contact" or objects list is longer then 500 elements or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         boolean setObjectBlockStatus(
-            in unsigned long long contact_id,
+            in unsigned long long user_contact_id,
             in string objtype,
             in ObjectIdSeq objects,
             in ObjectBlockType block,
@@ -612,14 +612,14 @@ module DomainBrowser {
 
         /**
          * Get list of contacts mergeable to user contact.
-         * @param contact_id contains database id of the user contact
+         * @param user_contact_id contains database id of the user contact
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
          * @return list of merge contact candidates
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         MergeContactCandidateList getMergeContactCandidateList(
-                in unsigned long long contact_id,
+                in unsigned long long user_contact_id,
                 in unsigned long offset,
                 out boolean limit_exceeded
             ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS);
