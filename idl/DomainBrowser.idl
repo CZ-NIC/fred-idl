@@ -85,6 +85,11 @@ module DomainBrowser {
     valuetype NullableDateTime DateTime;
 
     /**
+     * nullable database id
+     */
+    valuetype NullableULongLong unsigned long long;
+
+    /**
      * Registry object id, handle and name data.
      */
     struct RegistryReference
@@ -404,7 +409,7 @@ module DomainBrowser {
         /**
          * Get list of domains registered or administered by user contact or contact.
          * @param user_contact_id contains database id of the user contact
-         * @param contact_id if set (i.e., contact_id is not 0) list domains linked to contact with given id regardless of user contact relation to listed domains
+         * @param contact_id if set list domains linked to contact with given id regardless of user contact relation to listed domains
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
          * @return list of domain data
@@ -412,7 +417,7 @@ module DomainBrowser {
          */
         DomainList getDomainList(
             in unsigned long long user_contact_id,
-            in unsigned long long contact_id,
+            in NullableULongLong contact_id,
             in unsigned long offset,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
@@ -420,7 +425,7 @@ module DomainBrowser {
         /**
          * Get list of nssets administered by user contact.
          * @param user_contact_id contains database id of the user contact
-         * @param contact_id if set (i.e., contact_id is not 0) list nssets linked to contact with given id regardless of user contact relation to listed nssets
+         * @param contact_id if set list nssets linked to contact with given id regardless of user contact relation to listed nssets
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
          * @return list of nsset data
@@ -428,7 +433,7 @@ module DomainBrowser {
          */
         NssetList getNssetList(
             in unsigned long long user_contact_id,
-            in unsigned long long contact_id,
+            in NullableULongLong contact_id,
             in unsigned long offset,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
@@ -436,7 +441,7 @@ module DomainBrowser {
         /**
          * Get list of keysets administered by user contact.
          * @param user_contact_id contains database id of the user contact
-         * @param contact_id if set (i.e., contact_id is not 0) list keysets linked to contact with given id regardless of user contact relation to listed keysets
+         * @param contact_id if set list keysets linked to contact with given id regardless of user contact relation to listed keysets
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
          * @return list of keyset data
@@ -444,7 +449,7 @@ module DomainBrowser {
          */
         KeysetList getKeysetList(
             in unsigned long long user_contact_id,
-            in unsigned long long contact_id,
+            in NullableULongLong contact_id,
             in unsigned long offset,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
