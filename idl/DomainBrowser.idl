@@ -574,7 +574,7 @@ module DomainBrowser {
          * @param auth_info is new transfer password
          * @param request_id is id of the new entry in log_entry database table
          * @return true if authinfo were set, false if not or exception in case of failure
-         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if user contact is not identified or validated, @ref INCORRECT_USAGE if new transfer password is longer than 300 characters or objtype is not "contact" @ref INTERNAL_SERVER_ERROR in case of failure.
+         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if user contact is not identified or validated, @ref INCORRECT_USAGE if new transfer password is longer than 300 characters @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         boolean setContactAuthInfo(
             in unsigned long long user_contact_id,
