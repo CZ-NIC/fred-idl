@@ -176,6 +176,9 @@ module ccReg {
     exception InvalidValue {
       string what;
     };
+    /// exception thrown if message copy is prohibited
+    exception MessageCopyProhibited {};
+
     /// authenticate user against database
     void authenticateUser(in string username, in string password) raises (AuthFailed);
     /// create new session for administrator interface 
@@ -242,7 +245,7 @@ module ccReg {
       raises (OBJECT_NOT_FOUND, SQL_ERROR);
 
     TID resendPin3Letter(in TID publicRequestId)
-      raises (InternalServerError, ObjectNotFound);
+      raises (InternalServerError, ObjectNotFound, MessageCopyProhibited);
     TID resendPin2SMS(in TID publicRequestId)
       raises (InternalServerError, ObjectNotFound);
 

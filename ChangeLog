@@ -1,3 +1,7 @@
+2014-10-02 Jiri Sadek (2.19.1)
+
+   * fix - new adifd interface exception (message resend)
+
 2014-08-01 Jan Korous, Jan Zima (2.19.0)
 
    * new idl for whois prototype (now used for rdap)
