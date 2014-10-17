@@ -1,3 +1,11 @@
+2014-10-17 Jiri Sadek, Michal Strnad (2.20.0)
+
+   * mojeid - add 'company_name' to address struct
+            - request type for re-identification
+            - interface for retrieving contact state and states changes reworked
+
+   * adifd - add additional contact addreses to detail struct
+
 2014-10-02 Jiri Sadek (2.19.1)
 
    * fix - new adifd interface exception (message resend)
