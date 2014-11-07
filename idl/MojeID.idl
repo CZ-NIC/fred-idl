@@ -394,12 +394,16 @@ module MojeID {
          * @throw OBJECT_EXISTS in case public request for contact_id validation already exists
          * @throw VALIDATION_ALREADY_PROCESSED in case contact_id is already validated
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @throw DATA_VALIDATION_ERROR with possible data combinations:
+         *  -  "contact.birth_date" REQUIRED in case contact represents regular user and birth date is not set
+         *  -  "contact.birth_date" INVALID in case contact represents regular user and birth date is invalid value
+         *  -  "contact.vat_id" REQUIRED in case contact represent company (organization is set) and vat identification number is not set
          */
         void createValidationRequest(
                 in unsigned long long contact_id,
                 in unsigned long long request_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_EXISTS, OBJECT_NOT_EXISTS,
-                    VALIDATION_ALREADY_PROCESSED);
+                    VALIDATION_ALREADY_PROCESSED, DATA_VALIDATION_ERROR);
 
 
         /*
