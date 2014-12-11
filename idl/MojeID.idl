@@ -83,10 +83,12 @@ module MojeID {
         URLAddressList urladdresses;
     };
 
+    typedef string DateTime; // iso (extended) format: YYYY-MM-DDTHH:MM:SS,fffffffff
+
     struct ContactStateInfo {
         unsigned long long contact_id;
-        NullableDate mojeid_activation_date;
-        NullableDate conditionally_identification_date;
+        DateTime mojeid_activation_datetime;
+        Date conditionally_identification_date;
         NullableDate identification_date;
         NullableDate validation_date;
     };
