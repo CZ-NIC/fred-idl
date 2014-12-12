@@ -76,7 +76,6 @@ module MojeID {
         NullableString passport_num;
         NullableString ssn_id_num;
         NullableString vat_id_num;
-        NullableString ssn_type;
         AddressList addresses;
         EmailList emails;
         IMAccountList imaccounts;
