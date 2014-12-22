@@ -76,7 +76,6 @@ module MojeID {
         NullableString passport_num;
         NullableString ssn_id_num;
         NullableString vat_id_num;
-        NullableString ssn_type;
         AddressList addresses;
         EmailList emails;
         IMAccountList imaccounts;
@@ -84,10 +83,12 @@ module MojeID {
         URLAddressList urladdresses;
     };
 
+    typedef string DateTime; // iso (extended) format: YYYY-MM-DDTHH:MM:SS.fffffffff
+
     struct ContactStateInfo {
         unsigned long long contact_id;
-        NullableDate mojeid_activation_date;
-        NullableDate conditionally_identification_date;
+        DateTime mojeid_activation_datetime;
+        Date conditionally_identification_date;
         NullableDate identification_date;
         NullableDate validation_date;
     };
@@ -407,14 +408,15 @@ module MojeID {
 
 
         /*
-         * get list of contacts states changed in the past
+         * Get list of contact states, one for every contact which state changed in past `last_hours` hours.
+         *
+         * States for contacts which have no longer `mojeidContact` state are not included.
          *
          * @param last_hours      number of hours to search in past
          *
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          *
-         * @return                list of contacts and its states which
-         *                        was gained/changed in last last_hours hours
+         * @return                list of current contact states
          */
          ContactStateInfoList getContactsStateChanges(
                 in unsigned long last_hours)
@@ -422,14 +424,14 @@ module MojeID {
 
 
         /**
-         * specific contact state getter
+         * Get contact state
          *
          * @param contact_id      contact id
          *
-         * @throw OBJECT_NOT_EXISTS in case contact_id is not registered
+         * @throw OBJECT_NOT_EXISTS If contact doesn't exist or doesn't have `mojeidContact` state.
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          *
-         * @return                actual (mojeid) state
+         * @return                current contact state
          */
         ContactStateInfo getContactState(
                 in unsigned long long contact_id)
