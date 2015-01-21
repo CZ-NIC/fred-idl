@@ -65,7 +65,7 @@ module DomainBrowser {
     exception INVALID_CONTACTS { };
 
     /**
-     * arbitrary date
+     * ISO 8601 date in text form YYYY-MM-DD
      */
     typedef string Date;
 
@@ -75,14 +75,15 @@ module DomainBrowser {
     valuetype NullableDate Date;
     
     /**
-     * arbitrary timestamp
+     * ISO 8601 timestamp in text form YYYY-MM-DDTHH:MM:SS.fffffffff
+     * dot with decimal fractions are optional
      */
-    typedef string DateTime;
+    typedef string DateTimeIsoString;
 
     /**
      * nullable timestamp
      */
-    valuetype NullableDateTime DateTime;
+    valuetype NullableDateTimeIsoString DateTimeIsoString;
 
     /**
      * nullable database id
@@ -133,8 +134,8 @@ module DomainBrowser {
         string fqdn;
         string roid;
         RegistryReference registrar;
-        DateTime create_time; /**< timestamp of creation*/
-        NullableDateTime update_time; /**< timestamp of update*/
+        DateTimeIsoString create_time; /**< timestamp of creation*/
+        NullableDateTimeIsoString update_time; /**< timestamp of update*/
         string auth_info;/**< password for transfer */
         RegistryReference registrant;
         Date expiration_date; /**< date of domain expiration*/
@@ -180,9 +181,9 @@ module DomainBrowser {
         string handle;
         string roid;/**< registry object identifier of the contact */
         RegistryReference registrar;
-        DateTime create_time;
-        NullableDateTime transfer_time;
-        NullableDateTime update_time;
+        DateTimeIsoString create_time;
+        NullableDateTimeIsoString transfer_time;
+        NullableDateTimeIsoString update_time;
         string auth_info;/**< password for transfer */
         string name;
         string organization;
@@ -220,9 +221,9 @@ module DomainBrowser {
         string handle;
         string roid;/**< registry object identifier of nsset */
         RegistryReference registrar;
-        DateTime create_time;
-        NullableDateTime transfer_time;
-        NullableDateTime update_time;
+        DateTimeIsoString create_time;
+        NullableDateTimeIsoString transfer_time;
+        NullableDateTimeIsoString update_time;
         RegistryReference create_registrar;
         RegistryReference update_registrar;
         string auth_info;/**< password for transfer */
@@ -258,9 +259,9 @@ module DomainBrowser {
         string handle;
         string roid;/**< registry object identifier of keyset */
         RegistryReference registrar;
-        DateTime create_time;
-        NullableDateTime transfer_time;
-        NullableDateTime update_time;
+        DateTimeIsoString create_time;
+        NullableDateTimeIsoString transfer_time;
+        NullableDateTimeIsoString update_time;
         RegistryReference create_registrar;
         RegistryReference update_registrar;
         string auth_info;/**< password for transfer */
