@@ -313,6 +313,7 @@ module Registry {
         ccReg::TID invoiceId;
         string accountName;
         string crTime;
+        string destAccountNumber;
         // TODO other fields
 
       };
