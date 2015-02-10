@@ -166,6 +166,8 @@ module MojeID {
 
         exception OBJECT_CHANGED { };
 
+        exception IDENTIFICATION_REQUEST_NOT_EXISTS { };
+
         /**
          * create contact and identification request
          * chosen
