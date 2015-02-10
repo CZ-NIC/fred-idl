@@ -497,6 +497,20 @@ module MojeID {
         string contactAuthInfo(in unsigned long long contact_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
+        /*
+         * create new mojeid_contact_(re)identification request and generate new PIN3 letter
+         *
+         * @param contact_id      contact id
+         * @param request_id      associated request id in logger
+         *
+         * @throw OBJECT_NOT_EXISTS in case contact_id is not registered
+         * @throw IDENTIFICATION_REQUEST_NOT_EXISTS in case no opened mojeid_contact_(re)identification request exists
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         */
+        void resendPIN3(
+                in unsigned long long contact_id,
+                in unsigned long long request_id)
+            raises (OBJECT_NOT_EXISTS, IDENTIFICATION_REQUEST_NOT_EXISTS, INTERNAL_SERVER_ERROR);
     };
 
 };
