@@ -91,6 +91,7 @@ module MojeID {
         Date conditionally_identification_date;
         NullableDate identification_date;
         NullableDate validation_date;
+        NullableDate linked_date;
     };
 
     typedef sequence<ContactStateInfo> ContactStateInfoList;
