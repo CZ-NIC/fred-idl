@@ -1,3 +1,7 @@
+2015-03-01 Michal Strnad (2.21.0)
+
+   * mojeid - add method for new pin3 resending
+
 2015-02-09 Jan Zima (2.20.2)
 
    * mojeid - add contact linked status info to output structure

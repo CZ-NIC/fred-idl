@@ -1,4 +1,4 @@
-AC_INIT([fred-idl], 2.20.2)
+AC_INIT([fred-idl], 2.21.0)
 AC_CONFIG_FILES([Makefile
 		 fred-idl.spec])
 
