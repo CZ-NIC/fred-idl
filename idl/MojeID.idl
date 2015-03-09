@@ -170,9 +170,9 @@ module MojeID {
 
         exception MESSAGE_LIMIT_EXCEEDED
         {
-            Date limit_expire_date;         ///< when user can send next letter
-            unsigned letters_sent;          ///< number of sent letters during watched period (letter_limit_interval)
-            unsigned during_period_in_days; ///< how long was sent first letter
+            Date limit_expire_date;               ///< when user can send next letter
+            unsigned short letters_sent;          ///< number of sent letters during watched period (letter_limit_interval)
+            unsigned short during_period_in_days; ///< how long was sent first letter
         };
 
         /**
