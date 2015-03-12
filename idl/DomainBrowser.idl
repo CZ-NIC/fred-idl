@@ -65,6 +65,12 @@ module DomainBrowser {
     exception INVALID_CONTACTS { };
 
     /**
+     * any nullable string
+     */
+    valuetype NullableString string;
+    
+
+    /**
      * ISO 8601 date in text form YYYY-MM-DD
      */
     typedef string DateIsoString;
@@ -175,6 +181,22 @@ module DomainBrowser {
         boolean vat;
         boolean notify_email;
     };
+    
+    struct PlaceAddress
+    {
+       string street1;
+       NullableString street2;
+       NullableString street3;
+       string city;
+       NullableString state;
+       string postal_code;
+       string country;
+    };
+
+    /**
+     * nullable address
+     */
+    valuetype NullablePlaceAddress PlaceAddress;
 
     struct ContactDetail {
         unsigned long long id;
@@ -187,13 +209,8 @@ module DomainBrowser {
         string auth_info;/**< password for transfer */
         string name;
         string organization;
-        string street1;
-        string street2;
-        string street3;
-        string province;
-        string postalcode;
-        string city;
-        string country;
+        PlaceAddress permanent_address;
+        NullablePlaceAddress mailing_address;
         string telephone;
         string fax;
         string email;
