@@ -524,6 +524,22 @@ module MojeID {
                 in unsigned long long request_id)
             raises (OBJECT_NOT_EXISTS, IDENTIFICATION_REQUEST_NOT_EXISTS, INTERNAL_SERVER_ERROR,
                     MESSAGE_LIMIT_EXCEEDED);
+
+        /*
+         * create new mojeid_send_emergency_card request and generate new emergency card letter
+         *
+         * @param contact_id      contact id
+         * @param request_id      associated request id in logger
+         *
+         * @throw OBJECT_NOT_EXISTS if contact doesn't exist or doesn't have `mojeidContact` state.
+         * @throw DATA_VALIDATION_ERROR with possible data combinations:
+         *  -  "status" INVALID in case of contact isn't identified
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         */
+        void sendMojeIDCard(
+                in unsigned long long contact_id,
+                in unsigned long long request_id)
+            raises (OBJECT_NOT_EXISTS, DATA_VALIDATION_ERROR, INTERNAL_SERVER_ERROR);
     };
 
 };
