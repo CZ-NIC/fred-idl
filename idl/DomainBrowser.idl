@@ -645,7 +645,7 @@ module DomainBrowser {
          * @param request_id is id of the new entry in log_entry database table
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if user contact enabled_flag == false and user contact is not validated, @ref OBJECT_BLOCKED if contact is blocked or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        void sendExpirationLetters(
+        void setContactPreferenceForDomainExpirationLetters(
                 in unsigned long long user_contact_id,
                 in boolean enable_flag,
                 in unsigned long long request_id
