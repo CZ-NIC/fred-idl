@@ -170,9 +170,9 @@ module MojeID {
 
         exception MESSAGE_LIMIT_EXCEEDED
         {
-            Date limit_expire_date;               ///< when user can send next letter
-            unsigned short letters_sent;          ///< number of sent letters during watched period (letter_limit_interval)
-            unsigned short during_period_in_days; ///< how long was sent first letter
+            Date limit_expire_date;     ///< When a new message can be sent
+            unsigned short limit_count; ///< At most a @ref limit_count messages can be sent in a @ref limit_days days
+            unsigned short limit_days;  ///< @see limit_count
         };
 
         /**
@@ -290,7 +290,7 @@ module MojeID {
          *
          * @throw OBJECT_NOT_EXISTS in case contact c is not registered
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
-         * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters sent
+         * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
          */
         void contactUpdatePrepare(
                 in Contact c,
@@ -517,7 +517,7 @@ module MojeID {
          * @throw OBJECT_NOT_EXISTS if contact doesn't exist or doesn't have `mojeidContact` state.
          * @throw IDENTIFICATION_REQUEST_NOT_EXISTS in case no opened mojeid_contact_(re)identification request exists
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
-         * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters sent
+         * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
          */
         void sendNewPIN3(
                 in unsigned long long contact_id,
