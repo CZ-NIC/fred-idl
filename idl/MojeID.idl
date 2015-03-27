@@ -526,7 +526,7 @@ module MojeID {
                     MESSAGE_LIMIT_EXCEEDED);
 
         /*
-         * create new mojeid_send_emergency_card request and generate new emergency card letter
+         * generate new emergency card letter
          *
          * @param contact_id      contact id
          * @param request_id      associated request id in logger
