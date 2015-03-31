@@ -91,6 +91,11 @@ module DomainBrowser {
     valuetype NullableULongLong unsigned long long;
 
     /**
+     * nullable bit
+     */
+    valuetype NullableBoolean boolean;
+
+    /**
      * Registry object id, handle and name data.
      */
     struct RegistryReference
@@ -203,6 +208,7 @@ module DomainBrowser {
         string vat;/**< taxpayer identification number */
         ContactDiscloseFlags disclose_flags;
         StateCodeSequence state_codes;/**< contact states names*/
+        NullableBoolean warning_letter;/**< contact preference for sending domain expiration letters*/
     };
 
     /**
