@@ -535,11 +535,13 @@ module MojeID {
          * @throw DATA_VALIDATION_ERROR with possible data combinations:
          *  -  "status" INVALID in case of contact isn't identified
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
          */
         void sendMojeIDCard(
                 in unsigned long long contact_id,
                 in unsigned long long request_id)
-            raises (OBJECT_NOT_EXISTS, DATA_VALIDATION_ERROR, INTERNAL_SERVER_ERROR);
+            raises (OBJECT_NOT_EXISTS, DATA_VALIDATION_ERROR, INTERNAL_SERVER_ERROR,
+                    MESSAGE_LIMIT_EXCEEDED);
     };
 
 };
