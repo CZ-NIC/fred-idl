@@ -647,13 +647,13 @@ module DomainBrowser {
         /**
          * Set contact preference for sending domain expiration letters
          * @param user_contact_id contains database id of the user contact
-         * @param enable_flag contains user preference whether to send domain expiration letters, if TRUE then send domain expiration letters, if FALSE don't send domain expiration letters
+         * @param send_expiration_letters contains user preference whether to send domain expiration letters, if TRUE then send domain expiration letters, if FALSE don't send domain expiration letters
          * @param request_id is id of the new entry in log_entry database table
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if user contact enabled_flag == false and user contact is not validated, @ref OBJECT_BLOCKED if contact is blocked or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         void setContactPreferenceForDomainExpirationLetters(
                 in unsigned long long user_contact_id,
-                in boolean enable_flag,
+                in boolean send_expiration_letters,
                 in unsigned long long request_id
             ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
 
