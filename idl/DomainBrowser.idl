@@ -63,47 +63,48 @@ module DomainBrowser {
      * Unable to merge contacts.
      */
     exception INVALID_CONTACTS { };
+
+    /**
+     * ISO 8601 date in text form YYYY-MM-DD
+     */
+    typedef string DateIsoString;
+
+    /**
+     * nullable date
+     */
+    valuetype NullableDateIsoString DateIsoString;
     
     /**
-     * database ID.
-     * Useless typedef.
+     * ISO 8601 timestamp in text form YYYY-MM-DDTHH:MM:SS.fffffffff
+     * dot with decimal fractions are optional
      */
-    typedef unsigned long long TID;
+    typedef string DateTimeIsoString;
 
     /**
-     * arbitrary textual data
+     * nullable timestamp
      */
-    typedef string RegistryObject;
-    /**
-     * arbitrary textual data sequence
-     */
-    typedef sequence<RegistryObject> RecordSequence;
-    /**
-     * arbitrary textual data 2D
-     */
-    typedef sequence<RecordSequence> RecordSet;
+    valuetype NullableDateTimeIsoString DateTimeIsoString;
 
     /**
-     * Unused enum
+     * nullable database id
      */
-    enum RecordType {
-        TEXT,
-        DATE,
-        BOOL,
-        INT
-    };
+    valuetype NullableULongLong unsigned long long;
 
     /**
      * Registry object id, handle and name data.
      */
     struct RegistryReference
     {
-        TID id;
-        RegistryObject handle;
-        RegistryObject name;
+        unsigned long long id;
+        string handle;
+        string name;
     };
     typedef sequence<RegistryReference> RegistryReferenceSeq;
 
+    /**
+     * Object id sequence.
+     */
+    typedef sequence<unsigned long long> ObjectIdSeq;
     /**
      * Indicates whether user contact can get public or private data of given object
      */
@@ -114,7 +115,7 @@ module DomainBrowser {
     };
 
     struct RegistrarDetail {
-        TID id;
+        unsigned long long id;
         string handle;
         string name;
         string phone;
@@ -123,24 +124,28 @@ module DomainBrowser {
         string address;/**< postal address of the registrar */
     };
 
+    /**
+     * object state code sequence
+     */
+    typedef sequence<string> StateCodeSequence;
+    
     struct DomainDetail {
-        TID id;
+        unsigned long long id;
         string fqdn;
         string roid;
         RegistryReference registrar;
-        string create_date;
-        string update_date;
+        DateTimeIsoString create_time; /**< timestamp of creation*/
+        NullableDateTimeIsoString update_time; /**< timestamp of update*/
         string auth_info;/**< password for transfer */
         RegistryReference registrant;
-        string expiration_date;
-        string val_ex_date;/**< the expiration date of the ENUM domain validation */
+        DateIsoString expiration_date; /**< date of domain expiration*/
+        NullableDateIsoString val_ex_date;/**< the expiration date of the ENUM domain validation */
         boolean publish;/**< flag for publishing ENUM number and associated contact in public directory */
         boolean is_enum;/**<  is ENUM domain */
         RegistryReference nsset;
         RegistryReference keyset;
         RegistryReferenceSeq admins;
-        string states;/**< object states descriptions in given language from db. table enum_object_states_desc delimited by pipe '|' character */
-        string state_codes;/**< object states names from db. table enum_object_states delimited by coma ',' character */
+        StateCodeSequence state_codes;/**< object states names from db. table enum_object_states */
     };
 
     /**
@@ -172,13 +177,13 @@ module DomainBrowser {
     };
 
     struct ContactDetail {
-        TID id;
+        unsigned long long id;
         string handle;
         string roid;/**< registry object identifier of the contact */
         RegistryReference registrar;
-        string create_date;
-        string transfer_date;
-        string update_date;
+        DateTimeIsoString create_time;
+        NullableDateTimeIsoString transfer_time;
+        NullableDateTimeIsoString update_time;
         string auth_info;/**< password for transfer */
         string name;
         string organization;
@@ -197,31 +202,34 @@ module DomainBrowser {
         string ssn_type;/**< type of identification */
         string vat;/**< taxpayer identification number */
         ContactDiscloseFlags disclose_flags;
-        string states;/**< object states descriptions in given language from db. table enum_object_states_desc delimited by pipe '|' character */
-        string state_codes;/**< object states names from db. table enum_object_states delimited by coma ',' character */
+        StateCodeSequence state_codes;/**< contact states names*/
     };
 
+    /**
+     * ip address sequence
+     */
+    typedef sequence<string> IPAddrSequence;
+    
     struct DNSHost
     {
         string fqdn; /**< fully qualified name of the nameserver host*/
-        string inet; /**< ', ' delimited list of IPv4 or IPv6 addresses of the nameserver host*/
+        IPAddrSequence inet; /**< list of IPv4 or IPv6 addresses of the nameserver host*/
     };
 
     struct NSSetDetail {
-        TID id;
+        unsigned long long id;
         string handle;
         string roid;/**< registry object identifier of nsset */
         RegistryReference registrar;
-        string create_date;
-        string transfer_date;
-        string update_date;
+        DateTimeIsoString create_time;
+        NullableDateTimeIsoString transfer_time;
+        NullableDateTimeIsoString update_time;
         RegistryReference create_registrar;
         RegistryReference update_registrar;
         string auth_info;/**< password for transfer */
         RegistryReferenceSeq admins;
         sequence<DNSHost> hosts;/**< nsset DNS hosts */
-        string states;/**< object states descriptions in given language from db. table enum_object_states_desc delimited by pipe '|' character */
-        string state_codes;/**< object states names from db. table enum_object_states delimited by coma ',' character */
+        StateCodeSequence state_codes;/**< nsset states names */
         short report_level;/**< nsset level of technical checks */
     };
 
@@ -247,21 +255,20 @@ module DomainBrowser {
 
 
     struct KeysetDetail {
-        TID id;
+        unsigned long long id;
         string handle;
         string roid;/**< registry object identifier of keyset */
         RegistryReference registrar;
-        string create_date;
-        string transfer_date;
-        string update_date;
+        DateTimeIsoString create_time;
+        NullableDateTimeIsoString transfer_time;
+        NullableDateTimeIsoString update_time;
         RegistryReference create_registrar;
         RegistryReference update_registrar;
         string auth_info;/**< password for transfer */
         RegistryReferenceSeq admins;
         sequence<DSRecord> dsrecords;/**< not set by implementation, to be removed */
         sequence<DNSKey> dnskeys;
-        string states;/**< object states descriptions in given language from db. table enum_object_states_desc delimited by pipe '|' character */
-        string state_codes;/**< object states names from db. table enum_object_states delimited by coma ',' character */
+        StateCodeSequence state_codes;/**< keyset states names */
     };
 
     /**
@@ -274,234 +281,324 @@ module DomainBrowser {
         UNBLOCK_TRANSFER_AND_UPDATE
     };
 
+    /**
+     * Next domain state data.
+     */
+    struct NextDomainState
+    {
+        string state_code; /**< next state code */
+        DateIsoString state_date; /**< next state date */
+    };
+
+    /**
+     * optional next domain state
+     */
+    valuetype NullableNextDomainState NextDomainState;
+
+    /**
+     * element of DomainList
+     */
+    struct DomainListData
+    {
+        unsigned long long id;/**< id of the domain */
+        string fqdn;/**< fully qualified domain name */
+        unsigned long long external_importance;/**<  bitwise OR of importance values of states with external flag or next higher power of 2 value if bitwise OR is zero */
+        NullableNextDomainState next_state;/**< next state of the domain (if any) according to current date and expiration date, outzone date and delete date of the domain */
+        boolean have_keyset; /**< domain have keyset flag */
+        string user_role; /**< domainbrowser user relation to the domain (holder/admin/'') */
+        string registrar_handle; /**< domain registrar handle*/
+        string registrar_name; /**< domain registrar name*/
+        StateCodeSequence state_code;/**< domain states*/
+        boolean is_server_blocked; /**< whether domain have serverBlocked state */
+    };
+    
+    /**
+     * domain list output
+     */
+    typedef sequence<DomainListData> DomainList;
+    
+    /**
+     * element of NssetList
+     */
+    struct NssetListData
+    {
+        unsigned long long id;/**< id of the nsset */
+        string handle;/**< nsset handle */
+        unsigned long long domain_count;/**<  number of domains using this nsset */
+        string registrar_handle; /**< nsset registrar handle*/
+        string registrar_name; /**< nsset registrar name*/
+        unsigned long long external_importance;/**<  bitwise OR of importance values of states with external flag or next higher power of 2 value if bitwise OR is zero */
+        StateCodeSequence state_code;/**< nsset states*/
+        boolean is_server_blocked; /**< whether nsset have serverBlocked state */
+    };
+    
+    /**
+     * nsset list output
+     */
+    typedef sequence<NssetListData> NssetList;
+
+    /**
+     * element of KeysetList
+     */
+    struct KeysetListData
+    {
+        unsigned long long id;/**< id of the keyset */
+        string handle;/**< keyset handle */
+        unsigned long long domain_count;/**<  number of domains using this keyset */
+        string registrar_handle; /**< keyset registrar handle*/
+        string registrar_name; /**< keyset registrar name*/
+        unsigned long long external_importance;/**<  bitwise OR of importance values of states with external flag or next higher power of 2 value if bitwise OR is zero */
+        StateCodeSequence state_code;/**< keyset states*/
+        boolean is_server_blocked; /**< whether keyset have serverBlocked state*/
+    };
+    
+    /**
+     * keyset list output
+     */
+    typedef sequence<KeysetListData> KeysetList;
+
+    /**
+     * element of MergeContactCandidateList
+     */
+    struct MergeContactCandidateData
+    {
+        unsigned long long id;/**< id of the contact */
+        string handle;/**< contact handle */
+        unsigned long long domain_count;/**<  number of domains linked with this contact */
+        unsigned long long nsset_count;/**<  number of nssets linked with this contact */
+        unsigned long long keyset_count;/**<  number of keysets linked with this contact */
+        string registrar_handle; /**< contact registrar handle*/
+        string registrar_name; /**< contact registrar name*/
+    };
+    
+    /**
+     * merge contact candidate list
+     */
+    typedef sequence<MergeContactCandidateData> MergeContactCandidateList;
+    
+    /**
+     * sequence of object handles refused by setObjectBlockStatus call
+     */
+    typedef sequence<string> RefusedObjectHandleSequence;
+    
+    /**
+     * object state description
+     */
+     struct StatusDesc
+     {
+         string state_code;/**< state name */
+         string state_desc;/**< state description in some language */
+     };
+     
+    /**
+     * sequence of object state description
+     */
+    typedef sequence<StatusDesc> StatusDescList;
+    
     interface Server {
 
         /**
-         * Gets database id of the object.
-         * @param objtype is type of the object from table enum_object_type
-         * @param handle is object registry handle of the object
-         * @return object database id
-         * @throw @ref INCORRECT_USAGE if objype not found, @ref OBJECT_NOT_EXISTS if object with given type not found or @ref INTERNAL_SERVER_ERROR in case of failure.
+         * Gets database id of the contact.
+         * @param handle is object registry handle of the contact
+         * @return contact database id
+         * @throw @ref OBJECT_NOT_EXISTS if contact not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        TID getObjectRegistryId(
-            in string objtype,
+        unsigned long long getContactId(
             in string handle
-        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, OBJECT_NOT_EXISTS);
+        ) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
         /**
          * Get list of domains registered or administered by user contact or contact.
-         * @param user_contact.id contains database id of the user contact, handle is ignored
-         * @param contact.id if set (i.e., contact.id is not 0) list domains linked to contact with given id regardless of user contact relation to listed domains, handle is ignored
-         * @param lang contains language for state description "EN" or "CS"
+         * @param user_contact_id contains database id of the user contact
+         * @param contact_id if set list domains linked to contact with given id regardless of user contact relation to listed domains
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
-         * @return domain list of rows: id, fqdn, external_status_importance, next state of the domain, date of the next state, have keyset, contact role holder or admin, registrar handle, registrar name, comma separated list of external state descriptions ordered by importance, have serverBlocked state flag
-         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact.id != 0 and not found or @ref INTERNAL_SERVER_ERROR in case of failure.
+         * @return list of domain data
+         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact_id is set and not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        RecordSet getDomainList(
-            in RegistryReference user_contact,
-            in RegistryReference contact,
-            in string lang,
+        DomainList getDomainList(
+            in unsigned long long user_contact_id,
+            in NullableULongLong contact_id,
             in unsigned long offset,
             out boolean limit_exceeded
-        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+        ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Get list of nssets administered by user contact.
-         * @param user_contact.id contains database id of the user contact, handle is ignored
-         * @param contact.id if set (i.e., contact.id is not 0) list nssets linked to contact with given id regardless of user contact relation to listed nssets, handle is ignored
-         * @param lang contains language for state description "EN" or "CS"
+         * @param user_contact_id contains database id of the user contact
+         * @param contact_id if set list nssets linked to contact with given id regardless of user contact relation to listed nssets
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
-         * @return nsset list of rows: id, handle, domain count, registrar handle, registrar name, external_status_importance, comma separated list of external state descriptions ordered by importance, have serverBlocked state flag
-         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact.id != 0 and not found or @ref INTERNAL_SERVER_ERROR in case of failure.
+         * @return list of nsset data
+         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact_id is set and not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        RecordSet getNssetList(
-            in RegistryReference user_contact,
-            in RegistryReference contact,
-            in string lang,
+        NssetList getNssetList(
+            in unsigned long long user_contact_id,
+            in NullableULongLong contact_id,
             in unsigned long offset,
             out boolean limit_exceeded
-        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+        ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Get list of keysets administered by user contact.
-         * @param user_contact.id contains database id of the user contact, handle is ignored
-         * @param contact.id if set (i.e., contact.id is not 0) list keysets linked to contact with given id regardless of user contact relation to listed keysets, handle is ignored
-         * @param lang contains language for state description "EN" or "CS"
+         * @param user_contact_id contains database id of the user contact
+         * @param contact_id if set list keysets linked to contact with given id regardless of user contact relation to listed keysets
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
-         * @return keyset list of rows: id, handle, domain count, registrar handle, registrar name, external_status_importance, comma separated list of external state descriptions ordered by importance, have serverBlocked state flag
-         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact.id != 0 and not found or @ref INTERNAL_SERVER_ERROR in case of failure.
+         * @return list of keyset data
+         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact_id is set and not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        RecordSet getKeysetList(
-            in RegistryReference user_contact,
-            in RegistryReference contact,
-            in string lang,
+        KeysetList getKeysetList(
+            in unsigned long long user_contact_id,
+            in NullableULongLong contact_id,
             in unsigned long offset,
             out boolean limit_exceeded
-        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+        ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Get list of domains linked to given keyset.
-         * @param contact.id contains database id of the user contact, handle is ignored
-         * @param keyset.id list domains linked to keyset with given id regardless of user contact relation to listed domains, handle is ignored
-         * @param lang contains language for state description "EN" or "CS"
+         * @param user_contact_id contains database id of the user contact
+         * @param keyset_id list domains linked to keyset with given id regardless of user contact relation to listed domains
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
-         * @return domain list of rows: id, fqdn, external_status_importance, next state of the domain, date of the next state, have keyset, contact role holder or admin, registrar handle, registrar name, comma separated list of external state descriptions ordered by importance, have serverBlocked state flag
-         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found or @ref INTERNAL_SERVER_ERROR in case of failure.
+         * @return list of domain data
+         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if keyset not administered by user contact or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        RecordSet getDomainsForKeyset(
-            in RegistryReference contact,
-            in RegistryReference keyset,
-            in string lang,
+        DomainList getDomainsForKeyset(
+            in unsigned long long user_contact_id,
+            in unsigned long long keyset_id,
             in unsigned long offset,
             out boolean limit_exceeded
-        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
+        ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, ACCESS_DENIED);
 
         /**
          * Get list of domains linked to given nsset.
-         * @param contact.id contains database id of the user contact, handle is ignored
-         * @param nsset.id list domains linked to nsset with given id regardless of user contact relation to listed domains, handle is ignored
-         * @param lang contains language for state description "EN" or "CS"
+         * @param user_contact_id contains database id of the user contact
+         * @param nsset_id list domains linked to nsset with given id regardless of user contact relation to listed domains
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
-         * @return domain list of rows: id, fqdn, external_status_importance, next state of the domain, date of the next state, have keyset, contact role holder or admin, registrar handle, registrar name, comma separated list of external state descriptions ordered by importance, have serverBlocked state flag
-         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found or @ref INTERNAL_SERVER_ERROR in case of failure.
+         * @return list of domain data
+         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if nsset not administered by user contact or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        RecordSet getDomainsForNsset(
-            in RegistryReference contact,
-            in RegistryReference nsset,
-            in string lang,
+        DomainList getDomainsForNsset(
+            in unsigned long long user_contact_id,
+            in unsigned long long nsset_id,
             in unsigned long offset,
             out boolean limit_exceeded
-        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
+        ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, ACCESS_DENIED);
 
         /**
          * Returns contact detail.
-         * @param contact.id contains database id of the user contact, handle is ignored
-         * @param detail.id contains database id of the contact whose detail is requested
-         * @param lang contains language for state description "EN" or "CS"
+         * @param user_contact_id contains database id of the user contact
+         * @param detail_id contains database id of the contact whose detail is requested
          * @param auth_result output is PUBLIC_DATA if user contact is different from requested contact then transfer password is hidden, PRIVATE_DATA if user contact is the same as requested contact then transfer password is disclosed
          * @return contact detail data @ref ContactDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if contact not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         ContactDetail getContactDetail(
-            in RegistryReference contact,
-            in RegistryReference detail,
-            in string lang,
+            in unsigned long long user_contact_id,
+            in unsigned long long detail_id,
             out DataAccessLevel auth_result
-        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+        ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Returns nsset detail.
-         * @param contact.id contains database id of the user contact, handle is ignored
-         * @param nsset.id contains database id of the nsset whose detail is requested
-         * @param lang contains language for state description "EN" or "CS"
+         * @param user_contact_id contains database id of the user contact
+         * @param nsset_id contains database id of the nsset whose detail is requested
          * @param auth_result output is PUBLIC_DATA if user contact is not admin of requested nsset then transfer password is hidden, PRIVATE_DATA if user contact is admin of the requested nsset then transfer password is disclosed
          * @return nsset detail data @ref NSSetDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if nsset not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         NSSetDetail getNssetDetail(
-            in RegistryReference contact,
-            in RegistryReference nsset,
-            in string lang,
+            in unsigned long long user_contact_id,
+            in unsigned long long nsset_id,
             out DataAccessLevel auth_result
-        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+        ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Returns domain detail.
-         * @param contact.id contains database id of the user contact, handle is ignored
-         * @param domain.id contains database id of the domain whose detail is requested
-         * @param lang contains language for state description "EN" or "CS"
+         * @param user_contact_id contains database id of the user contact
+         * @param domain_id contains database id of the domain whose detail is requested
          * @param auth_result output is PUBLIC_DATA if user contact is not admin or owner of requested domain then transfer password is hidden, PRIVATE_DATA if user contact is admin or owner of the requested domain then transfer password is disclosed
          * @return domain detail data @ref DomainDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if domain not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         DomainDetail getDomainDetail(
-            in RegistryReference contact,
-            in RegistryReference domain,
-            in string lang,
+            in unsigned long long user_contact_id,
+            in unsigned long long domain_id,
             out DataAccessLevel auth_result
-        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+        ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Returns keyset detail.
-         * @param contact.id contains database id of the user contact, handle is ignored
-         * @param keyset.id contains database id of the keyset whose detail is requested
-         * @param lang contains language for state description "EN" or "CS"
+         * @param user_contact_id contains database id of the user contact
+         * @param keyset_id contains database id of the keyset whose detail is requested
          * @param auth_result output is PUBLIC_DATA if user contact is not admin of requested keyset then transfer password is hidden, PRIVATE_DATA if user contact is admin of the requested keyset then transfer password is disclosed
          * @return keyset detail data @ref KeysetDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if keyset not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         KeysetDetail getKeysetDetail(
-            in RegistryReference contact,
-            in RegistryReference keyset,
-            in string lang,
+            in unsigned long long user_contact_id,
+            in unsigned long long keyset_id,
             out DataAccessLevel auth_result
-        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+        ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Returns registrar detail.
-         * @param contact.id contains database id of the user contact, handle is ignored
+         * @param user_contact_id contains database id of the user contact
          * @param handle contains object registry handle of the registrar whose detail is requested
          * @return registrar detail data @ref RegistrarDetail
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if registrar not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         RegistrarDetail getRegistrarDetail(
-            in RegistryReference contact,
-            in RegistryObject handle
-        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
+            in unsigned long long user_contact_id,
+            in string handle
+        ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, OBJECT_NOT_EXISTS);
 
         /**
          * Sets contact disclose flags.
-         * @param contact.id contains database id of the contact
+         * @param user_contact_id contains database id of the user contact which is the contact to be modified
          * @param flags contains contact disclose flags
          * @param request_id is id of the new entry in log_entry database table
          * @return true if disclose flags were set, false if not or exception in case of failure
-         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if contact not identified or validated, @ref OBJECT_BLOCKED if contact is blocked or @ref INTERNAL_SERVER_ERROR in case of failure.
+         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref INCORRECT_USAGE when organization is set it's not allowed to hide address, @ref ACCESS_DENIED if contact not identified or validated, @ref OBJECT_BLOCKED if contact is blocked or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         boolean setContactDiscloseFlags(
-            in RegistryReference contact,
+            in unsigned long long user_contact_id,
             in UpdateContactDiscloseFlags flags,
-            in TID request_id
+            in unsigned long long request_id
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
 
         /**
          * Sets contact transfer password.
-         * @param contact.id contains database id of the user contact
-         * @param objtype is "contact"
-         * @param objref.id contains database id of the contact to be modified
+         * @param user_contact_id contains database id of the user contact which is the contact to be modified
          * @param auth_info is new transfer password
          * @param request_id is id of the new entry in log_entry database table
          * @return true if authinfo were set, false if not or exception in case of failure
-         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if user contact is different from contact or not identified or validated, @ref INCORRECT_USAGE if new transfer password is longer than 300 characters or objtype is not "contact", @ref OBJECT_BLOCKED if contact is blocked or @ref INTERNAL_SERVER_ERROR in case of failure.
+         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if user contact is not identified or validated, @ref INCORRECT_USAGE if new transfer password is longer than 300 characters, @ref OBJECT_BLOCKED if contact is blocked or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        boolean setAuthInfo(
-            in RegistryReference contact,
-            in RegistryObject objtype,
-            in RegistryReference objref,
-            in RegistryObject auth_info,
-            in TID request_id
-        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
+        boolean setContactAuthInfo(
+            in unsigned long long user_contact_id,
+            in string auth_info,
+            in unsigned long long request_id
+        ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
 
         /**
          * Sets blocking state of the object.
-         * @param contact.id contains database id of the user contact
+         * @param user_contact_id contains database id of the user contact
          * @param objtype type of the objects to be set: domain , nsset or keyset
-         * @param objects[i].id list of database ids of the objects to be set
+         * @param objects list of database ids of the objects to be set
          * @param block is type of blocking to be applied
-         * @param blocked is output list of object handles of objects with SERVER_BLOCKED state or objects attempted to be partially unblocked (which is now forbidden)
+         * @param change_prohibited is output list of object handles of objects with SERVER_BLOCKED state or objects attempted to be partially unblocked (which is now forbidden)
          * @return false if no object blocked, true if not or exception in case of failure
-         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if user contact is not validated, @ref INCORRECT_USAGE if objtype not found or objtype is "contact" or objects list is longer then 500 elements or @ref INTERNAL_SERVER_ERROR in case of failure.
+         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref OBJECT_NOT_EXISTS if object not found, @ref ACCESS_DENIED if user contact is not validated, @ref INCORRECT_USAGE if objtype not found or objtype is "contact" or objects list is longer then 500 elements or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         boolean setObjectBlockStatus(
-            in RegistryReference contact,
-            in RegistryObject objtype,
-            in RegistryReferenceSeq objects,
+            in unsigned long long user_contact_id,
+            in string objtype,
+            in ObjectIdSeq objects,
             in ObjectBlockType block,
-            out RecordSequence blocked
+            out RefusedObjectHandleSequence change_prohibited
         ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS, OBJECT_NOT_EXISTS, ACCESS_DENIED);
 
         /**
@@ -510,35 +607,35 @@ module DomainBrowser {
          * @return list of state descriptions
          * @throw @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        RecordSequence getPublicStatusDesc(
+        StatusDescList getPublicStatusDesc(
                 in string lang
-            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE);
+            ) raises (INTERNAL_SERVER_ERROR);
 
         /**
          * Get list of contacts mergeable to user contact.
-         * @param contact.id contains database id of the user contact
+         * @param user_contact_id contains database id of the user contact
          * @param offset contains list offset for pagination
          * @param limit_exceeded output flag means having more data for list than configured list limit
-         * @return contact list of rows: id, handle, domain count, nsset count, keyset count, registrar handle, registrar name
+         * @return list of merge contact candidates
          * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
-        RecordSet getMergeContactCandidateList(
-                in RegistryReference contact,
+        MergeContactCandidateList getMergeContactCandidateList(
+                in unsigned long long user_contact_id,
                 in unsigned long offset,
                 out boolean limit_exceeded
-            ) raises (INTERNAL_SERVER_ERROR, INCORRECT_USAGE, USER_NOT_EXISTS);
+            ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS);
 
         /**
          * Merge contact list to destination contact
          * @param dst_contact_id id of destination contact
-         * @param contact_list id list of source contacts
+         * @param src_contact_id_list id list of source contacts
          * @param request_id is id of the new entry in log_entry database table
          * @throw @ref USER_NOT_EXISTS if destination contact not in mojeid or not found, @ref INVALID_CONTACTS if merge fails or @ref INTERNAL_SERVER_ERROR in case of failure.
          */
         void mergeContacts(
-                in RegistryReference dst_contact,
-                in RegistryReferenceSeq  src_contact_list,
-                in TID request_id
+                in unsigned long long dst_contact_id,
+                in ObjectIdSeq  src_contact_id_list,
+                in unsigned long long request_id
             ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, INVALID_CONTACTS);
 
     };
