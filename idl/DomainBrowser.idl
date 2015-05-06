@@ -97,6 +97,11 @@ module DomainBrowser {
     valuetype NullableULongLong unsigned long long;
 
     /**
+     * nullable bit
+     */
+    valuetype NullableBoolean boolean;
+
+    /**
      * Registry object id, handle and name data.
      */
     struct RegistryReference
@@ -220,6 +225,7 @@ module DomainBrowser {
         string vat;/**< taxpayer identification number */
         ContactDiscloseFlags disclose_flags;
         StateCodeSequence state_codes;/**< contact states names*/
+        NullableBoolean warning_letter;/**< contact preference for sending domain expiration letters*/
     };
 
     /**
@@ -654,6 +660,19 @@ module DomainBrowser {
                 in ObjectIdSeq  src_contact_id_list,
                 in unsigned long long request_id
             ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, INVALID_CONTACTS);
+
+        /**
+         * Set contact preference for sending domain expiration letters
+         * @param user_contact_id contains database id of the user contact
+         * @param send_expiration_letters contains user preference whether to send domain expiration letters, if TRUE then send domain expiration letters, if FALSE don't send domain expiration letters
+         * @param request_id is id of the new entry in log_entry database table
+         * @throw @ref USER_NOT_EXISTS if user contact not in mojeid or not found, @ref ACCESS_DENIED if user contact enabled_flag == false and user contact is not validated, @ref OBJECT_BLOCKED if contact is blocked or @ref INTERNAL_SERVER_ERROR in case of failure.
+         */
+        void setContactPreferenceForDomainExpirationLetters(
+                in unsigned long long user_contact_id,
+                in boolean send_expiration_letters,
+                in unsigned long long request_id
+            ) raises (INTERNAL_SERVER_ERROR, USER_NOT_EXISTS, ACCESS_DENIED, OBJECT_BLOCKED);
 
     };
 };
