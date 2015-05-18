@@ -1,0 +1,473 @@
+/**
+ * @file
+ * mojeid interface
+ */
+
+
+#ifndef MOJEID_IDL_
+#define MOJEID_IDL_
+
+module Registry
+{
+module MojeID
+{
+
+    typedef string Date; ///< iso format YYYY-MM-DD
+
+    typedef string DateTime; ///< iso (extended) format: YYYY-MM-DDTHH:MM:SS.fffffffff
+
+    valuetype NullableString string;
+    valuetype NullableBoolean boolean;
+    valuetype NullableDate Date;
+    valuetype NullableULongLong unsigned long long;
+
+    struct Address
+    {
+        string street1;
+        NullableString street2;
+        NullableString street3;
+        string city;
+        NullableString state;
+        string postal_code;
+        string country;
+    };
+
+    valuetype NullableAddress Address;
+
+    struct ShippingAddress
+    {
+        NullableString company_name;
+        string street1;
+        NullableString street2;
+        NullableString street3;
+        string city;
+        NullableString state;
+        string postal_code;
+        string country;
+    };
+
+    valuetype NullableShippingAddress ShippingAddress;
+
+
+    struct CreateContact
+    {
+        string username;
+        string first_name;
+        string last_name;
+        NullableString organization;
+        NullableString vat_reg_num;
+        NullableDate birth_date;
+        NullableString id_card_num;
+        NullableString passport_num;
+        NullableString ssn_id_num;
+        NullableString vat_id_num;
+        Address permanent;
+        NullableAddress mailing;
+        NullableAddress billing;
+        NullableShippingAddress shipping;
+        NullableShippingAddress shipping2;
+        NullableShippingAddress shipping3;
+        string email;
+        NullableString notify_email;
+        string teplephone;
+        NullableString fax;
+    };
+
+
+    struct UpdateContact
+    {
+        unsigned long long id;
+        string first_name;
+        string last_name;
+        NullableString organization;
+        NullableString vat_reg_num;
+        NullableDate birth_date;
+        NullableString id_card_num;
+        NullableString passport_num;
+        NullableString ssn_id_num;
+        NullableString vat_id_num;
+        Address permanent;
+        NullableAddress mailing;
+        NullableAddress billing;
+        NullableShippingAddress shipping;
+        NullableShippingAddress shipping2;
+        NullableShippingAddress shipping3;
+        string email;
+        NullableString notify_email;
+        NullableString teplephone;
+        NullableString fax;
+    };
+
+    typedef UpdateContact InfoContact; ///< XXX
+
+
+    struct ContactStateInfo
+    {
+        unsigned long long contact_id;
+        DateTime mojeid_activation_datetime;
+        Date conditionally_identification_date;
+        NullableDate identification_date;
+        NullableDate validation_date;
+        NullableDate linked_date;
+    };
+
+    typedef sequence<ContactStateInfo> ContactStateInfoList;
+
+    typedef sequence<octet> Buffer;
+
+    typedef sequence<string> ContactHandleList;
+
+    interface ContactHandleListIter
+    {
+        exception INTERNAL_SERVER_ERROR { };
+
+        exception NOT_ACTIVE { };
+
+        /**
+         * gets next handle in list
+         * @throws NOT_ACTIVE in case instance was previously destroyed by @ref destroy
+         */
+        ContactHandleList get_next(in unsigned long count)
+            raises (INTERNAL_SERVER_ERROR, NOT_ACTIVE);
+
+        /**
+         * destroys ContactHandleListIter
+         */
+        void destroy()
+            raises (INTERNAL_SERVER_ERROR);
+    };
+
+    interface Server
+    {
+
+        exception INTERNAL_SERVER_ERROR { };
+
+        enum ValidationError
+        {
+            NOT_AVAILABLE,
+            INVALID,
+            REQUIRED
+        };
+
+        exception DATA_VALIDATION_ERROR
+        {
+            string field;
+            ValidationError error;
+        };
+
+        exception OBJECT_EXISTS { };
+
+        exception OBJECT_NOT_EXISTS { };
+
+        exception IDENTIFICATION_FAILED { };
+
+        exception IDENTIFICATION_ALREADY_PROCESSED { };
+
+        exception IDENTIFICATION_ALREADY_INVALIDATED { };
+
+        exception VALIDATION_ALREADY_PROCESSED { };
+
+        exception OBJECT_CHANGED { };
+
+        exception IDENTIFICATION_REQUEST_NOT_EXISTS { };
+
+        exception MESSAGE_LIMIT_EXCEEDED
+        {
+            Date limit_expire_date;     ///< When a new message can be sent
+            unsigned short limit_count; ///< At most a @ref limit_count messages can be sent in a @ref limit_days days
+            unsigned short limit_days;  ///< @see limit_count
+        };
+
+        /**
+         * create contact and identification request
+         * chosen
+         *
+         * @param c             create contact data structure
+         * @param trans_id      database transaction identifier
+         *                      for 2-phase commit
+         * @param request_id    associated request id in logger
+         * @param ident         (output) unique identificator of created identification request
+         *
+         * @throw DATA_VALIDATION_ERROR
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         *
+         * @return              contact id
+         */
+        unsigned long long create_contact_prepare(
+                in CreateContact c,
+                in string trans_id,
+                in unsigned long long request_id,
+                out string ident)
+            raises (INTERNAL_SERVER_ERROR, DATA_VALIDATION_ERROR);
+
+ 
+        /**
+         * create identification request. After
+         * successfully processing request contact is transfered to
+         * mojeid registrar
+         *
+         * @param handle        contact handle
+         * @param trans_id      transaction identifier
+         * @param request_id    associated request id in logger
+         * @param ident         (output) unique identificator of created identification request
+         *
+         * @throw OBJECT_NOT_EXISTS in case contact handle is not registered
+         * @throw DATA_VALIDATION_ERROR
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         *
+         * @return               data of contact with given username
+         */
+        InfoContact transfer_contact_prepare(
+                in string handle,
+                in string trans_id,
+                in unsigned long long request_id,
+                out string ident)
+            raises (INTERNAL_SERVER_ERROR, DATA_VALIDATION_ERROR, OBJECT_NOT_EXISTS);
+
+
+        /**
+         * prepares contact for update (2-phase commit)
+         *
+         * @param c             update contact data structure
+         * @param trans_id      database transaction identifier
+         *                      for 2-phase commit
+         * @param request_id    associated request id in logger
+         *
+         * @throw DATA_VALIDATION_ERROR         *
+         * @throw OBJECT_NOT_EXISTS in case contact c is not registered
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
+         */
+        void update_contact_prepared(
+                in UpdateContact c,
+                in string trans_id,
+                in unsigned long long request_id)
+            raises (INTERNAL_SERVER_ERROR, DATA_VALIDATION_ERROR, OBJECT_NOT_EXISTS,
+                    MESSAGE_LIMIT_EXCEEDED);
+
+
+
+        /**
+         *
+         */
+        unsigned long long process_registration_request(
+                in string ident_request_id,
+                in string password,
+                in unsigned long long request_id)
+            raises (INTERNAL_SERVER_ERROR,
+                    IDENTIFICATION_FAILED,
+                    IDENTIFICATION_ALREADY_PROCESSED,
+                    IDENTIFICATION_ALREADY_INVALIDATED,
+                    DATA_VALIDATION_ERROR,
+                    OBJECT_CHANGED);
+
+ 
+        /**
+         *
+         */
+
+        void process_identification_request(
+                in unsigned long long contact_id,
+                in string password,
+                in unsigned long long request_id)
+            raises (INTERNAL_SERVER_ERROR,
+                    IDENTIFICATION_FAILED,
+                    IDENTIFICATION_ALREADY_PROCESSED,
+                    IDENTIFICATION_ALREADY_INVALIDATED,
+                    DATA_VALIDATION_ERROR);
+
+
+        /**
+         * commit prepared update contact transaction
+         *
+         * @param trans_id        transaction identifier
+         *
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         */
+        void commit_prepared_transaction(
+                in string trans_id)
+            raises (INTERNAL_SERVER_ERROR);
+
+
+        /**
+         * rollback prepared update contact transaction
+         *
+         * @param trans_id        transaction identifier
+         *
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         */
+        void rollback_prepared_transaction(
+                in string trans_id)
+            raises (INTERNAL_SERVER_ERROR);
+
+
+        /**
+         * return buffer with pdf content generated from contact
+         * validation request
+         *
+         * @param contact_id      contact id
+         *
+         * @throw OBJECT_NOT_EXISTS in case no MojeID contact validation public request is found for given contact_id
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         *
+         * @return                validation pdf
+         */
+        Buffer get_validation_pdf(
+                in unsigned long long contact_id)
+            raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
+
+
+        /*
+         * create validation request
+         *
+         * @param contact_id      contact id
+         * @param request_id      associated request id in logger
+         *
+         * @throw OBJECT_NOT_EXISTS in case contact_id is not registered
+         * @throw OBJECT_EXISTS in case public request for contact_id validation already exists
+         * @throw VALIDATION_ALREADY_PROCESSED in case contact_id is already validated
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @throw DATA_VALIDATION_ERROR
+         */
+        void create_validation_request(
+                in unsigned long long contact_id,
+                in unsigned long long request_id)
+            raises (INTERNAL_SERVER_ERROR, OBJECT_EXISTS, OBJECT_NOT_EXISTS,
+                    VALIDATION_ALREADY_PROCESSED, DATA_VALIDATION_ERROR);
+
+
+        /*
+         * Get list of contact states, one for every contact which state changed in past `last_hours` hours.
+         *
+         * States for contacts which have no longer `mojeidContact` state are not included.
+         *
+         * @param last_hours      number of hours to search in past
+         *
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         *
+         * @return                list of current contact states
+         */
+         ContactStateInfoList get_contacts_state_changes(
+                in unsigned long last_hours)
+            raises (INTERNAL_SERVER_ERROR);
+
+
+        /**
+         * Get contact state
+         *
+         * @param contact_id      contact id
+         *
+         * @throw OBJECT_NOT_EXISTS If contact doesn't exist or doesn't have `mojeidContact` state.
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         *
+         * @return                current contact state
+         */
+        ContactStateInfo get_contact_state(
+                in unsigned long long contact_id)
+            raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
+
+
+        /**
+         *  cancel state mojeidContact at given mojeid contact
+         *
+         * @param contact_id    ID of the contact
+         * @param trans_id      database transaction identifier
+         *                      for 2-phase commit
+         * @param request_id    associated request id in logger
+         *
+         * @throw OBJECT_NOT_EXISTS in case contact_id is not registered
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         */
+
+        void cancel_contact_account_prepare(
+                in unsigned long long contact_id,
+                in string trans_id,
+                in unsigned long long request_id)
+            raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
+
+        /**
+         * get contact handles which can't be registered
+         *
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         *
+         * @return list of contact handles in string sequence
+         */
+        ContactHandleListIter get_unregistrable_handles_iter()
+            raises (INTERNAL_SERVER_ERROR);
+
+ 
+        /*
+         * create new mojeid_contact_(re)identification request and generate new PIN3 letter
+         *
+         * @param contact_id      contact id
+         * @param request_id      associated request id in logger
+         *
+         * @throw OBJECT_NOT_EXISTS if contact doesn't exist or doesn't have `mojeidContact` state.
+         * @throw IDENTIFICATION_REQUEST_NOT_EXISTS in case no opened mojeid_contact_(re)identification request exists
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
+         */
+        void send_new_pin3(
+                in unsigned long long contact_id,
+                in unsigned long long request_id)
+            raises (OBJECT_NOT_EXISTS,
+                    IDENTIFICATION_REQUEST_NOT_EXISTS,
+                    INTERNAL_SERVER_ERROR,
+                    MESSAGE_LIMIT_EXCEEDED);
+
+        /*
+         * generate new emergency card letter
+         *
+         * @param contact_id      contact id
+         * @param request_id      associated request id in logger
+         *
+         * @throw OBJECT_NOT_EXISTS if contact doesn't exist or doesn't have `mojeidContact` state.
+         * @throw DATA_VALIDATION_ERROR
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
+         */
+        void send_mojeid_card(
+                in unsigned long long contact_id,
+                in unsigned long long request_id)
+            raises (OBJECT_NOT_EXISTS,
+                    DATA_VALIDATION_ERROR,
+                    INTERNAL_SERVER_ERROR,
+                    MESSAGE_LIMIT_EXCEEDED);
+
+
+
+    /* XXX: Following methods will be removed when methods
+     * for transfer contact (to MojeID) with data change are implemented */
+
+    /**
+     * get contact id by its handle
+     *
+     * @param handle          contact handle
+     *
+     * @throw OBJECT_NOT_EXISTS in case contact handle is not registered
+     * @throw INTERNAL_SERVER_ERROR in case of internal server error
+     *
+     * @return                contact id
+     */
+    unsigned long long get_Contact_id(in string handle)
+        raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
+
+     /**
+      * get auth info for given contact
+      *
+      * @param contact_id          contact_id
+      *
+      * @throw OBJECT_NOT_EXISTS in case contact_id is not registered
+      * @throw INTERNAL_SERVER_ERROR in case of internal server error
+      *
+      * @return auth_info
+      */
+     string get_contact_authinfo(in unsigned long long contact_id)
+         raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
+
+
+    };
+};
+};
+
+#endif
