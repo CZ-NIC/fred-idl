@@ -1,3 +1,16 @@
+2015-05-19 Jiri Sadek, Jan Korous, Jan Zima, Michal Strnad (2.22.0)
+
+   * domainbrowser
+      * interface reworked
+      * add flag to change user preference whether send domain warning letter or not
+      * add mailing address to signed-on user contact info
+
+   * mojeid
+      * new method for (re)send mojeid card
+      * message limit exception
+
+   * adifd - add destination account number to payment detail
+
 2015-03-01 Michal Strnad (2.21.0)
 
    * mojeid - add method for new pin3 resending
