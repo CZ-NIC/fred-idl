@@ -1,11 +1,11 @@
 /**
  * @file
- * mojeid interface
+ * mojeid2 interface
  */
 
 
-#ifndef MOJEID_IDL_
-#define MOJEID_IDL_
+#ifndef MOJEID2_IDL_
+#define MOJEID2_IDL_
 
 module Registry
 {
@@ -116,26 +116,6 @@ module MojeID
     typedef sequence<octet> Buffer;
 
     typedef sequence<string> ContactHandleList;
-
-    interface ContactHandleListIter
-    {
-        exception INTERNAL_SERVER_ERROR { };
-
-        exception NOT_ACTIVE { };
-
-        /**
-         * gets next handle in list
-         * @throws NOT_ACTIVE in case instance was previously destroyed by @ref destroy
-         */
-        ContactHandleList get_next(in unsigned long count)
-            raises (INTERNAL_SERVER_ERROR, NOT_ACTIVE);
-
-        /**
-         * destroys ContactHandleListIter
-         */
-        void destroy()
-            raises (INTERNAL_SERVER_ERROR);
-    };
 
     interface Server
     {
@@ -392,7 +372,7 @@ module MojeID
          *
          * @return list of contact handles in string sequence
          */
-        ContactHandleListIter get_unregistrable_handles_iter()
+        ContactHandleList get_unregistrable_handles(in unsigned long count, out unsigned long long start_from)
             raises (INTERNAL_SERVER_ERROR);
 
  
@@ -449,7 +429,7 @@ module MojeID
      *
      * @return                contact id
      */
-    unsigned long long get_Contact_id(in string handle)
+    unsigned long long get_contact_id(in string handle)
         raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
      /**
@@ -470,4 +450,4 @@ module MojeID
 };
 };
 
-#endif
+#endif//MOJEID2_IDL_
