@@ -297,7 +297,7 @@ module MojeID
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
 
-        /*
+        /**
          * create validation request
          *
          * @param contact_id      contact id
@@ -316,7 +316,7 @@ module MojeID
                     VALIDATION_ALREADY_PROCESSED, DATA_VALIDATION_ERROR);
 
 
-        /*
+        /**
          * Get list of contact states, one for every contact which state changed in past `last_hours` hours.
          *
          * States for contacts which have no longer `mojeidContact` state are not included.
@@ -358,12 +358,12 @@ module MojeID
          * @throw OBJECT_NOT_EXISTS in case contact_id is not registered
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          */
-
         void cancel_contact_account_prepare(
                 in unsigned long long contact_id,
                 in string trans_id,
                 in unsigned long long request_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
+
 
         /**
          * get contact handles which can't be registered
@@ -371,8 +371,10 @@ module MojeID
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          *
          * @return list of contact handles in string sequence
+         *
+         * @note full list is too long so is transferred per chunks
          */
-        ContactHandleList get_unregistrable_handles(in unsigned long count, out unsigned long long start_from)
+        ContactHandleList get_unregistrable_handles(in unsigned long count, inout unsigned long long start_from)
             raises (INTERNAL_SERVER_ERROR);
 
  
