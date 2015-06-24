@@ -69,7 +69,7 @@ module MojeID
         NullableShippingAddress shipping3;
         string email;
         NullableString notify_email;
-        string teplephone;
+        string telephone;
         NullableString fax;
     };
 
@@ -94,7 +94,7 @@ module MojeID
         NullableShippingAddress shipping3;
         string email;
         NullableString notify_email;
-        NullableString teplephone;
+        NullableString telephone;
         NullableString fax;
     };
 
