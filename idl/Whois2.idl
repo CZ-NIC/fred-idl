@@ -72,7 +72,7 @@ module Whois
     struct DisclosableContactIdentification {
         ContactIdentification   value;
         boolean                 disclose;
-    }
+    };
 
     struct Contact {
         string                              handle;
