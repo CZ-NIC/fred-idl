@@ -49,6 +49,36 @@ module MojeID
     valuetype NullableShippingAddress ShippingAddress;
 
 
+    enum ValidationError
+    {
+        NOT_AVAILABLE,
+        INVALID,
+        REQUIRED
+    };
+
+    valuetype NullableValidationError ValidationError;
+
+    struct AddressValidationError
+    {
+        NullableValidationError street1;
+        NullableValidationError city;
+        NullableValidationError postal_code;
+        NullableValidationError country;
+    };
+
+    valuetype NullableAddressValidationError AddressValidationError;
+
+    struct ShippingAddressValidationError
+    {
+        NullableValidationError street1;
+        NullableValidationError city;
+        NullableValidationError postal_code;
+        NullableValidationError country;
+    };
+
+    valuetype NullableShippingAddressValidationError ShippingAddressValidationError;
+
+
     struct CreateContact
     {
         string username;
@@ -121,35 +151,6 @@ module MojeID
     {
 
         exception INTERNAL_SERVER_ERROR { };
-
-        enum ValidationError
-        {
-            NOT_AVAILABLE,
-            INVALID,
-            REQUIRED
-        };
-
-        valuetype NullableValidationError ValidationError;
-
-        struct AddressValidationError
-        {
-            NullableValidationError street1;
-            NullableValidationError city;
-            NullableValidationError postal_code;
-            NullableValidationError country;
-        };
-
-        valuetype NullableAddressValidationError AddressValidationError;
-
-        struct ShippingAddressValidationError
-        {
-            NullableValidationError street1;
-            NullableValidationError city;
-            NullableValidationError postal_code;
-            NullableValidationError country;
-        };
-
-        valuetype NullableShippingAddressValidationError ShippingAddressValidationError;
 
         exception OBJECT_EXISTS { };
 
