@@ -254,7 +254,7 @@ module MojeID
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
          */
-        void update_contact_prepared(
+        void update_contact_prepare(
                 in UpdateContact c,
                 in string trans_id,
                 in unsigned long long request_id)
