@@ -155,9 +155,15 @@ module Whois
 
         NSSet               get_nsset_by_handle(         in string handle)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
-        NSSetSeq            get_nssets_by_ns(            in string handle)
+        NSSetSeq            get_nssets_by_ns(
+                                in string handle,
+                                in unsigned long limit,
+                                out boolean limit_exceeded)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
-        NSSetSeq            get_nssets_by_tech_c(        in string handle)
+        NSSetSeq            get_nssets_by_tech_c(
+                                in string handle,
+                                in unsigned long limit,
+                                out boolean limit_exceeded)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
         NameServer          get_nameserver_by_fqdn(      in string fqdn  )
@@ -165,18 +171,33 @@ module Whois
 
         KeySet              get_keyset_by_handle(        in string handle)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
-        KeySetSeq           get_keysets_by_tech_c(       in string handle)
+        KeySetSeq           get_keysets_by_tech_c(
+                                in string handle,
+                                in unsigned long limit,
+                                out boolean limit_exceeded)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
         Domain              get_domain_by_handle(        in string handle)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
-        DomainSeq           get_domains_by_registrant(   in string handle)
+        DomainSeq           get_domains_by_registrant(
+                                in string handle,
+                                in unsigned long limit,
+                                out boolean limit_exceeded)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
-        DomainSeq           get_domains_by_admin_contact(in string handle)
+        DomainSeq           get_domains_by_admin_contact(
+                                in string handle,
+                                in unsigned long limit,
+                                out boolean limit_exceeded)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
-        DomainSeq           get_domains_by_nsset(        in string handle)
+        DomainSeq           get_domains_by_nsset(
+                                in string handle,
+                                in unsigned long limit,
+                                out boolean limit_exceeded)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
-        DomainSeq           get_domains_by_keyset(       in string handle)
+        DomainSeq           get_domains_by_keyset(
+                                in string handle,
+                                in unsigned long limit,
+                                out boolean limit_exceeded)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
         ObjectStatusDescSeq get_domain_status_descriptions(  in string lang) raises (INTERNAL_SERVER_ERROR);
