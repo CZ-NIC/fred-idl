@@ -12,9 +12,15 @@ module Registry
 module MojeID
 {
 
-    typedef string Date; ///< iso format YYYY-MM-DD
+    struct Date
+    {
+        string value;///< iso format YYYY-MM-DD
+    };
 
-    typedef string DateTime; ///< iso (extended) format: YYYY-MM-DDTHH:MM:SS.fffffffff
+    struct DateTime
+    {
+        string value;///< iso (extended) format: YYYY-MM-DDTHH:MM:SS.fffffffff
+    };
 
     valuetype NullableString string;
     valuetype NullableBoolean boolean;
