@@ -441,10 +441,8 @@ module MojeID
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          *
          * @return list of contact handles in string sequence
-         *
-         * @note full list is too long so is transferred per chunks
          */
-        ContactHandleList get_unregistrable_handles(in unsigned long count, inout unsigned long long start_from)
+        ContactHandleList get_unregistrable_handles()
             raises (INTERNAL_SERVER_ERROR);
 
  
