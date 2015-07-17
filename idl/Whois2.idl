@@ -144,6 +144,11 @@ module Whois
     exception OBJECT_NOT_FOUND {};
     exception INVALID_HANDLE {};
 
+    exception UNMANAGED_ZONE {};
+    exception TOO_MANY_LABELS {};
+    exception INVALID_LABEL {};
+
+
     interface WhoisIntf
     {
         Registrar           get_registrar_by_handle(     in string handle)
@@ -177,8 +182,8 @@ module Whois
                                 out boolean limit_exceeded)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
-        Domain              get_domain_by_handle(        in string handle)
-                                raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
+        Domain              get_domain_by_handle(in string handle)
+                                raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_LABEL, TOO_MANY_LABELS, UNMANAGED_ZONE);
         DomainSeq           get_domains_by_registrant(
                                 in string handle,
                                 in unsigned long limit,
