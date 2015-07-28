@@ -25,7 +25,6 @@ module MojeID
     valuetype NullableString string;
     valuetype NullableBoolean boolean;
     valuetype NullableDate Date;
-    valuetype NullableULongLong unsigned long long;
 
     struct Address
     {
@@ -85,6 +84,9 @@ module MojeID
     valuetype NullableShippingAddressValidationError ShippingAddressValidationError;
 
 
+    typedef unsigned long long ContactId;    ///< type used for representing contact numeric identification
+    typedef unsigned long long LogRequestId; ///< type used for representing request identification in logger
+
     struct CreateContact
     {
         string username;
@@ -112,7 +114,7 @@ module MojeID
 
     struct UpdateContact
     {
-        unsigned long long id;
+        ContactId id;
         string first_name;
         string last_name;
         NullableString organization;
@@ -139,7 +141,7 @@ module MojeID
 
     struct ContactStateInfo
     {
-        unsigned long long contact_id;
+        ContactId contact_id;
         DateTime mojeid_activation_datetime;
         Date conditionally_identification_date;
         NullableDate identification_date;
@@ -206,21 +208,21 @@ module MojeID
          * create contact and identification request
          * chosen
          *
-         * @param c             create contact data structure
-         * @param trans_id      database transaction identifier
-         *                      for 2-phase commit
-         * @param request_id    associated request id in logger
-         * @param ident         (output) unique identificator of created identification request
+         * @param contact        create contact data structure
+         * @param trans_id       database transaction identifier
+         *                       for 2-phase commit
+         * @param log_request_id associated request id in logger
+         * @param ident          (output) unique identificator of created identification request
          *
          * @throw CREATE_CONTACT_PREPARE_VALIDATION_ERROR in case of incorrect input data
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          *
-         * @return              contact id
+         * @return               contact id
          */
-        unsigned long long create_contact_prepare(
-                in CreateContact c,
+        ContactId create_contact_prepare(
+                in CreateContact contact,
                 in string trans_id,
-                in unsigned long long request_id,
+                in LogRequestId log_request_id,
                 out string ident)
             raises (INTERNAL_SERVER_ERROR, CREATE_CONTACT_PREPARE_VALIDATION_ERROR);
 
@@ -248,10 +250,10 @@ module MojeID
          * successfully processing request contact is transfered to
          * mojeid registrar
          *
-         * @param handle        contact handle
-         * @param trans_id      transaction identifier
-         * @param request_id    associated request id in logger
-         * @param ident         (output) unique identificator of created identification request
+         * @param handle         contact handle
+         * @param trans_id       transaction identifier
+         * @param log_request_id associated request id in logger
+         * @param ident          (output) unique identificator of created identification request
          *
          * @throw OBJECT_NOT_EXISTS in case contact handle is not registered
          * @throw TRANSFER_CONTACT_PREPARE_VALIDATION_ERROR in case of nontransferable contact data
@@ -265,7 +267,7 @@ module MojeID
         InfoContact transfer_contact_prepare(
                 in string handle,
                 in string trans_id,
-                in unsigned long long request_id,
+                in LogRequestId log_request_id,
                 out string ident)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS, TRANSFER_CONTACT_PREPARE_VALIDATION_ERROR,
                     OBJECT_USER_BLOCKED, OBJECT_ADMIN_BLOCKED, ALREADY_MOJEID_CONTACT);
@@ -278,20 +280,20 @@ module MojeID
         /**
          * prepares contact for update (2-phase commit)
          *
-         * @param c             update contact data structure
-         * @param trans_id      database transaction identifier
-         *                      for 2-phase commit
-         * @param request_id    associated request id in logger
+         * @param contact        update contact data structure
+         * @param trans_id       database transaction identifier
+         *                       for 2-phase commit
+         * @param log_request_id associated request id in logger
          *
-         * @throw DATA_VALIDATION_ERROR         *
-         * @throw OBJECT_NOT_EXISTS in case contact c is not registered
-         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @throw DATA_VALIDATION_ERROR
+         * @throw OBJECT_NOT_EXISTS      in case of contact isn't registered
+         * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
          */
         void update_contact_prepare(
-                in UpdateContact c,
+                in UpdateContact contact,
                 in string trans_id,
-                in unsigned long long request_id)
+                in LogRequestId log_request_id)
             raises (INTERNAL_SERVER_ERROR, DATA_VALIDATION_ERROR, OBJECT_NOT_EXISTS,
                     MESSAGE_LIMIT_EXCEEDED);
 
@@ -303,7 +305,7 @@ module MojeID
         unsigned long long process_registration_request(
                 in string ident_request_id,
                 in string password,
-                in unsigned long long request_id)
+                in LogRequestId log_request_id)
             raises (INTERNAL_SERVER_ERROR,
                     IDENTIFICATION_FAILED,
                     IDENTIFICATION_ALREADY_PROCESSED,
@@ -317,9 +319,9 @@ module MojeID
          */
 
         void process_identification_request(
-                in unsigned long long contact_id,
+                in ContactId contact_id,
                 in string password,
-                in unsigned long long request_id)
+                in LogRequestId log_request_id)
             raises (INTERNAL_SERVER_ERROR,
                     IDENTIFICATION_FAILED,
                     IDENTIFICATION_ALREADY_PROCESSED,
@@ -363,7 +365,7 @@ module MojeID
          * @return                validation pdf
          */
         Buffer get_validation_pdf(
-                in unsigned long long contact_id)
+                in ContactId contact_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
 
@@ -371,7 +373,7 @@ module MojeID
          * create validation request
          *
          * @param contact_id      contact id
-         * @param request_id      associated request id in logger
+         * @param log_request_id  associated request id in logger
          *
          * @throw OBJECT_NOT_EXISTS in case contact_id is not registered
          * @throw OBJECT_EXISTS in case public request for contact_id validation already exists
@@ -380,8 +382,8 @@ module MojeID
          * @throw DATA_VALIDATION_ERROR
          */
         void create_validation_request(
-                in unsigned long long contact_id,
-                in unsigned long long request_id)
+                in ContactId contact_id,
+                in LogRequestId log_request_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_EXISTS, OBJECT_NOT_EXISTS,
                     VALIDATION_ALREADY_PROCESSED, DATA_VALIDATION_ERROR);
 
@@ -413,25 +415,25 @@ module MojeID
          * @return                current contact state
          */
         ContactStateInfo get_contact_state(
-                in unsigned long long contact_id)
+                in ContactId contact_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
 
         /**
          *  cancel state mojeidContact at given mojeid contact
          *
-         * @param contact_id    ID of the contact
-         * @param trans_id      database transaction identifier
-         *                      for 2-phase commit
-         * @param request_id    associated request id in logger
+         * @param contact_id     ID of the contact
+         * @param trans_id       database transaction identifier
+         *                       for 2-phase commit
+         * @param log_request_id associated request id in logger
          *
-         * @throw OBJECT_NOT_EXISTS in case contact_id is not registered
+         * @throw OBJECT_NOT_EXISTS     in case of contact_id is not registered
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          */
-        void cancel_contact_account_prepare(
-                in unsigned long long contact_id,
+        void cancel_account_prepare(
+                in ContactId contact_id,
                 in string trans_id,
-                in unsigned long long request_id)
+                in LogRequestId log_request_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
 
@@ -450,7 +452,7 @@ module MojeID
          * create new mojeid_contact_(re)identification request and generate new PIN3 letter
          *
          * @param contact_id      contact id
-         * @param request_id      associated request id in logger
+         * @param log_request_id  associated request id in logger
          *
          * @throw OBJECT_NOT_EXISTS if contact doesn't exist or doesn't have `mojeidContact` state.
          * @throw IDENTIFICATION_REQUEST_NOT_EXISTS in case no opened mojeid_contact_(re)identification request exists
@@ -458,8 +460,8 @@ module MojeID
          * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
          */
         void send_new_pin3(
-                in unsigned long long contact_id,
-                in unsigned long long request_id)
+                in ContactId contact_id,
+                in LogRequestId log_request_id)
             raises (OBJECT_NOT_EXISTS,
                     IDENTIFICATION_REQUEST_NOT_EXISTS,
                     INTERNAL_SERVER_ERROR,
@@ -469,16 +471,16 @@ module MojeID
          * generate new emergency card letter
          *
          * @param contact_id      contact id
-         * @param request_id      associated request id in logger
+         * @param log_request_id  associated request id in logger
          *
-         * @throw OBJECT_NOT_EXISTS if contact doesn't exist or doesn't have `mojeidContact` state.
+         * @throw OBJECT_NOT_EXISTS      if contact doesn't exist or doesn't have `mojeidContact` state
          * @throw DATA_VALIDATION_ERROR
-         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
          */
         void send_mojeid_card(
-                in unsigned long long contact_id,
-                in unsigned long long request_id)
+                in ContactId contact_id,
+                in LogRequestId log_request_id)
             raises (OBJECT_NOT_EXISTS,
                     DATA_VALIDATION_ERROR,
                     INTERNAL_SERVER_ERROR,
@@ -499,7 +501,7 @@ module MojeID
      *
      * @return                contact id
      */
-    unsigned long long get_contact_id(in string handle)
+    ContactId get_contact_id(in string handle)
         raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
      /**
@@ -512,7 +514,7 @@ module MojeID
       *
       * @return auth_info
       */
-     string get_contact_authinfo(in unsigned long long contact_id)
+     string get_contact_authinfo(in ContactId contact_id)
          raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
 
