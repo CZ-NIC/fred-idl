@@ -139,6 +139,14 @@ module Whois
         StringSeq           statuses;
     };
     typedef sequence<KeySet> KeySetSeq;
+    
+    typedef sequence<string> RegistrarHandleList;
+    struct RegistrarGroup
+    {
+        string name;
+        RegistrarHandleList members;
+    };
+    typedef sequence<RegistrarGroup> RegistrarGroupList;
 
     exception INTERNAL_SERVER_ERROR {};
     exception OBJECT_NOT_FOUND {};
@@ -154,6 +162,8 @@ module Whois
         Registrar           get_registrar_by_handle(     in string handle)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
         RegistrarSeq        get_registrars() raises (INTERNAL_SERVER_ERROR);
+        
+        RegistrarGroupList  get_registrar_groups() raises (INTERNAL_SERVER_ERROR);
 
         Contact             get_contact_by_handle(       in string handle)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
