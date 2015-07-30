@@ -302,16 +302,15 @@ module MojeID
         /**
          *
          */
-        unsigned long long process_registration_request(
+        ContactId process_registration_request(
                 in string ident_request_id,
                 in string password,
                 in LogRequestId log_request_id)
             raises (INTERNAL_SERVER_ERROR,
-                    IDENTIFICATION_FAILED,
-                    IDENTIFICATION_ALREADY_PROCESSED,
-                    IDENTIFICATION_ALREADY_INVALIDATED,
-                    DATA_VALIDATION_ERROR,
-                    OBJECT_CHANGED);
+                    IDENTIFICATION_REQUEST_NOT_EXISTS,
+                    IDENTIFICATION_FAILED, IDENTIFICATION_ALREADY_PROCESSED, IDENTIFICATION_ALREADY_INVALIDATED,
+                    OBJECT_CHANGED, OBJECT_USER_BLOCKED, OBJECT_ADMIN_BLOCKED, ALREADY_MOJEID_CONTACT,
+                    DATA_VALIDATION_ERROR);
 
  
         /**
