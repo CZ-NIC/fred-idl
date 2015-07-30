@@ -147,7 +147,15 @@ module Whois
         RegistrarHandleList members;
     };
     typedef sequence<RegistrarGroup> RegistrarGroupList;
-
+    
+    struct RegistrarCertification
+    {
+        string registrar_handle;
+        short score;
+        unsigned long long evaluation_file_id;
+    };
+    typedef sequence<RegistrarCertification> RegistrarCertificationList;
+    
     exception INTERNAL_SERVER_ERROR {};
     exception OBJECT_NOT_FOUND {};
     exception INVALID_HANDLE {};
@@ -164,6 +172,8 @@ module Whois
         RegistrarSeq        get_registrars() raises (INTERNAL_SERVER_ERROR);
         
         RegistrarGroupList  get_registrar_groups() raises (INTERNAL_SERVER_ERROR);
+        
+        RegistrarCertificationList get_registrar_certification_list() raises (INTERNAL_SERVER_ERROR);
 
         Contact             get_contact_by_handle(       in string handle)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
