@@ -212,7 +212,7 @@ module MojeID
          * @param trans_id       database transaction identifier
          *                       for 2-phase commit
          * @param log_request_id associated request id in logger
-         * @param ident          (output) unique identificator of created identification request
+         * @param ident          (output) unique identifier of the created identification request
          *
          * @throw CREATE_CONTACT_PREPARE_VALIDATION_ERROR in case of incorrect input data
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
@@ -226,7 +226,7 @@ module MojeID
                 out string ident)
             raises (INTERNAL_SERVER_ERROR, CREATE_CONTACT_PREPARE_VALIDATION_ERROR);
 
- 
+
         exception TRANSFER_CONTACT_PREPARE_VALIDATION_ERROR
         {
             NullableValidationError                username;
@@ -246,14 +246,14 @@ module MojeID
         };
 
         /**
-         * create identification request. After
-         * successfully processing request contact is transfered to
-         * mojeid registrar
+         * create identification request. When
+         * the request is processed successfully, the contact is transfered to
+         * the mojeID registrar
          *
          * @param handle         contact handle
          * @param trans_id       transaction identifier
          * @param log_request_id associated request id in logger
-         * @param ident          (output) unique identificator of created identification request
+         * @param ident          (output) unique identifier of the created identification request
          *
          * @throw OBJECT_NOT_EXISTS in case contact handle is not registered
          * @throw TRANSFER_CONTACT_PREPARE_VALIDATION_ERROR in case of nontransferable contact data
@@ -262,7 +262,7 @@ module MojeID
          * @throw OBJECT_ADMIN_BLOCKED object manipulations constrained by administrator
          * @throw ALREADY_MOJEID_CONTACT object is mojeID contact already
          *
-         * @return               data of contact with given username
+         * @return               data of the contact having the given username
          */
         InfoContact transfer_contact_prepare(
                 in string handle,
@@ -312,7 +312,7 @@ module MojeID
                     OBJECT_CHANGED, OBJECT_USER_BLOCKED, OBJECT_ADMIN_BLOCKED, ALREADY_MOJEID_CONTACT,
                     DATA_VALIDATION_ERROR);
 
- 
+
         /**
          *
          */
@@ -388,11 +388,11 @@ module MojeID
 
 
         /**
-         * Get list of contact states, one for every contact which state changed in past `last_hours` hours.
+         * Get list of infos about states of those contacts which states changed in past `last_hours` hours.
          *
-         * States for contacts which have no longer `mojeidContact` state are not included.
+         * States for contacts which no longer have `mojeidContact` state are not included.
          *
-         * @param last_hours      number of hours to search in past
+         * @param last_hours      number of last hours to search in past
          *
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          *
@@ -404,7 +404,7 @@ module MojeID
 
 
         /**
-         * Get contact state
+         * Get info about contact state
          *
          * @param contact_id      contact id
          *
@@ -419,7 +419,7 @@ module MojeID
 
 
         /**
-         *  cancel state mojeidContact at given mojeid contact
+         *  cancel `mojeidContact` state at given mojeid contact
          *
          * @param contact_id     ID of the contact
          * @param trans_id       database transaction identifier
@@ -446,14 +446,14 @@ module MojeID
         ContactHandleList get_unregistrable_handles()
             raises (INTERNAL_SERVER_ERROR);
 
- 
+
         /*
          * create new mojeid_contact_(re)identification request and generate new PIN3 letter
          *
          * @param contact_id      contact id
          * @param log_request_id  associated request id in logger
          *
-         * @throw OBJECT_NOT_EXISTS if contact doesn't exist or doesn't have `mojeidContact` state.
+         * @throw OBJECT_NOT_EXISTS if the contact doesn't exist or doesn't have `mojeidContact` state.
          * @throw IDENTIFICATION_REQUEST_NOT_EXISTS in case no opened mojeid_contact_(re)identification request exists
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
@@ -472,7 +472,7 @@ module MojeID
          * @param contact_id      contact id
          * @param log_request_id  associated request id in logger
          *
-         * @throw OBJECT_NOT_EXISTS      if contact doesn't exist or doesn't have `mojeidContact` state
+         * @throw OBJECT_NOT_EXISTS      if the contact doesn't exist or doesn't have `mojeidContact` state
          * @throw DATA_VALIDATION_ERROR
          * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
