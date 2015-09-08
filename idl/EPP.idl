@@ -153,6 +153,32 @@ module ccReg {
     string msg; ///< Message belongs to returning code (according to language)
     string svTRID; ///< Server transaction ID
   };
+  /// Type for address - so far used only for mailing address because there is no time for broader refactoring
+  struct AddressData
+  {
+    string Street1; ///< street - line #1
+    string Street2; ///< street - line #2
+    string Street3; ///< street - line #3
+    string City; ///< city
+    string StateOrProvince; ///< state or province
+    string PostalCode; ///< postal code
+    string CountryCode; ///< country code - 2 char ISO country code
+  };
+  /// Optional AddressData type emulation
+  struct OptionalAddressData
+  {
+    boolean is_set;        ///< set/unset flag; if is_set == FALSE then data must not be interpreted
+    AddressData data;   ///< data of address when is_set == TRUE
+  };
+  /// Address action
+  enum AddressAction {set, rem, no_change};
+  /// AddressChange
+  struct AddressChange
+  {
+    AddressAction action;   ///< action
+    AddressData data;       ///< data of address when action makes sense
+  };
+
   /// Type for transfer data after info_contact call 
   struct Contact
   {
@@ -172,6 +198,7 @@ module ccReg {
     string StateOrProvince; ///< Address - region (country part)
     string PostalCode; ///< ZIP code
     string CountryCode; ///< Country Code - 2 placed ISO country code 
+    OptionalAddressData MailingAddress; ///< Mailing address
     string Telephone; ///< Telephone number 
     string Fax; ///< Fax number
     string Email; ///< Contact e-mail for messages about expiration
@@ -191,7 +218,37 @@ module ccReg {
     boolean DiscloseIdent; ///< Visibility for ident parameter
     boolean DiscloseNotifyEmail; ///< Visibility for NotifyEmail parameter
   };
-  /// Type for transfer data after call [create|update]_contact
+  /// Type for transfer data after call create_contact
+  struct ContactData
+  {
+    string Name; ///< Contact name or title
+    string Organization; ///< Organisation name
+    Lists Streets; ///< Address - maximum is 3 parts
+    string City; ///< Address - city
+    string StateOrProvince; ///< Address - region(country part)
+    string PostalCode; ///< ZIP code
+    string CC; ///< Country Code - 2 placed ISO country code
+    OptionalAddressData MailingAddress; ///< Mailing address
+    string Telephone; ///< Telephone number
+    string Fax; ///< Fax number
+    string Email; ///< Contact e-mail for messages about expiration
+    string NotifyEmail; ///< Alerting email for messages about changes
+    string VAT; ///< Value Added Tax
+    string ident; ///< ident - unique contact identifier
+    identtyp identtype; ///< Ident type - defines meaning of ident field
+    string AuthInfoPw; ///< Password for contact transfer
+    Disclose DiscloseFlag; ///< Disclose flag determines meaning of disclose param.
+    boolean DiscloseName; ///< Visibility for Name parameter
+    boolean DiscloseOrganization; ///< Visibility for Organisation parameter
+    boolean DiscloseAddress; ///< Visibility for Address parameter
+    boolean DiscloseTelephone; ///< Visibility for Telephone parameter
+    boolean DiscloseFax; ///< Visibility for Fax parameter
+    boolean DiscloseEmail; ///< Visibility for Email parameter
+    boolean DiscloseVAT; ///< Visibility for VAT parameter
+    boolean DiscloseIdent; ///< Visibility for ident parameter
+    boolean DiscloseNotifyEmail; ///< Visibility for NotifyEmail parameter
+  };
+  /// Type for transfer data after call update_contact
   struct ContactChange
   {
     string Name; ///< Contact name or title
@@ -201,6 +258,7 @@ module ccReg {
     string StateOrProvince; ///< Address - region(country part)
     string PostalCode; ///< ZIP code
     string CC; ///< Country Code - 2 placed ISO country code 
+    AddressChange MailingAddress; ///< Mailing address
     string Telephone; ///< Telephone number 
     string Fax; ///< Fax number
     string Email; ///< Contact e-mail for messages about expiration
@@ -616,7 +674,7 @@ module ccReg {
      \return General reply with operation results and error messagess */   
     Response ContactCreate (
       in string handle,
-      in ContactChange c,
+      in ContactData c,
       out timestamp crDate,
       in EppParams params
     ) raises (EppError);
