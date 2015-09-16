@@ -73,6 +73,17 @@ module MojeID
 
     valuetype NullableAddressValidationError AddressValidationError;
 
+    struct MandatoryAddressValidationError
+    {
+        NullableValidationError address_presence;
+        NullableValidationError street1;
+        NullableValidationError city;
+        NullableValidationError postal_code;
+        NullableValidationError country;
+    };
+
+    valuetype NullableMandatoryAddressValidationError MandatoryAddressValidationError;
+
     struct ShippingAddressValidationError
     {
         NullableValidationError street1;
@@ -383,6 +394,17 @@ module MojeID
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
 
+        exception CREATE_VALIDATION_REQUEST_VALIDATION_ERROR
+        {
+            NullableValidationError                 first_name;
+            NullableValidationError                 last_name;
+            NullableMandatoryAddressValidationError permanent;
+            NullableValidationError                 email;
+            NullableValidationError                 phone;
+            NullableValidationError                 notify_email;
+            NullableValidationError                 fax;
+            NullableValidationError                 ssn;
+        };
         /**
          * create validation request
          *
@@ -393,13 +415,13 @@ module MojeID
          * @throw OBJECT_EXISTS in case public request for contact_id validation already exists
          * @throw VALIDATION_ALREADY_PROCESSED in case contact_id is already validated
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
-         * @throw DATA_VALIDATION_ERROR
+         * @throw CREATE_VALIDATION_REQUEST_VALIDATION_ERROR in case of invalid contact data
          */
         void create_validation_request(
                 in ContactId contact_id,
                 in LogRequestId log_request_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_EXISTS, OBJECT_NOT_EXISTS,
-                    VALIDATION_ALREADY_PROCESSED, DATA_VALIDATION_ERROR);
+                    VALIDATION_ALREADY_PROCESSED, CREATE_VALIDATION_REQUEST_VALIDATION_ERROR);
 
 
         /**
