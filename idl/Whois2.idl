@@ -165,7 +165,7 @@ module Whois
     exception UNMANAGED_ZONE {};
     exception TOO_MANY_LABELS {};
     exception INVALID_LABEL {};
-    exception INVALID_LANG {};
+    exception MISSING_LOCALIZATION {};
 
     interface WhoisIntf
     {
@@ -229,10 +229,10 @@ module Whois
                                 out boolean limit_exceeded)
                                 raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
-        ObjectStatusDescSeq get_domain_status_descriptions(  in string lang) raises (INTERNAL_SERVER_ERROR, INVALID_LANG);
-        ObjectStatusDescSeq get_contact_status_descriptions( in string lang) raises (INTERNAL_SERVER_ERROR, INVALID_LANG);
-        ObjectStatusDescSeq get_nsset_status_descriptions(   in string lang) raises (INTERNAL_SERVER_ERROR, INVALID_LANG);
-        ObjectStatusDescSeq get_keyset_status_descriptions(  in string lang) raises (INTERNAL_SERVER_ERROR, INVALID_LANG);
+        ObjectStatusDescSeq get_domain_status_descriptions(  in string lang) raises (INTERNAL_SERVER_ERROR, MISSING_LOCALIZATION);
+        ObjectStatusDescSeq get_contact_status_descriptions( in string lang) raises (INTERNAL_SERVER_ERROR, MISSING_LOCALIZATION);
+        ObjectStatusDescSeq get_nsset_status_descriptions(   in string lang) raises (INTERNAL_SERVER_ERROR, MISSING_LOCALIZATION);
+        ObjectStatusDescSeq get_keyset_status_descriptions(  in string lang) raises (INTERNAL_SERVER_ERROR, MISSING_LOCALIZATION);
     };
 };
 };
