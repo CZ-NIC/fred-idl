@@ -522,7 +522,24 @@ module MojeID
                     INTERNAL_SERVER_ERROR,
                     MESSAGE_LIMIT_EXCEEDED);
 
+        /*
+         * generate sms messages associated with open (state new) public requests
+         * of mojeid_contact_conditional_identification type
+         */
+        void generate_sms_messages();
 
+        /*
+         * generate email messages associated with open (state new) public requests
+         * of mojeid_contact_conditional_identification, mojeid_conditionally_identified_contact_transfer or
+         * mojeid_identified_contact_transfer types
+         */
+        void generate_email_messages();
+
+        /*
+         * generate sms messages associated with open (state new) public requests
+         * of mojeid_identification or mojeid_reidentification types
+         */
+        void generate_letter_messages();
 
     /* XXX: Following methods will be removed when methods
      * for transfer contact (to MojeID) with data change are implemented */
