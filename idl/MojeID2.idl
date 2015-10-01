@@ -534,7 +534,7 @@ module MojeID
          * of mojeid_contact_conditional_identification type
          * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          */
-        void enable_sms_messages_generation(bool enable) raises (INTERNAL_SERVER_ERROR);
+        void enable_sms_messages_generation(in boolean enable) raises (INTERNAL_SERVER_ERROR);
 
         /*
          * generate email messages associated with open (state new) public requests
@@ -550,7 +550,7 @@ module MojeID
          * mojeid_identified_contact_transfer types
          * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          */
-        void enable_email_messages_generation(bool enable) raises (INTERNAL_SERVER_ERROR);
+        void enable_email_messages_generation(in boolean enable) raises (INTERNAL_SERVER_ERROR);
 
         /*
          * generate letters associated with open (state new) public requests
@@ -564,7 +564,7 @@ module MojeID
          * of mojeid_contact_identification or mojeid_contact_reidentification types
          * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          */
-        void enable_letter_messages_generation(bool enable) raises (INTERNAL_SERVER_ERROR);
+        void enable_letter_messages_generation(in boolean enable) raises (INTERNAL_SERVER_ERROR);
 
     /* XXX: Following methods will be removed when methods
      * for transfer contact (to MojeID) with data change are implemented */
