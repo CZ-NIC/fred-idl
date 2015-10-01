@@ -525,21 +525,46 @@ module MojeID
         /*
          * generate sms messages associated with open (state new) public requests
          * of mojeid_contact_conditional_identification type
+         * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          */
-        void generate_sms_messages();
+        void generate_sms_messages() raises (INTERNAL_SERVER_ERROR);
+
+        /*
+         * enable generation of sms messages associated with open (state new) public requests
+         * of mojeid_contact_conditional_identification type
+         * @throw INTERNAL_SERVER_ERROR  in case of internal server error
+         */
+        void enable_sms_messages_generation(bool enable) raises (INTERNAL_SERVER_ERROR);
 
         /*
          * generate email messages associated with open (state new) public requests
          * of mojeid_contact_conditional_identification, mojeid_conditionally_identified_contact_transfer or
          * mojeid_identified_contact_transfer types
+         * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          */
-        void generate_email_messages();
+        void generate_email_messages() raises (INTERNAL_SERVER_ERROR);
 
         /*
-         * generate sms messages associated with open (state new) public requests
-         * of mojeid_identification or mojeid_reidentification types
+         * enable generation of email messages associated with open (state new) public requests
+         * of mojeid_contact_conditional_identification, mojeid_conditionally_identified_contact_transfer or
+         * mojeid_identified_contact_transfer types
+         * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          */
-        void generate_letter_messages();
+        void enable_email_messages_generation(bool enable) raises (INTERNAL_SERVER_ERROR);
+
+        /*
+         * generate letters associated with open (state new) public requests
+         * of mojeid_contact_identification or mojeid_contact_reidentification types
+         * @throw INTERNAL_SERVER_ERROR  in case of internal server error
+         */
+        void generate_letter_messages() raises (INTERNAL_SERVER_ERROR);
+
+        /*
+         * enable generation of letters associated with open (state new) public requests
+         * of mojeid_contact_identification or mojeid_contact_reidentification types
+         * @throw INTERNAL_SERVER_ERROR  in case of internal server error
+         */
+        void enable_letter_messages_generation(bool enable) raises (INTERNAL_SERVER_ERROR);
 
     /* XXX: Following methods will be removed when methods
      * for transfer contact (to MojeID) with data change are implemented */
