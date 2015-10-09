@@ -299,6 +299,7 @@ module MojeID
             NullableValidationError                notifyemail;
             NullableValidationError                fax;
         };
+
         /**
          * prepares contact for update (2-phase commit)
          *
@@ -484,7 +485,7 @@ module MojeID
             raises (INTERNAL_SERVER_ERROR);
 
 
-        /*
+        /**
          * create new mojeid_contact_(re)identification request and generate new PIN3 letter
          *
          * @param contact_id      contact id
@@ -503,7 +504,7 @@ module MojeID
                     INTERNAL_SERVER_ERROR,
                     MESSAGE_LIMIT_EXCEEDED);
 
-        /*
+        /**
          * generate new emergency card letter
          *
          * @param contact_id      contact id
@@ -522,21 +523,21 @@ module MojeID
                     INTERNAL_SERVER_ERROR,
                     MESSAGE_LIMIT_EXCEEDED);
 
-        /*
+        /**
          * generate sms messages associated with open (state new) public requests
          * of mojeid_contact_conditional_identification type
          * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          */
         void generate_sms_messages() raises (INTERNAL_SERVER_ERROR);
 
-        /*
+        /**
          * enable generation of sms messages associated with open (state new) public requests
          * of mojeid_contact_conditional_identification type
          * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          */
         void enable_sms_messages_generation(in boolean enable) raises (INTERNAL_SERVER_ERROR);
 
-        /*
+        /**
          * generate email messages associated with open (state new) public requests
          * of mojeid_contact_conditional_identification, mojeid_conditionally_identified_contact_transfer or
          * mojeid_identified_contact_transfer types
@@ -544,7 +545,7 @@ module MojeID
          */
         void generate_email_messages() raises (INTERNAL_SERVER_ERROR);
 
-        /*
+        /**
          * enable generation of email messages associated with open (state new) public requests
          * of mojeid_contact_conditional_identification, mojeid_conditionally_identified_contact_transfer or
          * mojeid_identified_contact_transfer types
@@ -552,49 +553,19 @@ module MojeID
          */
         void enable_email_messages_generation(in boolean enable) raises (INTERNAL_SERVER_ERROR);
 
-        /*
+        /**
          * generate letters associated with open (state new) public requests
          * of mojeid_contact_identification or mojeid_contact_reidentification types
          * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          */
         void generate_letter_messages() raises (INTERNAL_SERVER_ERROR);
 
-        /*
+        /**
          * enable generation of letters associated with open (state new) public requests
          * of mojeid_contact_identification or mojeid_contact_reidentification types
          * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          */
         void enable_letter_messages_generation(in boolean enable) raises (INTERNAL_SERVER_ERROR);
-
-    /* XXX: Following methods will be removed when methods
-     * for transfer contact (to MojeID) with data change are implemented */
-
-    /**
-     * get contact id by its handle
-     *
-     * @param handle          contact handle
-     *
-     * @throw OBJECT_NOT_EXISTS in case contact handle is not registered
-     * @throw INTERNAL_SERVER_ERROR in case of internal server error
-     *
-     * @return                contact id
-     */
-    ContactId get_contact_id(in string handle)
-        raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
-
-     /**
-      * get auth info for given contact
-      *
-      * @param contact_id          contact_id
-      *
-      * @throw OBJECT_NOT_EXISTS in case contact_id is not registered
-      * @throw INTERNAL_SERVER_ERROR in case of internal server error
-      *
-      * @return auth_info
-      */
-     string get_contact_authinfo(in ContactId contact_id)
-         raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
-
 
     };
 };
