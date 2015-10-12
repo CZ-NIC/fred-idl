@@ -150,6 +150,20 @@ module MojeID
     typedef UpdateContact InfoContact; ///< XXX
 
 
+    struct SetContact
+    {
+         NullableString organization;
+         NullableString vat_reg_num;
+         NullableDate birth_date;
+         NullableString vat_id_num;
+         Address permanent;
+         NullableAddress mailing;
+         string email;
+         NullableString notify_email;
+         string telephone;
+         NullableString fax;
+    };
+
     struct ContactStateInfo
     {
         ContactId contact_id;
@@ -320,6 +334,23 @@ module MojeID
             raises (INTERNAL_SERVER_ERROR, UPDATE_CONTACT_PREPARE_VALIDATION_ERROR, OBJECT_NOT_EXISTS,
                     MESSAGE_LIMIT_EXCEEDED);
 
+
+
+        /**
+         *
+         */
+        InfoContact update_transfer_contact_prepare(
+            in string username,
+            in SetContact c,
+            in string trans_id,
+            in unsigned long long request_id)
+        raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
+
+
+        /**
+         *
+         */
+        InfoContact info_contact(in string username);
 
 
         exception DATA_VALIDATION_ERROR
