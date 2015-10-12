@@ -348,9 +348,15 @@ module MojeID
 
 
         /**
+         * return contact information
          *
+         * @param username       contact handle
+         * 
+         * @throw OBJECT_NOT_EXISTS      in case of contact isn't registered
+         * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          */
-        InfoContact info_contact(in string username);
+        InfoContact info_contact(in string username)
+        raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
 
         exception DATA_VALIDATION_ERROR
