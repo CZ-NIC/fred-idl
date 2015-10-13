@@ -271,9 +271,8 @@ module MojeID
         };
 
         /**
-         * create identification request. When
-         * the request is processed successfully, the contact is transfered to
-         * the mojeID registrar
+         * create identification request. When the request is processed successfully,
+         * the contact is transfered to the mojeID registrar
          *
          * @param handle         contact handle
          * @param trans_id       transaction identifier
@@ -336,15 +335,44 @@ module MojeID
 
 
 
+        exception UPDATE_TRANSFER_VALIDATION_ERROR
+        {
+            NullableValidationError                first_name;
+            NullableValidationError                last_name;
+            NullableValidationError                email;
+            NullableValidationError                phone;
+            NullableAddressValidationError         permanent;
+            NullableAddressValidationError         mailing;
+            NullableValidationError                notifyemail;
+            NullableValidationError                fax;
+        };
+
         /**
-         *
+         * update contact data and create corresponding request for transfer into mojeID
+         * 
+         * @param username       contact handle
+         * @param contact_data   contact new data
+         * @param trans_id       database transaction identifier
+         *                       for 2-phase commit
+         * @param log_request_id associated request id in logger
+         * 
+         * @throw INTERNAL_SERVER_ERROR  in case of internal server error
+         * @throw OBJECT_NOT_EXISTS      in case of contact isn't registered
+         * @throw OBJECT_ADMIN_BLOCKED   object manipulations constrained by administrator
+         * @throw OBJECT_USER_BLOCKED    object manipulations constrained by user
+         * @throw ALREADY_MOJEID_CONTACT object is mojeID contact already
+         * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
+         * @throw UPDATE_TRANSFER_VALIDATION_ERROR
+         * 
+         * @return               contact new data
          */
         InfoContact update_transfer_contact_prepare(
             in string username,
-            in SetContact c,
+            in SetContact contact_data,
             in string trans_id,
-            in unsigned long long request_id)
-        raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
+            in LogRequestId log_request_id)
+        raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS, OBJECT_ADMIN_BLOCKED, OBJECT_USER_BLOCKED,
+                ALREADY_MOJEID_CONTACT, UPDATE_TRANSFER_VALIDATION_ERROR);
 
 
         /**
@@ -354,6 +382,8 @@ module MojeID
          * 
          * @throw OBJECT_NOT_EXISTS      in case of contact isn't registered
          * @throw INTERNAL_SERVER_ERROR  in case of internal server error
+         * 
+         * @return               contact data
          */
         InfoContact info_contact(in string username)
         raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
