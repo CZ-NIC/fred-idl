@@ -40,6 +40,7 @@ module Whois
 
     struct Registrar {
         string          handle;
+        string          name;
         string          organization;
         string          url;
         string          phone;
