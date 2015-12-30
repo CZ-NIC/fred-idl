@@ -239,7 +239,8 @@ module Whois
     exception OBJECT_NOT_FOUND {};
 
     /**
-     * Requested object identifier is not valid
+     * Requested object identifier is not valid (bad format; in other words object of that handle
+     * could not be even created at the time of request)
      */
     exception INVALID_HANDLE {};
 
@@ -249,7 +250,8 @@ module Whois
     exception UNMANAGED_ZONE {};
 
     /**
-     * Requested zone (part of domain name) is not managed by server (due to long name in terms of domain name labels)
+     * Requested zone (part of domain name) is not managed by server (due to long name
+     * in terms of domain name labels)
      * E.g. if server manages only '.example' zone and requested domain is 'a.b.example'
      */
     exception TOO_MANY_LABELS {};
@@ -268,90 +270,277 @@ module Whois
 
     interface WhoisIntf
     {
+        /**
+         * Search for registrar data by handle
+         *
+         * @param handle                 registrar identifier
+         * @throw OBJECT_NOT_FOUND       if requested registrar is not found
+         * @throw INVALID_HANDLE         if @ref handle has invalid format
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         Registrar get_registrar_by_handle(in string handle)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
+
+        /**
+         * Retrieve list of all registrars data
+         *
+         * @throw INTERNAL_SERVER_ERROR  in case of failure
+         */
         RegistrarSeq get_registrars()
             raises (INTERNAL_SERVER_ERROR);
 
+
+        /**
+         * Retrieve list of all registrar groups
+         *
+         * @throw INTERNAL_SERVER_ERROR  in case of failure
+         */
         RegistrarGroupList get_registrar_groups()
             raises (INTERNAL_SERVER_ERROR);
 
+
+        /**
+         * Retrieve list of registrar evaluation data
+         *
+         * @throw INTERNAL_SERVER_ERROR  in case of failure
+         */
         RegistrarCertificationList get_registrar_certification_list()
             raises (INTERNAL_SERVER_ERROR);
 
+
+        /**
+         * Retrieve list of all managed zones
+         *
+         * @throw INTERNAL_SERVER_ERROR  in case of failure
+         */
         ZoneFqdnList get_managed_zone_list()
             raises (INTERNAL_SERVER_ERROR);
 
+
+        /**
+         * Search for contact data by identifier
+         *
+         * @param handle                 contact identifier
+         * @throw OBJECT_NOT_FOUND       if requested contact is not found
+         * @throw INVALID_HANDLE         if @ref handle has invalid format
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         Contact get_contact_by_handle(in string handle)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
+
+
+        /**
+         * Search for nsset data by identifier
+         *
+         * @param handle                 nsset identifier
+         * @throw OBJECT_NOT_FOUND       if requested nsset is not found
+         * @throw INVALID_HANDLE         if @ref handle has invalid format
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
 
         NSSet get_nsset_by_handle(in string handle)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
+
+        /**
+         * Search for nssets by nameserver fqdn
+         *
+         * @param handle                 nameserver fqdn
+         * @param limit                  limit result size by this value
+         * @param limit_exceeded         output flag which indicates that result was truncated
+         * @throw OBJECT_NOT_FOUND       if no nsset is found (XXX: should return empty list instead)
+         * @throw INVALID_HANDLE         if @ref handle has invalid format
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         NSSetSeq get_nssets_by_ns(
             in string handle,
             in unsigned long limit,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
+
+        /**
+         * Search for nssets by technical contact identifier
+         *
+         * @param handle                 contact identifier
+         * @param limit                  limit result size by this value
+         * @param limit_exceeded         output flag which indicates that result was truncated
+         * @throw OBJECT_NOT_FOUND       if no nsset is found (XXX: should return empty list instead)
+         * @throw INVALID_HANDLE         if @ref handle has invalid format
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         NSSetSeq get_nssets_by_tech_c(
             in string handle,
             in unsigned long limit,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
+
+        /**
+         * Search for nameserver data by fqdn
+         *
+         * @param fqdn                   nameserver fqdn
+         * @throw OBJECT_NOT_FOUND       if requested nameserver is not found
+         * @throw INVALID_HANDLE         if @ref handle has invalid format
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         NameServer get_nameserver_by_fqdn(in string fqdn)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
+
+        /**
+         * Search for keyset data by identifier
+         *
+         * @param handle                 keyset identifier
+         * @throw OBJECT_NOT_FOUND       if requested keyset is not found
+         * @throw INVALID_HANDLE         if @ref handle has invalid format
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         KeySet get_keyset_by_handle(in string handle)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
+
+        /**
+         * Search for keysets by technical contact identifier
+         *
+         * @param handle                 contact identifier
+         * @param limit                  limit result size by this value
+         * @param limit_exceeded         output flag which indicates that result was truncated
+         * @throw OBJECT_NOT_FOUND       if no keyset is found (XXX: should return empty list instead)
+         * @throw INVALID_HANDLE         if @ref handle has invalid format
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         KeySetSeq get_keysets_by_tech_c(
             in string handle,
             in unsigned long limit,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
+
+        /**
+         * Search for domain data by fqdn
+         *
+         * @param handle                 fqdn
+         * @throw UNMANAGED_ZONE         if fqdn doesn't fit to any managed zone by server
+         * @throw TOO_MANY_LABELS        if fqdn contains too many labels
+                                         (and therefore can't fit to any managed zone by server)
+         * @throw INVALID_LABEL          if fqdn contains invalid label (format)
+         * @throw OBJECT_NOT_FOUND       if requested domain is not found
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         Domain get_domain_by_handle(in string handle)
             raises (
                 INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND,
                 INVALID_LABEL, TOO_MANY_LABELS, UNMANAGED_ZONE
             );
 
+
+        /**
+         * Search for domain by holder identifier (contact handle)
+         *
+         * @param handle                 contact identifier
+         * @param limit                  limit result size by this value
+         * @param limit_exceeded         output flag which indicates that result was truncated
+         * @throw OBJECT_NOT_FOUND       if no domain is found (XXX: should return empty list instead)
+         * @throw INVALID_HANDLE         if @ref handle has invalid format
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         DomainSeq get_domains_by_registrant(
             in string handle,
             in unsigned long limit,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
+
+        /**
+         * Search for domain by administrative contact identifier
+         *
+         * @param handle                 contact identifier
+         * @param limit                  limit result size by this value
+         * @param limit_exceeded         output flag which indicates that result was truncated
+         * @throw OBJECT_NOT_FOUND       if no domain is found (XXX: should return empty list instead)
+         * @throw INVALID_HANDLE         if @ref handle has invalid format
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         DomainSeq get_domains_by_admin_contact(
             in string handle,
             in unsigned long limit,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
+
+        /**
+         * Search for domain by nsset identifier
+         *
+         * @param handle                 nsset identifier
+         * @param limit                  limit result size by this value
+         * @param limit_exceeded         output flag which indicates that result was truncated
+         * @throw OBJECT_NOT_FOUND       if no domain is found (XXX: should return empty list instead)
+         * @throw INVALID_HANDLE         if @ref handle has invalid format
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         DomainSeq get_domains_by_nsset(
             in string handle,
             in unsigned long limit,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
+
+        /**
+         * Search for domain by keyset identifier
+         *
+         * @param handle                 keyset identifier
+         * @param limit                  limit result size by this value
+         * @param limit_exceeded         output flag which indicates that result was truncated
+         * @throw OBJECT_NOT_FOUND       if no domain is found (XXX: should return empty list instead)
+         * @throw INVALID_HANDLE         if @ref handle has invalid format
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         DomainSeq get_domains_by_keyset(
             in string handle,
             in unsigned long limit,
             out boolean limit_exceeded
         ) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_HANDLE);
 
+
+        /**
+         * Retrieve all available human readable description for domain statuses
+         *
+         * @param lang                   language for description texts
+         * @throw MISSING_LOCALIZATION   if no data for given @ref language is found
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         ObjectStatusDescSeq get_domain_status_descriptions(in string lang)
             raises (INTERNAL_SERVER_ERROR, MISSING_LOCALIZATION);
 
+        /**
+         * Retrieve all available human readable description for contact statuses
+         *
+         * @param lang                   language for description texts
+         * @throw MISSING_LOCALIZATION   if no data for given @ref language is found
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         ObjectStatusDescSeq get_contact_status_descriptions(in string lang)
             raises (INTERNAL_SERVER_ERROR, MISSING_LOCALIZATION);
 
+        /**
+         * Retrieve all available human readable description for nsset statuses
+         *
+         * @param lang                   language for description texts
+         * @throw MISSING_LOCALIZATION   if no data for given @ref language is found
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         ObjectStatusDescSeq get_nsset_status_descriptions(in string lang)
             raises (INTERNAL_SERVER_ERROR, MISSING_LOCALIZATION);
 
+        /**
+         * Retrieve all available human readable description for keyset statuses
+         *
+         * @param lang                   language for description texts
+         * @throw MISSING_LOCALIZATION   if no data for given @ref language is found
+         * @throw INTERNAL_SERVER_ERROR  in case of other failure
+         */
         ObjectStatusDescSeq get_keyset_status_descriptions(in string lang)
             raises (INTERNAL_SERVER_ERROR, MISSING_LOCALIZATION);
     };
