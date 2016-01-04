@@ -54,45 +54,38 @@ module MojeID
     valuetype NullableShippingAddress ShippingAddress;
 
 
-    enum ValidationError
+    enum ValidationResult
     {
+        OK,
         NOT_AVAILABLE,
         INVALID,
         REQUIRED
     };
 
-    valuetype NullableValidationError ValidationError;
-
-    struct AddressValidationError
+    struct AddressValidationResult
     {
-        NullableValidationError street1;
-        NullableValidationError city;
-        NullableValidationError postal_code;
-        NullableValidationError country;
+        ValidationResult street1;
+        ValidationResult city;
+        ValidationResult postal_code;
+        ValidationResult country;
     };
 
-    valuetype NullableAddressValidationError AddressValidationError;
-
-    struct MandatoryAddressValidationError
+    struct MandatoryAddressValidationResult
     {
-        NullableValidationError address_presence;
-        NullableValidationError street1;
-        NullableValidationError city;
-        NullableValidationError postal_code;
-        NullableValidationError country;
+        ValidationResult address_presence;
+        ValidationResult street1;
+        ValidationResult city;
+        ValidationResult postal_code;
+        ValidationResult country;
     };
 
-    valuetype NullableMandatoryAddressValidationError MandatoryAddressValidationError;
-
-    struct ShippingAddressValidationError
+    struct ShippingAddressValidationResult
     {
-        NullableValidationError street1;
-        NullableValidationError city;
-        NullableValidationError postal_code;
-        NullableValidationError country;
+        ValidationResult street1;
+        ValidationResult city;
+        ValidationResult postal_code;
+        ValidationResult country;
     };
-
-    valuetype NullableShippingAddressValidationError ShippingAddressValidationError;
 
 
     typedef unsigned long long ContactId;    ///< type used for representing contact numeric identification
@@ -216,20 +209,20 @@ module MojeID
 
         exception REGISTRATION_VALIDATION_ERROR
         {
-            NullableValidationError                username;
-            NullableValidationError                first_name;
-            NullableValidationError                last_name;
-            NullableValidationError                birth_date;
-            NullableValidationError                email;
-            NullableValidationError                notify_email;
-            NullableValidationError                phone;
-            NullableValidationError                fax;
-            NullableAddressValidationError         permanent;
-            NullableAddressValidationError         mailing;
-            NullableAddressValidationError         billing;
-            NullableShippingAddressValidationError shipping;
-            NullableShippingAddressValidationError shipping2;
-            NullableShippingAddressValidationError shipping3;
+            ValidationResult                username;
+            ValidationResult                first_name;
+            ValidationResult                last_name;
+            ValidationResult                birth_date;
+            ValidationResult                email;
+            ValidationResult                notify_email;
+            ValidationResult                phone;
+            ValidationResult                fax;
+            AddressValidationResult         permanent;
+            AddressValidationResult         mailing;
+            AddressValidationResult         billing;
+            ShippingAddressValidationResult shipping;
+            ShippingAddressValidationResult shipping2;
+            ShippingAddressValidationResult shipping3;
         };
 
         /**
@@ -283,19 +276,19 @@ module MojeID
 
         exception UPDATE_CONTACT_PREPARE_VALIDATION_ERROR
         {
-            NullableValidationError                first_name;
-            NullableValidationError                last_name;
-            NullableValidationError                birth_date;
-            NullableValidationError                email;
-            NullableValidationError                notify_email;
-            NullableValidationError                phone;
-            NullableValidationError                fax;
-            NullableAddressValidationError         permanent;
-            NullableAddressValidationError         mailing;
-            NullableAddressValidationError         billing;
-            NullableShippingAddressValidationError shipping;
-            NullableShippingAddressValidationError shipping2;
-            NullableShippingAddressValidationError shipping3;
+            ValidationResult                first_name;
+            ValidationResult                last_name;
+            ValidationResult                birth_date;
+            ValidationResult                email;
+            ValidationResult                notify_email;
+            ValidationResult                phone;
+            ValidationResult                fax;
+            AddressValidationResult         permanent;
+            AddressValidationResult         mailing;
+            AddressValidationResult         billing;
+            ShippingAddressValidationResult shipping;
+            ShippingAddressValidationResult shipping2;
+            ShippingAddressValidationResult shipping3;
         };
 
         /**
@@ -362,8 +355,8 @@ module MojeID
 
         exception PROCESS_REGISTRATION_VALIDATION_ERROR
         {
-            NullableValidationError                email;
-            NullableValidationError                phone;
+            ValidationResult email;
+            ValidationResult phone;
         };
 
         /**
@@ -444,14 +437,14 @@ module MojeID
 
         exception CREATE_VALIDATION_REQUEST_VALIDATION_ERROR
         {
-            NullableValidationError                 first_name;
-            NullableValidationError                 last_name;
-            NullableMandatoryAddressValidationError permanent;
-            NullableValidationError                 email;
-            NullableValidationError                 phone;
-            NullableValidationError                 notify_email;
-            NullableValidationError                 fax;
-            NullableValidationError                 ssn;
+            ValidationResult                 first_name;
+            ValidationResult                 last_name;
+            MandatoryAddressValidationResult permanent;
+            ValidationResult                 email;
+            ValidationResult                 phone;
+            ValidationResult                 notify_email;
+            ValidationResult                 fax;
+            ValidationResult                 ssn;
         };
         /**
          * create validation request
