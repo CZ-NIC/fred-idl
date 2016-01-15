@@ -73,7 +73,7 @@ module Whois
     struct Domain {
         string              handle;                /**< fqdn */
         string              registrant_handle;     /**< domain holder identifier */
-        StringSeq           admin_contact_handles; /**< list of domain admin-c identifiers */
+        StringSeq           admin_contact_handles; /**< list of domain administrative contacts identifiers */
         NullableString      nsset_handle;          /**< nsset identifier */
         NullableString      keyset_handle;         /**< keyset identifier */
         string              registrar_handle;      /**< sponsoring registrar identifier */
@@ -171,7 +171,7 @@ module Whois
 
 
     /**
-     * DNSKEY RR data
+     * DNSKEY Resource Record data (rfc4034)
      */
     struct DNSKey {
         short   flags;
@@ -262,7 +262,7 @@ module Whois
     exception INVALID_LABEL {};
 
     /**
-     * ???
+     * Missing localization for requested language
      */
     exception MISSING_LOCALIZATION {};
 
