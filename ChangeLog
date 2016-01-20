@@ -1,3 +1,10 @@
+2016-01-20 (2.23.0)
+
+   * new whois and rdap backend interface refactoring and add methods used by
+     webwhois client
+
+   * domainbrowser - interface documentation
+
 2015-05-19 Jiri Sadek, Jan Korous, Jan Zima, Michal Strnad (2.22.0)
 
    * domainbrowser
