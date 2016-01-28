@@ -299,7 +299,7 @@ module MojeID
          *                       for 2-phase commit
          * @param log_request_id associated request id in logger
          *
-         * @throw UPDATE_CONTACT_PREPARE_VALIDATION_ERROR
+         * @throw UPDATE_CONTACT_PREPARE_VALIDATION_ERROR in case of incorrect input data
          * @throw OBJECT_NOT_EXISTS      in case of contact isn't registered
          * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
@@ -326,7 +326,7 @@ module MojeID
          * @throw OBJECT_USER_BLOCKED    object manipulations constrained by user
          * @throw ALREADY_MOJEID_CONTACT object is mojeID contact already
          * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
-         * @throw REGISTRATION_VALIDATION_ERROR
+         * @throw REGISTRATION_VALIDATION_ERROR in case of incorrect input data
          *
          * @return               contact new data
          */
@@ -360,7 +360,23 @@ module MojeID
         };
 
         /**
+         * finishes contact registration request
          *
+         * @param ident_request_id unique identifier of the processed request
+         * @param password         contact authorization
+         * @param log_request_id   associated request id in logger
+         *
+         * @throw INTERNAL_SERVER_ERROR  in case of internal server error
+         * @throw IDENTIFICATION_REQUEST_NOT_EXISTS in case of no identification request exists
+         *                               for given contact
+         * @throw IDENTIFICATION_FAILED  in case of password doesn't match
+         * @throw IDENTIFICATION_ALREADY_PROCESSED in case of contact already identified
+         * @throw IDENTIFICATION_ALREADY_INVALIDATED in case of contact identification cancelled
+         * @throw OBJECT_CHANGED         in case of contact data changed
+         * @throw ALREADY_MOJEID_CONTACT in case of contact identification already done
+         * @throw OBJECT_ADMIN_BLOCKED   in case of contact changes forbidden due to administrative blocking
+         * @throw OBJECT_USER_BLOCKED    in case of contact changes forbidden due to user blocking
+         * @throw PROCESS_REGISTRATION_VALIDATION_ERROR in case of incorrect data of contact
          */
         ContactId process_registration_request(
                 in string ident_request_id,
@@ -380,8 +396,8 @@ module MojeID
          * @param password       contact authorization
          * @param log_request_id associated request id in logger
          *
-         * @throw OBJECT_NOT_EXISTS      in case of contact isn't registered
          * @throw INTERNAL_SERVER_ERROR  in case of internal server error
+         * @throw OBJECT_NOT_EXISTS      in case of contact isn't registered
          * @throw IDENTIFICATION_REQUEST_NOT_EXISTS in case of no identification request exists
          *                               for given contact
          * @throw IDENTIFICATION_FAILED  in case of password doesn't match
