@@ -169,7 +169,12 @@ module MojeID
 
     typedef sequence<ContactStateInfo> ContactStateInfoList;
 
-    typedef sequence<octet> Buffer;
+    typedef sequence<octet> BufferValue;
+
+    struct Buffer
+    {
+        BufferValue value;
+    };
 
     typedef sequence<string> ContactHandleList;
 
