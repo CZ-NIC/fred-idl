@@ -521,7 +521,7 @@ module MojeID
          *                       for 2-phase commit
          * @param log_request_id associated request id in logger
          *
-         * @throw OBJECT_NOT_EXISTS     in case of contact_id is not registered
+         * @throw OBJECT_NOT_EXISTS     in case of contact_id isn't registered or isn't mojeID contact
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          */
         void cancel_account_prepare(
