@@ -1,11 +1,11 @@
 /**
  * @file
- * mojeid2 interface
+ * mojeid interface
  */
 
 
-#ifndef MOJEID2_IDL_
-#define MOJEID2_IDL_
+#ifndef MOJEID_IDL_
+#define MOJEID_IDL_
 
 module Registry
 {
@@ -23,7 +23,6 @@ module MojeID
     };
 
     valuetype NullableString string;
-    valuetype NullableBoolean boolean;
     valuetype NullableDate Date;
 
     struct Address
@@ -630,4 +629,4 @@ module MojeID
 };
 };
 
-#endif//MOJEID2_IDL_
+#endif//MOJEID_IDL_
