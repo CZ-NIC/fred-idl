@@ -102,16 +102,16 @@ module MojeID
         NullableString passport_num;
         NullableString ssn_id_num;
         NullableString vat_id_num;
+        string email;
+        NullableString notify_email;
+        string telephone;
+        NullableString fax;
         Address permanent;
         NullableAddress mailing;
         NullableAddress billing;
         NullableShippingAddress shipping;
         NullableShippingAddress shipping2;
         NullableShippingAddress shipping3;
-        string email;
-        NullableString notify_email;
-        string telephone;
-        NullableString fax;
     };
 
 
@@ -127,16 +127,16 @@ module MojeID
         NullableString passport_num;
         NullableString ssn_id_num;
         NullableString vat_id_num;
+        string email;
+        NullableString notify_email;
+        NullableString telephone;
+        NullableString fax;
         Address permanent;
         NullableAddress mailing;
         NullableAddress billing;
         NullableShippingAddress shipping;
         NullableShippingAddress shipping2;
         NullableShippingAddress shipping3;
-        string email;
-        NullableString notify_email;
-        NullableString telephone;
-        NullableString fax;
     };
 
     typedef UpdateContact InfoContact; ///< XXX
@@ -148,12 +148,12 @@ module MojeID
          NullableString vat_reg_num;
          NullableDate birth_date;
          NullableString vat_id_num;
-         Address permanent;
-         NullableAddress mailing;
          string email;
          NullableString notify_email;
          string telephone;
          NullableString fax;
+         Address permanent;
+         NullableAddress mailing;
     };
 
     struct ContactStateInfo
@@ -455,13 +455,13 @@ module MojeID
         {
             ValidationResult                 first_name;
             ValidationResult                 last_name;
-            MandatoryAddressValidationResult permanent;
-            ValidationResult                 email;
-            ValidationResult                 phone;
-            ValidationResult                 notify_email;
-            ValidationResult                 fax;
             ValidationResult                 birth_date;
             ValidationResult                 vat_id_num;
+            ValidationResult                 email;
+            ValidationResult                 notify_email;
+            ValidationResult                 phone;
+            ValidationResult                 fax;
+            MandatoryAddressValidationResult permanent;
         };
         /**
          * create validation request
