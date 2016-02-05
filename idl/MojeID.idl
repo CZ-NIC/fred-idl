@@ -206,8 +206,6 @@ module MojeID
         exception MESSAGE_LIMIT_EXCEEDED
         {
             Date limit_expire_date;     ///< When a new message can be sent
-            unsigned short limit_count; ///< At most a @ref limit_count messages can be sent in a @ref limit_days days
-            unsigned short limit_days;  ///< @see limit_count
         };
 
         exception REGISTRATION_VALIDATION_ERROR
