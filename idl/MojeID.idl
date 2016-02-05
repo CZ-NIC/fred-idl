@@ -160,7 +160,6 @@ module MojeID
     {
         ContactId contact_id;
         DateTime mojeid_activation_datetime;
-        Date conditionally_identification_date;
         NullableDate identification_date;
         NullableDate validation_date;
         NullableDate linked_date;
