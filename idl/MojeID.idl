@@ -228,7 +228,6 @@ module MojeID
 
         /**
          * create contact and identification request
-         * chosen
          *
          * @param contact        create contact data structure
          * @param trans_id       database transaction identifier
@@ -301,7 +300,7 @@ module MojeID
          * @param log_request_id associated request id in logger
          *
          * @throw UPDATE_CONTACT_PREPARE_VALIDATION_ERROR in case of incorrect input data
-         * @throw OBJECT_NOT_EXISTS      in case of contact isn't registered
+         * @throw OBJECT_NOT_EXISTS      in case of contact isn't registered or isn't mojeID contact
          * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
          */
@@ -469,7 +468,7 @@ module MojeID
          * @param contact_id      contact id
          * @param log_request_id  associated request id in logger
          *
-         * @throw OBJECT_NOT_EXISTS in case contact_id is not registered
+         * @throw OBJECT_NOT_EXISTS in case contact_id isn't registered or isn't mojeID contact
          * @throw OBJECT_EXISTS in case public request for contact_id validation already exists
          * @throw VALIDATION_ALREADY_PROCESSED in case contact_id is already validated
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
