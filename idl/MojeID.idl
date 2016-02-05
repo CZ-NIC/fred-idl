@@ -460,7 +460,8 @@ module MojeID
             ValidationResult                 phone;
             ValidationResult                 notify_email;
             ValidationResult                 fax;
-            ValidationResult                 ssn;
+            ValidationResult                 birth_date;
+            ValidationResult                 vat_id_num;
         };
         /**
          * create validation request
