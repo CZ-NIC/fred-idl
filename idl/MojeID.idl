@@ -78,14 +78,6 @@ module MojeID
         ValidationResult country;
     };
 
-    struct ShippingAddressValidationResult
-    {
-        ValidationResult street1;
-        ValidationResult city;
-        ValidationResult postal_code;
-        ValidationResult country;
-    };
-
 
     typedef unsigned long long ContactId;    ///< type used for representing contact numeric identification
     typedef unsigned long long LogRequestId; ///< type used for representing request identification in logger
@@ -210,20 +202,20 @@ module MojeID
 
         exception REGISTRATION_VALIDATION_ERROR
         {
-            ValidationResult                username;
-            ValidationResult                first_name;
-            ValidationResult                last_name;
-            ValidationResult                birth_date;
-            ValidationResult                email;
-            ValidationResult                notify_email;
-            ValidationResult                phone;
-            ValidationResult                fax;
-            AddressValidationResult         permanent;
-            AddressValidationResult         mailing;
-            AddressValidationResult         billing;
-            ShippingAddressValidationResult shipping;
-            ShippingAddressValidationResult shipping2;
-            ShippingAddressValidationResult shipping3;
+            ValidationResult                 username;
+            ValidationResult                 first_name;
+            ValidationResult                 last_name;
+            ValidationResult                 birth_date;
+            ValidationResult                 email;
+            ValidationResult                 notify_email;
+            ValidationResult                 phone;
+            ValidationResult                 fax;
+            MandatoryAddressValidationResult permanent;
+            AddressValidationResult          mailing;
+            AddressValidationResult          billing;
+            AddressValidationResult          shipping;
+            AddressValidationResult          shipping2;
+            AddressValidationResult          shipping3;
         };
 
         /**
@@ -276,19 +268,19 @@ module MojeID
 
         exception UPDATE_CONTACT_PREPARE_VALIDATION_ERROR
         {
-            ValidationResult                first_name;
-            ValidationResult                last_name;
-            ValidationResult                birth_date;
-            ValidationResult                email;
-            ValidationResult                notify_email;
-            ValidationResult                phone;
-            ValidationResult                fax;
-            AddressValidationResult         permanent;
-            AddressValidationResult         mailing;
-            AddressValidationResult         billing;
-            ShippingAddressValidationResult shipping;
-            ShippingAddressValidationResult shipping2;
-            ShippingAddressValidationResult shipping3;
+            ValidationResult                 first_name;
+            ValidationResult                 last_name;
+            ValidationResult                 birth_date;
+            ValidationResult                 email;
+            ValidationResult                 notify_email;
+            ValidationResult                 phone;
+            ValidationResult                 fax;
+            MandatoryAddressValidationResult permanent;
+            AddressValidationResult          mailing;
+            AddressValidationResult          billing;
+            AddressValidationResult          shipping;
+            AddressValidationResult          shipping2;
+            AddressValidationResult          shipping3;
         };
 
         /**
