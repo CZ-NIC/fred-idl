@@ -197,7 +197,7 @@ module MojeID
 
         exception MESSAGE_LIMIT_EXCEEDED
         {
-            Date limit_expire_date;     ///< When a new message can be sent
+            DateTime limit_expire_datetime;     ///< When a new message can be sent
         };
 
         exception REGISTRATION_VALIDATION_ERROR
