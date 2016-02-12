@@ -19,7 +19,7 @@ module MojeID
 
     struct DateTime
     {
-        string value;///< iso (extended) format: YYYY-MM-DDTHH:MM:SS.fffffffff
+        string value;///< iso (extended) format: YYYY-MM-DDTHH:MM:SS.fffffffff; always in UTC
     };
 
     valuetype NullableString string;
