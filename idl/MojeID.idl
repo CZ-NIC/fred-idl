@@ -134,7 +134,7 @@ module MojeID
     typedef UpdateContact InfoContact; ///< XXX
 
 
-    struct SetContact
+    struct UpdateTransferContact
     {
          NullableString organization;
          NullableString vat_reg_num;
@@ -324,7 +324,7 @@ module MojeID
          */
         InfoContact update_transfer_contact_prepare(
             in string username,
-            in SetContact contact_data,
+            in UpdateTransferContact contact_data,
             in string trans_id,
             in LogRequestId log_request_id)
         raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS, OBJECT_ADMIN_BLOCKED, OBJECT_USER_BLOCKED,
