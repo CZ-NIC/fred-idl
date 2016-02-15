@@ -109,7 +109,6 @@ module MojeID
 
     struct UpdateContact
     {
-        ContactId id;
         string first_name;
         string last_name;
         NullableString organization;
@@ -308,7 +307,8 @@ module MojeID
         /**
          * prepares contact for update (2-phase commit)
          *
-         * @param contact        update contact data structure
+         * @param contact_id     id of updated contact
+         * @param contact        contact data after update
          * @param trans_id       database transaction identifier
          *                       for 2-phase commit
          * @param log_request_id associated request id in logger
@@ -319,6 +319,7 @@ module MojeID
          * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
          */
         void update_contact_prepare(
+                in ContactId contact_id,
                 in UpdateContact contact,
                 in string trans_id,
                 in LogRequestId log_request_id)
