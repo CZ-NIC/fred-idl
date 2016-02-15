@@ -131,7 +131,29 @@ module MojeID
         NullableShippingAddress shipping3;
     };
 
-    typedef UpdateContact InfoContact; ///< XXX
+    struct InfoContact
+    {
+        ContactId id;
+        string first_name;
+        string last_name;
+        NullableString organization;
+        NullableString vat_reg_num;
+        NullableDate birth_date;
+        NullableString id_card_num;
+        NullableString passport_num;
+        NullableString ssn_id_num;
+        NullableString vat_id_num;
+        string email;
+        NullableString notify_email;
+        NullableString telephone;
+        NullableString fax;
+        Address permanent;
+        NullableAddress mailing;
+        NullableAddress billing;
+        NullableShippingAddress shipping;
+        NullableShippingAddress shipping2;
+        NullableShippingAddress shipping3;
+    };
 
 
     struct UpdateTransferContact
