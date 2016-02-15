@@ -152,6 +152,15 @@ module MojeID
         NullableShippingAddress shipping;
         NullableShippingAddress shipping2;
         NullableShippingAddress shipping3;
+        boolean disclose_name;
+        boolean disclose_organization;
+        boolean disclose_vat_reg_num;
+        boolean disclose_ident;
+        boolean disclose_email;
+        boolean disclose_notify_email;
+        boolean disclose_telephone;
+        boolean disclose_fax;
+        boolean disclose_permanent;
     };
 
 
