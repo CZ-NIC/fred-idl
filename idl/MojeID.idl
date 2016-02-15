@@ -166,16 +166,17 @@ module MojeID
 
     struct UpdateTransferContact
     {
-         NullableString organization;
-         NullableString vat_reg_num;
-         NullableDate birth_date;
-         NullableString vat_id_num;
-         string email;
-         NullableString notify_email;
-         string telephone;
-         NullableString fax;
-         Address permanent;
-         NullableAddress mailing;
+        string full_name;
+        NullableString organization;
+        NullableString vat_reg_num;
+        NullableDate birth_date;
+        NullableString vat_id_num;
+        string email;
+        NullableString notify_email;
+        string telephone;
+        NullableString fax;
+        Address permanent;
+        NullableAddress mailing;
     };
 
     struct ContactStateInfo
