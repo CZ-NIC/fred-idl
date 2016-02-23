@@ -152,15 +152,6 @@ module MojeID
         NullableShippingAddress shipping;
         NullableShippingAddress shipping2;
         NullableShippingAddress shipping3;
-        boolean disclose_name;
-        boolean disclose_organization;
-        boolean disclose_vat_reg_num;
-        boolean disclose_ident;
-        boolean disclose_email;
-        boolean disclose_notify_email;
-        boolean disclose_telephone;
-        boolean disclose_fax;
-        boolean disclose_permanent;
     };
 
 
@@ -198,6 +189,30 @@ module MojeID
     };
 
     typedef sequence<string> ContactHandleList;
+
+    struct InfoContactPublishFlags
+    {
+        ContactId id;
+        boolean first_name;
+        boolean last_name;
+        boolean organization;
+        boolean vat_reg_num;
+        boolean birth_date;
+        boolean id_card_num;
+        boolean passport_num;
+        boolean ssn_id_num;
+        boolean vat_id_num;
+        boolean email;
+        boolean notify_email;
+        boolean telephone;
+        boolean fax;
+        boolean permanent;
+        boolean mailing;
+        boolean billing;
+        boolean shipping;
+        boolean shipping2;
+        boolean shipping3;
+    };
 
     interface Server
     {
@@ -375,6 +390,20 @@ module MojeID
          * @return               contact data
          */
         InfoContact info_contact(in string username)
+        raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
+
+
+        /**
+         * return contact publish flags information
+         *
+         * @param contact_id     contact id
+         * 
+         * @throw OBJECT_NOT_EXISTS      in case of contact isn't registered
+         * @throw INTERNAL_SERVER_ERROR  in case of internal server error
+         * 
+         * @return               contact publish flags information
+         */
+        InfoContactPublishFlags get_contact_info_publish_flags(ContactId contact_id)
         raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
 
