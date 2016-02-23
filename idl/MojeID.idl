@@ -403,7 +403,7 @@ module MojeID
          * 
          * @return               contact publish flags information
          */
-        InfoContactPublishFlags get_contact_info_publish_flags(ContactId contact_id)
+        InfoContactPublishFlags get_contact_info_publish_flags(in ContactId contact_id)
         raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
 
