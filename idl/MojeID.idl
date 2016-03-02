@@ -192,7 +192,6 @@ module MojeID
 
     struct InfoContactPublishFlags
     {
-        ContactId id;
         boolean first_name;
         boolean last_name;
         boolean organization;
