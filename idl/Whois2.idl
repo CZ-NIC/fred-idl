@@ -71,20 +71,22 @@ module Whois
      * Domain data
      */
     struct Domain {
-        string              handle;                /**< fqdn */
-        string              registrant_handle;     /**< domain holder identifier */
-        StringSeq           admin_contact_handles; /**< list of domain administrative contacts identifiers */
-        NullableString      nsset_handle;          /**< nsset identifier */
-        NullableString      keyset_handle;         /**< keyset identifier */
-        string              registrar_handle;      /**< sponsoring registrar identifier */
-        StringSeq           statuses;              /**< list of status identifiers */
-        DateTime            registered;            /**< timestamp of creation */
-        NullableDateTime    changed;               /**< timestamp of last update */
-        NullableDateTime    last_transfer;         /**< timestamp of last transfer */
-        Date                expire;                /**< domain expiration date */
-        DateTime            expire_time_estimate;  /**< computed expiration date time according to obeject update status procedure run */
-        NullableDateTime    expire_time_actual;    /**< actual date time of expiration - time when 'expired' status was set */
-        NullableDate        validated_to;          /**< enum domain expiration date of validation */
+        string              handle;                     /**< fqdn */
+        string              registrant_handle;          /**< domain holder identifier */
+        StringSeq           admin_contact_handles;      /**< list of domain administrative contacts identifiers */
+        NullableString      nsset_handle;               /**< nsset identifier */
+        NullableString      keyset_handle;              /**< keyset identifier */
+        string              registrar_handle;           /**< sponsoring registrar identifier */
+        StringSeq           statuses;                   /**< list of status identifiers */
+        DateTime            registered;                 /**< timestamp of creation */
+        NullableDateTime    changed;                    /**< timestamp of last update */
+        NullableDateTime    last_transfer;              /**< timestamp of last transfer */
+        Date                expire;                     /**< domain expiration date */
+        DateTime            expire_time_estimate;       /**< computed expiration date time according to obeject update status procedure run */
+        NullableDateTime    expire_time_actual;         /**< actual date time of expiration - time when 'expired' status was set */
+        NullableDate        validated_to;               /**< enum domain expiration date of validation */
+        NullableDateTime    validated_to_time_estimate; /**< computed validation expiration date time according to obeject update status procedure run */
+        NullableDateTime    validated_to_time_actual;   /**< actual date time of expiration - time when 'not_validated' status was set */
     };
 
     typedef sequence<Domain> DomainSeq;
