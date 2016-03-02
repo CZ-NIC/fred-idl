@@ -82,10 +82,10 @@ module Whois
         NullableDateTime    changed;                    /**< timestamp of last update */
         NullableDateTime    last_transfer;              /**< timestamp of last transfer */
         Date                expire;                     /**< domain expiration date */
-        DateTime            expire_time_estimate;       /**< computed expiration date time according to obeject update status procedure run */
+        DateTime            expire_time_estimate;       /**< computed expiration date time according to object update status procedure run */
         NullableDateTime    expire_time_actual;         /**< actual date time of expiration - time when 'expired' status was set */
         NullableDate        validated_to;               /**< enum domain expiration date of validation */
-        NullableDateTime    validated_to_time_estimate; /**< computed validation expiration date time according to obeject update status procedure run */
+        NullableDateTime    validated_to_time_estimate; /**< computed validation expiration date time according to object update status procedure run */
         NullableDateTime    validated_to_time_actual;   /**< actual date time of expiration - time when 'not_validated' status was set */
     };
 
