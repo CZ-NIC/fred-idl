@@ -358,6 +358,7 @@ module MojeID
          * @param trans_id       database transaction identifier
          *                       for 2-phase commit
          * @param log_request_id associated request id in logger
+         * @param ident          (output) unique identifier of the created identification request
          *
          * @throw INTERNAL_SERVER_ERROR  in case of internal server error
          * @throw OBJECT_NOT_EXISTS      in case of contact isn't registered
@@ -373,7 +374,8 @@ module MojeID
             in string username,
             in UpdateTransferContact contact_data,
             in string trans_id,
-            in LogRequestId log_request_id)
+            in LogRequestId log_request_id,
+            out string ident)
         raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS, OBJECT_ADMIN_BLOCKED, OBJECT_USER_BLOCKED,
                 ALREADY_MOJEID_CONTACT, MESSAGE_LIMIT_EXCEEDED, REGISTRATION_VALIDATION_ERROR);
 
