@@ -251,6 +251,7 @@ module MojeID
             ValidationResult                 first_name;
             ValidationResult                 last_name;
             ValidationResult                 birth_date;
+            ValidationResult                 vat_id_num;
             ValidationResult                 email;
             ValidationResult                 notify_email;
             ValidationResult                 phone;
