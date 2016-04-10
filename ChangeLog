@@ -1,3 +1,7 @@
+2016-04-08 (2.24.0)
+
+   * mojeid interface reworked
+
 2016-01-20 (2.23.0)
 
    * new whois and rdap backend interface refactoring and add methods used by
