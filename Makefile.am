@@ -1,3 +1,5 @@
+ACLOCAL_AMFLAGS = -I m4
+
 idldir = $(datadir)/idl/fred
 dist_idl_DATA = ${srcdir}/idl/*.idl
 EXTRA_DIST = fred-idl.spec $(srcdir)/doc/Doxyfile \
