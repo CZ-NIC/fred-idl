@@ -1,0 +1,47 @@
+#ifndef NOTIFICATION_IDL_
+#define NOTIFICATION_IDL_
+
+module Registry {
+
+    module Notification {
+
+        struct DomainEmail {
+            unsigned long long domain_id; ///< id of \c expired but not yet \c outboundUnguarded domain
+            string email;                 ///< additional email for notification of \c outboundUnguardedWarning state
+        };
+
+        typedef sequence<DomainEmail> DomainEmailSeq;
+
+        /// Exception for internal server error
+        exception INTERNAL_SERVER_ERROR {};
+
+        /// Exception for case when either domain_id or email is not valid
+        exception DOMAIN_EMAIL_VALIDATION_ERROR {
+            DomainEmailSeq domain_invalid_email_seq;
+        };
+
+        /**
+        * Notification interface
+        */
+        interface Server {
+
+            /**
+             * Import list of additional emails used to notify \c outboundUnguardedWarning domain state
+             *
+             * \param DomainEmailSeq   sequence of pairs <domain_id, email> to import
+             *
+             * \throw INTERNAL_SERVER_ERROR          in case of unexpected failure
+             * \throw DOMAIN_EMAIL_VALIDATION_ERROR  in case of invalid input
+             */
+            void set_domain_outzone_unguarded_warning_emails(in DomainEmailSeq domain_email_seq)
+                raises (DOMAIN_EMAIL_VALIDATION_ERROR, INTERNAL_SERVER_ERROR);
+
+        };
+
+    };
+
+};
+
+#endif
+
+/* vim: set et sw=4 : */
