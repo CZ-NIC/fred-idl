@@ -537,6 +537,22 @@ module MojeID
             raises (INTERNAL_SERVER_ERROR, OBJECT_EXISTS, OBJECT_NOT_EXISTS,
                     VALIDATION_ALREADY_PROCESSED, CREATE_VALIDATION_REQUEST_VALIDATION_ERROR);
 
+        /**
+         * sets flag validatedContact to the contact
+         *
+         * @param contact_id      contact id
+         * @param log_request_id  associated request id in logger
+         *
+         * @throw OBJECT_NOT_EXISTS in case contact_id isn't registered or isn't mojeID contact
+         * @throw VALIDATION_ALREADY_PROCESSED in case contact_id is already validated
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         */
+        void validate_contact(
+                in ContactId contact_id,
+                in LogRequestId log_request_id) 
+            raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS,
+                    VALIDATION_ALREADY_PROCESSED, CREATE_VALIDATION_REQUEST_VALIDATION_ERROR);
+
 
         /**
          * Get list of infos about states of those contacts which states changed in past `last_hours` hours.
