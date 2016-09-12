@@ -2,6 +2,8 @@
 
    * mojeid - method for direct contact validation
 
+   * new interface method for custom e-mail notification about domain going outzone (after expiration)
+
 2016-04-08 (2.24.0)
 
    * mojeid interface reworked
