@@ -8,12 +8,12 @@ module Registry
 module PublicRequest
 {
 
-enum ObjectType
+enum ObjectType_PR
 {
-    CONTACT,
-    NSSET,
-    DOMAIN,
-    KEYSET
+    contact,
+    nsset,
+    domain,
+    keyset
 };
 
 enum ConfirmationMethod
@@ -40,7 +40,7 @@ exception OBJECT_NOT_BLOCKED {};
 interface PublicRequestIntf
 {
     unsigned long long create_authinfo_request_registry_email(
-        in ObjectType object_type,
+        in ObjectType_PR object_type,
         in string object_handle,
         in string reason,
         in NullableULongLong log_request_id
@@ -48,7 +48,7 @@ interface PublicRequestIntf
         raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR); // think exceptions over
 
     unsigned long long create_authinfo_request_non_registry_email(
-        in ObjectType object_type,
+        in ObjectType_PR object_type,
         in string object_handle,
         in string reason,
         in NullableULongLong log_request_id,
@@ -58,7 +58,7 @@ interface PublicRequestIntf
         raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, INVALID_EMAIL);
 
     unsigned long long create_block_unblock_request(
-        in ObjectType object_type,
+        in ObjectType_PR object_type,
         in string object_handle,
         in NullableULongLong log_request_id,
         in ConfirmationMethod confirmation_method,
