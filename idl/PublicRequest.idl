@@ -1,5 +1,5 @@
-#ifndef PUBLIC_REGISTRY_IDL_761243517
-#define PUBLIC_REGISTRY_IDL_761243517
+#ifndef PUBLIC_REQUEST_IDL_761243517
+#define PUBLIC_REQUEST_IDL_761243517
 
 #include "NullableTypes.idl"
 
@@ -45,7 +45,7 @@ interface PublicRequestIntf
         in string reason,
         in NullableULongLong log_request_id
     )
-        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR); // think exceptions over
+        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR);
 
     unsigned long long create_authinfo_request_non_registry_email(
         in ObjectType_PR object_type,
@@ -70,4 +70,5 @@ interface PublicRequestIntf
 }; // PublicRequest
 }; // Registry
 
-#endif // PUBLIC_REGISTRY_IDL_761243517
+#endif // PUBLIC_REQUEST_IDL_761243517
+ 
