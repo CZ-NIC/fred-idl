@@ -45,7 +45,7 @@ interface PublicRequestIntf
         in string reason,
         in NullableULongLong log_request_id
     )
-        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR);
+        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, INVALID_EMAIL);
 
     unsigned long long create_authinfo_request_non_registry_email(
         in ObjectType_PR object_type,
