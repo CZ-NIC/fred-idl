@@ -44,6 +44,8 @@ exception INTERNAL_SERVER_ERROR {};
 exception INVALID_EMAIL {};
 exception OBJECT_ALREADY_BLOCKED {};
 exception OBJECT_NOT_BLOCKED {};
+exception HAS_DIFFERENT_BLOCK {};
+exception INVALID_PUBLIC_REQUEST_TYPE {};
 
 interface PublicRequestIntf
 {
@@ -72,7 +74,10 @@ interface PublicRequestIntf
         in ConfirmationMethod confirmation_method,
         in LockRequestType lock_request_type
     )
-        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, OBJECT_ALREADY_BLOCKED, OBJECT_NOT_BLOCKED);
+        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, OBJECT_ALREADY_BLOCKED, OBJECT_NOT_BLOCKED, HAS_DIFFERENT_BLOCK);
+
+    Buffer create_public_request_pdf(in unsigned long long public_request_id, in Language lang)
+        raises (INTERNAL_SERVER_ERROR, INVALID_PUBLIC_REQUEST_TYPE, OBJECT_NOT_FOUND);
 };
 
 }; // PublicRequest
