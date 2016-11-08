@@ -10,10 +10,7 @@ module PublicRequest
 
 enum ObjectType_PR
 {
-    contact,
-    nsset,
-    domain,
-    keyset
+    contact, nsset, domain, keyset
 };
 
 enum ConfirmationMethod
@@ -71,4 +68,3 @@ interface PublicRequestIntf
 }; // Registry
 
 #endif // PUBLIC_REQUEST_IDL_761243517
- 
