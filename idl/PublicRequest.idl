@@ -19,8 +19,7 @@ enum ConfirmationMethod
     LETTER_WITH_AUTHENTICATED_SIGNATURE
 };
 
-// renamed as in domain browser
-enum LockRequestType
+enum LockRequestType // renamed as in domain browser
 {
     BLOCK_TRANSFER,
     BLOCK_TRANSFER_AND_UPDATE,
