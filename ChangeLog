@@ -1,3 +1,7 @@
+2016-11-22 (2.25.1)
+
+   * daphne idl fix - import new idl (Notification.idl) in ccReg.idl
+
 2016-09-07 (2.25.0)
 
    * mojeid - method for direct contact validation
