@@ -16,10 +16,10 @@ enum ObjectType_PR
     keyset
 };
 
-enum ConfirmationMethod
+enum ConfirmedBy
 {
-    EMAIL_WITH_QUALIFIED_CERTIFICATE,
-    LETTER_WITH_AUTHENTICATED_SIGNATURE
+    SIGNED_EMAIL,
+    NOTARIZED_LETTER
 };
 
 enum LockRequestType // renamed as in domain browser
@@ -64,7 +64,7 @@ interface PublicRequestIntf
         in ObjectType_PR object_type,
         in string object_handle,
         in NullableULongLong log_request_id,
-        in ConfirmationMethod confirmation_method,
+        in ConfirmedBy confirmation_method,
         in string specified_email
     )
         raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, INVALID_EMAIL);
@@ -73,7 +73,7 @@ interface PublicRequestIntf
         in ObjectType_PR object_type,
         in string object_handle,
         in NullableULongLong log_request_id,
-        in ConfirmationMethod confirmation_method,
+        in ConfirmedBy confirmation_method,
         in LockRequestType lock_request_type
     )
         raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, OBJECT_ALREADY_BLOCKED, OBJECT_NOT_BLOCKED, HAS_DIFFERENT_BLOCK);
