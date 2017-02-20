@@ -8,32 +8,44 @@ module Registry
 module PublicRequest
 {
 
-enum ObjectType_PR
+module ObjectType_PR
 {
-    contact,
-    nsset,
-    domain,
-    keyset
+    enum Type
+    {
+        contact,
+        nsset,
+        domain,
+        keyset
+    };
 };
 
-enum ConfirmedBy
+module ConfirmedBy
 {
-    SIGNED_EMAIL,
-    NOTARIZED_LETTER
+    enum Type
+    {
+        signed_email,
+        notarized_letter
+    };
 };
 
-enum LockRequestType // renamed as in domain browser
+module LockRequestType // renamed as in domain browser
 {
-    BLOCK_TRANSFER,
-    BLOCK_TRANSFER_AND_UPDATE,
-    UNBLOCK_TRANSFER,
-    UNBLOCK_TRANSFER_AND_UPDATE
+    enum Type
+    {
+        block_transfer,
+        block_transfer_and_update,
+        unblock_transfer,
+        unblock_transfer_and_update
+    };
 };
 
-enum Language
+module Language
 {
-    CS,
-    EN
+    enum Type
+    {
+        cs,
+        en
+    };
 };
 
 typedef sequence<octet> BufferValue;
@@ -54,31 +66,31 @@ exception INVALID_PUBLIC_REQUEST_TYPE {};
 interface PublicRequestIntf
 {
     unsigned long long create_authinfo_request_registry_email(
-        in ObjectType_PR object_type,
+        in ObjectType_PR::Type object_type,
         in string object_handle,
         in NullableULongLong log_request_id
     )
         raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, INVALID_EMAIL);
 
     unsigned long long create_authinfo_request_non_registry_email(
-        in ObjectType_PR object_type,
+        in ObjectType_PR::Type object_type,
         in string object_handle,
         in NullableULongLong log_request_id,
-        in ConfirmedBy confirmation_method,
+        in ConfirmedBy::Type confirmation_method,
         in string specified_email
     )
         raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, INVALID_EMAIL);
 
     unsigned long long create_block_unblock_request(
-        in ObjectType_PR object_type,
+        in ObjectType_PR::Type object_type,
         in string object_handle,
         in NullableULongLong log_request_id,
-        in ConfirmedBy confirmation_method,
-        in LockRequestType lock_request_type
+        in ConfirmedBy::Type confirmation_method,
+        in LockRequestType::Type lock_request_type
     )
         raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, OBJECT_ALREADY_BLOCKED, OBJECT_NOT_BLOCKED, HAS_DIFFERENT_BLOCK);
 
-    Buffer create_public_request_pdf(in unsigned long long public_request_id, in Language lang)
+    Buffer create_public_request_pdf(in unsigned long long public_request_id, in Language::Type lang)
         raises (INTERNAL_SERVER_ERROR, INVALID_PUBLIC_REQUEST_TYPE, OBJECT_NOT_FOUND);
 };
 
