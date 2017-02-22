@@ -154,6 +154,7 @@ module ccReg {
     string svTRID; ///< Server transaction ID
   };
   /// Type for address - so far used only for mailing address because there is no time for broader refactoring
+  ///                  - doesn't contain Name and Organization parts of address, which are shared with main address
   struct AddressData
   {
     string Street1; ///< street - line #1
@@ -167,16 +168,21 @@ module ccReg {
   /// Optional AddressData type emulation
   struct OptionalAddressData
   {
-    boolean is_set;        ///< set/unset flag; if is_set == FALSE then data must not be interpreted
-    AddressData data;   ///< data of address when is_set == TRUE
+    boolean is_set;     ///< set/unset flag; if not is_set then data must not be interpreted
+    AddressData data;   ///< data of address when is_set
   };
   /// Address action
-  enum AddressAction {set, rem, no_change};
+  enum AddressAction
+  {
+    set,
+    remove,
+    no_change
+  };
   /// AddressChange
   struct AddressChange
   {
     AddressAction action;   ///< action
-    AddressData data;       ///< data of address when action makes sense
+    AddressData data;       ///< address data when action == "set"
   };
 
   /// Type for transfer data after info_contact call 
