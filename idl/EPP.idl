@@ -228,7 +228,7 @@ module ccReg {
   struct ContactData
   {
     string Name; ///< Contact name or title
-    string Organization; ///< Organisation name
+    string Organization; ///< Organization name
     Lists Streets; ///< Address - maximum is 3 parts
     string City; ///< Address - city
     string StateOrProvince; ///< Address - region(country part)
