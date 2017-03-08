@@ -4,7 +4,7 @@
 #include "Mailer.idl"
 #include "Whois.idl"
 #include "Admin.idl"
-
+#include "PublicRequest.idl"
 
 #include "EPP.idl"
 #include "ZoneGenerator.idl"
