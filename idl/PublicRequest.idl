@@ -1,0 +1,100 @@
+#ifndef PUBLIC_REQUEST_IDL_761243517
+#define PUBLIC_REQUEST_IDL_761243517
+
+#include "NullableTypes.idl"
+
+module Registry
+{
+module PublicRequest
+{
+
+module ObjectType_PR
+{
+    enum Type
+    {
+        contact,
+        nsset,
+        domain,
+        keyset
+    };
+};
+
+module ConfirmedBy
+{
+    enum Type
+    {
+        signed_email,
+        notarized_letter
+    };
+};
+
+module LockRequestType // renamed as in domain browser
+{
+    enum Type
+    {
+        block_transfer,
+        block_transfer_and_update,
+        unblock_transfer,
+        unblock_transfer_and_update
+    };
+};
+
+module Language
+{
+    enum Type
+    {
+        cs,
+        en
+    };
+};
+
+typedef sequence<octet> BufferValue;
+
+struct Buffer
+{
+    BufferValue value;
+};
+
+exception OBJECT_NOT_FOUND {};
+exception INTERNAL_SERVER_ERROR {};
+exception INVALID_EMAIL {};
+exception OBJECT_ALREADY_BLOCKED {};
+exception OBJECT_NOT_BLOCKED {};
+exception HAS_DIFFERENT_BLOCK {};
+exception INVALID_PUBLIC_REQUEST_TYPE {};
+
+interface PublicRequestIntf
+{
+    unsigned long long create_authinfo_request_registry_email(
+        in ObjectType_PR::Type object_type,
+        in string object_handle,
+        in NullableULongLong log_request_id
+    )
+        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, INVALID_EMAIL);
+
+    unsigned long long create_authinfo_request_non_registry_email(
+        in ObjectType_PR::Type object_type,
+        in string object_handle,
+        in NullableULongLong log_request_id,
+        in ConfirmedBy::Type confirmation_method,
+        in string specified_email
+    )
+        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, INVALID_EMAIL);
+
+    unsigned long long create_block_unblock_request(
+        in ObjectType_PR::Type object_type,
+        in string object_handle,
+        in NullableULongLong log_request_id,
+        in ConfirmedBy::Type confirmation_method,
+        in LockRequestType::Type lock_request_type
+    )
+        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, OBJECT_ALREADY_BLOCKED, OBJECT_NOT_BLOCKED, HAS_DIFFERENT_BLOCK);
+
+    Buffer create_public_request_pdf(in unsigned long long public_request_id, in Language::Type lang)
+        raises (INTERNAL_SERVER_ERROR, INVALID_PUBLIC_REQUEST_TYPE, OBJECT_NOT_FOUND);
+};
+
+}; // PublicRequest
+}; // Registry
+
+#endif // PUBLIC_REQUEST_IDL_761243517
