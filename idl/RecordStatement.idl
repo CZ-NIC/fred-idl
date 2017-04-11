@@ -1,0 +1,170 @@
+/*
+ * Copyright (C) 2017  CZ.NIC, z.s.p.o.
+ *
+ * This file is part of FRED.
+ *
+ * FRED is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 2 of the License.
+ *
+ * FRED is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with FRED.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/**
+ * @file
+ * registry record statement printout interface
+ */
+
+
+#ifndef RECORD_STATEMENT_IDL_D5FC9FAF5786462690CD9E099CF32973
+#define RECORD_STATEMENT_IDL_D5FC9FAF5786462690CD9E099CF32973
+
+module Registry {
+module RecordStatement {
+
+    struct DateTime
+    {
+        string value;///< RFC3339 format like: YYYY-MM-DDTHH:MM:SS+ZZ:ZZ, YYYY-MM-DDTHH:MM:SS-ZZ:ZZ or YYYY-MM-DDTHH:MM:SSZ, in case of missing zone offset, it is considered to be time in UTC
+    };
+
+    exception INTERNAL_SERVER_ERROR { };
+    exception OBJECT_NOT_FOUND { };
+    exception INVALID_TIMESTAMP { };
+
+    typedef sequence<octet> BufferData;
+
+    struct PdfBuffer
+    {
+        BufferData data;
+    };
+
+    interface Server
+    {
+
+        /**
+         * Registry printout of current domain data, hidden/revealed according to discloseflags.
+         * @param fqdn is fully qualified domain name with optional root dot
+         * @param is_private_printout if true, reveal domain owner information regardless of discloseflags and include discloseflags values,
+         *  if false, hide domain owner information according to discloseflags and do not include discloseflags values
+         * @throw OBJECT_NOT_FOUND in case of incorrect input data
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @return buffer with signed pdf printout
+         */
+        PdfBuffer domain_printout(in string fqdn, in boolean is_private_printout) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+
+        /**
+         * Registry printout of current nsset data.
+         * @param handle  nsset identifier
+         * @throw OBJECT_NOT_FOUND in case of incorrect input data
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @return buffer with signed pdf printout
+         */
+        PdfBuffer nsset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+
+        /**
+         * Registry printout of current keyset data.
+         * @param handle  keyset identifier
+         * @throw OBJECT_NOT_FOUND in case of incorrect input data
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @return buffer with signed pdf printout
+         */
+        PdfBuffer keyset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+
+        /**
+         * Registry printout of current contact data, hidden/revealed according to discloseflags.
+         * @param handle  contact identifier
+         * @param is_private_printout if true, reveal information regardless of discloseflags and include discloseflags values,
+         *  if false, hide information according to discloseflags and do not include discloseflags values
+         * @throw OBJECT_NOT_FOUND in case of incorrect input data
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @return buffer with signed pdf printout
+         */
+        PdfBuffer contact_printout(in string handle, in boolean is_private_printout) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+
+        /**
+         * Registry printout of private historic domain data.
+         * @param fqdn  fully qualified domain name with optional root dot
+         * @param timestamp  printout data at given time
+         * @throw OBJECT_NOT_FOUND in case of incorrect input data
+         * @throw INVALID_TIMESTAMP in case of invalid timestamp
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @return buffer with signed pdf printout
+         */
+        PdfBuffer historic_domain_printout(in string fqdn, in DateTime timestamp) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_TIMESTAMP);
+
+        /**
+         * Registry printout of historic nsset data.
+         * @param handle  nsset identifier
+         * @param timestamp  printout data at given time
+         * @throw OBJECT_NOT_FOUND in case of incorrect input data
+         * @throw INVALID_TIMESTAMP in case of invalid timestamp
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @return buffer with signed pdf printout
+         */
+        PdfBuffer historic_nsset_printout(in string handle, in DateTime timestamp) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_TIMESTAMP);
+
+        /**
+         * Registry printout of historic keyset data.
+         * @param handle  keyset identifier
+         * @param timestamp  printout data at given time
+         * @throw OBJECT_NOT_FOUND in case of incorrect input data
+         * @throw INVALID_TIMESTAMP in case of invalid timestamp
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @return buffer with signed pdf printout
+         */
+        PdfBuffer historic_keyset_printout(in string handle, in DateTime timestamp) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_TIMESTAMP);
+
+        /**
+         * Registry printout of private historic contact data.
+         * @param handle  contact identifier
+         * @param timestamp  printout data at given time
+         * @throw OBJECT_NOT_FOUND in case of incorrect input data
+         * @throw INVALID_TIMESTAMP in case of invalid timestamp
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         * @return buffer with signed pdf printout
+         */
+        PdfBuffer historic_contact_printout(in string handle, in DateTime timestamp) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_TIMESTAMP);
+
+        /**
+         * Send registry printout of current private domain data, to owner's email.
+         * @param fqdn  fully qualified domain name with optional root dot
+         * @throw OBJECT_NOT_FOUND in case of incorrect input data
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         */
+        void send_domain_printout(in string fqdn) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+
+        /**
+         * Send registry printout of current nsset data, to emails of all technical contacts.
+         * @param handle  nsset identifier
+         * @throw OBJECT_NOT_FOUND in case of incorrect input data
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         */
+        void send_nsset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+
+        /**
+         * Send registry printout of current keyset data to emails of all technical contacts.
+         * @param handle  keyset identifier
+         * @throw OBJECT_NOT_FOUND in case of incorrect input data
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         */
+        void send_keyset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+
+        /**
+         * Send registry printout of current private contact data to its email.
+         * @param handle  contact identifier
+         * @throw OBJECT_NOT_FOUND in case of incorrect input data
+         * @throw INTERNAL_SERVER_ERROR in case of internal server error
+         */
+        void send_contact_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+    };
+
+};
+};
+
+#endif

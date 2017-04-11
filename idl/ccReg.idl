@@ -15,6 +15,7 @@
 #include "AdministrativeBlocking.idl"
 #include "AdminContactVerification.idl"
 #include "Notification.idl"
+#include "RecordStatement.idl"
 
 // for zone handling
 #include "Zone.idl"
