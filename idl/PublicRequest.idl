@@ -56,12 +56,14 @@ struct Buffer
 };
 
 exception OBJECT_NOT_FOUND {};
+exception OBJECT_TRANSFER_PROHIBITED {};
 exception INTERNAL_SERVER_ERROR {};
 exception INVALID_EMAIL {};
 exception OBJECT_ALREADY_BLOCKED {};
 exception OBJECT_NOT_BLOCKED {};
 exception HAS_DIFFERENT_BLOCK {};
 exception INVALID_PUBLIC_REQUEST_TYPE {};
+exception OPERATION_PROHIBITED {};
 
 interface PublicRequestIntf
 {
@@ -70,7 +72,7 @@ interface PublicRequestIntf
         in string object_handle,
         in NullableULongLong log_request_id
     )
-        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, INVALID_EMAIL);
+        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, INVALID_EMAIL, OBJECT_TRANSFER_PROHIBITED);
 
     unsigned long long create_authinfo_request_non_registry_email(
         in ObjectType_PR::Type object_type,
@@ -79,7 +81,7 @@ interface PublicRequestIntf
         in ConfirmedBy::Type confirmation_method,
         in string specified_email
     )
-        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, INVALID_EMAIL);
+        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, INVALID_EMAIL, OBJECT_TRANSFER_PROHIBITED);
 
     unsigned long long create_block_unblock_request(
         in ObjectType_PR::Type object_type,
@@ -88,13 +90,14 @@ interface PublicRequestIntf
         in ConfirmedBy::Type confirmation_method,
         in LockRequestType::Type lock_request_type
     )
-        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, OBJECT_ALREADY_BLOCKED, OBJECT_NOT_BLOCKED, HAS_DIFFERENT_BLOCK);
+        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, OBJECT_ALREADY_BLOCKED, OBJECT_NOT_BLOCKED, HAS_DIFFERENT_BLOCK,
+                OPERATION_PROHIBITED);
 
     Buffer create_public_request_pdf(in unsigned long long public_request_id, in Language::Type lang)
         raises (INTERNAL_SERVER_ERROR, INVALID_PUBLIC_REQUEST_TYPE, OBJECT_NOT_FOUND);
 };
 
-}; // PublicRequest
+}; // Registry::PublicRequest
 }; // Registry
 
 #endif // PUBLIC_REQUEST_IDL_761243517
