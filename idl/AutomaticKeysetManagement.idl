@@ -1,0 +1,116 @@
+#ifndef AUTOMATIC_KEYSET_MANAGEMENT_IDL_493A3DF87D8741E49171C1739F228657
+#define AUTOMATIC_KEYSET_MANAGEMENT_IDL_493A3DF87D8741E49171C1739F228657
+
+module Registry {
+module AutomaticKeysetManagement {
+
+exception OBJECT_NOT_EXIST {};
+exception DOMAIN_HAS_OTHER_KEYSET_CANNOT_MANAGE_AUTOMATICALLY {};
+exception CURRENT_NSSET_DIFFERS {};
+exception NEW_KEYSET_NOT_ACCEPTED_BREAKS_CONTINUITY {};
+exception INTERNAL_SERVER_ERROR {};
+
+typedef sequence<string> NameserverSeq;
+
+/**
+ * Nameserver set data
+ */
+struct Nsset {
+    NameserverSeq nameservers;             /**< list of nameservers */
+};
+
+/**
+ * DNSKEY Resource Record data (rfc4034)
+ */
+struct DnsKey {
+    short flags;
+    short protocol;
+    short alg;
+    string public_key;
+};
+
+typedef sequence<DnsKey> DnsKeySeq;
+
+/**
+ * Keyset data (set of dnskeys)
+ */
+struct Keyset {
+    DnsKeySeq dns_keys;             /**< list of dnskeys */
+};
+
+struct Domain {
+    unsigned long long id;
+    string fqdn;
+};
+
+typedef sequence <Domain> DomainSeq;
+
+struct NameserverDomains {
+    string nameserver;
+    DomainSeq nameserver_domains;
+};
+
+typedef sequence <NameserverDomains> NameserverDomainsSeq;
+
+interface AutomaticKeysetManagementIntf
+{
+
+  /**
+   * Get list of nameservers with domains, whose keysets should be managed automatically.
+   *
+   * Domains with flag AutomaticKeysetManagement and without any keyset are candidates
+   * for automatic keyset management.
+   *
+   * @returns NameserverDomainsSeq - list of nameservers with domains whose keysets should be managed automatically
+   *
+   * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
+   */
+  NameserverDomainsSeq get_nameservers_with_automatically_managed_domain_candidates()
+      raises (INTERNAL_SERVER_ERROR);
+
+    /**
+     * Get list of nameservers with domains, whose keysets are managed automatically.
+     *
+     * Domains with
+     * - flag AutomaticKeysetManagement and
+     * - linked keyset with
+     *    - specific registrar and
+     *    - specific technical contact
+     * have their keyset managed automatically.
+     *
+     * @returns NameserverDomainsSeq - list of nameservers with domains whose keysets are managed automatically
+     *
+     * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
+     */
+    NameserverDomainsSeq get_nameservers_with_automatically_managed_domains()
+        raises (INTERNAL_SERVER_ERROR);/**
+
+    /**
+     * Reconfigure domain so that its keyset is managed automatically.
+     *
+     * @param `domain_id`  domain to be configured
+     * @param `domain_nameservers`  list of domain nameservers
+     * @param `dns_keys`  list of DNSKEYs for domain keyset
+     *
+     * @throws OBJECT_NOT_EXIST  in case of TODO
+     * @throws DOMAIN_HAS_OTHER_KEYSET_CANNOT_MANAGE_AUTOMATICALLY  in case of TODO
+     * @throws CURRENT_NSSET_DIFFERS  in case of TODO
+     * @throws CURRENT_KEYSET_DIFFERS  in case of TODO
+     * @throws NEW_KEYSET_NOT_ACCEPTED_BREAKS_CONTINUITY  in case of TODO
+     * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
+     */
+    void domain_automatic_keyset_update(
+            in unsigned long long domain_id,
+            in Nsset current_nsset,
+            in Keyset new_keyset)
+        raises (OBJECT_NOT_EXIST,
+                DOMAIN_HAS_OTHER_KEYSET_CANNOT_MANAGE_AUTOMATICALLY,
+                CURRENT_NSSET_DIFFERS,
+                NEW_KEYSET_NOT_ACCEPTED_BREAKS_CONTINUITY,
+                INTERNAL_SERVER_ERROR);
+};
+
+}; // Registry::AutomaticKeysetManagement
+}; // Registry
+
+#endif
