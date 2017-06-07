@@ -52,6 +52,8 @@ struct NameserverDomains {
 
 typedef sequence <NameserverDomains> NameserverDomainsSeq;
 
+typedef sequence <string> TechContactSeq;
+
 interface AutomaticKeysetManagementIntf
 {
 
@@ -92,14 +94,14 @@ interface AutomaticKeysetManagementIntf
      * @param `domain_nameservers`  list of domain nameservers
      * @param `dns_keys`  list of DNSKEYs for domain keyset
      *
-     * @throws OBJECT_NOT_EXIST  in case of TODO
+     * @throws OBJECT_NOT_EXIST  if domain with `domain_id` is not found in the registry
      * @throws DOMAIN_HAS_OTHER_KEYSET_CANNOT_MANAGE_AUTOMATICALLY  in case of TODO
      * @throws CURRENT_NSSET_DIFFERS  in case of TODO
      * @throws CURRENT_KEYSET_DIFFERS  in case of TODO
      * @throws NEW_KEYSET_NOT_ACCEPTED_BREAKS_CONTINUITY  in case of TODO
      * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
      */
-    void domain_automatic_keyset_update(
+    void update_domain_automatic_keyset(
             in unsigned long long domain_id,
             in Nsset current_nsset,
             in Keyset new_keyset)
@@ -108,6 +110,22 @@ interface AutomaticKeysetManagementIntf
                 CURRENT_NSSET_DIFFERS,
                 NEW_KEYSET_NOT_ACCEPTED_BREAKS_CONTINUITY,
                 INTERNAL_SERVER_ERROR);
+
+    /**
+     * Get tech contacts of domain's nsset.
+     *
+     * @param domain_id
+     *
+     * @returns  sequence of technical contacts of the nsset linked to the domain with the `domain_id` 
+     *
+     * @throws OBJECT_NOT_EXIST  if domain with `domain_id` is not found in the registry
+     * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
+     */
+    TechContactSeq get_domain_nsset_tech_contacts(
+            in unsigned long long domain_id)
+        raises (OBJECT_NOT_EXIST,
+                INTERNAL_SERVER_ERROR);
+
 };
 
 }; // Registry::AutomaticKeysetManagement
