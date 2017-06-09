@@ -4,11 +4,16 @@
 module Registry {
 module AutomaticKeysetManagement {
 
-exception OBJECT_NOT_EXIST {};
-exception DOMAIN_HAS_OTHER_KEYSET_CANNOT_MANAGE_AUTOMATICALLY {};
-exception CURRENT_NSSET_DIFFERS {};
-exception NEW_KEYSET_NOT_ACCEPTED_BREAKS_CONTINUITY {};
+exception OBJECT_NOT_FOUND {};
+exception NSSET_INVALID {};
+exception KEYSET_INVALID {};
+exception NSSET_DIFFERS {};
+exception DOMAIN_HAS_OTHER_KEYSET {};
+exception DOMAIN_STATE_POLICY_ERROR {};
+exception SYSTEM_REGISTRATOR_NOT_FOUND {};
+exception CONFIGURATION_ERROR {};
 exception INTERNAL_SERVER_ERROR {};
+
 
 typedef sequence<string> NameserverSeq;
 
@@ -94,21 +99,28 @@ interface AutomaticKeysetManagementIntf
      * @param `domain_nameservers`  list of domain nameservers
      * @param `dns_keys`  list of DNSKEYs for domain keyset
      *
-     * @throws OBJECT_NOT_EXIST  if domain with `domain_id` is not found in the registry
-     * @throws DOMAIN_HAS_OTHER_KEYSET_CANNOT_MANAGE_AUTOMATICALLY  in case of TODO
-     * @throws CURRENT_NSSET_DIFFERS  in case of TODO
-     * @throws CURRENT_KEYSET_DIFFERS  in case of TODO
-     * @throws NEW_KEYSET_NOT_ACCEPTED_BREAKS_CONTINUITY  in case of TODO
+     * @throws OBJECT_NOT_FOUND  if domain with `domain_id` is not found in the registry
+     * @throws NSSET_INVALID  TODO
+     * @throws KEYSET_INVALID  TODO
+     * @throws NSSET_DIFFERS  TODO
+     * @throws DOMAIN_HAS_OTHER_KEYSET TODO
+     * @throws DOMAIN_STATE_POLICY_ERROR  TODO
+     * @throws SYSTEM_REGISTRATOR_NOT_FOUND  TODO
+     * @throws CONFIGURATION_ERROR  TODO
      * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
      */
     void update_domain_automatic_keyset(
             in unsigned long long domain_id,
             in Nsset current_nsset,
             in Keyset new_keyset)
-        raises (OBJECT_NOT_EXIST,
-                DOMAIN_HAS_OTHER_KEYSET_CANNOT_MANAGE_AUTOMATICALLY,
-                CURRENT_NSSET_DIFFERS,
-                NEW_KEYSET_NOT_ACCEPTED_BREAKS_CONTINUITY,
+        raises (OBJECT_NOT_FOUND,
+                NSSET_INVALID,
+                KEYSET_INVALID,
+                NSSET_DIFFERS,
+                DOMAIN_HAS_OTHER_KEYSET,
+                DOMAIN_STATE_POLICY_ERROR,
+                SYSTEM_REGISTRATOR_NOT_FOUND,
+                CONFIGURATION_ERROR,
                 INTERNAL_SERVER_ERROR);
 
     /**
@@ -118,12 +130,12 @@ interface AutomaticKeysetManagementIntf
      *
      * @returns  sequence of technical contacts of the nsset linked to the domain with the `domain_id` 
      *
-     * @throws OBJECT_NOT_EXIST  if domain with `domain_id` is not found in the registry
+     * @throws OBJECT_NOT_FOUND  if domain with `domain_id` is not found in the registry
      * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
      */
     TechContactSeq get_domain_nsset_tech_contacts(
             in unsigned long long domain_id)
-        raises (OBJECT_NOT_EXIST,
+        raises (OBJECT_NOT_FOUND,
                 INTERNAL_SERVER_ERROR);
 
 };
