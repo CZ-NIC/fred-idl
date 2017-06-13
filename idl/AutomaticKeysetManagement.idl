@@ -10,6 +10,7 @@ exception KEYSET_INVALID {};
 exception NSSET_DIFFERS {};
 exception DOMAIN_HAS_OTHER_KEYSET {};
 exception DOMAIN_STATE_POLICY_ERROR {};
+exception KEYSET_STATE_POLICY_ERROR {};
 exception SYSTEM_REGISTRATOR_NOT_FOUND {};
 exception CONFIGURATION_ERROR {};
 exception INTERNAL_SERVER_ERROR {};
@@ -105,6 +106,7 @@ interface AutomaticKeysetManagementIntf
      * @throws NSSET_DIFFERS  TODO
      * @throws DOMAIN_HAS_OTHER_KEYSET TODO
      * @throws DOMAIN_STATE_POLICY_ERROR  TODO
+     * @throws KEYSET_STATE_POLICY_ERROR  TODO
      * @throws SYSTEM_REGISTRATOR_NOT_FOUND  TODO
      * @throws CONFIGURATION_ERROR  TODO
      * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
@@ -119,6 +121,7 @@ interface AutomaticKeysetManagementIntf
                 NSSET_DIFFERS,
                 DOMAIN_HAS_OTHER_KEYSET,
                 DOMAIN_STATE_POLICY_ERROR,
+                KEYSET_STATE_POLICY_ERROR,
                 SYSTEM_REGISTRATOR_NOT_FOUND,
                 CONFIGURATION_ERROR,
                 INTERNAL_SERVER_ERROR);
