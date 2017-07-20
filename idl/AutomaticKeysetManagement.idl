@@ -5,13 +5,13 @@ module Registry {
 module AutomaticKeysetManagement {
 
 exception OBJECT_NOT_FOUND {};
-exception NSSET_INVALID {};
-exception KEYSET_INVALID {};
-exception NSSET_DIFFERS {};
+exception NSSET_IS_EMPTY {};
+exception DOMAIN_NSSET_IS_EMPTY {};
+exception KEYSET_IS_INVALID {};
+exception NSSET_IS_DIFFERENT {};
 exception DOMAIN_HAS_OTHER_KEYSET {};
 exception DOMAIN_STATE_POLICY_ERROR {};
 exception KEYSET_STATE_POLICY_ERROR {};
-exception SYSTEM_REGISTRATOR_NOT_FOUND {};
 exception CONFIGURATION_ERROR {};
 exception INTERNAL_SERVER_ERROR {};
 
@@ -49,16 +49,16 @@ struct Domain {
     string fqdn;
 };
 
-typedef sequence <Domain> DomainSeq;
+typedef sequence<Domain> DomainSeq;
 
 struct NameserverDomains {
     string nameserver;
     DomainSeq nameserver_domains;
 };
 
-typedef sequence <NameserverDomains> NameserverDomainsSeq;
+typedef sequence<NameserverDomains> NameserverDomainsSeq;
 
-typedef sequence <string> TechContactSeq;
+typedef sequence<string> EmailAddressSeq;
 
 interface AutomaticKeysetManagementIntf
 {
@@ -91,24 +91,24 @@ interface AutomaticKeysetManagementIntf
      * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
      */
     NameserverDomainsSeq get_nameservers_with_automatically_managed_domains()
-        raises (INTERNAL_SERVER_ERROR);/**
+        raises (INTERNAL_SERVER_ERROR);
 
     /**
      * Reconfigure domain so that its keyset is managed automatically.
      *
      * @param `domain_id`  domain to be configured
-     * @param `domain_nameservers`  list of domain nameservers
-     * @param `dns_keys`  list of DNSKEYs for domain keyset
+     * @param `current_nsset`  list of domain nameservers
+     * @param `new_keyset`  list of DNSKEYs for domain keyset
      *
-     * @throws OBJECT_NOT_FOUND  if domain with `domain_id` is not found in the registry
-     * @throws NSSET_INVALID  TODO
-     * @throws KEYSET_INVALID  TODO
-     * @throws NSSET_DIFFERS  TODO
-     * @throws DOMAIN_HAS_OTHER_KEYSET TODO
-     * @throws DOMAIN_STATE_POLICY_ERROR  TODO
-     * @throws KEYSET_STATE_POLICY_ERROR  TODO
-     * @throws SYSTEM_REGISTRATOR_NOT_FOUND  TODO
-     * @throws CONFIGURATION_ERROR  TODO
+     * @throws OBJECT_NOT_FOUND  if the domain with `domain_id` is not found in the registry
+     * @throws NSSET_IS_EMPTY  if `current_nsset` has empty nameserver set
+     * @throws DOMAIN_NSSET_IS_EMPTY  if the nsset of the domain with `domain_id` has an empty nameserver set
+     * @throws KEYSET_IS_INVALID  if some of the keys included in the `new_keyset` is not a valid CDNSKEY
+     * @throws NSSET_IS_DIFFERENT  if `current_nsset` differs from the nsset of the domain with `domain_id`
+     * @throws DOMAIN_HAS_OTHER_KEYSET  if the domain with `domain_id` has other than "automatically managed keyset"
+     * @throws DOMAIN_STATE_POLICY_ERROR  if the state of the domain with `domain_id` prevents the action
+     * @throws KEYSET_STATE_POLICY_ERROR  if the state of the keyset of the domain with `domain_id` prevents the action
+     * @throws CONFIGURATION_ERROR  if server configuration is not valid
      * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
      */
     void update_domain_automatic_keyset(
@@ -116,18 +116,18 @@ interface AutomaticKeysetManagementIntf
             in Nsset current_nsset,
             in Keyset new_keyset)
         raises (OBJECT_NOT_FOUND,
-                NSSET_INVALID,
-                KEYSET_INVALID,
-                NSSET_DIFFERS,
+                NSSET_IS_EMPTY,
+                DOMAIN_NSSET_IS_EMPTY,
+                KEYSET_IS_INVALID,
+                NSSET_IS_DIFFERENT,
                 DOMAIN_HAS_OTHER_KEYSET,
                 DOMAIN_STATE_POLICY_ERROR,
                 KEYSET_STATE_POLICY_ERROR,
-                SYSTEM_REGISTRATOR_NOT_FOUND,
                 CONFIGURATION_ERROR,
                 INTERNAL_SERVER_ERROR);
 
     /**
-     * Get tech contacts of domain's nsset.
+     * Get the email addresses of the technical contacts of the nsset of the domain.
      *
      * @param domain_id
      *
@@ -136,7 +136,7 @@ interface AutomaticKeysetManagementIntf
      * @throws OBJECT_NOT_FOUND  if domain with `domain_id` is not found in the registry
      * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
      */
-    TechContactSeq get_nsset_notification_emails_by_domain_id(
+    EmailAddressSeq get_email_addresses_by_domain_id(
             in unsigned long long domain_id)
         raises (OBJECT_NOT_FOUND,
                 INTERNAL_SERVER_ERROR);
