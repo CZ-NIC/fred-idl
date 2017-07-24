@@ -10,7 +10,9 @@ exception DOMAIN_NSSET_IS_EMPTY {};
 exception KEYSET_IS_INVALID {};
 exception NSSET_IS_DIFFERENT {};
 exception DOMAIN_HAS_KEYSET {};
-exception DOMAIN_HAS_OTHER_KEYSET {};
+exception DOMAIN_DOES_NOT_HAVE_KEYSET {};
+exception DOMAIN_DOES_NOT_HAVE_AUTOMATICALLY_MANAGED_KEYSET {};
+exception DOMAIN_ALREADY_HAS_AUTOMATICALLY_MANAGED_KEYSET {};
 exception DOMAIN_STATE_POLICY_ERROR {};
 exception KEYSET_STATE_POLICY_ERROR {};
 exception CONFIGURATION_ERROR {};
@@ -23,7 +25,7 @@ typedef sequence<string> NameserverSeq;
  * Nameserver set data
  */
 struct Nsset {
-    NameserverSeq nameservers;             /**< list of nameservers */
+    NameserverSeq nameservers; /**< list of nameservers */
 };
 
 /**
@@ -42,7 +44,7 @@ typedef sequence<DnsKey> DnsKeySeq;
  * Keyset data (set of dnskeys)
  */
 struct Keyset {
-    DnsKeySeq dns_keys;             /**< list of dnskeys */
+    DnsKeySeq dns_keys; /**< list of dnskeys */
 };
 
 struct Domain {
@@ -67,14 +69,25 @@ interface AutomaticKeysetManagementIntf
   /**
    * Get list of nameservers with domains, whose keysets should be managed automatically.
    *
-   * Domains with flag AutomaticKeysetManagement and without any keyset are candidates
-   * for automatic keyset management.
+   * Domains without any keyset as insecure candidates for automatic keyset management.
    *
    * @returns NameserverDomainsSeq - list of nameservers with domains whose keysets should be managed automatically
    *
    * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
    */
-  NameserverDomainsSeq get_nameservers_with_automatically_managed_domain_candidates()
+  NameserverDomainsSeq get_nameservers_with_insecure_automatically_managed_domain_candidates()
+      raises (INTERNAL_SERVER_ERROR);
+
+  /**
+   * Get list of nameservers with domains, whose keysets should be managed automatically.
+   *
+   * Domains without automatically managed keyset but with other keyset as secure candidates for automatic keyset management.
+   *
+   * @returns NameserverDomainsSeq - list of nameservers with domains whose keysets should be managed automatically
+   *
+   * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
+   */
+  NameserverDomainsSeq get_nameservers_with_secure_automatically_managed_domain_candidates()
       raises (INTERNAL_SERVER_ERROR);
 
     /**
@@ -95,7 +108,7 @@ interface AutomaticKeysetManagementIntf
         raises (INTERNAL_SERVER_ERROR);
 
     /**
-     * Reconfigure domain so that its keyset is managed automatically.
+     * Create and attach an automatically managed keyset to the domain without keyset.
      *
      * @param `domain_id`  domain to be configured
      * @param `current_nsset`  list of domain nameservers
@@ -122,19 +135,19 @@ interface AutomaticKeysetManagementIntf
                 NSSET_IS_DIFFERENT,
                 DOMAIN_HAS_KEYSET,
                 DOMAIN_STATE_POLICY_ERROR,
-                KEYSET_STATE_POLICY_ERROR,
                 CONFIGURATION_ERROR,
                 INTERNAL_SERVER_ERROR);
 
     /**
-     * Reconfigure domain so that its keyset is managed automatically.
+     * Create and attach an automatically managed keyset to the domain with keyset.
      *
      * @param `domain_id`  domain to be configured
      * @param `new_keyset`  list of DNSKEYs for domain keyset
      *
      * @throws OBJECT_NOT_FOUND  if the domain with `domain_id` is not found in the registry
      * @throws KEYSET_IS_INVALID  if some of the keys included in the `new_keyset` is not a valid CDNSKEY
-     * @throws DOMAIN_HAS_OTHER_KEYSET  if the domain with `domain_id` has other than "automatically managed keyset"
+     * @throws DOMAIN_DOES_NOT_HAVE_KEYSET  if the domain with `domain_id` does not have a keyset (is not secure)
+     * @throws DOMAIN_ALREADY_HAS_AUTOMATICALLY_MANAGED_KEYSET  if the domain with `domain_id` already has an automatically managed keyset
      * @throws DOMAIN_STATE_POLICY_ERROR  if the state of the domain with `domain_id` prevents the action
      * @throws CONFIGURATION_ERROR  if server configuration is not valid
      * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
@@ -144,21 +157,21 @@ interface AutomaticKeysetManagementIntf
             in Keyset new_keyset)
         raises (OBJECT_NOT_FOUND,
                 KEYSET_IS_INVALID,
-                DOMAIN_HAS_OTHER_KEYSET,
+                DOMAIN_DOES_NOT_HAVE_KEYSET,
+                DOMAIN_ALREADY_HAS_AUTOMATICALLY_MANAGED_KEYSET,
                 DOMAIN_STATE_POLICY_ERROR,
                 CONFIGURATION_ERROR,
                 INTERNAL_SERVER_ERROR);
 
     /**
-     * Reconfigure domain so that its keyset is managed automatically.
+     * Update the automatically managed keyset of the domain.
      *
      * @param `domain_id`  domain to be configured
-     * @param `current_nsset`  list of domain nameservers
      * @param `new_keyset`  list of DNSKEYs for domain keyset
      *
      * @throws OBJECT_NOT_FOUND  if the domain with `domain_id` is not found in the registry
      * @throws KEYSET_IS_INVALID  if some of the keys included in the `new_keyset` is not a valid CDNSKEY
-     * @throws DOMAIN_HAS_OTHER_KEYSET  if the domain with `domain_id` has other than "automatically managed keyset"
+     * @throws DOMAIN_DOES_NOT_HAVE_AUTOMATICALLY_MANAGED_KEYSET  if the domain with `domain_id` does not have an automatically managed keyset (has other keyset or no keyset)
      * @throws DOMAIN_STATE_POLICY_ERROR  if the state of the domain with `domain_id` prevents the action
      * @throws KEYSET_STATE_POLICY_ERROR  if the state of the keyset of the domain with `domain_id` prevents the action
      * @throws CONFIGURATION_ERROR  if server configuration is not valid
@@ -169,7 +182,7 @@ interface AutomaticKeysetManagementIntf
             in Keyset new_keyset)
         raises (OBJECT_NOT_FOUND,
                 KEYSET_IS_INVALID,
-                DOMAIN_HAS_OTHER_KEYSET,
+                DOMAIN_DOES_NOT_HAVE_AUTOMATICALLY_MANAGED_KEYSET,
                 DOMAIN_STATE_POLICY_ERROR,
                 KEYSET_STATE_POLICY_ERROR,
                 CONFIGURATION_ERROR,
