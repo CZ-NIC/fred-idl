@@ -9,6 +9,7 @@ exception NSSET_IS_EMPTY {};
 exception DOMAIN_NSSET_IS_EMPTY {};
 exception KEYSET_IS_INVALID {};
 exception NSSET_IS_DIFFERENT {};
+exception DOMAIN_HAS_KEYSET {};
 exception DOMAIN_HAS_OTHER_KEYSET {};
 exception DOMAIN_STATE_POLICY_ERROR {};
 exception KEYSET_STATE_POLICY_ERROR {};
@@ -105,13 +106,12 @@ interface AutomaticKeysetManagementIntf
      * @throws DOMAIN_NSSET_IS_EMPTY  if the nsset of the domain with `domain_id` has an empty nameserver set
      * @throws KEYSET_IS_INVALID  if some of the keys included in the `new_keyset` is not a valid CDNSKEY
      * @throws NSSET_IS_DIFFERENT  if `current_nsset` differs from the nsset of the domain with `domain_id`
-     * @throws DOMAIN_HAS_OTHER_KEYSET  if the domain with `domain_id` has other than "automatically managed keyset"
+     * @throws DOMAIN_HAS_KEYSET  if the domain with `domain_id` already has some keyset (is not insecure)
      * @throws DOMAIN_STATE_POLICY_ERROR  if the state of the domain with `domain_id` prevents the action
-     * @throws KEYSET_STATE_POLICY_ERROR  if the state of the keyset of the domain with `domain_id` prevents the action
      * @throws CONFIGURATION_ERROR  if server configuration is not valid
      * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
      */
-    void update_domain_automatic_keyset(
+    void turn_on_automatic_keyset_management_on_insecure_domain(
             in unsigned long long domain_id,
             in Nsset current_nsset,
             in Keyset new_keyset)
@@ -120,6 +120,55 @@ interface AutomaticKeysetManagementIntf
                 DOMAIN_NSSET_IS_EMPTY,
                 KEYSET_IS_INVALID,
                 NSSET_IS_DIFFERENT,
+                DOMAIN_HAS_KEYSET,
+                DOMAIN_STATE_POLICY_ERROR,
+                KEYSET_STATE_POLICY_ERROR,
+                CONFIGURATION_ERROR,
+                INTERNAL_SERVER_ERROR);
+
+    /**
+     * Reconfigure domain so that its keyset is managed automatically.
+     *
+     * @param `domain_id`  domain to be configured
+     * @param `new_keyset`  list of DNSKEYs for domain keyset
+     *
+     * @throws OBJECT_NOT_FOUND  if the domain with `domain_id` is not found in the registry
+     * @throws KEYSET_IS_INVALID  if some of the keys included in the `new_keyset` is not a valid CDNSKEY
+     * @throws DOMAIN_HAS_OTHER_KEYSET  if the domain with `domain_id` has other than "automatically managed keyset"
+     * @throws DOMAIN_STATE_POLICY_ERROR  if the state of the domain with `domain_id` prevents the action
+     * @throws CONFIGURATION_ERROR  if server configuration is not valid
+     * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
+     */
+    void turn_on_automatic_keyset_management_on_secure_domain(
+            in unsigned long long domain_id,
+            in Keyset new_keyset)
+        raises (OBJECT_NOT_FOUND,
+                KEYSET_IS_INVALID,
+                DOMAIN_HAS_OTHER_KEYSET,
+                DOMAIN_STATE_POLICY_ERROR,
+                CONFIGURATION_ERROR,
+                INTERNAL_SERVER_ERROR);
+
+    /**
+     * Reconfigure domain so that its keyset is managed automatically.
+     *
+     * @param `domain_id`  domain to be configured
+     * @param `current_nsset`  list of domain nameservers
+     * @param `new_keyset`  list of DNSKEYs for domain keyset
+     *
+     * @throws OBJECT_NOT_FOUND  if the domain with `domain_id` is not found in the registry
+     * @throws KEYSET_IS_INVALID  if some of the keys included in the `new_keyset` is not a valid CDNSKEY
+     * @throws DOMAIN_HAS_OTHER_KEYSET  if the domain with `domain_id` has other than "automatically managed keyset"
+     * @throws DOMAIN_STATE_POLICY_ERROR  if the state of the domain with `domain_id` prevents the action
+     * @throws KEYSET_STATE_POLICY_ERROR  if the state of the keyset of the domain with `domain_id` prevents the action
+     * @throws CONFIGURATION_ERROR  if server configuration is not valid
+     * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
+     */
+    void update_automatically_managed_keyset_of_domain(
+            in unsigned long long domain_id,
+            in Keyset new_keyset)
+        raises (OBJECT_NOT_FOUND,
+                KEYSET_IS_INVALID,
                 DOMAIN_HAS_OTHER_KEYSET,
                 DOMAIN_STATE_POLICY_ERROR,
                 KEYSET_STATE_POLICY_ERROR,
