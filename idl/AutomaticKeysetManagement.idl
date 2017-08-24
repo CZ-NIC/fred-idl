@@ -12,6 +12,7 @@ exception NSSET_IS_DIFFERENT {};
 exception DOMAIN_HAS_KEYSET {};
 exception DOMAIN_DOES_NOT_HAVE_KEYSET {};
 exception DOMAIN_DOES_NOT_HAVE_AUTOMATICALLY_MANAGED_KEYSET {};
+exception DOMAIN_ALREADY_DOES_NOT_HAVE_KEYSET {};
 exception DOMAIN_ALREADY_HAS_AUTOMATICALLY_MANAGED_KEYSET {};
 exception DOMAIN_STATE_POLICY_ERROR {};
 exception KEYSET_STATE_POLICY_ERROR {};
@@ -118,6 +119,7 @@ interface AutomaticKeysetManagementIntf
      * @throws NSSET_IS_EMPTY  if `current_nsset` has empty nameserver set
      * @throws DOMAIN_NSSET_IS_EMPTY  if the nsset of the domain with `domain_id` has an empty nameserver set
      * @throws KEYSET_IS_INVALID  if some of the keys included in the `new_keyset` is not a valid CDNSKEY
+     * @throws DOMAIN_ALREADY_DOES_NOT_HAVE_KEYSET  if `new_keyset` means to delete keyset. Because insecure domain does not have any keyset
      * @throws NSSET_IS_DIFFERENT  if `current_nsset` differs from the nsset of the domain with `domain_id`
      * @throws DOMAIN_HAS_KEYSET  if the domain with `domain_id` already has some keyset (is not insecure)
      * @throws DOMAIN_STATE_POLICY_ERROR  if the state of the domain with `domain_id` prevents the action
@@ -132,6 +134,7 @@ interface AutomaticKeysetManagementIntf
                 NSSET_IS_EMPTY,
                 DOMAIN_NSSET_IS_EMPTY,
                 KEYSET_IS_INVALID,
+                DOMAIN_ALREADY_DOES_NOT_HAVE_KEYSET,
                 NSSET_IS_DIFFERENT,
                 DOMAIN_HAS_KEYSET,
                 DOMAIN_STATE_POLICY_ERROR,
