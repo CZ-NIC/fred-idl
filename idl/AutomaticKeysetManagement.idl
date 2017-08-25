@@ -14,6 +14,7 @@ exception DOMAIN_DOES_NOT_HAVE_KEYSET {};
 exception DOMAIN_DOES_NOT_HAVE_AUTOMATICALLY_MANAGED_KEYSET {};
 exception DOMAIN_ALREADY_DOES_NOT_HAVE_KEYSET {};
 exception DOMAIN_ALREADY_HAS_AUTOMATICALLY_MANAGED_KEYSET {};
+exception KEYSET_SAME_AS_DOMAIN_KEYSET {};
 exception DOMAIN_STATE_POLICY_ERROR {};
 exception KEYSET_STATE_POLICY_ERROR {};
 exception CONFIGURATION_ERROR {};
@@ -177,6 +178,7 @@ interface AutomaticKeysetManagementIntf
      * @throws DOMAIN_DOES_NOT_HAVE_AUTOMATICALLY_MANAGED_KEYSET  if the domain with `domain_id` does not have an automatically managed keyset (has other keyset or no keyset)
      * @throws DOMAIN_STATE_POLICY_ERROR  if the state of the domain with `domain_id` prevents the action
      * @throws KEYSET_STATE_POLICY_ERROR  if the state of the keyset of the domain with `domain_id` prevents the action
+     * @throws KEYSET_SAME_AS_DOMAIN_KEYSET  the `new_keyset` is the same as the current keyset of the domain
      * @throws CONFIGURATION_ERROR  if server configuration is not valid
      * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
      */
@@ -188,6 +190,7 @@ interface AutomaticKeysetManagementIntf
                 DOMAIN_DOES_NOT_HAVE_AUTOMATICALLY_MANAGED_KEYSET,
                 DOMAIN_STATE_POLICY_ERROR,
                 KEYSET_STATE_POLICY_ERROR,
+                KEYSET_SAME_AS_DOMAIN_KEYSET,
                 CONFIGURATION_ERROR,
                 INTERNAL_SERVER_ERROR);
 
