@@ -1,0 +1,217 @@
+#ifndef AUTOMATIC_KEYSET_MANAGEMENT_IDL_493A3DF87D8741E49171C1739F228657
+#define AUTOMATIC_KEYSET_MANAGEMENT_IDL_493A3DF87D8741E49171C1739F228657
+
+module Registry {
+module AutomaticKeysetManagement {
+
+exception OBJECT_NOT_FOUND {};
+exception NSSET_IS_EMPTY {};
+exception DOMAIN_NSSET_IS_EMPTY {};
+exception KEYSET_IS_INVALID {};
+exception NSSET_IS_DIFFERENT {};
+exception DOMAIN_HAS_KEYSET {};
+exception DOMAIN_DOES_NOT_HAVE_KEYSET {};
+exception DOMAIN_DOES_NOT_HAVE_AUTOMATICALLY_MANAGED_KEYSET {};
+exception DOMAIN_ALREADY_DOES_NOT_HAVE_KEYSET {};
+exception DOMAIN_ALREADY_HAS_AUTOMATICALLY_MANAGED_KEYSET {};
+exception KEYSET_SAME_AS_DOMAIN_KEYSET {};
+exception DOMAIN_STATE_POLICY_ERROR {};
+exception KEYSET_STATE_POLICY_ERROR {};
+exception CONFIGURATION_ERROR {};
+exception INTERNAL_SERVER_ERROR {};
+
+
+typedef sequence<string> NameserverSeq;
+
+/**
+ * Nameserver set data
+ */
+struct Nsset {
+    NameserverSeq nameservers; /**< list of nameservers */
+};
+
+/**
+ * DNSKEY Resource Record data (rfc4034)
+ */
+struct DnsKey {
+    short flags;
+    short protocol;
+    short alg;
+    string public_key;
+};
+
+typedef sequence<DnsKey> DnsKeySeq;
+
+/**
+ * Keyset data (set of dnskeys)
+ */
+struct Keyset {
+    DnsKeySeq dns_keys; /**< list of dnskeys */
+};
+
+struct Domain {
+    unsigned long long id;
+    string fqdn;
+};
+
+typedef sequence<Domain> DomainSeq;
+
+struct NameserverDomains {
+    string nameserver;
+    DomainSeq nameserver_domains;
+};
+
+typedef sequence<NameserverDomains> NameserverDomainsSeq;
+
+typedef sequence<string> EmailAddressSeq;
+
+interface AutomaticKeysetManagementIntf
+{
+
+  /**
+   * Get list of nameservers with domains, whose keysets should be managed automatically.
+   *
+   * Domains without any keyset as insecure candidates for automatic keyset management.
+   *
+   * @returns NameserverDomainsSeq - list of nameservers with domains whose keysets should be managed automatically
+   *
+   * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
+   */
+  NameserverDomainsSeq get_nameservers_with_insecure_automatically_managed_domain_candidates()
+      raises (INTERNAL_SERVER_ERROR);
+
+  /**
+   * Get list of nameservers with domains, whose keysets should be managed automatically.
+   *
+   * Domains without automatically managed keyset but with other keyset as secure candidates for automatic keyset management.
+   *
+   * @returns NameserverDomainsSeq - list of nameservers with domains whose keysets should be managed automatically
+   *
+   * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
+   */
+  NameserverDomainsSeq get_nameservers_with_secure_automatically_managed_domain_candidates()
+      raises (INTERNAL_SERVER_ERROR);
+
+    /**
+     * Get list of nameservers with domains, whose keysets are managed automatically.
+     *
+     * Domains with
+     * - flag AutomaticKeysetManagement and
+     * - linked keyset with
+     *    - specific registrar and
+     *    - specific technical contact
+     * have their keyset managed automatically.
+     *
+     * @returns NameserverDomainsSeq - list of nameservers with domains whose keysets are managed automatically
+     *
+     * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
+     */
+    NameserverDomainsSeq get_nameservers_with_automatically_managed_domains()
+        raises (INTERNAL_SERVER_ERROR);
+
+    /**
+     * Create and attach an automatically managed keyset to the domain without keyset.
+     *
+     * @param `domain_id`  domain to be configured
+     * @param `current_nsset`  list of domain nameservers
+     * @param `new_keyset`  list of DNSKEYs for domain keyset
+     *
+     * @throws OBJECT_NOT_FOUND  if the domain with `domain_id` is not found in the registry
+     * @throws NSSET_IS_EMPTY  if `current_nsset` has empty nameserver set
+     * @throws DOMAIN_NSSET_IS_EMPTY  if the nsset of the domain with `domain_id` has an empty nameserver set
+     * @throws KEYSET_IS_INVALID  if some of the keys included in the `new_keyset` is not a valid CDNSKEY
+     * @throws DOMAIN_ALREADY_DOES_NOT_HAVE_KEYSET  if `new_keyset` means to delete keyset. Because insecure domain does not have any keyset
+     * @throws NSSET_IS_DIFFERENT  if `current_nsset` differs from the nsset of the domain with `domain_id`
+     * @throws DOMAIN_HAS_KEYSET  if the domain with `domain_id` already has some keyset (is not insecure)
+     * @throws DOMAIN_STATE_POLICY_ERROR  if the state of the domain with `domain_id` prevents the action
+     * @throws CONFIGURATION_ERROR  if server configuration is not valid
+     * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
+     */
+    void turn_on_automatic_keyset_management_on_insecure_domain(
+            in unsigned long long domain_id,
+            in Nsset current_nsset,
+            in Keyset new_keyset)
+        raises (OBJECT_NOT_FOUND,
+                NSSET_IS_EMPTY,
+                DOMAIN_NSSET_IS_EMPTY,
+                KEYSET_IS_INVALID,
+                DOMAIN_ALREADY_DOES_NOT_HAVE_KEYSET,
+                NSSET_IS_DIFFERENT,
+                DOMAIN_HAS_KEYSET,
+                DOMAIN_STATE_POLICY_ERROR,
+                CONFIGURATION_ERROR,
+                INTERNAL_SERVER_ERROR);
+
+    /**
+     * Create and attach an automatically managed keyset to the domain with keyset.
+     *
+     * @param `domain_id`  domain to be configured
+     * @param `new_keyset`  list of DNSKEYs for domain keyset
+     *
+     * @throws OBJECT_NOT_FOUND  if the domain with `domain_id` is not found in the registry
+     * @throws KEYSET_IS_INVALID  if some of the keys included in the `new_keyset` is not a valid CDNSKEY
+     * @throws DOMAIN_DOES_NOT_HAVE_KEYSET  if the domain with `domain_id` does not have a keyset (is not secure)
+     * @throws DOMAIN_ALREADY_HAS_AUTOMATICALLY_MANAGED_KEYSET  if the domain with `domain_id` already has an automatically managed keyset
+     * @throws DOMAIN_STATE_POLICY_ERROR  if the state of the domain with `domain_id` prevents the action
+     * @throws CONFIGURATION_ERROR  if server configuration is not valid
+     * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
+     */
+    void turn_on_automatic_keyset_management_on_secure_domain(
+            in unsigned long long domain_id,
+            in Keyset new_keyset)
+        raises (OBJECT_NOT_FOUND,
+                KEYSET_IS_INVALID,
+                DOMAIN_DOES_NOT_HAVE_KEYSET,
+                DOMAIN_ALREADY_HAS_AUTOMATICALLY_MANAGED_KEYSET,
+                DOMAIN_STATE_POLICY_ERROR,
+                CONFIGURATION_ERROR,
+                INTERNAL_SERVER_ERROR);
+
+    /**
+     * Update the automatically managed keyset of the domain.
+     *
+     * @param `domain_id`  domain to be configured
+     * @param `new_keyset`  list of DNSKEYs for domain keyset
+     *
+     * @throws OBJECT_NOT_FOUND  if the domain with `domain_id` is not found in the registry
+     * @throws KEYSET_IS_INVALID  if some of the keys included in the `new_keyset` is not a valid CDNSKEY
+     * @throws DOMAIN_DOES_NOT_HAVE_AUTOMATICALLY_MANAGED_KEYSET  if the domain with `domain_id` does not have an automatically managed keyset (has other keyset or no keyset)
+     * @throws DOMAIN_STATE_POLICY_ERROR  if the state of the domain with `domain_id` prevents the action
+     * @throws KEYSET_STATE_POLICY_ERROR  if the state of the keyset of the domain with `domain_id` prevents the action
+     * @throws KEYSET_SAME_AS_DOMAIN_KEYSET  the `new_keyset` is the same as the current keyset of the domain
+     * @throws CONFIGURATION_ERROR  if server configuration is not valid
+     * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
+     */
+    void update_automatically_managed_keyset_of_domain(
+            in unsigned long long domain_id,
+            in Keyset new_keyset)
+        raises (OBJECT_NOT_FOUND,
+                KEYSET_IS_INVALID,
+                DOMAIN_DOES_NOT_HAVE_AUTOMATICALLY_MANAGED_KEYSET,
+                DOMAIN_STATE_POLICY_ERROR,
+                KEYSET_STATE_POLICY_ERROR,
+                KEYSET_SAME_AS_DOMAIN_KEYSET,
+                CONFIGURATION_ERROR,
+                INTERNAL_SERVER_ERROR);
+
+    /**
+     * Get the email addresses of the technical contacts of the nsset of the domain.
+     *
+     * @param domain_id
+     *
+     * @returns  sequence of technical contacts of the nsset linked to the domain with the `domain_id` 
+     *
+     * @throws OBJECT_NOT_FOUND  if domain with `domain_id` is not found in the registry
+     * @throws INTERNAL_SERVER_ERROR  in case of unspecified internal error
+     */
+    EmailAddressSeq get_email_addresses_by_domain_id(
+            in unsigned long long domain_id)
+        raises (OBJECT_NOT_FOUND,
+                INTERNAL_SERVER_ERROR);
+
+};
+
+}; // Registry::AutomaticKeysetManagement
+}; // Registry
+
+#endif
