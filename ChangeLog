@@ -1,3 +1,7 @@
+2017-09-12 (2.28.0)
+
+   * epp interface contact method changed to support mailing address
+
 2017-06-09 (2.27.0)
 
    * add interface for automatic keyset management
