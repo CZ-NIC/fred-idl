@@ -13,3 +13,6 @@ fred-idl.spec
 .cproject
 idl/*.hh
 idl/*.cc
+*.pyc
+/fred_idl
+!/fred_idl/__init__.py
