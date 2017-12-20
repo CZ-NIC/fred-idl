@@ -1,3 +1,7 @@
+2017-12-20 (2.29.0)
+
+   * statically compiled IDL for python
+
 2017-09-12 (2.28.0)
 
    * epp interface contact method changed to support mailing address
