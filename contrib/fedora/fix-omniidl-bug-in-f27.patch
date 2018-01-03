@@ -1,0 +1,13 @@
+diff --git a/Makefile.am b/Makefile.am
+index 085ab5d..a6e7e92 100644
+--- a/Makefile.am
++++ b/Makefile.am
+@@ -16,7 +16,7 @@ endif
+ all: fred_idl
+ 
+ fred_idl:
+-	omniidl -bpython -Wbmodules=fred_idl -Wbstubs=fred_idl._stubs ${dist_idl_DATA}
++	omniidl -bpython -Wbmodules=fred_idl -p /usr/lib/python2.7/site-packages/omniidl_be/ -Wbstubs=fred_idl._stubs ${dist_idl_DATA}
+ 	find fred_idl -name \*.py -exec $(PYTHON) -mcompileall {} \;
+ 
+ install-exec-local: fred_idl

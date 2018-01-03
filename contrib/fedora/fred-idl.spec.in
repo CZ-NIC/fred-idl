@@ -6,9 +6,10 @@ Summary:	FRED - idl interface files
 Group:		Applications/Utils
 License:	GPL
 URL:		http://fred.nic.cz
-Source0:	%{name}-%{version}.tar.gz
+Source:         %{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
+BuildRequires:  omniORB-devel python-omniORB
 
 %description
 FRED (Free Registry for Enum and Domain) is free registry system for 
@@ -17,6 +18,7 @@ of corba interfaces to server
 
 %prep
 %setup -q
+patch -p1 < contrib/fedora/fix-omniidl-bug-in-f27.patch
 
 %build
 %configure
