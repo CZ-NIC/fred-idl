@@ -2,8 +2,8 @@ ACLOCAL_AMFLAGS = -I m4
 
 idldir = $(datadir)/idl/fred
 dist_idl_DATA = ${srcdir}/idl/*.idl
-EXTRA_DIST = $(srcdir)/doc/Doxyfile \
-  $(srcdir)/doc/docbook.xsl $(srcdir)/doc/mainpage.h $(srcdir)/contrib/fedora/*
+EXTRA_DIST = contrib/fedora/fred-idl.spec $(srcdir)/doc/Doxyfile \
+  $(srcdir)/doc/docbook.xsl $(srcdir)/doc/mainpage.h
 
 include $(top_srcdir)/am_doxygen.am
 
