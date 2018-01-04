@@ -1,6 +1,6 @@
 AC_INIT([fred-idl], 2.29.0)
 AC_CONFIG_FILES([Makefile
-		 fred-idl.spec])
+		 contrib/fedora/fred-idl.spec])
 
 # doxygen
 DX_HTML_FEATURE(OFF)
