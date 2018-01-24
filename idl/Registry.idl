@@ -404,6 +404,7 @@ module Zone
   module Registrar {
     /// Access structure
     struct EPPAccess {
+      ccReg::TID id;
       string password; ///< epp login password
       string md5Cert; ///< md5 of certificate
     };
