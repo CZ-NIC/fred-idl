@@ -44,8 +44,10 @@ module ccReg {
   
     /// Access structure
   struct AdminEPPAccess {
+    ccReg::TID id;
     string password; ///< epp login password
     string md5Cert; ///< md5 of certificate
+    string md5Cert2SamePasswd; ///< md5 of certificate with same password (for add)
   };
   
   /// List of access structures
