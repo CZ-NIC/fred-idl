@@ -35,6 +35,7 @@ module RecordStatement {
 
     exception INTERNAL_SERVER_ERROR { };
     exception OBJECT_NOT_FOUND { };
+    exception OBJECT_DELETE_CANDIDATE { };
     exception INVALID_TIMESTAMP { };
 
     typedef sequence<octet> BufferData;
@@ -56,7 +57,7 @@ module RecordStatement {
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @return buffer with signed pdf printout
          */
-        PdfBuffer domain_printout(in string fqdn, in boolean is_private_printout) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+        PdfBuffer domain_printout(in string fqdn, in boolean is_private_printout) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
 
         /**
          * Registry printout of current nsset data.
@@ -65,7 +66,7 @@ module RecordStatement {
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @return buffer with signed pdf printout
          */
-        PdfBuffer nsset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+        PdfBuffer nsset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
 
         /**
          * Registry printout of current keyset data.
@@ -74,7 +75,7 @@ module RecordStatement {
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @return buffer with signed pdf printout
          */
-        PdfBuffer keyset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+        PdfBuffer keyset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
 
         /**
          * Registry printout of current contact data, hidden/revealed according to discloseflags.
@@ -85,7 +86,7 @@ module RecordStatement {
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @return buffer with signed pdf printout
          */
-        PdfBuffer contact_printout(in string handle, in boolean is_private_printout) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+        PdfBuffer contact_printout(in string handle, in boolean is_private_printout) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
 
         /**
          * Registry printout of private historic domain data.
@@ -137,7 +138,7 @@ module RecordStatement {
          * @throw OBJECT_NOT_FOUND in case of incorrect input data
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          */
-        void send_domain_printout(in string fqdn) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+        void send_domain_printout(in string fqdn) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
 
         /**
          * Send registry printout of current nsset data, to emails of all technical contacts.
@@ -145,7 +146,7 @@ module RecordStatement {
          * @throw OBJECT_NOT_FOUND in case of incorrect input data
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          */
-        void send_nsset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+        void send_nsset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
 
         /**
          * Send registry printout of current keyset data to emails of all technical contacts.
@@ -153,7 +154,7 @@ module RecordStatement {
          * @throw OBJECT_NOT_FOUND in case of incorrect input data
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          */
-        void send_keyset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+        void send_keyset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
 
         /**
          * Send registry printout of current private contact data to its email.
@@ -161,7 +162,7 @@ module RecordStatement {
          * @throw OBJECT_NOT_FOUND in case of incorrect input data
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          */
-        void send_contact_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+        void send_contact_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
     };
 
 };
