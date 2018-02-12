@@ -1,6 +1,8 @@
 #ifndef ADMINISTRATIVE_BLOCKING_IDL_
 #define ADMINISTRATIVE_BLOCKING_IDL_
 
+#include "NullableIsoDate.idl"
+
 module Registry {
 module Administrative {
 
