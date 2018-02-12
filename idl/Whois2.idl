@@ -1,6 +1,8 @@
 #ifndef WHOIS_IDL_15354554
 #define WHOIS_IDL_15354554
 
+#include "IsoDate.idl"
+#include "IsoDateTime.idl"
 #include "NullableTypes.idl"
 
 module Registry
