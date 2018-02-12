@@ -1,0 +1,16 @@
+#ifndef BUFFER_IDL_5B12C2DE467C4E609D579511DE58FCA0
+#define BUFFER_IDL_5B12C2DE467C4E609D579511DE58FCA0
+
+module Registry
+{
+
+typedef sequence<octet> BufferData;
+
+struct Buffer
+{
+    BufferData data;
+};
+
+}; // Registry
+
+#endif
