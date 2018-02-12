@@ -1,0 +1,14 @@
+#ifndef ISODATE_IDL_5EF2E045803B484BA30945EC69AD2703
+#define ISODATE_IDL_5EF2E045803B484BA30945EC69AD2703
+
+module Registry
+{
+
+struct IsoDate
+{
+    string value; ///< iso format YYYY-MM-DD
+};
+
+}; // Registry
+
+#endif
