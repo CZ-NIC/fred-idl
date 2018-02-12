@@ -6,6 +6,7 @@
  */
 
 #include "DateTime.idl"
+#include "NullableIsoDateTime.idl"
 #include "NullableTypes.idl"
 
 module Registry
