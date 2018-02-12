@@ -25,6 +25,9 @@
 #ifndef RECORD_STATEMENT_IDL_D5FC9FAF5786462690CD9E099CF32973
 #define RECORD_STATEMENT_IDL_D5FC9FAF5786462690CD9E099CF32973
 
+#include "Buffer.idl"
+#include "IsoDateTime.idl"
+
 module Registry {
 module RecordStatement {
 
