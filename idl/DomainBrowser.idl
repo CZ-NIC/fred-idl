@@ -25,6 +25,9 @@
 #ifndef DOMAIN_BROWSER_IDL_
 #define DOMAIN_BROWSER_IDL_
 
+#include "NullableIsoDate.idl"
+#include "NullableIsoDateTime.idl"
+
 module Registry {
 module DomainBrowser {
 
