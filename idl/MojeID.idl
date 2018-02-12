@@ -7,6 +7,10 @@
 #ifndef MOJEID_IDL_
 #define MOJEID_IDL_
 
+#include "Buffer.idl"
+#include "NullableIsoDate.idl"
+#include "IsoDateTime.idl"
+
 module Registry
 {
 module MojeID
