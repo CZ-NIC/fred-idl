@@ -136,6 +136,11 @@ module ccReg {
         string header;   ///< Name of header which caused the error.
     };
 
+    /** Run saved message parameters through template and return rendered message
+     *  \return          Rendered message text
+     */
+    string renderMail(in long mailid) raises (UnknownMailid, InternalError);
+
     /** Method returns mapping between email type names and their IDs.
      *  \return          Code list of email types.
      */
