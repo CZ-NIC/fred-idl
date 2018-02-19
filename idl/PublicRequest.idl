@@ -49,13 +49,6 @@ module Language
     };
 };
 
-typedef sequence<octet> BufferValue;
-
-struct Buffer
-{
-    BufferValue value;
-};
-
 exception OBJECT_NOT_FOUND {};
 exception OBJECT_TRANSFER_PROHIBITED {};
 exception INTERNAL_SERVER_ERROR {};
