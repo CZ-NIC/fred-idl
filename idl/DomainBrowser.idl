@@ -72,28 +72,6 @@ module DomainBrowser {
      */
     valuetype NullableString string;
 
-
-    /**
-     * ISO 8601 date in text form YYYY-MM-DD
-     */
-    typedef string DateIsoString;
-
-    /**
-     * nullable date
-     */
-    valuetype NullableDateIsoString DateIsoString;
-
-    /**
-     * ISO 8601 timestamp in text form YYYY-MM-DDTHH:MM:SS.fffffffff
-     * dot with decimal fractions are optional
-     */
-    typedef string DateTimeIsoString;
-
-    /**
-     * nullable timestamp
-     */
-    valuetype NullableDateTimeIsoString DateTimeIsoString;
-
     /**
      * nullable database id
      */
@@ -148,12 +126,12 @@ module DomainBrowser {
         string fqdn;
         string roid;
         RegistryReference registrar;
-        DateTimeIsoString create_time; /**< timestamp of creation*/
-        NullableDateTimeIsoString update_time; /**< timestamp of update*/
+        IsoDateTime create_time; /**< timestamp of creation*/
+        NullableIsoDateTime update_time; /**< timestamp of update*/
         string auth_info;/**< password for transfer */
         RegistryReference registrant;
-        DateIsoString expiration_date; /**< date of domain expiration*/
-        NullableDateIsoString val_ex_date;/**< the expiration date of the ENUM domain validation */
+        IsoDate expiration_date; /**< date of domain expiration*/
+        NullableIsoDate val_ex_date;/**< the expiration date of the ENUM domain validation */
         boolean publish;/**< flag for publishing ENUM number and associated contact in public directory */
         boolean is_enum;/**<  is ENUM domain */
         RegistryReference nsset;
@@ -211,9 +189,9 @@ module DomainBrowser {
         string handle;
         string roid;/**< registry object identifier of the contact */
         RegistryReference registrar;
-        DateTimeIsoString create_time;
-        NullableDateTimeIsoString transfer_time;
-        NullableDateTimeIsoString update_time;
+        IsoDateTime create_time;
+        NullableIsoDateTime transfer_time;
+        NullableIsoDateTime update_time;
         string auth_info;/**< password for transfer */
         string name;
         string organization;
@@ -247,9 +225,9 @@ module DomainBrowser {
         string handle;
         string roid;/**< registry object identifier of nsset */
         RegistryReference registrar;
-        DateTimeIsoString create_time;
-        NullableDateTimeIsoString transfer_time;
-        NullableDateTimeIsoString update_time;
+        IsoDateTime create_time;
+        NullableIsoDateTime transfer_time;
+        NullableIsoDateTime update_time;
         RegistryReference create_registrar;
         RegistryReference update_registrar;
         string auth_info;/**< password for transfer */
@@ -285,9 +263,9 @@ module DomainBrowser {
         string handle;
         string roid;/**< registry object identifier of keyset */
         RegistryReference registrar;
-        DateTimeIsoString create_time;
-        NullableDateTimeIsoString transfer_time;
-        NullableDateTimeIsoString update_time;
+        IsoDateTime create_time;
+        NullableIsoDateTime transfer_time;
+        NullableIsoDateTime update_time;
         RegistryReference create_registrar;
         RegistryReference update_registrar;
         string auth_info;/**< password for transfer */
@@ -313,7 +291,7 @@ module DomainBrowser {
     struct NextDomainState
     {
         string state_code; /**< next state code */
-        DateIsoString state_date; /**< next state date */
+        IsoDate state_date; /**< next state date */
     };
 
     /**
