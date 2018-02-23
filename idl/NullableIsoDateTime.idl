@@ -1,0 +1,13 @@
+#ifndef NULLABLEISODATETIME_IDL_26BB489A1B054FC6B7F1126328402E59
+#define NULLABLEISODATETIME_IDL_26BB489A1B054FC6B7F1126328402E59
+
+#include "IsoDateTime.idl"
+
+module Registry
+{
+
+valuetype NullableIsoDateTime IsoDateTime;
+
+}; // Registry
+
+#endif
