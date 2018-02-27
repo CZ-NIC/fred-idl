@@ -16,17 +16,20 @@ module Registry
 module MojeID
 {
 
+    // unused
     struct Date
     {
         string value;///< iso format YYYY-MM-DD
     };
 
+    // unused
     struct DateTime
     {
         string value;///< iso (extended) format: YYYY-MM-DDTHH:MM:SS.fffffffff; always in UTC
     };
 
     valuetype NullableString string;
+    // unused
     valuetype NullableDate Date;
 
     struct Address
@@ -93,7 +96,7 @@ module MojeID
         string last_name;
         NullableString organization;
         NullableString vat_reg_num;
-        NullableDate birth_date;
+        NullableIsoDate birth_date;
         NullableString id_card_num;
         NullableString passport_num;
         NullableString ssn_id_num;
@@ -117,7 +120,7 @@ module MojeID
         string last_name;
         NullableString organization;
         NullableString vat_reg_num;
-        NullableDate birth_date;
+        NullableIsoDate birth_date;
         NullableString id_card_num;
         NullableString passport_num;
         NullableString ssn_id_num;
@@ -141,7 +144,7 @@ module MojeID
         string last_name;
         NullableString organization;
         NullableString vat_reg_num;
-        NullableDate birth_date;
+        NullableIsoDate birth_date;
         NullableString id_card_num;
         NullableString passport_num;
         NullableString ssn_id_num;
@@ -164,7 +167,7 @@ module MojeID
         string full_name;
         NullableString organization;
         NullableString vat_reg_num;
-        NullableDate birth_date;
+        NullableIsoDate birth_date;
         NullableString vat_id_num;
         string email;
         NullableString notify_email;
@@ -177,16 +180,18 @@ module MojeID
     struct ContactStateInfo
     {
         ContactId contact_id;
-        DateTime mojeid_activation_datetime;
-        NullableDate identification_date;
-        NullableDate validation_date;
-        NullableDate linked_date;
+        IsoDateTime mojeid_activation_datetime;
+        NullableIsoDate identification_date;
+        NullableIsoDate validation_date;
+        NullableIsoDate linked_date;
     };
 
     typedef sequence<ContactStateInfo> ContactStateInfoList;
 
+    // unused
     typedef sequence<octet> BufferValue;
 
+    // unused
     struct Buffer
     {
         BufferValue value;
@@ -246,7 +251,7 @@ module MojeID
 
         exception MESSAGE_LIMIT_EXCEEDED
         {
-            DateTime limit_expire_datetime;     ///< When a new message can be sent
+            IsoDateTime limit_expire_datetime;     ///< When a new message can be sent
         };
 
         exception REGISTRATION_VALIDATION_ERROR
@@ -506,7 +511,7 @@ module MojeID
          *
          * @return                validation pdf
          */
-        Buffer get_validation_pdf(
+        Registry::Buffer get_validation_pdf(
                 in ContactId contact_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
