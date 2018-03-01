@@ -5,7 +5,7 @@
  * omniidl -bcxx -Wba -Wbexample -C./src/corba/ ../idl/idl/AdminContactVerification.idl
  */
 
-#include "DateTime.idl"
+#include "NullableIsoDateTime.idl"
 #include "NullableTypes.idl"
 
 module Registry
@@ -30,12 +30,10 @@ module Registry
 
         exception INTERNAL_SERVER_ERROR { };
 
-        typedef ccReg::DateTimeType DateTime;
-
         struct ContactTestStatus {
             string              status;
             string              err_msg;
-            DateTime            update;
+            IsoDateTime         update;
             NullableULongLong   logd_request_id;
         };
 
@@ -45,7 +43,7 @@ module Registry
 
         struct ContactTest {
             string                      test_handle;
-            DateTime                    created;
+            IsoDateTime                 created;
             ContactTestStatusSeq        status_history;
             RelatedContactValuesSeq     tested_contact_data;
             RelatedContactValuesSeq     current_contact_data;
@@ -56,7 +54,7 @@ module Registry
 
         struct ContactCheckStatus {
             string              status;
-            DateTime            update;
+            IsoDateTime         update;
             NullableULongLong   logd_request_id;
         };
 
@@ -69,7 +67,7 @@ module Registry
             unsigned long long      contact_id;
             string                  contact_handle;
             unsigned long long      checked_contact_hid;
-            DateTime                created;
+            IsoDateTime             created;
             ContactCheckStatusSeq   status_history;
             ContactTestSeq          test_list;
         };
@@ -81,10 +79,10 @@ module Registry
             unsigned long long      contact_id;
             string                  contact_handle;
             unsigned long long      checked_contact_hid;
-            DateTime                created;
-            DateTime                updated;
-            NullableDateTime        last_test_finished;
-            DateTime                last_contact_update;
+            IsoDateTime             created;
+            IsoDateTime             updated;
+            NullableIsoDateTime     last_test_finished;
+            IsoDateTime             last_contact_update;
             string                  current_status;
         };
 
@@ -138,8 +136,8 @@ module Registry
             unsigned long long  id;
             string              type_handle;
             string              content_handle;
-            DateTime            created;
-            NullableDateTime    updated;
+            IsoDateTime         created;
+            NullableIsoDateTime updated;
             string              status;
         };
 
