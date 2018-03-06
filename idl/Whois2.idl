@@ -245,6 +245,11 @@ module Whois
     exception OBJECT_NOT_FOUND {};
 
     /**
+     * Requested object is delete candidate
+     */
+    exception OBJECT_DELETE_CANDIDATE {};
+
+    /**
      * Requested object identifier is not valid (bad format; in other words object of that handle
      * could not be even created at the time of request)
      */
@@ -433,11 +438,12 @@ module Whois
                                          (and therefore can't fit to any managed zone by server)
          * @throw INVALID_LABEL          if fqdn contains invalid label (format)
          * @throw OBJECT_NOT_FOUND       if requested domain is not found
+         * @throw OBJECT_DELETE_CANDIDATE  if requested domain is delete candidate
          * @throw INTERNAL_SERVER_ERROR  in case of other failure
          */
         Domain get_domain_by_handle(in string handle)
             raises (
-                INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND,
+                INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE,
                 INVALID_LABEL, TOO_MANY_LABELS, UNMANAGED_ZONE
             );
 
