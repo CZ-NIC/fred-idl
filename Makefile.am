@@ -15,7 +15,7 @@ endif
 
 all: fred_idl
 
-fred_idl:
+fred_idl: ${dist_idl_DATA}
 	omniidl -bpython -Wbmodules=fred_idl -Wbstubs=fred_idl._stubs ${dist_idl_DATA}
 	find fred_idl -name \*.py -exec $(PYTHON) -mcompileall {} \;
 
