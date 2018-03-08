@@ -1,3 +1,9 @@
+2018-03-08 (2.30.0)
+
+   * add renderMail method to mailer interface
+
+   * fix record statement interface (status deleteCandidate)
+
 2017-12-20 (2.29.0)
 
    * statically compiled IDL for python
