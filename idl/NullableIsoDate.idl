@@ -1,0 +1,13 @@
+#ifndef NULLABLEISODATE_IDL_13195245A2B345009D877BCCFB20E7BB
+#define NULLABLEISODATE_IDL_13195245A2B345009D877BCCFB20E7BB
+
+#include "IsoDate.idl"
+
+module Registry
+{
+
+valuetype NullableIsoDate IsoDate;
+
+}; // Registry
+
+#endif

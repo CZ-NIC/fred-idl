@@ -1,0 +1,14 @@
+#ifndef ISODATETIME_IDL_FBD0F15AA23A4B90AC43C96A1459FD36
+#define ISODATETIME_IDL_FBD0F15AA23A4B90AC43C96A1459FD36
+
+module Registry
+{
+
+struct IsoDateTime
+{
+    string value; ///< iso (extended) format: YYYY-MM-DDTHH:MM:SS[.fffffffff]Z
+};
+
+}; // Registry
+
+#endif

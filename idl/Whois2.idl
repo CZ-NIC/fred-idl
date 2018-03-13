@@ -1,6 +1,8 @@
 #ifndef WHOIS_IDL_15354554
 #define WHOIS_IDL_15354554
 
+#include "NullableIsoDate.idl"
+#include "NullableIsoDateTime.idl"
 #include "NullableTypes.idl"
 
 module Registry
@@ -78,15 +80,15 @@ module Whois
         NullableString      keyset_handle;              /**< keyset identifier */
         string              registrar_handle;           /**< sponsoring registrar identifier */
         StringSeq           statuses;                   /**< list of status identifiers */
-        DateTime            registered;                 /**< timestamp of creation */
-        NullableDateTime    changed;                    /**< timestamp of last update */
-        NullableDateTime    last_transfer;              /**< timestamp of last transfer */
-        Date                expire;                     /**< domain expiration date */
-        DateTime            expire_time_estimate;       /**< computed expiration date time according to object update status procedure run */
-        NullableDateTime    expire_time_actual;         /**< actual date time of expiration - time when 'expired' status was set */
-        NullableDate        validated_to;               /**< enum domain expiration date of validation */
-        NullableDateTime    validated_to_time_estimate; /**< computed validation expiration date time according to object update status procedure run */
-        NullableDateTime    validated_to_time_actual;   /**< actual date time of expiration - time when 'not_validated' status was set */
+        IsoDateTime         registered;                 /**< timestamp of creation */
+        NullableIsoDateTime changed;                    /**< timestamp of last update */
+        NullableIsoDateTime last_transfer;              /**< timestamp of last transfer */
+        IsoDate             expire;                     /**< domain expiration date */
+        IsoDateTime         expire_time_estimate;       /**< computed expiration date time according to object update status procedure run */
+        NullableIsoDateTime expire_time_actual;         /**< actual date time of expiration - time when 'expired' status was set */
+        NullableIsoDate     validated_to;               /**< enum domain expiration date of validation */
+        NullableIsoDateTime validated_to_time_estimate; /**< computed validation expiration date time according to object update status procedure run */
+        NullableIsoDateTime validated_to_time_actual;   /**< actual date time of expiration - time when 'not_validated' status was set */
     };
 
     typedef sequence<Domain> DomainSeq;
@@ -126,9 +128,9 @@ module Whois
         DisclosableContactIdentification  identification;
         string                            creating_registrar_handle;
         string                            sponsoring_registrar_handle;
-        DateTime                          created;       /**< timestamp of creation */
-        NullableDateTime                  changed;       /**< timestamp of last update */
-        NullableDateTime                  last_transfer; /**< timestamp of last transfer */
+        IsoDateTime                       created;       /**< timestamp of creation */
+        NullableIsoDateTime               changed;       /**< timestamp of last update */
+        NullableIsoDateTime               last_transfer; /**< timestamp of last transfer */
         StringSeq                         statuses;      /**< list of status identifiers */
     };
 
@@ -165,9 +167,9 @@ module Whois
         NameServerSeq       nservers;             /**< list of nameservers */
         StringSeq           tech_contact_handles; /**< list of technical contact identifiers */
         string              registrar_handle;     /**< sponsoring registrar identifier */
-        DateTime            created;              /**< timestamp of creation */
-        NullableDateTime    changed;              /**< timestamp of last update */
-        NullableDateTime    last_transfer;        /**< timestamp of last transfer */
+        IsoDateTime         created;              /**< timestamp of creation */
+        NullableIsoDateTime changed;              /**< timestamp of last update */
+        NullableIsoDateTime last_transfer;        /**< timestamp of last transfer */
         StringSeq           statuses;             /**< list of status identifiers */
     };
 
@@ -194,9 +196,9 @@ module Whois
         DNSKeySeq           dns_keys;             /**< list of dnskeys */
         StringSeq           tech_contact_handles; /**< list of technical contact identifiers */
         string              registrar_handle;     /**< sponsoring registrar identifier */
-        DateTime            created;              /**< timestamp of creation */
-        NullableDateTime    changed;              /**< timestamp of last update */
-        NullableDateTime    last_transfer;        /**< timestamp of last transfer */
+        IsoDateTime         created;              /**< timestamp of creation */
+        NullableIsoDateTime changed;              /**< timestamp of last update */
+        NullableIsoDateTime last_transfer;        /**< timestamp of last transfer */
         StringSeq           statuses;             /**< list of status identifiers */
     };
 
@@ -241,6 +243,11 @@ module Whois
      * Requested object was not found
      */
     exception OBJECT_NOT_FOUND {};
+
+    /**
+     * Requested object is delete candidate
+     */
+    exception OBJECT_DELETE_CANDIDATE {};
 
     /**
      * Requested object identifier is not valid (bad format; in other words object of that handle
@@ -431,11 +438,12 @@ module Whois
                                          (and therefore can't fit to any managed zone by server)
          * @throw INVALID_LABEL          if fqdn contains invalid label (format)
          * @throw OBJECT_NOT_FOUND       if requested domain is not found
+         * @throw OBJECT_DELETE_CANDIDATE  if requested domain is delete candidate
          * @throw INTERNAL_SERVER_ERROR  in case of other failure
          */
         Domain get_domain_by_handle(in string handle)
             raises (
-                INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND,
+                INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE,
                 INVALID_LABEL, TOO_MANY_LABELS, UNMANAGED_ZONE
             );
 

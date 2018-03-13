@@ -25,6 +25,9 @@
 #ifndef RECORD_STATEMENT_IDL_D5FC9FAF5786462690CD9E099CF32973
 #define RECORD_STATEMENT_IDL_D5FC9FAF5786462690CD9E099CF32973
 
+#include "Buffer.idl"
+#include "IsoDateTime.idl"
+
 module Registry {
 module RecordStatement {
 
@@ -57,7 +60,7 @@ module RecordStatement {
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @return buffer with signed pdf printout
          */
-        PdfBuffer domain_printout(in string fqdn, in boolean is_private_printout) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
+        Buffer domain_printout(in string fqdn, in boolean is_private_printout) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
 
         /**
          * Registry printout of current nsset data.
@@ -66,7 +69,7 @@ module RecordStatement {
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @return buffer with signed pdf printout
          */
-        PdfBuffer nsset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
+        Buffer nsset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
 
         /**
          * Registry printout of current keyset data.
@@ -75,7 +78,7 @@ module RecordStatement {
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @return buffer with signed pdf printout
          */
-        PdfBuffer keyset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
+        Buffer keyset_printout(in string handle) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
 
         /**
          * Registry printout of current contact data, hidden/revealed according to discloseflags.
@@ -86,7 +89,7 @@ module RecordStatement {
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @return buffer with signed pdf printout
          */
-        PdfBuffer contact_printout(in string handle, in boolean is_private_printout) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
+        Buffer contact_printout(in string handle, in boolean is_private_printout) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, OBJECT_DELETE_CANDIDATE);
 
         /**
          * Registry printout of private historic domain data.
@@ -97,7 +100,7 @@ module RecordStatement {
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @return buffer with signed pdf printout
          */
-        PdfBuffer historic_domain_printout(in string fqdn, in DateTime timestamp) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_TIMESTAMP);
+        Buffer historic_domain_printout(in string fqdn, in IsoDateTime timestamp) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_TIMESTAMP);
 
         /**
          * Registry printout of historic nsset data.
@@ -108,7 +111,7 @@ module RecordStatement {
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @return buffer with signed pdf printout
          */
-        PdfBuffer historic_nsset_printout(in string handle, in DateTime timestamp) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_TIMESTAMP);
+        Buffer historic_nsset_printout(in string handle, in IsoDateTime timestamp) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_TIMESTAMP);
 
         /**
          * Registry printout of historic keyset data.
@@ -119,7 +122,7 @@ module RecordStatement {
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @return buffer with signed pdf printout
          */
-        PdfBuffer historic_keyset_printout(in string handle, in DateTime timestamp) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_TIMESTAMP);
+        Buffer historic_keyset_printout(in string handle, in IsoDateTime timestamp) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_TIMESTAMP);
 
         /**
          * Registry printout of private historic contact data.
@@ -130,7 +133,7 @@ module RecordStatement {
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @return buffer with signed pdf printout
          */
-        PdfBuffer historic_contact_printout(in string handle, in DateTime timestamp) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_TIMESTAMP);
+        Buffer historic_contact_printout(in string handle, in IsoDateTime timestamp) raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, INVALID_TIMESTAMP);
 
         /**
          * Send registry printout of current private domain data, to owner's email.

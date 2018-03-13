@@ -1,6 +1,7 @@
 #ifndef PUBLIC_REQUEST_IDL_761243517
 #define PUBLIC_REQUEST_IDL_761243517
 
+#include "Buffer.idl"
 #include "NullableTypes.idl"
 
 module Registry
@@ -46,13 +47,6 @@ module Language
         cs,
         en
     };
-};
-
-typedef sequence<octet> BufferValue;
-
-struct Buffer
-{
-    BufferValue value;
 };
 
 exception OBJECT_NOT_FOUND {};
