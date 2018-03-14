@@ -1,3 +1,7 @@
+2018-03-14 (2.31.0)
+
+   * switch to new common date/time and buffer data types
+
 2018-03-08 (2.30.0)
 
    * add renderMail method to mailer interface
