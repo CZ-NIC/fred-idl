@@ -31,22 +31,10 @@
 module Registry {
 module RecordStatement {
 
-    struct DateTime
-    {
-        string value;///< RFC3339 format like: YYYY-MM-DDTHH:MM:SS+ZZ:ZZ, YYYY-MM-DDTHH:MM:SS-ZZ:ZZ or YYYY-MM-DDTHH:MM:SSZ, in case of missing zone offset, it is considered to be time in UTC
-    };
-
     exception INTERNAL_SERVER_ERROR { };
     exception OBJECT_NOT_FOUND { };
     exception OBJECT_DELETE_CANDIDATE { };
     exception INVALID_TIMESTAMP { };
-
-    typedef sequence<octet> BufferData;
-
-    struct PdfBuffer
-    {
-        BufferData data;
-    };
 
     interface Server
     {

@@ -16,21 +16,7 @@ module Registry
 module MojeID
 {
 
-    // unused
-    struct Date
-    {
-        string value;///< iso format YYYY-MM-DD
-    };
-
-    // unused
-    struct DateTime
-    {
-        string value;///< iso (extended) format: YYYY-MM-DDTHH:MM:SS.fffffffff; always in UTC
-    };
-
     valuetype NullableString string;
-    // unused
-    valuetype NullableDate Date;
 
     struct Address
     {
@@ -187,15 +173,6 @@ module MojeID
     };
 
     typedef sequence<ContactStateInfo> ContactStateInfoList;
-
-    // unused
-    typedef sequence<octet> BufferValue;
-
-    // unused
-    struct Buffer
-    {
-        BufferValue value;
-    };
 
     typedef sequence<string> ContactHandleList;
 
@@ -511,7 +488,7 @@ module MojeID
          *
          * @return                validation pdf
          */
-        Registry::Buffer get_validation_pdf(
+        Buffer get_validation_pdf(
                 in ContactId contact_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS);
 
