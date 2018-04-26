@@ -1,11 +1,14 @@
 #ifndef PAIN_IDL_DB189D57EF894375BECB3931E4AD4E54
 #define PAIN_IDL_DB189D57EF894375BECB3931E4AD4E54
 
+#include "IsoDateTime.idl"
+
 module Registry {
 module Pain {
 
 exception OBJECT_NOT_FOUND {};
-exception INVALID_VALUE {};
+exception INVALID_CREDIT_VALUE {};
+exception DUPLICATE_IDENT_ALREADY_EXISTS {};
 exception INTERNAL_SERVER_ERROR {};
 
 typedef string Money;
@@ -13,15 +16,17 @@ typedef string Money;
 interface PainIntf
 {
 
-    unsigned long long increase_credit_of_registrar(
+    void increase_credit_of_registrar(
+            in TBD ident,
             in string registrar_handle,
-            in Money value)
-    raises (OBJECT_NOT_FOUND, INVALID_VALUE, INTERNAL_SERVER_ERROR);
+            in Money credit_value)
+    raises (OBJECT_NOT_FOUND, INVALID_CREDIT_VALUE, DUPLICATE_IDENT_ALREADY_EXISTS, INTERNAL_SERVER_ERROR);
 
-    unsigned long long decrease_credit_of_registrar(
+    void decrease_credit_of_registrar(
+            in TBD ident,
             in string registrar_handle,
-            in Money value)
-    raises (OBJECT_NOT_FOUND, INVALID_VALUE, INTERNAL_SERVER_ERROR);
+            in Money credit_value)
+    raises (OBJECT_NOT_FOUND, INVALID_CREDIT_VALUE, DUPLICATE_IDENT_ALREADY_EXISTS, INTERNAL_SERVER_ERROR);
 
 };
 
