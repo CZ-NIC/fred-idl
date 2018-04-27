@@ -378,6 +378,7 @@ module ccReg {
     polltype_delete_domain,    ///< Domain was deleted.
     polltype_lowcredit,        ///< Warning about low credit of registrator.
     polltype_request_fee_info, ///< Information about requests done and price
+    polltype_update_contact,   ///< Contact was changed
     polltype_update_domain,    ///< Domain was changed
     polltype_update_nsset,     ///< NSSet was changed
     polltype_update_keyset     ///< KeySet was changed
@@ -534,6 +535,18 @@ module ccReg {
       out any mesg,
       in EppParams params
     ) raises (EppError, NoMessages);
+    /** Get poll update contact data (see PollMsg_Update struct comment for more info)
+     \param pollID update contact poll message id
+     \param oldData contact info structure with old data
+     \param newData contact info structure with new data
+     \param params common parameters
+     */
+    void PollRequestGetUpdateContactDetails(
+      in unsigned long long pollID,
+      out Contact oldData,
+      out Contact newData,
+      in EppParams params
+    ) raises (EppError);
     /** Get poll update domain data (see PollMsg_Update struct comment for more info)
      \param pollID update domain poll message id
      \param oldData domain info structure with old data
@@ -547,7 +560,7 @@ module ccReg {
       in EppParams params
     ) raises (EppError);
     /** Get poll update nsset data (see PollMsg_Update struct comment for more info)
-     \param pollID update domain poll message id
+     \param pollID update nsset poll message id
      \param oldData nsset info structure with old data
      \param newData nsset info structure with new data
      \param params common parameters
@@ -559,7 +572,7 @@ module ccReg {
       in EppParams params
     ) raises (EppError);
     /** Get poll update keyset data (see PollMsg_Update struct comment for more info)
-     \param pollID update domain poll message id
+     \param pollID update keyset poll message id
      \param oldData nsset info structure with old data
      \param newData nsset info structure with new data
      \param params common parameters
