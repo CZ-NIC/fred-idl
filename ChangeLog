@@ -2,6 +2,8 @@
 
    * add personal info into public request interface
 
+   * modify epp interface to support update contact poll message
+
 2018-03-14 (2.31.0)
 
    * switch to new common date/time and buffer data types
