@@ -87,6 +87,20 @@ interface PublicRequestIntf
         raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, OBJECT_ALREADY_BLOCKED, OBJECT_NOT_BLOCKED, HAS_DIFFERENT_BLOCK,
                 OPERATION_PROHIBITED);
 
+    unsigned long long create_personal_info_request_registry_email(
+        in string contact_handle,
+        in NullableULongLong log_request_id
+    )
+        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, INVALID_EMAIL);
+
+    unsigned long long create_personal_info_request_non_registry_email(
+        in string contact_handle,
+        in NullableULongLong log_request_id,
+        in ConfirmedBy::Type confirmation_method,
+        in string specified_email
+    )
+        raises (OBJECT_NOT_FOUND, INTERNAL_SERVER_ERROR, INVALID_EMAIL);
+
     Buffer create_public_request_pdf(in unsigned long long public_request_id, in Language::Type lang)
         raises (INTERNAL_SERVER_ERROR, INVALID_PUBLIC_REQUEST_TYPE, OBJECT_NOT_FOUND);
 };

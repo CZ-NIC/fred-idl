@@ -192,7 +192,10 @@ module Registry {
       PRT_MOJEID_IDENTIFIED_CONTACT_TRANSFER,
       PRT_MOJEID_CONTACT_REIDENTIFICATION,
       PRT_MOJEID_PREVALIDATED_UNIDENTIFIED_CONTACT_TRANSFER, ///< Request for mojeid transfer with update (no actual verification status)
-      PRT_MOJEID_PREVALIDATED_CONTACT_TRANSFER  ///< Request for mojeid transfer with update (already has [conditionally]IdentifiedContact status)
+      PRT_MOJEID_PREVALIDATED_CONTACT_TRANSFER, ///< Request for mojeid transfer with update (already has [conditionally]IdentifiedContact status)
+      PRT_PERSONALINFO_AUTO_PIF,      ///< Request for personal info automatic answer created
+      PRT_PERSONALINFO_EMAIL_PIF,     ///< Request for personal info awaiting autorization by signed email
+      PRT_PERSONALINFO_POST_PIF       ///< Request for personal info awaiting autorization by checked letter
     };
 
     /// Status of request 

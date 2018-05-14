@@ -1,4 +1,4 @@
-AC_INIT([fred-idl], 2.31.0)
+AC_INIT([fred-idl], 2.32.0)
 AC_CONFIG_FILES([Makefile
 		 contrib/fedora/fred-idl.spec])
 
