@@ -200,9 +200,9 @@ module Registry {
 
     /// Status of request 
     enum Status {
-      PRS_NEW,       ///< Unresolved request
-      PRS_ANSWERED,  ///< Answered request
-      PRS_INVALID    ///< Request closed as invalid
+      PRS_OPENED,       ///< Opened request
+      PRS_RESOLVED,     ///< Resolved request
+      PRS_INVALIDATED   ///< Invalidated request
     };
 
     /// Object type of request
