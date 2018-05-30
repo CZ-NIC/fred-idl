@@ -4,7 +4,7 @@
 #include "IsoDateTime.idl"
 
 module Registry {
-module Pain {
+module Accounting {
 
 exception OBJECT_NOT_FOUND {};
 exception INVALID_CREDIT_VALUE {};
@@ -13,24 +13,24 @@ exception INTERNAL_SERVER_ERROR {};
 
 typedef string Money;
 
-interface PainIntf
+interface AccountingIntf
 {
 
     void increase_credit_of_registrar(
-            in TBD ident,
+            in string ident,
             in string registrar_handle,
             in Money credit_value)
     raises (OBJECT_NOT_FOUND, INVALID_CREDIT_VALUE, DUPLICATE_IDENT_ALREADY_EXISTS, INTERNAL_SERVER_ERROR);
 
     void decrease_credit_of_registrar(
-            in TBD ident,
+            in string ident,
             in string registrar_handle,
             in Money credit_value)
     raises (OBJECT_NOT_FOUND, INVALID_CREDIT_VALUE, DUPLICATE_IDENT_ALREADY_EXISTS, INTERNAL_SERVER_ERROR);
 
 };
 
-}; // Registry::Pain
+}; // Registry::Accounting
 }; // Registry
 
 #endif
