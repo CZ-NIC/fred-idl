@@ -10,23 +10,79 @@ exception OBJECT_NOT_FOUND {};
 exception INVALID_CREDIT_VALUE {};
 exception DUPLICATE_IDENT_ALREADY_EXISTS {};
 exception INTERNAL_SERVER_ERROR {};
+exception TOO_MANY_OBJECTS_FOUND {};
 
 typedef string Money;
+
+struct PlaceAddress
+{
+    string street1;
+    string street2;
+    string street3;
+    string city;
+    string stateorprovince;
+    string postalcode;
+    string country_code;
+
+};
+
+struct Registrar
+{
+    string handle;
+    string name;
+    string organization;
+    string url;
+    string phone;
+    string fax;
+    PlaceAddress address;
+};
+
+struct PaymentData
+{
+    string bank_payment;
+    string uuid;
+    string account_number;
+    string bank_code;
+    string counter_account_number;
+    string counter_account_name;
+    string constant_symbol;
+    string variable_symbol;
+    string specific_symbol;
+    string price;
+    string date;
+    string memo;
+    string creation_time;
+};
+
+struct PaymentPriceDetails
+{
+    Money value;
+    Money vat;
+    string vat_level;
+};
 
 interface AccountingIntf
 {
 
     void increase_credit_of_registrar(
-            in string ident,
+            in string transaction_ident,
             in string registrar_handle,
-            in Money credit_value)
+            in Money credit_amount_to_add)
     raises (OBJECT_NOT_FOUND, INVALID_CREDIT_VALUE, DUPLICATE_IDENT_ALREADY_EXISTS, INTERNAL_SERVER_ERROR);
 
     void decrease_credit_of_registrar(
-            in string ident,
+            in string transaction_ident,
             in string registrar_handle,
-            in Money credit_value)
+            in Money credit_amount_to_substract)
     raises (OBJECT_NOT_FOUND, INVALID_CREDIT_VALUE, DUPLICATE_IDENT_ALREADY_EXISTS, INTERNAL_SERVER_ERROR);
+
+    Registrar get_registrar_by_payment(
+            in PaymentData payment_data)
+    raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, TOO_MANY_OBJECTS_FOUND);
+
+    PaymentPriceDetails import_payment(
+        in PaymentData payment)
+    raises (INTERNAL_SERVER_ERROR);
 
 };
 
