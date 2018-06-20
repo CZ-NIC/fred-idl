@@ -10,7 +10,6 @@ exception OBJECT_NOT_FOUND {};
 exception INVALID_CREDIT_VALUE {};
 exception DUPLICATE_IDENT_ALREADY_EXISTS {};
 exception INTERNAL_SERVER_ERROR {};
-exception TOO_MANY_OBJECTS_FOUND {};
 
 typedef string Money;
 
@@ -78,7 +77,7 @@ interface AccountingIntf
 
     Registrar get_registrar_by_payment(
             in PaymentData payment_data)
-    raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND, TOO_MANY_OBJECTS_FOUND);
+    raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
 
     PaymentPriceDetails import_payment(
         in PaymentData payment)
