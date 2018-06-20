@@ -10,7 +10,6 @@ exception REGISTRAR_NOT_FOUND {};
 exception INVALID_ZONE {};
 exception INVALID_CREDIT_VALUE {};
 exception CREDIT_ALREADY_PROCESSED {};
-exception PAYMENT_ALREADY_IMPORTED {};
 exception INTERNAL_SERVER_ERROR {};
 
 typedef string Money;
@@ -55,13 +54,6 @@ struct PaymentData
     string creation_time;
 };
 
-struct PaymentPriceDetails
-{
-    Money value;
-    Money vat;
-    string vat_level;
-};
-
 interface AccountingIntf
 {
 
@@ -84,9 +76,10 @@ interface AccountingIntf
             out string zone)
     raises (INTERNAL_SERVER_ERROR, REGISTRAR_NOT_FOUND);
 
-    PaymentPriceDetails import_payment(
-        in PaymentData payment)
-    raises (PAYMENT_ALREADY_IMPORTED, INTERNAL_SERVER_ERROR);
+    void import_payment(
+        in PaymentData payment,
+        out Money credit)
+    raises (INTERNAL_SERVER_ERROR);
 
 };
 
