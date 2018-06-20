@@ -6,9 +6,11 @@
 module Registry {
 module Accounting {
 
-exception OBJECT_NOT_FOUND {};
+exception REGISTRAR_NOT_FOUND {};
+exception INVALID_ZONE {};
 exception INVALID_CREDIT_VALUE {};
-exception DUPLICATE_IDENT_ALREADY_EXISTS {};
+exception CREDIT_ALREADY_PROCESSED {};
+exception PAYMENT_ALREADY_IMPORTED {};
 exception INTERNAL_SERVER_ERROR {};
 
 typedef string Money;
@@ -63,25 +65,28 @@ struct PaymentPriceDetails
 interface AccountingIntf
 {
 
-    void increase_credit_of_registrar(
+    void increase_zone_credit_of_registrar(
             in string transaction_ident,
             in string registrar_handle,
+            in string zone,
             in Money credit_amount_to_add)
-    raises (OBJECT_NOT_FOUND, INVALID_CREDIT_VALUE, DUPLICATE_IDENT_ALREADY_EXISTS, INTERNAL_SERVER_ERROR);
+    raises (CREDIT_ALREADY_PROCESSED, REGISTRAR_NOT_FOUND, INVALID_ZONE, INVALID_CREDIT_VALUE, INTERNAL_SERVER_ERROR);
 
-    void decrease_credit_of_registrar(
+    void decrease_zone_credit_of_registrar(
             in string transaction_ident,
             in string registrar_handle,
+            in string zone,
             in Money credit_amount_to_substract)
-    raises (OBJECT_NOT_FOUND, INVALID_CREDIT_VALUE, DUPLICATE_IDENT_ALREADY_EXISTS, INTERNAL_SERVER_ERROR);
+    raises (CREDIT_ALREADY_PROCESSED, REGISTRAR_NOT_FOUND, INVALID_ZONE, INVALID_CREDIT_VALUE, INTERNAL_SERVER_ERROR);
 
     Registrar get_registrar_by_payment(
-            in PaymentData payment_data)
-    raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_FOUND);
+            in PaymentData payment_data,
+            out string zone)
+    raises (INTERNAL_SERVER_ERROR, REGISTRAR_NOT_FOUND);
 
     PaymentPriceDetails import_payment(
         in PaymentData payment)
-    raises (INTERNAL_SERVER_ERROR);
+    raises (PAYMENT_ALREADY_IMPORTED, INTERNAL_SERVER_ERROR);
 
 };
 
