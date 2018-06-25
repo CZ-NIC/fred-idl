@@ -42,7 +42,6 @@ struct PaymentData
     string bank_payment;
     string uuid;
     string account_number;
-    string bank_code;
     string counter_account_number;
     string counter_account_name;
     string constant_symbol;
