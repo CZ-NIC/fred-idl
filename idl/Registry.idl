@@ -1,10 +1,29 @@
-#ifndef _REGISTRY_IDL_
-#define _REGISTRY_IDL_
+/*
+ * Copyright (C) 2018  CZ.NIC, z.s.p.o.
+ *
+ * This file is part of FRED.
+ *
+ * FRED is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 2 of the License.
+ *
+ * FRED is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with FRED.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef REGISTRY_IDL_04F2F62E716A4FB887212967723DE9E9
+#define REGISTRY_IDL_04F2F62E716A4FB887212967723DE9E9
 
 #include "Filters.idl"
 #include "_dataTypes.idl"
 
-module Registry {
+module Registry
+{
 
   /// This is thrown in case a query takes too much time 
   exception SqlQueryTimeout {};
@@ -174,15 +193,20 @@ module Registry {
       PRT_AUTHINFO_AUTO_RIF,         ///< Request for authinfo was created by registrar through RIF (EPP)
       PRT_AUTHINFO_AUTO_PIF,         ///< Request for authinfo automatic answer created through PIF
       PRT_AUTHINFO_EMAIL_PIF,        ///< Request for authinfo waiting for autorization by signed email
-      PRT_AUTHINFO_POST_PIF,         ///< Request for authinfo waiting for autorization by checked letter
+      PRT_AUTHINFO_POST_PIF,         ///< Request for authinfo waiting for autorization by notarized letter
+      PRT_AUTHINFO_GOVERNMENT_PIF,   ///< Request for authinfo waiting for autorization by means of e-government
       PRT_BLOCK_CHANGES_EMAIL_PIF,    ///< Request for block update object waiting for autorization by signed email
-      PRT_BLOCK_CHANGES_POST_PIF,     ///< Request for block update object waiting for autorization by checked letter
+      PRT_BLOCK_CHANGES_POST_PIF,     ///< Request for block update object waiting for autorization by notarized letter
+      PRT_BLOCK_CHANGES_GOVERNMENT_PIF, ///< Request for block update object waiting for autorization by means of e-government
       PRT_BLOCK_TRANSFER_EMAIL_PIF,  ///< Request for block transfer object waiting for autorization by signed email
-      PRT_BLOCK_TRANSFER_POST_PIF,   ///< Request for block transfer object waiting for autorization by checked letter
+      PRT_BLOCK_TRANSFER_POST_PIF,   ///< Request for block transfer object waiting for autorization by notarized letter
+      PRT_BLOCK_TRANSFER_GOVERNMENT_PIF, ///< Request for block transfer object waiting for autorization by means of e-government
       PRT_UNBLOCK_CHANGES_EMAIL_PIF,  ///< Request for unblock update object waiting for autorization by signed email
-      PRT_UNBLOCK_CHANGES_POST_PIF,   ///< Request for unblock update object waiting for autorization by checked letter
+      PRT_UNBLOCK_CHANGES_POST_PIF,   ///< Request for unblock update object waiting for autorization by notarized letter
+      PRT_UNBLOCK_CHANGES_GOVERNMENT_PIF, ///< Request for unblock update object waiting for autorization by means of e-government
       PRT_UNBLOCK_TRANSFER_EMAIL_PIF,///< Request for unblock transfer object waiting for autorization by signed email
-      PRT_UNBLOCK_TRANSFER_POST_PIF,  ///< Request for unblock transfer object waiting for autorization by checked letter
+      PRT_UNBLOCK_TRANSFER_POST_PIF,  ///< Request for unblock transfer object waiting for autorization by notarized letter
+      PRT_UNBLOCK_TRANSFER_GOVERNMENT_PIF, ///< Request for unblock transfer object waiting for autorization by means of e-government
       PRT_MOJEID_CONTACT_CONDITIONAL_IDENTIFICATION,
       PRT_MOJEID_CONTACT_IDENTIFICATION,
       PRT_MOJEID_CONTACT_VALIDATION,
@@ -195,7 +219,8 @@ module Registry {
       PRT_MOJEID_PREVALIDATED_CONTACT_TRANSFER, ///< Request for mojeid transfer with update (already has [conditionally]IdentifiedContact status)
       PRT_PERSONALINFO_AUTO_PIF,      ///< Request for personal info automatic answer created
       PRT_PERSONALINFO_EMAIL_PIF,     ///< Request for personal info awaiting autorization by signed email
-      PRT_PERSONALINFO_POST_PIF       ///< Request for personal info awaiting autorization by checked letter
+      PRT_PERSONALINFO_POST_PIF,      ///< Request for personal info awaiting autorization by notarized letter
+      PRT_PERSONALINFO_GOVERNMENT_PIF ///< Request for personal info awaiting autorization by means of e-government
     };
 
     /// Status of request 
@@ -736,6 +761,7 @@ module Zone
       MessageContent message_content;
     }; 
   };
-};
+
+}; // module Registry
 
 #endif

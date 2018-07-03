@@ -1,5 +1,23 @@
-#ifndef PUBLIC_REQUEST_IDL_761243517
-#define PUBLIC_REQUEST_IDL_761243517
+/*
+ * Copyright (C) 2018  CZ.NIC, z.s.p.o.
+ *
+ * This file is part of FRED.
+ *
+ * FRED is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 2 of the License.
+ *
+ * FRED is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with FRED.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef PUBLIC_REQUEST_IDL_9AA62C3370464AE092F31804EA9A5F0F
+#define PUBLIC_REQUEST_IDL_9AA62C3370464AE092F31804EA9A5F0F
 
 #include "Buffer.idl"
 #include "NullableTypes.idl"
@@ -25,7 +43,8 @@ module ConfirmedBy
     enum Type
     {
         signed_email,
-        notarized_letter
+        notarized_letter,
+        government
     };
 };
 
@@ -105,7 +124,7 @@ interface PublicRequestIntf
         raises (INTERNAL_SERVER_ERROR, INVALID_PUBLIC_REQUEST_TYPE, OBJECT_NOT_FOUND);
 };
 
-}; // Registry::PublicRequest
-}; // Registry
+}; // module Registry::PublicRequest
+}; // module Registry
 
-#endif // PUBLIC_REQUEST_IDL_761243517
+#endif
