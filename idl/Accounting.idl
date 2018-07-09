@@ -76,7 +76,7 @@ interface AccountingIntf
     raises (INTERNAL_SERVER_ERROR, REGISTRAR_NOT_FOUND);
 
     void import_payment(
-        in PaymentData payment,
+        in PaymentData payment_data,
         out Money credit)
     raises (INTERNAL_SERVER_ERROR);
 
