@@ -1,7 +1,7 @@
 #ifndef PAIN_IDL_DB189D57EF894375BECB3931E4AD4E54
 #define PAIN_IDL_DB189D57EF894375BECB3931E4AD4E54
 
-#include "IsoDateTime.idl"
+#include "IsoDate.idl"
 
 module Registry {
 module Accounting {
@@ -56,7 +56,7 @@ struct PaymentData
     string variable_symbol;
     string specific_symbol;
     Money price;
-    string date;
+    IsoDate date;
     string memo;
     string creation_time;
 };
@@ -79,6 +79,12 @@ interface AccountingIntf
     raises (CREDIT_ALREADY_PROCESSED, REGISTRAR_NOT_FOUND, INVALID_ZONE, INVALID_CREDIT_VALUE, INTERNAL_SERVER_ERROR);
 
     Registrar get_registrar_by_payment(
+            in PaymentData payment_data,
+            out string zone)
+    raises (INTERNAL_SERVER_ERROR, REGISTRAR_NOT_FOUND);
+
+    Registrar get_registrar_by_handle_and_payment(
+            in string registrar_handle,
             in PaymentData payment_data,
             out string zone)
     raises (INTERNAL_SERVER_ERROR, REGISTRAR_NOT_FOUND);
