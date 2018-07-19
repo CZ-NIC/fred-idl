@@ -78,8 +78,7 @@ module MojeID
     struct CreateContact
     {
         string username;
-        string first_name;
-        string last_name;
+        string name;
         NullableString organization;
         NullableString vat_reg_num;
         NullableIsoDate birth_date;
@@ -102,8 +101,7 @@ module MojeID
 
     struct UpdateContact
     {
-        string first_name;
-        string last_name;
+        string name;
         NullableString organization;
         NullableString vat_reg_num;
         NullableIsoDate birth_date;
@@ -126,8 +124,7 @@ module MojeID
     struct InfoContact
     {
         ContactId id;
-        string first_name;
-        string last_name;
+        string name;
         NullableString organization;
         NullableString vat_reg_num;
         NullableIsoDate birth_date;
@@ -150,7 +147,7 @@ module MojeID
 
     struct UpdateTransferContact
     {
-        string full_name;
+        string name;
         NullableString organization;
         NullableString vat_reg_num;
         NullableIsoDate birth_date;
@@ -178,8 +175,7 @@ module MojeID
 
     struct InfoContactPublishFlags
     {
-        boolean first_name;
-        boolean last_name;
+        boolean name;
         boolean organization;
         boolean vat_reg_num;
         boolean birth_date;
@@ -234,8 +230,7 @@ module MojeID
         exception REGISTRATION_VALIDATION_ERROR
         {
             ValidationResult                 username;
-            ValidationResult                 first_name;
-            ValidationResult                 last_name;
+            ValidationResult                 name;
             ValidationResult                 birth_date;
             ValidationResult                 vat_id_num;
             ValidationResult                 email;
@@ -300,8 +295,7 @@ module MojeID
 
         exception UPDATE_CONTACT_PREPARE_VALIDATION_ERROR
         {
-            ValidationResult                 first_name;
-            ValidationResult                 last_name;
+            ValidationResult                 name;
             ValidationResult                 birth_date;
             ValidationResult                 email;
             ValidationResult                 notify_email;
@@ -495,8 +489,7 @@ module MojeID
 
         exception CREATE_VALIDATION_REQUEST_VALIDATION_ERROR
         {
-            ValidationResult                 first_name;
-            ValidationResult                 last_name;
+            ValidationResult                 name;
             ValidationResult                 birth_date;
             ValidationResult                 vat_id_num;
             ValidationResult                 email;
