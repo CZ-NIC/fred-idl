@@ -2,6 +2,7 @@
 #define PAIN_IDL_DB189D57EF894375BECB3931E4AD4E54
 
 #include "IsoDate.idl"
+#include "IsoDateTime.idl"
 
 module Registry {
 module Accounting {
@@ -39,6 +40,8 @@ struct Registrar
     string handle;
     string name;
     string organization;
+    string cin;
+    string tin;
     string url;
     string phone;
     string fax;
@@ -58,7 +61,7 @@ struct PaymentData
     Money price;
     IsoDate date;
     string memo;
-    string creation_time;
+    IsoDateTime creation_time;
 };
 
 interface AccountingIntf
