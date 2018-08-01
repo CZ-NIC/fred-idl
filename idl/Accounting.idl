@@ -30,6 +30,7 @@ exception INVALID_ZONE {};
 exception INVALID_CREDIT_VALUE {};
 exception INVALID_PAYMENT_DATA {};
 exception CREDIT_ALREADY_PROCESSED {};
+exception PAYMENT_ALREADY_PROCESSED {};
 exception INTERNAL_SERVER_ERROR {};
 
 /// fiat money
@@ -72,9 +73,9 @@ struct Registrar
 /// bank payment data
 struct PaymentData
 {
-    string bank_payment_ident;
     string uuid;
     string account_number;
+    string bank_payment_ident;
     string counter_account_number;
     string counter_account_name;
     string constant_symbol;
@@ -158,7 +159,7 @@ interface AccountingIntf
     void import_payment(
         in PaymentData payment_data,
         out Credit remaining_credit)
-    raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA);
+    raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA, PAYMENT_ALREADY_PROCESSED);
 
     /**
      * According to given payment data and registrar handle imports payment into FRED. If the payment data price is > 0,
@@ -171,7 +172,7 @@ interface AccountingIntf
         in PaymentData payment_data,
         in string registrar_handle,
         out Credit remaining_credit)
-    raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA);
+    raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA, PAYMENT_ALREADY_PROCESSED);
 
 };
 
