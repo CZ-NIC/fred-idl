@@ -5,16 +5,16 @@
 
 module ccReg {
 
-    /// common EPP params for create,update,delete and transfer operations
-  struct EppParams {
-      TID requestID;  ///<ID of fred-logd request which represents this call
-                        /// setting it to 0 means no request ID will be saved in history 
-      TID loginID;  ///<ID of fred-logd session  (was login table before)
-      string clTRID;    ///< client transaction ID
-      string XML;       ///< raw content of EPP command
+  /// common EPP params for create,update,delete and transfer operations
+  struct EppParams
+  {
+    TID requestID; ///<ID of fred-logd request which represents this call
+                   ///setting it to 0 means no request ID will be saved in history
+    TID loginID; ///<ID of fred-logd session  (was login table before)
+    string clTRID; ///< client transaction ID
+    string XML; ///< raw content of EPP command
   };
-
-    /// type of identification possibilities, define meaning of ident string
+  /// type of identification possibilities, define meaning of ident string
   enum identtyp 
   {
     EMPTY, ///< unidentified
@@ -24,12 +24,38 @@ module ccReg {
     MPSV, ///< identification number of MPSV
     BIRTHDAY ///< date of birth
   };
-  /// type for meaning of disclose parameters
-  enum Disclose 
+  /// named discloseflags values
+  enum PrivacyPolicy
   {
-    DISCL_EMPTY, ///< disclose section is missing, ignore disclose parameters
-    DISCL_HIDE, ///< all parameters with TRUE value will be hidden
-    DISCL_DISPLAY  ///< all parameters with TRUE value will be shown
+    public_data,
+    private_data,
+    unused_privacy_policy
+  };
+  /// controlled privacy data
+  struct ControlledPrivacyData
+  {
+    PrivacyPolicy Name; ///< Visibility of Name
+    PrivacyPolicy Organization; ///< Visibility of Organization
+    PrivacyPolicy Address; ///< Visibility of Address
+    PrivacyPolicy Telephone; ///< Visibility of Telephone
+    PrivacyPolicy Fax; ///< Visibility of Fax
+    PrivacyPolicy Email; ///< Visibility of Email
+    PrivacyPolicy VAT; ///< Visibility of VAT
+    PrivacyPolicy Ident; ///< Visibility of ident
+    PrivacyPolicy NotifyEmail; ///< Visibility of NotifyEmail
+  };
+  /// controlled privacy data mask
+  struct ControlledPrivacyDataMask
+  {
+    boolean Name;
+    boolean Organization;
+    boolean Address;
+    boolean Telephone;
+    boolean Fax;
+    boolean Email;
+    boolean VAT;
+    boolean Ident;
+    boolean NotifyEmail;
   };
   /// type for result of check operation
   enum CheckAvail 
@@ -184,6 +210,12 @@ module ccReg {
     AddressAction action;   ///< action
     AddressData data;       ///< address data when action == "set"
   };
+  /// ControlledPrivacyDataChange
+  struct ControlledPrivacyDataChange
+  {
+    boolean update_data; ///< update is requested
+    ControlledPrivacyData data; ///< data when update_data is true
+  };
 
   /// Type for transfer data after info_contact call 
   struct Contact
@@ -198,7 +230,7 @@ module ccReg {
     timestamp UpDate; ///< Date and time of last change
     timestamp TrDate; ///< Date and time of last transfer
     string Name; ///< Contact name or title
-    string Organization; ///< Organisation name
+    string Organization; ///< Organization name
     Lists Streets; ///< Address - maximum is 3 parts
     string City; ///< Address - city
     string StateOrProvince; ///< Address - region (country part)
@@ -213,18 +245,9 @@ module ccReg {
     string ident; ///< ident - unique identifier of contact
     identtyp identtype; ///< Ident type - defines meaning of ident field 
     string AuthInfoPw; ///< password for contact transfer
-    Disclose DiscloseFlag; ///< disclose flag determines meaning of disclose param.
-    boolean DiscloseName; ///< Visibility for Name parameter 
-    boolean DiscloseOrganization; ///< Visibility for Organisation parameter
-    boolean DiscloseAddress; ///< Visibility for Addrss parameter
-    boolean DiscloseTelephone; ///< Visibility for Telephone parametr
-    boolean DiscloseFax; ///< Visibility for Fax parameter
-    boolean DiscloseEmail; ///< Visibility for Email parameter
-    boolean DiscloseVAT; ///< Visibility for VAT parameter
-    boolean DiscloseIdent; ///< Visibility for ident parameter
-    boolean DiscloseNotifyEmail; ///< Visibility for NotifyEmail parameter
+    ControlledPrivacyData DiscloseFlags;
   };
-  /// Type for transfer data after call create_contact
+  /// Type for transfer data in create_contact function
   struct ContactData
   {
     string Name; ///< Contact name or title
@@ -243,18 +266,9 @@ module ccReg {
     string ident; ///< ident - unique contact identifier
     identtyp identtype; ///< Ident type - defines meaning of ident field
     string AuthInfoPw; ///< Password for contact transfer
-    Disclose DiscloseFlag; ///< Disclose flag determines meaning of disclose param.
-    boolean DiscloseName; ///< Visibility for Name parameter
-    boolean DiscloseOrganization; ///< Visibility for Organisation parameter
-    boolean DiscloseAddress; ///< Visibility for Address parameter
-    boolean DiscloseTelephone; ///< Visibility for Telephone parameter
-    boolean DiscloseFax; ///< Visibility for Fax parameter
-    boolean DiscloseEmail; ///< Visibility for Email parameter
-    boolean DiscloseVAT; ///< Visibility for VAT parameter
-    boolean DiscloseIdent; ///< Visibility for ident parameter
-    boolean DiscloseNotifyEmail; ///< Visibility for NotifyEmail parameter
+    ControlledPrivacyData DiscloseFlags;
   };
-  /// Type for transfer data after call update_contact
+  /// Type for transfer data in update_contact function
   struct ContactChange
   {
     string Name; ///< Contact name or title
@@ -273,16 +287,7 @@ module ccReg {
     string ident; ///< ident - unique contact identifier
     identtyp identtype; ///< Ident type - defines meaning of ident field
     string AuthInfoPw; ///< Password for contact transfer 
-    Disclose DiscloseFlag; ///< Disclose flag determines meaning of disclose param.
-    boolean DiscloseName; ///< Visibility for Name parameter 
-    boolean DiscloseOrganization; ///< Visibility for Organisation parameter
-    boolean DiscloseAddress; ///< Visibility for Address parameter
-    boolean DiscloseTelephone; ///< Visibility for Telephone parameter
-    boolean DiscloseFax; ///< Visibility for Fax parameter
-    boolean DiscloseEmail; ///< Visibility for Email parameter
-    boolean DiscloseVAT; ///< Visibility for VAT parameter
-    boolean DiscloseIdent; ///< Visibility for ident parameter
-    boolean DiscloseNotifyEmail; ///< Visibility for NotifyEmail parameter
+    ControlledPrivacyDataChange DiscloseFlags;
   };
   /// Type for transfer data in info_nsset function
   struct NSSet
@@ -340,12 +345,14 @@ module ccReg {
     AdminContact tmpcontact; ///< List of admnistrative contacts
   };
   /// Type for validation date disposition at ENUM domain
-  struct ENUMValidationExtension {
+  struct ENUMValidationExtension
+  {
     date valExDate; ///< Expiration date of valadation validity
-    Disclose publish; ///< Should the ENUM domain be published in ENUM dictionary
+    boolean publish; ///< Should the ENUM domain be published in ENUM dictionary
   };
   /// Info function type.
-  enum InfoType {
+  enum InfoType
+  {
     IT_LIST_CONTACTS,
     IT_LIST_DOMAINS,
     IT_LIST_NSSETS,
@@ -645,11 +652,13 @@ module ccReg {
     /** Find out with given identifier. If logged registrar isn't 
         registrar of contact, AuthInfoPw item shows him empty.
      \param handle Identifier of requested object
+     \param available_disclose_flags Disclose flags sendable to the client
      \param c Data structure with reply
      \param params common parametres
      \return General reply with operation results and error message */   
     Response ContactInfo (
       in string handle,
+      in ControlledPrivacyDataMask available_disclose_flags,
       out Contact c,
       in EppParams params
     ) raises (EppError);
