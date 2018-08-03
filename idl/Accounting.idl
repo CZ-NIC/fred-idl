@@ -99,12 +99,14 @@ interface AccountingIntf
      * \param credit_amount_to_add  value > 0, will be added to the registar's credit for the specified zone
      *
      */
+    /* commented out because credit handling still remains in import_payment call
     void increase_zone_credit_of_registrar(
             in string transaction_ident,
             in string registrar_handle,
             in string zone,
             in Credit credit_amount_to_add)
     raises (CREDIT_ALREADY_PROCESSED, REGISTRAR_NOT_FOUND, INVALID_ZONE, INVALID_CREDIT_VALUE, INTERNAL_SERVER_ERROR);
+    */
 
     /**
      * Decrease credit of the registrar for the specified zone.
@@ -112,15 +114,17 @@ interface AccountingIntf
      * \param transaction_ident  unique identifier of the request
      * \param registrar_handle  handle of the registrar whose credit should be increased
      * \param zone  zone for which the registrar should have the credit increased
-     * \param credit_amount_to_substract  value > 0, will be substracted from the registar's credit for the specified zone
+     * \param credit_amount_to_subtract  value > 0, will be subtracted from the registar's credit for the specified zone
      *
      */
+    /* commented out because credit handling still remains in import_payment call
     void decrease_zone_credit_of_registrar(
             in string transaction_ident,
             in string registrar_handle,
             in string zone,
-            in Credit credit_amount_to_substract)
+            in Credit credit_amount_to_subtract)
     raises (CREDIT_ALREADY_PROCESSED, REGISTRAR_NOT_FOUND, INVALID_ZONE, INVALID_CREDIT_VALUE, INTERNAL_SERVER_ERROR);
+    */
 
     /**
      * According to given payment data identifies the registrar and returns its information and the zone to which
@@ -150,11 +154,15 @@ interface AccountingIntf
     raises (INTERNAL_SERVER_ERROR, REGISTRAR_NOT_FOUND, INVALID_PAYMENT_DATA);
 
     /**
-     * According to given payment data identifies the registrar and imports payment into FRED. If the payment data price is > 0,
-     * creates the advance invoice.
+     * According to given payment data:
+     * - identifies the registrar,
+     * - pays possibly unpaid invoices,
+     * - if the remaining credit > 0:
+     *    - creates the advance invoice and
+     *    - increases his credit.
      *
      * \param payment_data  the bank payment data
-     * \param remaining_credit  what remains after processing the payment to add to the registrar credit
+     * \param remaining_credit  what remained after processing the payment to add to the registrar credit
      */
     void import_payment(
         in PaymentData payment_data,
@@ -162,11 +170,15 @@ interface AccountingIntf
     raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA, PAYMENT_ALREADY_PROCESSED);
 
     /**
-     * According to given payment data and registrar handle imports payment into FRED. If the payment data price is > 0,
-     * creates the advance invoice.
+     * According to given registrar handle:
+     * - looks up the registrar
+     * - pays possibly unpaid invoices,
+     * - if the remaining credit > 0:
+     *    - creates the advance invoice and
+     *    - increases his credit.
      *
      * \param payment_data  the bank payment data
-     * \param remaining_credit  what remains after processing the payment to add to the registrar credit
+     * \param remaining_credit  what remained after processing the payment to add to the registrar credit
      */
     void import_payment_by_registrar_handle(
         in PaymentData payment_data,
