@@ -59,6 +59,7 @@ struct PlaceAddress
 
 struct Registrar
 {
+    unsigned long long id; /// temporary needed to link to old management interface
     string handle;
     string name;
     string organization;
