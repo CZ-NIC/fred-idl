@@ -57,6 +57,14 @@ struct PlaceAddress
 
 };
 
+struct RegistrarReference
+{
+    unsigned long long id; /// temporary needed to link to old management interface
+    string handle;
+};
+
+typedef sequence<RegistrarReference> RegistrarReferenceSeq;
+
 struct Registrar
 {
     unsigned long long id; /// temporary needed to link to old management interface
@@ -99,7 +107,7 @@ struct InvoiceReference
     string number;
     Money balance_change;
     InvoiceType type;
-}
+};
 
 typedef sequence<InvoiceReference> InvoiceReferenceSeq;
 
@@ -205,6 +213,14 @@ interface AccountingIntf
         in PaymentData payment_data,
         in string registrar_handle)
     raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA, PAYMENT_ALREADY_PROCESSED);
+
+    /**
+     * Returns sequence of references to registrar.
+     *
+     * \returns sequence of references to registrars
+     */
+    RegistrarReferenceSeq get_registrars_references()
+    raises (INTERNAL_SERVER_ERROR, REGISTRAR_NOT_FOUND);
 
 };
 
