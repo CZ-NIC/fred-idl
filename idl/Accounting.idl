@@ -88,6 +88,21 @@ struct PaymentData
     IsoDateTime creation_time;
 };
 
+enum InvoiceType {
+  IT_ADVANCE,
+  IT_ACCOUNT
+};
+
+struct InvoiceReference
+{
+    unsigned long long id;
+    string number;
+    Money balance_change;
+    InvoiceType type;
+}
+
+typedef sequence<InvoiceReference> InvoiceReferenceSeq;
+
 interface AccountingIntf
 {
 
@@ -134,6 +149,7 @@ interface AccountingIntf
      * \param payment_data  the bank payment data
      * \param zone  output parameter
      *
+     * \returns registrar details
      */
     Registrar get_registrar_by_payment(
             in PaymentData payment_data,
@@ -147,6 +163,7 @@ interface AccountingIntf
      * \param payment_data  the bank payment data
      * \param zone  output parameter
      *
+     * \returns registrar details
      */
     Registrar get_registrar_by_handle_and_payment(
             in string registrar_handle,
@@ -164,10 +181,11 @@ interface AccountingIntf
      *
      * \param payment_data  the bank payment data
      * \param remaining_credit  what remained after processing the payment to add to the registrar credit
+     *
+     * \returns sequence of references to invoices
      */
-    void import_payment(
-        in PaymentData payment_data,
-        out Credit remaining_credit)
+    InvoiceReferenceSeq import_payment(
+        in PaymentData payment_data)
     raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA, PAYMENT_ALREADY_PROCESSED);
 
     /**
@@ -180,11 +198,12 @@ interface AccountingIntf
      *
      * \param payment_data  the bank payment data
      * \param remaining_credit  what remained after processing the payment to add to the registrar credit
+     *
+     * \returns sequence of references to invoices
      */
-    void import_payment_by_registrar_handle(
+    InvoiceReferenceSeq import_payment_by_registrar_handle(
         in PaymentData payment_data,
-        in string registrar_handle,
-        out Credit remaining_credit)
+        in string registrar_handle)
     raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA, PAYMENT_ALREADY_PROCESSED);
 
 };
