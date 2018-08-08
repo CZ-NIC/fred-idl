@@ -90,9 +90,13 @@ struct PaymentData
     IsoDateTime creation_time;
 };
 
-enum InvoiceType {
-  IT_ADVANCE,
-  IT_ACCOUNT
+module InvoiceType
+{
+    enum Type
+    {
+        advance,
+        account
+    };
 };
 
 struct InvoiceReference
@@ -100,7 +104,7 @@ struct InvoiceReference
     unsigned long long id;
     string number;
     Money balance_change;
-    InvoiceType type;
+    InvoiceType::Type type;
 };
 
 typedef sequence<InvoiceReference> InvoiceReferenceSeq;
@@ -182,7 +186,6 @@ interface AccountingIntf
      *    - increases his credit.
      *
      * \param payment_data  the bank payment data
-     * \param remaining_credit  what remained after processing the payment to add to the registrar credit
      *
      * \returns sequence of references to invoices
      */
@@ -199,7 +202,6 @@ interface AccountingIntf
      *    - increases his credit.
      *
      * \param payment_data  the bank payment data
-     * \param remaining_credit  what remained after processing the payment to add to the registrar credit
      *
      * \returns sequence of references to invoices
      */
@@ -214,7 +216,7 @@ interface AccountingIntf
      * \returns sequence of handles of registrars
      */
     RegistrarHandleSeq get_registrar_handles()
-    raises (INTERNAL_SERVER_ERROR, REGISTRAR_NOT_FOUND);
+    raises (INTERNAL_SERVER_ERROR);
 
 };
 
