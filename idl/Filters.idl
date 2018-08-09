@@ -225,7 +225,7 @@ module ccReg {
       Str addSsn();
       Str addPhoneNumber();
     };
-    
+
     interface NSSet : Obj
     {
       Id addId();
@@ -297,7 +297,7 @@ module ccReg {
       Obj addObject();
       File addFile();
     };
-    
+
     interface Mail : Compound
     {
       Id addId();
@@ -320,43 +320,13 @@ module ccReg {
       void saveFilter(in string name);
     };
 
-    interface StatementItem: Compound
-    {
-        Id addId();
-        Str addAccountNumber();
-        Str addBankCode();
-        Int addCode();
-        Int addType();
-        Str addConstSymb();
-        Str addVarSymb();
-        Str addAccountEvid();
-        Date addAccountDate();
-        Str addAccountName();
-        DateTime addCrTime();
-        Str addAccountMemo();
-        Id addAccountId();
-    };
-
-    interface StatementHead : Compound
-    {
-        Id addId();
-        Id addAccountId();
-        Date addCreateDate();
-        Date addBalanceOldDate();
-        Str addAccountNumber();
-        Str addBankCode();
-        Str addConstSymbol();
-        Str addVarSymbol();
-        Str addSpecSymbol();
-    };
-
     interface Message: Compound
     {
         Id addId();
         DateTime addCrDate();
         DateTime addModDate();
         Int addAttempt();
-	    Int addStatus();
+        Int addStatus();
         Int addCommType();
         Int addMessageType();
         Str addSmsPhoneNumber();
