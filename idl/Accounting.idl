@@ -1,0 +1,235 @@
+/*
+ * Copyright (C) 2018  CZ.NIC, z.s.p.o.
+ *
+ * This file is part of FRED.
+ *
+ * FRED is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, version 2 of the License.
+ *
+ * FRED is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with FRED.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
+#ifndef PAIN_IDL_DB189D57EF894375BECB3931E4AD4E54
+#define PAIN_IDL_DB189D57EF894375BECB3931E4AD4E54
+
+#include "IsoDate.idl"
+#include "IsoDateTime.idl"
+
+module Registry {
+module Accounting {
+
+exception REGISTRAR_NOT_FOUND {};
+exception INVALID_ZONE {};
+exception INVALID_CREDIT_VALUE {};
+exception INVALID_PAYMENT_DATA {};
+exception CREDIT_ALREADY_PROCESSED {};
+exception PAYMENT_ALREADY_PROCESSED {};
+exception INTERNAL_SERVER_ERROR {};
+
+/// fiat money
+struct Money
+{
+    string value;
+};
+
+/// currency used by FRED internally
+struct Credit
+{
+    string value;
+};
+
+struct PlaceAddress
+{
+    string street1;
+    string street2;
+    string street3;
+    string city;
+    string stateorprovince;
+    string postalcode;
+    string country_code;
+
+};
+
+struct Registrar
+{
+    unsigned long long id; /// temporary needed to link to old management interface
+    string handle;
+    string name;
+    string organization;
+    string cin;
+    string tin;
+    string url;
+    string phone;
+    string fax;
+    PlaceAddress address;
+};
+
+struct RegistrarReference
+{
+    string handle;
+    string name;
+};
+
+typedef sequence<RegistrarReference> RegistrarReferenceSeq;
+
+/// bank payment data
+struct PaymentData
+{
+    string uuid;
+    string account_number;
+    string account_payment_ident;
+    string counter_account_number;
+    string counter_account_name;
+    string constant_symbol;
+    string variable_symbol;
+    string specific_symbol;
+    Money price;
+    IsoDate date;
+    string memo;
+    IsoDateTime creation_time;
+};
+
+module InvoiceType
+{
+    enum Type
+    {
+        advance,
+        account
+    };
+};
+
+struct InvoiceReference
+{
+    unsigned long long id;
+    string number;
+    InvoiceType::Type type;
+};
+
+typedef sequence<InvoiceReference> InvoiceReferenceSeq;
+
+interface AccountingIntf
+{
+
+    /**
+     * Increase credit of the registrar for the specified zone.
+     *
+     * \param transaction_ident  unique identifier of the request
+     * \param registrar_handle  handle of the registrar whose credit should be increased
+     * \param zone  zone for which the registrar should have the credit increased
+     * \param credit_amount_to_add  value > 0, will be added to the registar's credit for the specified zone
+     *
+     */
+    /* commented out because credit handling still remains in import_payment call
+    void increase_zone_credit_of_registrar(
+            in string transaction_ident,
+            in string registrar_handle,
+            in string zone,
+            in Credit credit_amount_to_add)
+    raises (CREDIT_ALREADY_PROCESSED, REGISTRAR_NOT_FOUND, INVALID_ZONE, INVALID_CREDIT_VALUE, INTERNAL_SERVER_ERROR);
+    */
+
+    /**
+     * Decrease credit of the registrar for the specified zone.
+     *
+     * \param transaction_ident  unique identifier of the request
+     * \param registrar_handle  handle of the registrar whose credit should be increased
+     * \param zone  zone for which the registrar should have the credit increased
+     * \param credit_amount_to_subtract  value > 0, will be subtracted from the registar's credit for the specified zone
+     *
+     */
+    /* commented out because credit handling still remains in import_payment call
+    void decrease_zone_credit_of_registrar(
+            in string transaction_ident,
+            in string registrar_handle,
+            in string zone,
+            in Credit credit_amount_to_subtract)
+    raises (CREDIT_ALREADY_PROCESSED, REGISTRAR_NOT_FOUND, INVALID_ZONE, INVALID_CREDIT_VALUE, INTERNAL_SERVER_ERROR);
+    */
+
+    /**
+     * According to given payment data identifies the registrar and returns its information and the zone to which
+     * the payment should be credited to.
+     *
+     * \param payment_data  the bank payment data
+     * \param zone  output parameter
+     *
+     * \returns registrar details
+     */
+    Registrar get_registrar_by_payment(
+            in PaymentData payment_data,
+            out string zone)
+    raises (INTERNAL_SERVER_ERROR, REGISTRAR_NOT_FOUND, INVALID_PAYMENT_DATA);
+
+    /**
+     * According to given handle identifies the registrar and according the payment data identifies the zone and returns
+     * registrar information and the zone to which the payment should be credited to.
+     *
+     * \param payment_data  the bank payment data
+     * \param zone  output parameter
+     *
+     * \returns registrar details
+     */
+    Registrar get_registrar_by_handle_and_payment(
+            in string registrar_handle,
+            in PaymentData payment_data,
+            out string zone)
+    raises (INTERNAL_SERVER_ERROR, REGISTRAR_NOT_FOUND, INVALID_PAYMENT_DATA);
+
+    /**
+     * According to given payment data:
+     * - identifies the registrar,
+     * - pays possibly unpaid invoices,
+     * - if the remaining credit > 0:
+     *    - creates the advance invoice and
+     *    - increases his credit.
+     *
+     * \param payment_data  the bank payment data
+     * \param remaining_credit  what remained after processing the payment to add to the registrar credit
+     *
+     * \returns sequence of references to invoices
+     */
+    InvoiceReferenceSeq import_payment(
+        in PaymentData payment_data,
+        out Credit remaining_credit)
+    raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA, PAYMENT_ALREADY_PROCESSED);
+
+    /**
+     * According to given registrar handle:
+     * - looks up the registrar
+     * - pays possibly unpaid invoices,
+     * - if the remaining credit > 0:
+     *    - creates the advance invoice and
+     *    - increases his credit.
+     *
+     * \param payment_data  the bank payment data
+     * \param remaining_credit  what remained after processing the payment to add to the registrar credit
+     *
+     * \returns sequence of references to invoices
+     */
+    InvoiceReferenceSeq import_payment_by_registrar_handle(
+        in PaymentData payment_data,
+        in string registrar_handle,
+        out Credit remaining_credit)
+    raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA, PAYMENT_ALREADY_PROCESSED);
+
+    /**
+     * Returns sequence of references to registrars sorted alphabetically by name.
+     *
+     * \returns sequence of handles of registrars
+     */
+    RegistrarReferenceSeq get_registrar_references()
+    raises (INTERNAL_SERVER_ERROR);
+
+};
+
+}; // Registry::Accounting
+}; // Registry
+
+#endif
