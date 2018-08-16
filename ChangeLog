@@ -1,3 +1,17 @@
+2018-08-16 (2.33.0)
+
+   * modify epp interface to support disclose flags policy configration
+
+   * mojeid - join fist/last name to name
+
+   * new interface for accounting (removed bank payements interfaces and structures)
+
+   * public request
+       - status enum renaming
+       - new verification type for requests (government)
+
+   * dropping unused structures
+
 2018-04-20 (2.32.0)
 
    * add personal info into public request interface
