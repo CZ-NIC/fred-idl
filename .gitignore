@@ -5,10 +5,9 @@ autom4te.cache/
 configure
 install-sh
 missing
-Makefile
+./Makefile
 config.log
 config.status
-fred-idl.spec
 .project
 .cproject
 idl/*.hh

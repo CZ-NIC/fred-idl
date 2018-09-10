@@ -12,7 +12,7 @@ macro(set_default variable_name variable_value)
 endmacro()
 
 set_default(TARBALL_FILE_NAME fred-idl)
-set_default(PYTHON python)
+set_default(PYTHON python3)
 
 if(NOT VERSION)
     execute_process(COMMAND "git" "describe" "--tags"
@@ -76,12 +76,14 @@ compile_idl_files(
     ZoneGenerator
     Zone)
 
-execute_process(COMMAND ${PYTHON} -c "from distutils.sysconfig import get_python_inc; print(get_python_inc())"
+execute_process(COMMAND ${PYTHON} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
     OUTPUT_VARIABLE PKGPYTHONDIR)
 string(REGEX REPLACE "\n" "" PKGPYTHONDIR "${PKGPYTHONDIR}")
 
-install(DIRECTORY ${CMAKE_BINARY_DIR}/fred_idl DESTINATION "${CMAKE_INSTALL_PREFIX}/${PKGPYTHONDIR}")
-add_custom_target(uninstall COMMAND rm -rf ${CMAKE_INSTALL_PREFIX}/${PKGPYTHONDIR}/fred_idl)
+install(DIRECTORY ${CMAKE_BINARY_DIR}/fred_idl/ DESTINATION "${PKGPYTHONDIR}")
+install(DIRECTORY ${CMAKE_BINARY_DIR}/idl/ DESTINATION "${CMAKE_INSTALL_PREFIX}/share/idl/fred/" FILES_MATCHING PATTERN "*.idl")
+add_custom_target(uninstall_python_idl COMMAND rm -rf "${PKGPYTHONDIR}/fred_idl")
+add_custom_target(uninstall COMMAND rm -rf "${CMAKE_INSTALL_PREFIX}/share/idl/fred/" DEPENDS uninstall_python_idl)
 
 if(EXISTS ${CMAKE_SOURCE_DIR}/.git AND GIT_PROGRAM)
     if(NOT TARGET dist)
