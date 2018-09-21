@@ -4,6 +4,7 @@ find_program(IDL_PROGRAM omniidl)
 find_program(GIT_PROGRAM git)
 
 set(program_name fred-idl)
+project(${program_name} NONE)
 
 macro(set_default variable_name variable_value)
     if(NOT ${variable_name})
