@@ -13,7 +13,7 @@ macro(set_default variable_name variable_value)
 endmacro()
 
 set_default(TARBALL_FILE_NAME fred-idl)
-set_default(PYTHON python3)
+set_default(PYTHON python)
 
 if(NOT VERSION)
     execute_process(COMMAND "git" "describe" "--tags"
