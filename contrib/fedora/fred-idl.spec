@@ -9,11 +9,10 @@ URL:		http://fred.nic.cz
 Source:         %{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
+%define python_version python
 %if 0%{?centos}
-%define python_version python36
 BuildRequires: centos-release-scl, llvm-toolset-7-cmake, llvm-toolset-7-build
 %else
-%define python_version python3
 BuildRequires: cmake
 %endif
 BuildRequires:  omniORBpy-devel, %{python_version}
