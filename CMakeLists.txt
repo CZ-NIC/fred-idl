@@ -77,7 +77,7 @@ compile_idl_files(
     ZoneGenerator
     Zone)
 
-execute_process(COMMAND ${PYTHON} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"
+execute_process(COMMAND ${PYTHON} -c "from distutils.sysconfig import get_python_lib; print(get_python_lib(True, False, '${CMAKE_INSTALL_PREFIX}'))"
     OUTPUT_VARIABLE PKGPYTHONDIR)
 string(REGEX REPLACE "\n" "" PKGPYTHONDIR "${PKGPYTHONDIR}")
 
