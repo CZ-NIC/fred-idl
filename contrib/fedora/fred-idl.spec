@@ -46,6 +46,6 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 /usr/share/idl/fred/*.idl
-/usr/lib64/*
+%{python_sitearch}/*
 
 %changelog
