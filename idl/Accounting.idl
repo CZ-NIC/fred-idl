@@ -190,7 +190,7 @@ interface AccountingIntf
      *    - creates the advance invoice and
      *    - increases his credit.
      *
-     * \param payment_data  the bank payment data
+     * \param payment_data  the bank payment data; payment_data.date is used as tax date
      * \param remaining_credit  what remained after processing the payment to add to the registrar credit
      *
      * \returns sequence of references to invoices
@@ -209,6 +209,8 @@ interface AccountingIntf
      *    - increases his credit.
      *
      * \param payment_data  the bank payment data
+     * \param registrar_handle  a handle of the registrar to pair the payment with
+     * \param tax_date  tax date; for payments imported by registrar handle, tax date needs to be specified here
      * \param remaining_credit  what remained after processing the payment to add to the registrar credit
      *
      * \returns sequence of references to invoices
@@ -216,6 +218,7 @@ interface AccountingIntf
     InvoiceReferenceSeq import_payment_by_registrar_handle(
         in PaymentData payment_data,
         in string registrar_handle,
+        in IsoDate tax_date, 
         out Credit remaining_credit)
     raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA, PAYMENT_ALREADY_PROCESSED);
 
