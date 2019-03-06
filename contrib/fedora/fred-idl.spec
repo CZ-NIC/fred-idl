@@ -4,7 +4,7 @@ Version:	%{our_version}
 Release:	%{?our_release}%{!?our_release:1}%{?dist}
 Summary:	FRED - idl interface files
 Group:		Applications/Utils
-License:	GPL
+License:	GPLv3+
 URL:		http://fred.nic.cz
 Source:         %{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
