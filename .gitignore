@@ -1,13 +1,7 @@
 INSTALL
-Makefile.in
-aclocal.m4
-autom4te.cache/
-configure
-install-sh
-missing
-./Makefile
-config.log
-config.status
+Makefile
+build.ninja
+rules.ninja
 .project
 .cproject
 idl/*.hh
@@ -15,3 +9,8 @@ idl/*.cc
 *.pyc
 /fred_idl
 !/fred_idl/__init__.py
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+.ninja_deps
+.ninja_log
