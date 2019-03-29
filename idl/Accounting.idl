@@ -21,6 +21,7 @@
 
 #include "IsoDate.idl"
 #include "IsoDateTime.idl"
+#include "NullableIsoDate.idl"
 
 module Registry {
 module Accounting {
@@ -29,6 +30,9 @@ exception REGISTRAR_NOT_FOUND {};
 exception INVALID_ZONE {};
 exception INVALID_CREDIT_VALUE {};
 exception INVALID_PAYMENT_DATA {};
+exception INVALID_TAX_DATE_FORMAT {};
+exception INVALID_TAX_DATE_VALUE {};
+exception PAYMENT_TOO_OLD {};
 exception CREDIT_ALREADY_PROCESSED {};
 exception PAYMENT_ALREADY_PROCESSED {};
 exception INTERNAL_SERVER_ERROR {};
@@ -190,7 +194,7 @@ interface AccountingIntf
      *    - creates the advance invoice and
      *    - increases his credit.
      *
-     * \param payment_data  the bank payment data
+     * \param payment_data  the bank payment data.  Payment_data.date is used as tax date
      * \param remaining_credit  what remained after processing the payment to add to the registrar credit
      *
      * \returns sequence of references to invoices
@@ -198,7 +202,7 @@ interface AccountingIntf
     InvoiceReferenceSeq import_payment(
         in PaymentData payment_data,
         out Credit remaining_credit)
-    raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA, PAYMENT_ALREADY_PROCESSED);
+    raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA, PAYMENT_TOO_OLD, PAYMENT_ALREADY_PROCESSED);
 
     /**
      * According to given registrar handle:
@@ -209,6 +213,8 @@ interface AccountingIntf
      *    - increases his credit.
      *
      * \param payment_data  the bank payment data
+     * \param registrar_handle  a handle of the registrar to pair the payment with
+     * \param tax_date  tax date.  tax date.  If missing, payment_data.date is used
      * \param remaining_credit  what remained after processing the payment to add to the registrar credit
      *
      * \returns sequence of references to invoices
@@ -216,8 +222,9 @@ interface AccountingIntf
     InvoiceReferenceSeq import_payment_by_registrar_handle(
         in PaymentData payment_data,
         in string registrar_handle,
+        in NullableIsoDate tax_date,
         out Credit remaining_credit)
-    raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA, PAYMENT_ALREADY_PROCESSED);
+    raises (INTERNAL_SERVER_ERROR, INVALID_PAYMENT_DATA, INVALID_TAX_DATE_VALUE, INVALID_TAX_DATE_FORMAT, REGISTRAR_NOT_FOUND, PAYMENT_ALREADY_PROCESSED);
 
     /**
      * Returns sequence of references to registrars sorted alphabetically by name.
