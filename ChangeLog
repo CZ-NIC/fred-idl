@@ -1,3 +1,7 @@
+2019-04-26 (2.35.0)
+
+   * accounting interface - add optional custom tax date to import payment method (when specifying registrar manually)
+
 2019-03-18 (2.34.0)
 
    * License GNU GPLv3+
