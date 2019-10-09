@@ -9,13 +9,13 @@ URL:		http://fred.nic.cz
 Source:         %{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
-%define python_version python
-%if 0%{?centos}
+%define python_version python2
+%if 0%{?el7}
 BuildRequires: centos-release-scl, llvm-toolset-7-cmake, llvm-toolset-7-build
 %else
 BuildRequires: cmake
 %endif
-BuildRequires:  omniORBpy-devel, %{python_version}
+BuildRequires:  omniORBpy-devel, %{python_version}-devel
 
 %description
 FRED (Free Registry for Enum and Domain) is free registry system for 
@@ -26,13 +26,13 @@ of corba interfaces to server
 %setup -q
 
 %build
-%if 0%{?centos}
+%if 0%{?el7}
 %{?scl:scl enable llvm-toolset-7 - << \EOF}
 %global __cmake /opt/rh/llvm-toolset-7/root/usr/bin/cmake
 %endif
 %cmake -DPYTHON=%{python_version} -DVERSION=%{version} .
 %make_build
-%if 0%{?centos}
+%if 0%{?el7}
 %{?scl:EOF}
 %endif
 
@@ -46,6 +46,6 @@ rm -rf $RPM_BUILD_ROOT
 %files
 %defattr(-,root,root,-)
 /usr/share/idl/fred/*.idl
-%{python_sitearch}/*
+%{python2_sitearch}/*
 
 %changelog
