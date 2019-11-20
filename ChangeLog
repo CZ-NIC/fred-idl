@@ -1,3 +1,7 @@
+2019-11-20 (2.35.1)
+
+   * Update spec file for F31 and Centos/RHEL 8
+
 2019-04-26 (2.35.0)
 
    * accounting interface - add optional custom tax date to import payment method (when specifying registrar manually)
