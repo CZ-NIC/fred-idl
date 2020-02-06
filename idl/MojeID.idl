@@ -144,6 +144,13 @@ module MojeID
         NullableShippingAddress shipping3;
     };
 
+    struct ValidatedContactData
+    {
+        string name;
+        IsoDate birth_date;
+        Address permanent;
+    };
+
 
     struct UpdateTransferContact
     {
@@ -330,6 +337,33 @@ module MojeID
                 in LogRequestId log_request_id)
             raises (INTERNAL_SERVER_ERROR, UPDATE_CONTACT_PREPARE_VALIDATION_ERROR, OBJECT_NOT_EXISTS,
                     MESSAGE_LIMIT_EXCEEDED);
+
+        exception UPDATE_VALIDATED_CONTACT_PREPARE_VALIDATION_ERROR
+        {
+            ValidationResult                 name;
+            ValidationResult                 birth_date;
+            MandatoryAddressValidationResult permanent;
+        };
+
+        /**
+         * prepares contact for update (2-phase commit)
+         *
+         * @param contact_id     id of updated contact
+         * @param verified_data  data from trustworthy source
+         * @param trans_id       database transaction identifier
+         *                       for 2-phase commit
+         * @param log_request_id associated request id in logger
+         *
+         * @throw UPDATE_VALIDATED_CONTACT_PREPARE_VALIDATION_ERROR in case of incorrect input data
+         * @throw OBJECT_NOT_EXISTS      in case of contact isn't registered or isn't mojeID contact
+         * @throw INTERNAL_SERVER_ERROR  in case of internal server error
+         */
+        void update_validated_contact_prepare(
+                in ContactId contact_id,
+                in ValidatedContactData verified_data,
+                in string trans_id,
+                in LogRequestId log_request_id)
+            raises (INTERNAL_SERVER_ERROR, UPDATE_VALIDATED_CONTACT_PREPARE_VALIDATION_ERROR, OBJECT_NOT_EXISTS);
 
         /**
          * update contact data and create corresponding request for transfer into mojeID
