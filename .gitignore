@@ -1,5 +1,6 @@
 INSTALL
 Makefile
+/CMakeLists.txt.user
 build.ninja
 rules.ninja
 .project
