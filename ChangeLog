@@ -1,3 +1,9 @@
+2020-02-20 (2.36.0)
+
+   * MojeID
+     - add new method for validated data update (no mojeid verification states canceling)
+     - fix exception in send_new_pin3 method
+
 2019-11-20 (2.35.1)
 
    * Update spec file for F31 and Centos/RHEL 8
