@@ -600,7 +600,8 @@ module MojeID
          * @param log_request_id  associated request id in logger
          *
          * @throw OBJECT_NOT_EXISTS if the contact doesn't exist or doesn't have `mojeidContact` state.
-         * @throw IDENTIFICATION_REQUEST_NOT_EXISTS in case no opened mojeid_contact_(re)identification request exists
+         * @throw IDENTIFICATION_REQUEST_NOT_EXISTS (not used anymore, subject to removal)
+         * @throw IDENTIFICATION_ALREADY_PROCESSED in case of contact already identified
          * @throw INTERNAL_SERVER_ERROR in case of internal server error
          * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
          */
@@ -609,6 +610,7 @@ module MojeID
                 in LogRequestId log_request_id)
             raises (OBJECT_NOT_EXISTS,
                     IDENTIFICATION_REQUEST_NOT_EXISTS,
+                    IDENTIFICATION_ALREADY_PROCESSED,
                     INTERNAL_SERVER_ERROR,
                     MESSAGE_LIMIT_EXCEEDED);
 
