@@ -1,0 +1,22 @@
+#ifndef LOGGER_REQUEST_COUNT_IDL_
+#define LOGGER_REQUEST_COUNT_IDL_
+
+#include "_dataTypes.idl"
+
+module ccReg {
+    interface LoggerRequestCount {
+        exception INCORRECT_USAGE {};
+        exception INTERNAL_SERVER_ERROR {};
+
+        /* request count for all users identified by handles in the output
+           - one of the handles may be an empty string
+        */
+        RequestCountInfo getRequestCountUsers(
+                in string datetime_from,
+                in string datetime_to,
+                in string service)
+            raises (INCORRECT_USAGE, INTERNAL_SERVER_ERROR);
+    };
+};
+
+#endif

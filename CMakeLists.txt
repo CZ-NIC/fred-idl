@@ -54,6 +54,7 @@ compile_idl_files(
     IsoDate
     IsoDateTime
     Logger
+    LoggerRequestCount
     Mailer
     Messages
     MojeID
