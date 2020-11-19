@@ -54,6 +54,7 @@ compile_idl_files(
     IsoDate
     IsoDateTime
     Logger
+    LoggerFilter
     LoggerRequestCount
     Mailer
     Messages
