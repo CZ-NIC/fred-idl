@@ -31,14 +31,22 @@ of corba interfaces to server
 %global __cmake /opt/rh/llvm-toolset-7/root/usr/bin/cmake
 %endif
 %cmake -DPYTHON=%{python_version} -DVERSION=%{version} .
+%if 0%{?el7}
 %make_build
+%else
+%cmake_build
+%endif
 %if 0%{?el7}
 %{?scl:EOF}
 %endif
 
 %install
 rm -rf $RPM_BUILD_ROOT
+%if 0%{?el7}
 %make_install
+%else
+%cmake_install
+%endif
 
 %clean
 rm -rf $RPM_BUILD_ROOT
