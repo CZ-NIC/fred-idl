@@ -76,7 +76,7 @@ execute_process(COMMAND ${PYTHON} -c "from distutils.sysconfig import get_python
 string(REGEX REPLACE "\n" "" PKGPYTHONDIR "${PKGPYTHONDIR}")
 
 install(DIRECTORY ${CMAKE_BINARY_DIR}/fred_idl/ DESTINATION "${PKGPYTHONDIR}")
-install(DIRECTORY ${CMAKE_BINARY_DIR}/idl/ DESTINATION "${CMAKE_INSTALL_PREFIX}/share/idl/fred/" FILES_MATCHING PATTERN "*.idl")
+install(DIRECTORY ${CMAKE_SOURCE_DIR}/idl/ DESTINATION "${CMAKE_INSTALL_PREFIX}/share/idl/fred/" FILES_MATCHING PATTERN "*.idl")
 add_custom_target(uninstall_python_idl COMMAND rm -rf "${PKGPYTHONDIR}/fred_idl")
 add_custom_target(uninstall COMMAND rm -rf "${CMAKE_INSTALL_PREFIX}/share/idl/fred/" DEPENDS uninstall_python_idl)
 
