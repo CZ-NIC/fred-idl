@@ -652,12 +652,14 @@ module ccReg {
     /** Find out with given identifier. If logged registrar isn't 
         registrar of contact, AuthInfoPw item shows him empty.
      \param handle Identifier of requested object
+     \param authInfo Optional authorization information associated with the contact object
      \param available_disclose_flags Disclose flags sendable to the client
      \param c Data structure with reply
      \param params common parametres
      \return General reply with operation results and error message */   
     Response ContactInfo (
       in string handle,
+      in string authInfo,
       in ControlledPrivacyDataMask available_disclose_flags,
       out Contact c,
       in EppParams params
