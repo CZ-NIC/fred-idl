@@ -2,6 +2,13 @@ ChangeLog
 =========
 
 
+2021-04-30 (2.37.0)
+-------------------
+
+* Add optional authinfo parameter to epp info contact method
+* Rename changelog to CHANGELOG.rst to match all FRED projects
+* Rework CMake IDL compilation
+
 2020-12-02 (2.36.1)
 -------------------
 
