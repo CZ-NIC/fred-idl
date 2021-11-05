@@ -9,51 +9,71 @@ URL:		http://fred.nic.cz
 Source:         %{name}-%{version}.tar.gz
 BuildRoot:	%{_tmppath}/%{name}-%{version}-%{release}-root-%(%{__id_u} -n)
 BuildArch:	noarch
-%define python_version python2
-%if 0%{?el7}
-BuildRequires: centos-release-scl, llvm-toolset-7-cmake, llvm-toolset-7-build
-%else
 BuildRequires: cmake
-%endif
-BuildRequires:  omniORBpy-devel, %{python_version}-devel
 
 %description
 FRED (Free Registry for Enum and Domain) is free registry system for 
 managing domain registrations. This package contains idl files with definition
 of corba interfaces to server
 
+%package -n python3-fred-idl
+Summary: FRED - python3 compiled idl interfaces
+BuildRequires: python3 python3-omniORB omniORBpy-devel omniORB-devel python3-devel
+
+%package -n python2-fred-idl
+Summary: FRED - python2 compiled idl interfaces
+BuildRequires: python2 python2-omniORB omniORBpy-devel omniORB-devel python2-devel
+
+%description -n python3-fred-idl
+FRED (Free Registry for Enum and Domain) is free registry system for 
+managing domain registrations. This package contains python3 compiled idl
+files with definition of corba interfaces to server.
+
+%description -n python2-fred-idl
+FRED (Free Registry for Enum and Domain) is free registry system for 
+managing domain registrations. This package contains python3 compiled idl
+files with definition of corba interfaces to server.
+
 %prep
 %setup -q
 
 %build
-%if 0%{?el7}
-%{?scl:scl enable llvm-toolset-7 - << \EOF}
-%global __cmake /opt/rh/llvm-toolset-7/root/usr/bin/cmake
-%endif
-%cmake -DPYTHON=%{python_version} -DVERSION=%{version} .
-%if 0%{?el7}
-%make_build
-%else
+
+mkdir build_py2
+pushd build_py2
+export PYTHON=%{__python2}
+%cmake -DPYTHON=python2 -DVERSION=%{version} ..
 %cmake_build
-%endif
-%if 0%{?el7}
-%{?scl:EOF}
-%endif
+popd
+
+mkdir build_py3
+pushd build_py3
+export PYTHON=%{__python3}
+%cmake -DPYTHON=python3 -DVERSION=%{version} ..
+%cmake_build
+popd
 
 %install
 rm -rf $RPM_BUILD_ROOT
-%if 0%{?el7}
-%make_install
-%else
+pushd build_py2
 %cmake_install
-%endif
+popd
+pushd build_py3
+%cmake_install
+popd
 
 %clean
 rm -rf $RPM_BUILD_ROOT
 
-%files
+%files -n fred-idl
 %defattr(-,root,root,-)
 /usr/share/idl/fred/*.idl
+
+%files -n python3-fred-idl
+%{python3_sitearch}/*
+
+%files -n python2-fred-idl
 %{python2_sitearch}/*
+
 
 %changelog
