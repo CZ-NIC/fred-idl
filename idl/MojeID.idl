@@ -229,6 +229,8 @@ module MojeID
 
         exception IDENTIFICATION_REQUEST_NOT_EXISTS { };
 
+        exception IDENTITY_ATTACHED { };
+
         exception MESSAGE_LIMIT_EXCEEDED
         {
             IsoDateTime limit_expire_datetime;     ///< When a new message can be sent
@@ -288,6 +290,7 @@ module MojeID
          * @throw OBJECT_USER_BLOCKED object manipulations constrained by user
          * @throw OBJECT_ADMIN_BLOCKED object manipulations constrained by administrator
          * @throw ALREADY_MOJEID_CONTACT object is mojeID contact already
+         * @throw IDENTITY_ATTACHED object is attached to external identity
          *
          * @return               data of the contact having the given username
          */
@@ -297,7 +300,8 @@ module MojeID
                 in LogRequestId log_request_id,
                 out string ident)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS, REGISTRATION_VALIDATION_ERROR,
-                    OBJECT_USER_BLOCKED, OBJECT_ADMIN_BLOCKED, ALREADY_MOJEID_CONTACT);
+                    OBJECT_USER_BLOCKED, OBJECT_ADMIN_BLOCKED, ALREADY_MOJEID_CONTACT,
+                    IDENTITY_ATTACHED);
 
 
         exception UPDATE_CONTACT_PREPARE_VALIDATION_ERROR
@@ -382,6 +386,7 @@ module MojeID
          * @throw ALREADY_MOJEID_CONTACT object is mojeID contact already
          * @throw MESSAGE_LIMIT_EXCEEDED in case of too many letters have been sent
          * @throw REGISTRATION_VALIDATION_ERROR in case of incorrect input data
+         * @throw IDENTITY_ATTACHED      object is attached to external identity
          *
          * @return               contact new data
          */
@@ -392,7 +397,8 @@ module MojeID
             in LogRequestId log_request_id,
             out string ident)
         raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS, OBJECT_ADMIN_BLOCKED, OBJECT_USER_BLOCKED,
-                ALREADY_MOJEID_CONTACT, MESSAGE_LIMIT_EXCEEDED, REGISTRATION_VALIDATION_ERROR);
+                ALREADY_MOJEID_CONTACT, MESSAGE_LIMIT_EXCEEDED, REGISTRATION_VALIDATION_ERROR,
+                IDENTITY_ATTACHED);
 
 
         /**
@@ -472,13 +478,14 @@ module MojeID
          *                               for given contact
          * @throw IDENTIFICATION_FAILED  in case of password doesn't match
          * @throw IDENTIFICATION_ALREADY_PROCESSED in case of contact already identified
+         * @throw IDENTITY_ATTACHED      object is attached to external identity
          */
         void process_identification_request(
                 in ContactId contact_id,
                 in string password,
                 in LogRequestId log_request_id)
             raises (INTERNAL_SERVER_ERROR, OBJECT_NOT_EXISTS, IDENTIFICATION_REQUEST_NOT_EXISTS,
-                    IDENTIFICATION_FAILED, IDENTIFICATION_ALREADY_PROCESSED);
+                    IDENTIFICATION_FAILED, IDENTIFICATION_ALREADY_PROCESSED, IDENTITY_ATTACHED);
 
 
         /**
