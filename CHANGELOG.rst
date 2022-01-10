@@ -7,6 +7,7 @@ ChangeLog
 * Add exception ``IDENTITY_ATTACHED`` to signalize that given registry contact cannot be transferred to MojeID
   because is attached to another external identity
 * Update fedora RPM build
+* Add python setup.
 
 2021-04-30 (2.37.0)
 -------------------
