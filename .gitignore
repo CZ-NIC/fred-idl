@@ -15,3 +15,9 @@ CMakeFiles/
 cmake_install.cmake
 .ninja_deps
 .ninja_log
+
+# Python distribution / packaging
+/build
+/dist
+/MANIFEST
+/*.egg-info
