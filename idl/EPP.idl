@@ -244,7 +244,7 @@ module ccReg {
     string VAT; ///< Value Added Tax 
     string ident; ///< ident - unique identifier of contact
     identtyp identtype; ///< Ident type - defines meaning of ident field 
-    string AuthInfoPw; ///< password for contact transfer
+    string AuthInfoPw; ///< unused
     ControlledPrivacyData DiscloseFlags;
   };
   /// Type for transfer data in create_contact function
@@ -265,7 +265,7 @@ module ccReg {
     string VAT; ///< Value Added Tax
     string ident; ///< ident - unique contact identifier
     identtyp identtype; ///< Ident type - defines meaning of ident field
-    string AuthInfoPw; ///< Password for contact transfer
+    string AuthInfoPw; ///< unused
     ControlledPrivacyData DiscloseFlags;
   };
   /// Type for transfer data in update_contact function
@@ -301,7 +301,7 @@ module ccReg {
     timestamp CrDate; ///< Creation date and time 
     timestamp UpDate; ///< Date and time of last change
     timestamp TrDate; ///< Date and time of last transfer
-    string AuthInfoPw; ///< Password for nsset transfer
+    string AuthInfoPw; ///< unused
     DNSHost dns; ///< List of DNS nameservers 
     TechContact tech; ///< List of technical contacts identifier
     short level; ///< Technical tests level
@@ -318,7 +318,7 @@ module ccReg {
       timestamp CrDate; ///< Creation date and time
       timestamp UpDate; ///< Date and time of last change
       timestamp TrDate; ///< Date and time of last transfer
-      string AuthInfoPw; ///< Password for keyset transfer
+      string AuthInfoPw; ///< unused
       DSRecord dsrec; ///< List of ds records
       DNSKey dnsk;      ///< List of dnskeys
       TechContact tech; ///< List of technical contacts identifier
@@ -339,7 +339,7 @@ module ccReg {
     timestamp UpDate; ///< Date and time of last changes
     timestamp TrDate; ///< Date and time of last transfer
     timestamp ExDate; ///< Date and time of domain expiration
-    string AuthInfoPw; ///< Password for domain transfer
+    string AuthInfoPw; ///< unused
     AdminContact admin; ///< List of administrative contacts
     ExtensionList ext; ///< General extension information  
     AdminContact tmpcontact; ///< List of admnistrative contacts
@@ -649,8 +649,8 @@ module ccReg {
       in EppParams params
     ) raises (EppError);
     /// Obtain information of registered contact
-    /** Find out with given identifier. If logged registrar isn't 
-        registrar of contact, AuthInfoPw item shows him empty.
+    /** Find out with given identifier. If authInfo is not empty, it must match contact's
+    authinfo password.
      \param handle Identifier of requested object
      \param authInfo Optional authorization information associated with the contact object
      \param available_disclose_flags Disclose flags sendable to the client
@@ -748,14 +748,15 @@ module ccReg {
       in EppParams params
     ) raises (EppError);
     /// Obtaining informations about registered nsset
-    /** Find out nsset with given identifier. If logged registrar isn't 
-        registrar of nsset, AuthInfoPw item shows him empty.
+    /** Find out nsset with given identifier. If authInfo is not empty, it must match nsset's authinfo password.
      \param handle Identifier of requested object
+     \param authInfo Optional authorization information associated with the nsset object
      \param n Data structure with reply 
      \param params common parametres
      \return General reply with operation result and error messages */   
     Response NSSetInfo (
       in string handle,
+      in string authInfo,
       out NSSet n,
       in EppParams params
     ) raises (EppError);
@@ -869,6 +870,7 @@ module ccReg {
     ) raises (EppError);
     Response KeySetInfo(
         in string handle,
+        in string authInfo,
         out KeySet k,
         in EppParams params
     ) raises (EppError);
@@ -928,17 +930,19 @@ module ccReg {
     ) raises (EppError);
     /// Obtaing information about registered domain
     /** At first check up validity of identifier with same way as in DomainCheck.
-	Find out domain with the same name or parentdomain name or subdomain
- 	name. If logged registrar isn't registrar of founded domain, AuthInfoPw
-	item shows him empty. If it case of enum domain, domain registrant and 
-	administrative contact don't show to this foreign registar. In addition
-	validation date is returning at enum domain in general extension list.
+    Find out domain with the same name or parentdomain name or subdomain
+    name. If authInfo is not empty, it must match domain's authinfo password. In
+    case of enum domain, domain registrant and administrative contact don't show
+    to this foreign registrar. In addition validation date is returning at enum
+    domain in general extension list.
      \param fqdn Domain name
+     \param authInfo Optional authorization information associated with the domain object
      \param d Data structure with reply
      \param params common parametres
      \return General reply with operation result and error messages */   
     Response DomainInfo (
       in string fqdn,
+      in string authInfo,
       out Domain d,
       in EppParams params
     ) raises (EppError);
@@ -970,7 +974,7 @@ module ccReg {
      \param registrant_chg Password domain registrant
      \param authInfo_chg Password change for transfer
      \param nsset_chg Nsset change
-     \param keyset_chg KeySet chage
+     \param keyset_chg KeySet change
      \param admin_add Identifier of added administrative contact
      \param admin_rem Identifier of removed administrative contact
      \param params common parametres
